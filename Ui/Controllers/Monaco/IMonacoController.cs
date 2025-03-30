@@ -5,6 +5,7 @@ namespace Ui.Controllers.Monaco;
 
 public interface IMonacoController
 {
+    public Uri AssetsPath { get; }
     Task CreateAsync();
     Task SetThemeAsync(ApplicationTheme appApplicationTheme);
     Task SetLanguageAsync(MonacoLanguage monacoLanguage);

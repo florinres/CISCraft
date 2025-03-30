@@ -3,20 +3,26 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
+using System.IO;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Web.WebView2.Wpf;
 using Ui.Models.Monaco;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Extensions;
 
 namespace Ui.Controllers.Monaco;
 
 public class MonacoController : IMonacoController
 {
     private const string EditorContainerSelector = "#root";
-
     private const string EditorObject = "wpfUiMonacoEditor";
-
     private readonly WebView2? _webView;
+    public Uri AssetsPath { get; } = new(
+        Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            @"Assets\Monaco"
+        )
+    );
 
     public MonacoController()
     {
@@ -57,6 +63,15 @@ public class MonacoController : IMonacoController
 
     public async Task SetLanguageAsync(MonacoLanguage monacoLanguage)
     {
+        if (monacoLanguage == MonacoLanguage.Assembly)
+        {
+            var script = await File.ReadAllTextAsync(
+                AssetsPath.Append(@"/custom/registerAssemblyLanguage.js").AbsolutePath
+                );
+            _ = await _webView!.ExecuteScriptAsync(script);
+
+        }
+        
         var languageId =
             monacoLanguage == MonacoLanguage.ObjectiveC ? "objective-c" : monacoLanguage.ToString().ToLower();
 
