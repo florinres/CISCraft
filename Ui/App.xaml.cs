@@ -11,6 +11,7 @@ using Ui.Views.Pages;
 using Ui.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
+using Wpf.Ui.Gallery.ViewModels.Windows;
 
 namespace Ui
 {
@@ -45,13 +46,17 @@ namespace Ui
                 // Main window with navigation
                 services.AddSingleton<INavigationWindow, MainWindow>();
                 services.AddSingleton<MainWindowViewModel>();
-
+                
+                // Pages
                 services.AddSingleton<DashboardPage>();
                 services.AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>();
                 services.AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+                
+                services.AddSingleton<MonacoPage>();
+                services.AddSingleton<MonacoViewModel>();
             }).Build();
 
         /// <summary>
