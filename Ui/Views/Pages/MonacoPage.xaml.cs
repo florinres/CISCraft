@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
-using Wpf.Ui.Gallery.ViewModels.Windows;
+using MonacoViewModel = Ui.ViewModels.Pages.MonacoViewModel;
 
 namespace Ui.Views.Pages;
 

@@ -7,8 +7,6 @@
     xmlns:ww2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     xmlns:pages="clr-namespace:Ui.Views.Pages"
     Title="WPF UI - Monaco Editor"
-    Width="1250"
-    Height="652"
     d:DataContext="{d:DesignInstance pages:MonacoPage,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="650"

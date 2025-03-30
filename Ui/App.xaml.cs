@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Reflection;
 using System.Windows.Threading;
+using Microsoft.Extensions.Logging;
+using Ui.Controllers;
 using Ui.Services;
 using Ui.ViewModels.Pages;
 using Ui.ViewModels.Windows;
@@ -11,7 +13,7 @@ using Ui.Views.Pages;
 using Ui.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
-using Wpf.Ui.Gallery.ViewModels.Windows;
+using MonacoViewModel = Ui.ViewModels.Pages.MonacoViewModel;
 
 namespace Ui
 {
@@ -25,15 +27,20 @@ namespace Ui
         // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
         // https://docs.microsoft.com/dotnet/core/extensions/configuration
         // https://docs.microsoft.com/dotnet/core/extensions/logging
+        // ReSharper disable once InconsistentNaming
         private static readonly IHost _host = Host
             .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)); })
+            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory) ?? throw new InvalidOperationException()); })
             .ConfigureServices((context, services) =>
             {
                 services.AddNavigationViewPageProvider();
 
                 services.AddHostedService<ApplicationHostService>();
 
+                services.AddLogging(builder =>
+                {
+                    builder.AddConsole();
+                });
                 // Theme manipulation
                 services.AddSingleton<IThemeService, ThemeService>();
 
@@ -42,6 +49,9 @@ namespace Ui
 
                 // Service containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();
+                
+                // External controllers
+                services.AddSingleton<MonacoController>();
 
                 // Main window with navigation
                 services.AddSingleton<INavigationWindow, MainWindow>();

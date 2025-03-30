@@ -16,7 +16,11 @@ public class MonacoController
 
     private const string EditorObject = "wpfUiMonacoEditor";
 
-    private readonly WebView2 _webView;
+    private readonly WebView2? _webView;
+    
+    public MonacoController()
+    {
+    }
 
     public MonacoController(WebView2 webView)
     {
@@ -25,7 +29,7 @@ public class MonacoController
 
     public async Task CreateAsync()
     {
-        _ = await _webView.ExecuteScriptAsync(
+        _ = await _webView!.ExecuteScriptAsync(
             $$"""
             const {{EditorObject}} = monaco.editor.create(document.querySelector('{{EditorContainerSelector}}'));
             window.onresize = () => {{{EditorObject}}.layout();}
@@ -39,7 +43,7 @@ public class MonacoController
         const string uiThemeName = "wpf-ui-app-theme";
         var baseMonacoTheme = appApplicationTheme == ApplicationTheme.Light ? "vs" : "vs-dark";
 
-        _ = await _webView.ExecuteScriptAsync(
+        _ = await _webView!.ExecuteScriptAsync(
             $$$"""
             monaco.editor.defineTheme('{{{uiThemeName}}}', {
                 base: '{{{baseMonacoTheme}}}',
@@ -56,7 +60,7 @@ public class MonacoController
         var languageId =
             monacoLanguage == MonacoLanguage.ObjectiveC ? "objective-c" : monacoLanguage.ToString().ToLower();
 
-        _ = await _webView.ExecuteScriptAsync(
+        _ = await _webView!.ExecuteScriptAsync(
             "monaco.editor.setModelLanguage(" + EditorObject + $".getModel(), \"{languageId}\");"
         );
     }
@@ -65,16 +69,18 @@ public class MonacoController
     {
         var literalContents = SymbolDisplay.FormatLiteral(contents, false);
 
-        _ = await _webView.ExecuteScriptAsync(EditorObject + $".setValue(\"{literalContents}\");");
+        _ = await _webView!.ExecuteScriptAsync(EditorObject + $".setValue(\"{literalContents}\");");
     }
-
+    public async Task<string> GetContentAsync()
+    {
+        string content = await _webView!.ExecuteScriptAsync(
+            $"{EditorObject}.getValue()"
+        );
+    
+        return content;
+    }
     public void DispatchScript(string script)
     {
-        if (_webView == null)
-        {
-            return;
-        }
-
         _ = Application.Current.Dispatcher.InvokeAsync(
             async () => await _webView!.ExecuteScriptAsync(script)
         );
