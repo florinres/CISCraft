@@ -1,6 +1,5 @@
-namespace Ui.Resources
+namespace Ui.Resources;
+
+public class Translations
 {
-    public partial class Translations
-    {
-    }
 }

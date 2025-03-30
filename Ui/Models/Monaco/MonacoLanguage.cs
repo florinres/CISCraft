@@ -84,5 +84,5 @@ public enum MonacoLanguage
     TypeScript,
     Vb,
     Xml,
-    Yaml,
+    Yaml
 }

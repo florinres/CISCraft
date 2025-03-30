@@ -8,16 +8,16 @@ using Microsoft.Web.WebView2.Wpf;
 using Ui.Models.Monaco;
 using Wpf.Ui.Appearance;
 
-namespace Ui.Controllers;
+namespace Ui.Controllers.Monaco;
 
-public class MonacoController
+public class MonacoController : IMonacoController
 {
     private const string EditorContainerSelector = "#root";
 
     private const string EditorObject = "wpfUiMonacoEditor";
 
     private readonly WebView2? _webView;
-    
+
     public MonacoController()
     {
     }
@@ -31,9 +31,9 @@ public class MonacoController
     {
         _ = await _webView!.ExecuteScriptAsync(
             $$"""
-            const {{EditorObject}} = monaco.editor.create(document.querySelector('{{EditorContainerSelector}}'));
-            window.onresize = () => {{{EditorObject}}.layout();}
-            """
+              const {{EditorObject}} = monaco.editor.create(document.querySelector('{{EditorContainerSelector}}'));
+              window.onresize = () => {{{EditorObject}}.layout();}
+              """
         );
     }
 
@@ -45,13 +45,13 @@ public class MonacoController
 
         _ = await _webView!.ExecuteScriptAsync(
             $$$"""
-            monaco.editor.defineTheme('{{{uiThemeName}}}', {
-                base: '{{{baseMonacoTheme}}}',
-                inherit: true,
-                rules: [{ background: 'FFFFFF00' }],
-                colors: {'editor.background': '#FFFFFF00','minimap.background': '#FFFFFF00',}});
-            monaco.editor.setTheme('{{{uiThemeName}}}');
-            """
+               monaco.editor.defineTheme('{{{uiThemeName}}}', {
+                   base: '{{{baseMonacoTheme}}}',
+                   inherit: true,
+                   rules: [{ background: 'FFFFFF00' }],
+                   colors: {'editor.background': '#FFFFFF00','minimap.background': '#FFFFFF00',}});
+               monaco.editor.setTheme('{{{uiThemeName}}}');
+               """
         );
     }
 
@@ -71,14 +71,16 @@ public class MonacoController
 
         _ = await _webView!.ExecuteScriptAsync(EditorObject + $".setValue(\"{literalContents}\");");
     }
+
     public async Task<string> GetContentAsync()
     {
-        string content = await _webView!.ExecuteScriptAsync(
+        var content = await _webView!.ExecuteScriptAsync(
             $"{EditorObject}.getValue()"
         );
-    
+
         return content;
     }
+
     public void DispatchScript(string script)
     {
         _ = Application.Current.Dispatcher.InvokeAsync(

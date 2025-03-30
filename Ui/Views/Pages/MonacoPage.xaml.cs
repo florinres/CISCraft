@@ -1,14 +1,11 @@
-﻿using System.Windows.Controls;
+﻿using Ui.ViewModels.Pages.Monaco;
 using Wpf.Ui.Abstractions.Controls;
-using MonacoViewModel = Ui.ViewModels.Pages.MonacoViewModel;
 
 namespace Ui.Views.Pages;
 
-public partial class MonacoPage : INavigableView<MonacoViewModel>
+public partial class MonacoPage : INavigableView<IMonacoViewModel>
 {
-    public MonacoViewModel ViewModel { get; }
-
-    public MonacoPage(MonacoViewModel viewModel)
+    public MonacoPage(IMonacoViewModel viewModel)
     {
         ViewModel = viewModel;
         DataContext = this;
@@ -16,4 +13,6 @@ public partial class MonacoPage : INavigableView<MonacoViewModel>
         InitializeComponent();
         ViewModel.SetWebView(WebView);
     }
+
+    public IMonacoViewModel ViewModel { get; }
 }

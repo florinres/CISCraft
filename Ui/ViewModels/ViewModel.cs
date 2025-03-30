@@ -1,13 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the MIT License.
-// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-// All Rights Reserved.
+﻿namespace Ui.ViewModels;
 
-using Wpf.Ui.Abstractions.Controls;
-
-namespace Wpf.Ui.Gallery.ViewModels;
-
-public abstract partial class ViewModel : ObservableObject, INavigationAware
+public abstract class ViewModel : ObservableObject, IViewModel
 {
     /// <inheritdoc />
     public virtual Task OnNavigatedToAsync()
@@ -18,10 +11,12 @@ public abstract partial class ViewModel : ObservableObject, INavigationAware
     }
 
     /// <summary>
-    /// Handles the event that is fired after the component is navigated to.
+    ///     Handles the event that is fired after the component is navigated to.
     /// </summary>
     // ReSharper disable once MemberCanBeProtected.Global
-    public virtual void OnNavigatedTo() { }
+    public virtual void OnNavigatedTo()
+    {
+    }
 
     /// <inheritdoc />
     public virtual Task OnNavigatedFromAsync()
@@ -32,8 +27,10 @@ public abstract partial class ViewModel : ObservableObject, INavigationAware
     }
 
     /// <summary>
-    /// Handles the event that is fired before the component is navigated from.
+    ///     Handles the event that is fired before the component is navigated from.
     /// </summary>
     // ReSharper disable once MemberCanBeProtected.Global
-    public virtual void OnNavigatedFrom() { }
+    public virtual void OnNavigatedFrom()
+    {
+    }
 }
