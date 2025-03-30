@@ -1,0 +1,6 @@
+- Ego
+- Andrei Saldorfean
+- Rares Bolca
+- Avram Matei
+- Luca Rusu
+- Ionut Razvan
