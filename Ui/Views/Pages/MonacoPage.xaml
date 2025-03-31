@@ -165,25 +165,6 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem>
-                <ui:SymbolIcon Foreground="{DynamicResource TextFillColorSecondaryBrush}" Symbol="BranchFork24" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="1" Margin="0,0,4,0">
-                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Development *" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="2" Margin="4,0,4,0">
-                <ui:SymbolIcon Foreground="{DynamicResource TextFillColorSecondaryBrush}" Symbol="Home24" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="3" Margin="4,0,4,0">
-                <ui:SymbolIcon Foreground="{DynamicResource TextFillColorSecondaryBrush}" Symbol="Fire24" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="4" Margin="4,0,4,0">
-                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Wpf.Ui.sln" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="6">
-                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="Ln 45, Col 30  Spaces: 2 UTF8 with BOM C#" />
-            </StatusBarItem>
         </StatusBar>
     </Grid>
 </Page>
