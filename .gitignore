@@ -1,2 +1,61 @@
+# Common IntelliJ Platform excludes
 
+# User specific
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/shelf/*
+**/.idea/dictionaries
+**/.idea/httpRequests/
+*.sln.DotSettings.user
+
+
+# Sensitive or high-churn files
+**/.idea/**/dataSources/
+**/.idea/**/dataSources.ids
+**/.idea/**/dataSources.xml
+**/.idea/**/dataSources.local.xml
+**/.idea/**/sqlDataSources.xml
+**/.idea/**/dynamic.xml
+
+# Rider
+# Rider auto-generates .iml files, and contentModel.xml
+**/.idea/**/*.iml
+**/.idea/**/contentModel.xml
+**/.idea/**/modules.xml
+
+*.suo
+*.user
+.vs/
+**/[Bb]in/**
+**/[Oo]bj/**
+_UpgradeReport_Files/
+[Pp]ackages/
+
+Thumbs.db
+Desktop.ini
+.DS_Store
 .idea/
+
+Assembler.Business/obj/
+Assembler.Main/obj/
+
+/Assembler.Business/obj/Assembler.Business.csproj.nuget.dgspec.json
+/Assembler.Business/obj/Assembler.Business.csproj.nuget.g.props
+/Assembler.Business/obj/project.assets.json
+/Assembler.Business/obj/project.nuget.cache
+/Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.AssemblyInfo.cs
+/Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.AssemblyInfoInputs.cache
+/Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.assets.cache
+/Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/Ui/obj/Debug/net9.0-windows/Ui.AssemblyInfo.cs
+/Ui/obj/Debug/net9.0-windows/Ui.AssemblyInfoInputs.cache
+/Ui/obj/Debug/net9.0-windows/Ui.assets.cache
+/Ui/obj/Debug/net9.0-windows/Ui.GeneratedMSBuildEditorConfig.editorconfig
+/Ui/obj/project.assets.json
+/Ui/obj/project.nuget.cache
+/Ui/obj/Ui.csproj.nuget.dgspec.json
+/Ui/obj/Ui.csproj.nuget.g.props
+/Assembler.Tests/obj/Assembler.Tests.csproj.nuget.dgspec.json
+/Assembler.Tests/obj/Assembler.Tests.csproj.nuget.g.props
+/Assembler.Tests/obj/project.assets.json
+/Assembler.Tests/obj/project.nuget.cache
