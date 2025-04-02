@@ -39,7 +39,7 @@ public class MonacoController : IMonacoController
             $$"""
               const {{EditorObject}} = monaco.editor.create(document.querySelector('{{EditorContainerSelector}}'), {
                 minimap: { enabled: false },
-                scrollbar: { vertical: "hidden", horizontal: "hidden" },
+                //scrollbar: { vertical: "hidden", horizontal: "hidden" },
                 showUnused: false
               });
               window.onresize = () => {{{EditorObject}}.layout();}
