@@ -64,6 +64,8 @@ public partial class App
             services.AddSingleton<DataViewModel>();
             services.AddSingleton<SettingsPage>();
             services.AddSingleton<SettingsViewModel>();
+            services.AddSingleton<AvalonEditPage>();
+            services.AddSingleton<AvalonEditViewModel>();
 
             services.AddSingleton<MonacoPage>();
             services.AddSingleton<IMonacoViewModel, MonacoViewModel>();
