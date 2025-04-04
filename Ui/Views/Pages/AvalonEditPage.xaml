@@ -7,6 +7,7 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
       xmlns:pages="clr-namespace:Ui.Views.Pages"
+      xmlns:components="clr-namespace:Ui.Components"
       mc:Ignorable="d"
       d:DataContext="{d:DesignInstance pages:AvalonEditPage,
                                      IsDesignTimeCreatable=False}"
@@ -14,8 +15,8 @@
       ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
       Title="AvalonEditPage" Height="450" Width="800">
     <Grid>
-        <avalonEdit:TextEditor
-            Name="textEditor"
+        <components:StyledAvalonEdit
+            x:Name="TextEditor"
             SyntaxHighlighting="Custom"
             FontFamily="Consolas"
             FontSize="10pt"

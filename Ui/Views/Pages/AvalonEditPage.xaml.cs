@@ -10,30 +10,20 @@ namespace Ui.Views.Pages;
 
 public partial class AvalonEditPage : Page
 {
-    public AvalonEditPage()
+    public AvalonEditPage(AvalonEditViewModel viewModel)
     {
+        ViewModel = viewModel;
+        DataContext = this;
+        
         InitializeComponent();
-        Initialize();
         LoadAssembly16BitHighlighting();
     }
-
-    private void Initialize()
-    {
-        var editorBackground = (Brush)FindResource("ApplicationBackgroundBrush");
-        var editorForeground = (Brush)FindResource("TextFillColorPrimaryBrush");
-
-        textEditor.Background = editorBackground;
-        textEditor.Foreground = editorForeground;
-        textEditor.TextArea.Foreground = editorForeground;
-        textEditor.TextArea.Background = editorBackground;
-    }
     
-    void LoadAssembly16BitHighlighting()
+    private void LoadAssembly16BitHighlighting()
     {
-        using (XmlReader reader = XmlReader.Create("Assets\\AvalonEdit\\Assembly16BitHighlighting.xshd"))
-        {
-            textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-        }
+        using var reader = XmlReader.Create(@"Assets\AvalonEdit\Assembly16BitHighlighting.xshd");
+        TextEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
     }
 
+    public AvalonEditViewModel ViewModel { get; }
 }
