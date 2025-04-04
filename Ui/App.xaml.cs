@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Configuration;
+using System.Data;
+using System.IO;
+using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,14 +16,13 @@ using Ui.Views.Pages;
 using Ui.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
-using MonacoViewModel = Ui.ViewModels.Pages.Monaco.MonacoViewModel;
 
 namespace Ui;
 
 /// <summary>
-///     Interaction logic for App.xaml
+/// Interaction logic for App.xaml
 /// </summary>
-public partial class App
+public partial class App : Application
 {
     // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
     // https://docs.microsoft.com/dotnet/core/extensions/generic-host
@@ -102,3 +104,4 @@ public partial class App
         // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
     }
 }
+
