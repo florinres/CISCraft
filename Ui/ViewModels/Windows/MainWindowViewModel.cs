@@ -28,6 +28,12 @@ namespace Ui.ViewModels.Windows
                 Content = "Data",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 },
                 TargetPageType = typeof(Views.Pages.MonacoPage)
+            },
+            new NavigationViewItem()
+            {
+                Content = "Data",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Edit16 },
+                TargetPageType = typeof(Views.Pages.AvalonEditPage)
             }
         };
 

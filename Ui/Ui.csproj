@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0"/>
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3171-prerelease"/>
         <PackageReference Include="WPF-UI" Version="4.0.2"/>
@@ -28,6 +29,9 @@
         <None Remove="Assets\wpfui-icon-1024.png"/>
         <None Update="Assets\Monaco\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\AvalonEdit\Assembly16BitHighlighting.xshd">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
