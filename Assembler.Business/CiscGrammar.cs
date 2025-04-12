@@ -118,10 +118,9 @@ namespace Assembler.Business
 
             NonGrammarTerminals.Add(comment);
 
-            mem.Rule = (/*optional*/ number.Q() + LBRACKET + register + RBRACKET);
+            mem.Rule  = (/*optional*/ number.Q() + LBRACKET + register + RBRACKET);
             proc.Rule = ToTerm("PROC") + str;
             endp.Rule = ToTerm("ENDP") + str;
-
             label.Rule = str + COLON;
 
             b1Operand1.Rule  = register | mem;
@@ -136,8 +135,8 @@ namespace Assembler.Business
             instruction.Rule = b1Instr | b2Instr | b3Instr | b4Instr | label | proc | endp;
 
             instrList.Rule = MakeStarRule(instrList, null, instruction);
-            prog.Rule = instrList;
-            Root = prog;
+            prog.Rule      = instrList;
+            Root           = prog;
 
             MarkPunctuation("\n", "\r\n", ",", ":", "[", "]");
             RegisterBracePair("[", "]");

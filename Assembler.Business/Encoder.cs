@@ -118,7 +118,7 @@ namespace Assembler.Business
             ERR = 0xFFFF, /* 0xF00 */
         };
         ushort instrAddress  = 0x0000;
-        short symbolAddress = 0x0000;
+        ushort symbolAddress = 0x0000;
         struct InstructionParts
         {
             public ushort opcode;
@@ -137,9 +137,9 @@ namespace Assembler.Business
             public short offset1;
             public short offset2;
         }
-        ushort[] program = new ushort[100];
+        byte[] program = new byte[300];
         int programIndex = 0;
-        Dictionary<string, short> symbolTable = new Dictionary<string, short>();
+        Dictionary<string, ushort> symbolTable = new Dictionary<string, ushort>();
         Dictionary<string, Dictionary<ushort,string>> oppcodes = new Dictionary<string, Dictionary<ushort,string>>
         {
             // Numerical value    ,                                     Mnemonic, Type
@@ -217,10 +217,11 @@ namespace Assembler.Business
             { "R14", 0xE },
             { "R15", 0xF },
         };
-        internal ushort[] Encode(ParseTreeNode node)
+        internal byte[] Encode(ParseTreeNode node, out int len)
         {
             ConstructSymbolTabel(node.ChildNodes[0]);
             TranverseInstructionList(node);
+            len = programIndex;
             return program;
         }
         private void ConstructSymbolTabel(ParseTreeNode node)
@@ -370,6 +371,11 @@ namespace Assembler.Business
             }
             storeAssembledInstruction(instr);
         }
+
+        /**
+        *   Input: The node that points to the "Instr" Non-termianl
+        *   Output: The parts of the instruction stored in instructionParts
+        */
         private void handleB1Instruction(ParseTreeNode node)
         {
             var parent = node;
@@ -389,15 +395,15 @@ namespace Assembler.Business
                     {
                         case "MemoryAccess":
                         {
-                            handleMemoryAccess(parent.ChildNodes[0], ref instructionParts.mas, ref instructionParts.rs, ref instructionParts.offset1);
+                            handleMemoryAccess(parent.ChildNodes[0], ref instructionParts.mad, ref instructionParts.rd, ref instructionParts.offset1);
                             return;
                         }
                         case "Register":
                         {
                             // add the register to the instructionParts
                             string regiser = parent.ChildNodes[0].ChildNodes[0].Token.Text.ToUpper();
-                            instructionParts.mas = 0b01;
-                            instructionParts.rs = registers[regiser];
+                            instructionParts.mad = 0b01;
+                            instructionParts.rd = registers[regiser];
                             Console.Write(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
                             return;
                         }
@@ -410,7 +416,7 @@ namespace Assembler.Business
                     {
                         case "MemoryAccess":
                         {
-                            handleMemoryAccess(parent.ChildNodes[0], ref instructionParts.mad, ref instructionParts.rd, ref instructionParts.offset2);
+                            handleMemoryAccess(parent.ChildNodes[0], ref instructionParts.mas, ref instructionParts.rs, ref instructionParts.offset2);
                             Console.WriteLine();
                             instrAddress += 2;
                             return;
@@ -419,8 +425,8 @@ namespace Assembler.Business
                         {
                             // add the register to the instructionParts
                             string regiser = parent.ChildNodes[0].ChildNodes[0].Token.Text.ToUpper();
-                            instructionParts.mad = 0b01;
-                            instructionParts.rd = registers[regiser];
+                            instructionParts.mas = 0b01;
+                            instructionParts.rs = registers[regiser];
                             Console.WriteLine(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
                             instrAddress += 2;
                             return;
@@ -660,7 +666,7 @@ namespace Assembler.Business
         private Instruction assembleB1(InstructionParts parts)
         {
             Instruction instr = default;
-            instr.instr = (ushort)(parts.opcode | (parts.mad << 10) | (parts.rd << 6) | (parts.mas << 4) | parts.rs);
+            instr.instr = (ushort)(parts.opcode | (parts.mas << 10) | (parts.rs << 6) | (parts.mad << 4) | parts.rd);
             instr.offset1 = parts.offset1;
             instr.offset2 = parts.offset2;
             return instr;
@@ -668,7 +674,7 @@ namespace Assembler.Business
         private Instruction assembleB2(InstructionParts parts)
         {
             Instruction instr = default;
-            instr.instr = (ushort)(parts.opcode | (parts.mas << 4) | parts.rs);
+            instr.instr = (ushort)(parts.opcode | (parts.mad << 4) | parts.rd);
             instr.offset1 = parts.offset1;    
             instr.offset2 = parts.offset2;
             return instr;
@@ -689,15 +695,19 @@ namespace Assembler.Business
         {
             if(instruction.instr != 0)
             {
-                program[programIndex++] = instruction.instr;
+                // Little endian representation - the MSB at the low byte
+                program[programIndex++] = (byte)(instruction.instr>>8);
+                program[programIndex++] = (byte)instruction.instr;
             }
             if(instruction.offset1 != 0)
             {
-                program[programIndex++] = (ushort)instruction.offset1;
+                program[programIndex++] = (byte)(instruction.offset1>>8);
+                program[programIndex++] = (byte)instruction.offset1;
             }
             if(instruction.offset2 != 0)
             {
-                program[programIndex++] = (ushort)instruction.offset2;
+                program[programIndex++] = (byte)(instruction.offset2>>8);
+                program[programIndex++] = (byte)instruction.offset2;
             }
         }
     }
