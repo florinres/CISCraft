@@ -18,7 +18,7 @@ namespace Assembler.Business
             grammar = new CiscGrammar();
             parser  = new Parser(grammar);
         }
-        public ushort[] Assemble(string sourceCode)
+        public byte[] Assemble(string sourceCode, out int len)
         {
             var tree = parser.Parse(sourceCode);
 
@@ -35,7 +35,7 @@ namespace Assembler.Business
             }
 
             Console.WriteLine("AST Traversal:");
-            return encoder.Encode(tree.Root);
+            return encoder.Encode(tree.Root, out len);
         }
 
     }
