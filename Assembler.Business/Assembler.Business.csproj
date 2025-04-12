@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Irony" Version="1.5.3" />
+    </ItemGroup>
+
 </Project>
