@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assembler.Business", "Assem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assembler.Main", "Assembler.Main\Assembler.Main.csproj", "{F70B9398-EEC3-4571-8A02-408985E57502}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assembler.Tests", "Assembler.Tests\Assembler.Tests.csproj", "{731221CD-D70C-483C-B610-1B598E56CED1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui", "Ui\Ui.csproj", "{2E7F6799-1840-4ACB-952C-2799F455B6F9}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5DA54A1E-6745-4244-9EA1-D4E38E493E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DA54A1E-6745-4244-9EA1-D4E38E493E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DA54A1E-6745-4244-9EA1-D4E38E493E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DA54A1E-6745-4244-9EA1-D4E38E493E60}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DA55B8CA-DA2A-4B06-A8FB-A4E98A32990F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA55B8CA-DA2A-4B06-A8FB-A4E98A32990F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA55B8CA-DA2A-4B06-A8FB-A4E98A32990F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,5 +41,8 @@ Global
 		{DA55B8CA-DA2A-4B06-A8FB-A4E98A32990F} = {53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}
 		{F70B9398-EEC3-4571-8A02-408985E57502} = {53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}
 		{731221CD-D70C-483C-B610-1B598E56CED1} = {53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A98E4739-3A77-4F95-B6D9-F3A0E15FDDD0}
 	EndGlobalSection
 EndGlobal
