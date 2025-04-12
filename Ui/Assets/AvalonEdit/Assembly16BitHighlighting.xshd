@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008" extensions=".asm">
+    <Property name="CaseSensitive" value="true" />
+
+    <!-- Define Colors -->
+    <Color name="Comment" foreground="Gray"/>
+    <Color name="String" foreground="LightCoral"/>
+    <Color name="Instruction" foreground="LightBlue"/>
+    <Color name="Register" foreground="LightGreen"/>
+    <Color name="Directive" foreground="Orange"/>
+    <Color name="Number" foreground="LightYellow"/>
+    <Color name="Label" foreground="LightPink"/>
+    
+    <RuleSet ignoreCase="true">
+        <!-- Strings -->
+        <Span color="String">
+            <Begin>"</Begin>
+            <End>"</End>
+            <RuleSet>
+                <!-- nested span for escape sequences -->
+                <Span begin="\\" end="." />
+            </RuleSet>
+        </Span>
+
+        <Span color="String">
+            <Begin>'</Begin>
+            <End>'</End>
+            <RuleSet>
+                <!-- nested span for escape sequences -->
+                <Span begin="\\" end="." />
+            </RuleSet>
+        </Span>
+
+        <!-- Comments -->
+        <Rule color="Comment">;.*</Rule>
+
+        <!-- Instructions -->
+        <Keywords color="Instruction">
+            <!-- Data Transfer Instructions -->
+            <Word>MOV</Word> <Word>mov</Word>
+            <Word>PUSH</Word> <Word>push</Word>
+            <Word>POP</Word> <Word>pop</Word>
+            <Word>XCHG</Word> <Word>xchg</Word>
+            <Word>IN</Word> <Word>in</Word>
+            <Word>OUT</Word> <Word>out</Word>
+            <Word>LEA</Word> <Word>lea</Word>
+            <Word>LDS</Word> <Word>lds</Word>
+            <Word>LES</Word> <Word>les</Word>
+
+            <!-- Arithmetic Instructions -->
+            <Word>ADD</Word> <Word>add</Word>
+            <Word>ADC</Word> <Word>adc</Word>
+            <Word>SUB</Word> <Word>sub</Word>
+            <Word>SBB</Word> <Word>sbb</Word>
+            <Word>INC</Word> <Word>inc</Word>
+            <Word>DEC</Word> <Word>dec</Word>
+            <Word>MUL</Word> <Word>mul</Word>
+            <Word>IMUL</Word> <Word>imul</Word>
+            <Word>DIV</Word> <Word>div</Word>
+            <Word>IDIV</Word> <Word>idiv</Word>
+            <Word>CMP</Word> <Word>cmp</Word>
+
+            <!-- Logic Instructions -->
+            <Word>AND</Word> <Word>and</Word>
+            <Word>OR</Word> <Word>or</Word>
+            <Word>XOR</Word> <Word>xor</Word>
+            <Word>TEST</Word> <Word>test</Word>
+            <Word>NOT</Word> <Word>not</Word>
+            <Word>NEG</Word> <Word>neg</Word>
+
+            <!-- Shift & Rotate Instructions -->
+            <Word>SHL</Word> <Word>shl</Word>
+            <Word>SHR</Word> <Word>shr</Word>
+            <Word>SAL</Word> <Word>sal</Word>
+            <Word>SAR</Word> <Word>sar</Word>
+            <Word>ROL</Word> <Word>rol</Word>
+            <Word>ROR</Word> <Word>ror</Word>
+            <Word>RCL</Word> <Word>rcl</Word>
+            <Word>RCR</Word> <Word>rcr</Word>
+
+            <!-- Jump Instructions -->
+            <Word>JMP</Word> <Word>jmp</Word>
+            <Word>JE</Word> <Word>je</Word> <Word>JZ</Word> <Word>jz</Word>
+            <Word>JNE</Word> <Word>jne</Word> <Word>JNZ</Word> <Word>jnz</Word>
+            <Word>JG</Word> <Word>jg</Word> <Word>JNLE</Word> <Word>jnle</Word>
+            <Word>JGE</Word> <Word>jge</Word> <Word>JNL</Word> <Word>jnl</Word>
+            <Word>JL</Word> <Word>jl</Word> <Word>JNGE</Word> <Word>jnge</Word>
+            <Word>JLE</Word> <Word>jle</Word> <Word>JNG</Word> <Word>jng</Word>
+            <Word>JA</Word> <Word>ja</Word> <Word>JNBE</Word> <Word>jnbe</Word>
+            <Word>JAE</Word> <Word>jae</Word> <Word>JNB</Word> <Word>jnb</Word>
+            <Word>JB</Word> <Word>jb</Word> <Word>JNAE</Word> <Word>jnae</Word>
+            <Word>JBE</Word> <Word>jbe</Word> <Word>JNA</Word> <Word>jna</Word>
+            <Word>JC</Word> <Word>jc</Word> <Word>JNC</Word> <Word>jnc</Word>
+            <Word>JO</Word> <Word>jo</Word> <Word>JNO</Word> <Word>jno</Word>
+            <Word>JS</Word> <Word>js</Word> <Word>JNS</Word> <Word>jns</Word>
+            <Word>JP</Word> <Word>jp</Word> <Word>JPE</Word> <Word>jpe</Word>
+            <Word>JNP</Word> <Word>jnp</Word> <Word>JPO</Word> <Word>jpo</Word>
+            <Word>LOOP</Word> <Word>loop</Word>
+            <Word>LOOPE</Word> <Word>loope</Word> <Word>LOOPZ</Word> <Word>loopz</Word>
+            <Word>LOOPNE</Word> <Word>loopne</Word> <Word>LOOPNZ</Word> <Word>loopnz</Word>
+
+            <!-- Call & Return Instructions -->
+            <Word>CALL</Word> <Word>call</Word>
+            <Word>RET</Word> <Word>ret</Word>
+            <Word>RETF</Word> <Word>retf</Word>
+
+            <!-- String Manipulation Instructions -->
+            <Word>MOVSB</Word> <Word>movsb</Word>
+            <Word>MOVSW</Word> <Word>movsw</Word>
+            <Word>CMPSB</Word> <Word>cmpsb</Word>
+            <Word>CMPSW</Word> <Word>cmpsw</Word>
+            <Word>SCASB</Word> <Word>scasb</Word>
+            <Word>SCASW</Word> <Word>scasw</Word>
+            <Word>LODSB</Word> <Word>lodsb</Word>
+            <Word>LODSW</Word> <Word>lodsw</Word>
+            <Word>STOSB</Word> <Word>stosb</Word>
+            <Word>STOSW</Word> <Word>stosw</Word>
+
+            <!-- Stack Operations -->
+            <Word>PUSHF</Word> <Word>pushf</Word>
+            <Word>POPF</Word> <Word>popf</Word>
+
+            <!-- Processor Control Instructions -->
+            <Word>STC</Word> <Word>stc</Word>
+            <Word>CLC</Word> <Word>clc</Word>
+            <Word>CMC</Word> <Word>cmc</Word>
+            <Word>STD</Word> <Word>std</Word>
+            <Word>CLD</Word> <Word>cld</Word>
+            <Word>STI</Word> <Word>sti</Word>
+            <Word>CLI</Word> <Word>cli</Word>
+            <Word>HLT</Word> <Word>hlt</Word>
+            <Word>WAIT</Word> <Word>wait</Word>
+            <Word>NOP</Word> <Word>nop</Word>
+        </Keywords>
+
+        <!-- Registers -->
+        <Keywords color="Register" >
+            <Word>AX</Word> <Word>ax</Word>
+            <Word>BX</Word> <Word>bx</Word>
+            <Word>CX</Word> <Word>cx</Word>
+            <Word>DX</Word> <Word>dx</Word>
+            <Word>SI</Word> <Word>si</Word>
+            <Word>DI</Word> <Word>di</Word>
+            <Word>SP</Word> <Word>sp</Word>
+            <Word>BP</Word> <Word>bp</Word>
+        </Keywords>
+
+        <!-- Directives -->
+        <Keywords color="Directive">
+            <Word>.data</Word>
+            <Word>.code</Word>
+            <Word>.stack</Word>
+        </Keywords>
+
+        <!-- Numbers -->
+        <!-- Digits -->
+        <Rule color="Number">
+            \b0[xX][0-9a-fA-F]+  # hex number
+            |    \b
+            (    \d+(\.[0-9]+)?   #number with optional floating point
+            |    \.[0-9]+         #or just starting with floating point
+            )
+            ([eE][+-]?[0-9]+)? # optional exponent
+        </Rule>
+
+        <!-- Labels -->
+        <Rule color="Label">^[a-zA-Z_][a-zA-Z0-9_]*:</Rule>
+    </RuleSet>
+</SyntaxDefinition>
