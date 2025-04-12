@@ -1,6 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assembler", "Assembler", "{53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}"
@@ -12,6 +11,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assembler.Tests", "Assembler.Tests\Assembler.Tests.csproj", "{731221CD-D70C-483C-B610-1B598E56CED1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui", "Ui\Ui.csproj", "{2E7F6799-1840-4ACB-952C-2799F455B6F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ControlUnit", "ControlUnit", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlUnit", "ControlUnit\ControlUnit.csproj", "{F9D6AFBE-108B-4715-84BB-8F7DDED48D3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,5 +50,9 @@ Global
 		{DA55B8CA-DA2A-4B06-A8FB-A4E98A32990F} = {53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}
 		{F70B9398-EEC3-4571-8A02-408985E57502} = {53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}
 		{731221CD-D70C-483C-B610-1B598E56CED1} = {53669BBD-1B53-4B18-BF34-C6CF1F30E3F5}
+		{F9D6AFBE-108B-4715-84BB-8F7DDED48D3C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5778115A-5790-4021-B1B2-2A2ADC7D5A6D}
 	EndGlobalSection
 EndGlobal

@@ -35,6 +35,8 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 .idea/
+Assembler.Business/obj/
+Assembler.Main/obj/
 /.vs/CISCraft/CopilotIndices/17.13.433.20974
 /.vs/CISCraft/DesignTimeBuild
 /.vs/CISCraft/FileContentIndex
@@ -70,6 +72,10 @@ Desktop.ini
 /Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.AssemblyInfoInputs.cache
 /Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.assets.cache
 /Assembler.Tests/obj/Debug/net9.0/Assembler.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/Ui/obj/Debug/net9.0-windows/Ui.AssemblyInfo.cs
+/Ui/obj/Debug/net9.0-windows/Ui.AssemblyInfoInputs.cache
+/Ui/obj/Debug/net9.0-windows/Ui.assets.cache
+/Ui/obj/Debug/net9.0-windows/Ui.GeneratedMSBuildEditorConfig.editorconfig
 /Assembler.Tests/obj/Assembler.Tests.csproj.nuget.dgspec.json
 /Assembler.Tests/obj/Assembler.Tests.csproj.nuget.g.props
 /Assembler.Tests/obj/project.assets.json
@@ -161,5 +167,9 @@ Desktop.ini
 /Ui/obj/project.nuget.cache
 /Ui/obj/Ui.csproj.nuget.dgspec.json
 /Ui/obj/Ui.csproj.nuget.g.props
+/Assembler.Tests/obj/Assembler.Tests.csproj.nuget.dgspec.json
+/Assembler.Tests/obj/Assembler.Tests.csproj.nuget.g.props
+/Assembler.Tests/obj/project.assets.json
+/Assembler.Tests/obj/project.nuget.cache
 /Assembler.Tests/bin/Debug/net9.0/Debug - Comandă rapidă.lnk
 /ControlUnit/obj/Debug/net9.0/ref/ControlUnit.dll
