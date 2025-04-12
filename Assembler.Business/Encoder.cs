@@ -11,6 +11,8 @@ namespace Assembler.Business
 {
     internal class Encoder
     {
+        static internal ushort programStartingAddress = 0;
+
         /**
          * @brief  Enumerations for the CASM instructions
          * @note   The CASM instructions are divided into 4 types
@@ -117,8 +119,6 @@ namespace Assembler.Business
              */
             ERR = 0xFFFF, /* 0xF00 */
         };
-        ushort instrAddress  = 0x0000;
-        ushort symbolAddress = 0x0000;
         struct InstructionParts
         {
             public ushort opcode;
@@ -130,15 +130,17 @@ namespace Assembler.Business
             public short offset1;
             public short offset2;
         }
-        InstructionParts instructionParts;
         struct Instruction
         {
             public ushort instr;
             public short offset1;
             public short offset2;
         }
-        byte[] program = new byte[300];
-        int programIndex = 0;
+        InstructionParts instructionParts = default;
+        ushort instrAddress  = 0x0000;
+        ushort symbolAddress = 0x0000;
+        ushort programIndex  = 0x0000;
+        byte[] program       = new byte[300];
         Dictionary<string, ushort> symbolTable = new Dictionary<string, ushort>();
         Dictionary<string, Dictionary<ushort,string>> oppcodes = new Dictionary<string, Dictionary<ushort,string>>
         {
@@ -385,8 +387,8 @@ namespace Assembler.Business
                 {
                     instructionParts = default;
                     string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
-                    Console.Write(instrAddress+" "+oppcode);
                     instructionParts.opcode = oppcodes[oppcode].Keys.First();
+                    Console.Write(instrAddress+" "+ oppcode);
                     return;
                 }
                 case "B1Operand1":
@@ -666,7 +668,7 @@ namespace Assembler.Business
         private Instruction assembleB1(InstructionParts parts)
         {
             Instruction instr = default;
-            instr.instr = (ushort)(parts.opcode | (parts.mas << 10) | (parts.rs << 6) | (parts.mad << 4) | parts.rd);
+            instr.instr   = (ushort)(parts.opcode | (parts.mas << 10) | (parts.rs << 6) | (parts.mad << 4) | parts.rd);
             instr.offset1 = parts.offset1;
             instr.offset2 = parts.offset2;
             return instr;
@@ -674,9 +676,9 @@ namespace Assembler.Business
         private Instruction assembleB2(InstructionParts parts)
         {
             Instruction instr = default;
-            instr.instr = (ushort)(parts.opcode | (parts.mad << 4) | parts.rd);
-            instr.offset1 = parts.offset1;    
-            instr.offset2 = parts.offset2;
+            instr.instr   = (ushort)(parts.opcode | (parts.mad << 4) | parts.rd);
+            instr.offset1 = (short)(parts.offset1 + programStartingAddress);
+            instr.offset2 = (short)(parts.offset2 + programStartingAddress);
             return instr;
         }
         private Instruction assembleB3(InstructionParts parts)

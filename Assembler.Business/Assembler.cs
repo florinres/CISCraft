@@ -9,6 +9,18 @@ namespace Assembler.Business
 {
     public class Assembler
     {
+        public ushort programStartingAddress 
+        {
+            get
+            {
+                return Encoder.programStartingAddress;
+            }
+            set
+            {
+                Encoder.programStartingAddress = programStartingAddress;
+            }
+        }
+
         Encoder encoder;
         CiscGrammar grammar;
         Parser parser;
@@ -37,6 +49,5 @@ namespace Assembler.Business
             Console.WriteLine("AST Traversal:");
             return encoder.Encode(tree.Root, out len);
         }
-
     }
 }
