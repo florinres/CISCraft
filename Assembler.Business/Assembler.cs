@@ -17,7 +17,7 @@ namespace Assembler.Business
             }
             set
             {
-                Encoder.programStartingAddress = programStartingAddress;
+                Encoder.programStartingAddress = value;
             }
         }
 
@@ -40,13 +40,13 @@ namespace Assembler.Business
                 {
                     Console.WriteLine($"Error: {err.Message} at {err.Location}");
                 }
+                len = 0;
+                return new byte[0];
             }
             else
             {
                 Console.WriteLine("Parsing successful.");
             }
-
-            Console.WriteLine("AST Traversal:");
             return encoder.Encode(tree.Root, out len);
         }
     }

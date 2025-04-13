@@ -219,8 +219,11 @@ namespace Assembler.Business
             { "R14", 0xE },
             { "R15", 0xF },
         };
-        internal byte[] Encode(ParseTreeNode node, out int len)
+
+        bool debug = false;
+        internal byte[] Encode(ParseTreeNode node, out int len, bool debug = false)
         {
+            this.debug = debug;
             ConstructSymbolTabel(node.ChildNodes[0]);
             TranverseInstructionList(node);
             len = programIndex;
@@ -350,13 +353,27 @@ namespace Assembler.Business
 
                 case "B2Instr":
                     {
-                        handleB2Instruction(child);
-                        instr = assembleInstruction(instructionParts, 2);
+                        try
+                        {
+                            handleB2Instruction(child);
+                            instr = assembleInstruction(instructionParts, 2);
+                        }
+                        catch(Exception e)
+                        {
+                            Console.WriteLine($"Error: {e.Message}");
+                        }
                         break;
                     }
                 case "B3Instr":
                     {
-                        handleB3Instruction(child);
+                        try
+                        {
+                            handleB3Instruction(child);
+                        }
+                        catch(Exception e)
+                        {
+                            Console.WriteLine($"Error: {e.Message}");
+                        }
                         instr = assembleInstruction(instructionParts, 3);
                         break;
                     }
@@ -388,7 +405,7 @@ namespace Assembler.Business
                     instructionParts = default;
                     string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
                     instructionParts.opcode = oppcodes[oppcode].Keys.First();
-                    Console.Write(instrAddress+" "+ oppcode);
+                    if(debug) Console.Write(instrAddress+" "+ oppcode);
                     return;
                 }
                 case "B1Operand1":
@@ -406,7 +423,7 @@ namespace Assembler.Business
                             string regiser = parent.ChildNodes[0].ChildNodes[0].Token.Text.ToUpper();
                             instructionParts.mad = 0b01;
                             instructionParts.rd = registers[regiser];
-                            Console.Write(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
+                            if(debug) Console.Write(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
                             return;
                         }
                     }
@@ -419,7 +436,7 @@ namespace Assembler.Business
                         case "MemoryAccess":
                         {
                             handleMemoryAccess(parent.ChildNodes[0], ref instructionParts.mas, ref instructionParts.rs, ref instructionParts.offset2);
-                            Console.WriteLine();
+                            if(debug) Console.WriteLine();
                             instrAddress += 2;
                             return;
                         }
@@ -429,15 +446,18 @@ namespace Assembler.Business
                             string regiser = parent.ChildNodes[0].ChildNodes[0].Token.Text.ToUpper();
                             instructionParts.mas = 0b01;
                             instructionParts.rs = registers[regiser];
-                            Console.WriteLine(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
+                            if(debug) Console.WriteLine(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
                             instrAddress += 2;
                             return;
                         }
                         case "number":
                         {
                             // add the register to the instructionParts
-                            Console.WriteLine(" " + parent.ChildNodes[0].Token.Value);
-                            Console.WriteLine(instrAddress + 2 + " " + parent.ChildNodes[0].Token.Value);
+                            if (debug)
+                            {
+                                Console.WriteLine(" " + parent.ChildNodes[0].Token.Value);
+                                Console.WriteLine(instrAddress + 2 + " " + parent.ChildNodes[0].Token.Value);
+                            }
                             instructionParts.offset2 = Convert.ToInt16(parent.ChildNodes[0].Token.Value);
                             instrAddress += 4;
                             return;
@@ -470,7 +490,7 @@ namespace Assembler.Business
                 {
                     instructionParts = default;
                     string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
-                    Console.Write(instrAddress+" "+oppcode);
+                    if(debug) Console.Write(instrAddress+" "+oppcode);
                     instructionParts.opcode = oppcodes[oppcode].Keys.First();
                     return;
                 }
@@ -481,7 +501,7 @@ namespace Assembler.Business
                         case "MemoryAccess":
                         {
                             handleMemoryAccess(parent.ChildNodes[0], ref instructionParts.mad, ref instructionParts.rd, ref instructionParts.offset1);
-                            Console.WriteLine();
+                            if(debug) Console.WriteLine();
                             instrAddress += 2;
 
                             return;
@@ -492,7 +512,7 @@ namespace Assembler.Business
                             instructionParts.mad = 0b01;
                             instructionParts.rd = registers[regiser];
                             // add the register to the instructionParts
-                            Console.WriteLine(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
+                            if(debug) Console.WriteLine(" " + parent.ChildNodes[0].ChildNodes[0].Token.Text);
                             instrAddress += 2;
                             return;
                         }
@@ -500,17 +520,25 @@ namespace Assembler.Business
                         {
                             instructionParts.offset1 = Convert.ToInt16(parent.ChildNodes[0].Token.Value);
                             // add the register to the instructionParts
-                            Console.WriteLine(" " + parent.ChildNodes[0].Token.Value);
-                            Console.WriteLine((instrAddress + 2) + " " + parent.ChildNodes[0].Token.Value);
+                            if(debug)
+                            {
+
+                                Console.WriteLine(" " + parent.ChildNodes[0].Token.Value);
+                                Console.WriteLine((instrAddress + 2) + " " + parent.ChildNodes[0].Token.Value);
+                            }
                             instrAddress += 4;
                             return;
                         }
                         case "identifier":
                         {
                             string label = parent.ChildNodes[0].Token.Text;
+                            if (!symbolTable.ContainsKey(label))
+                            {
+                                throw new Exception($"Unknown label: {label}");
+                            }
                             instructionParts.offset1 = Convert.ToInt16(symbolTable[label]);
                             // add the register to the instructionParts
-                            Console.WriteLine(" " + label + " " + symbolTable[label]);
+                            if(debug) Console.WriteLine(" " + label + " " + symbolTable[label]);
                             instrAddress += 4;
                             return;
                         }
@@ -541,7 +569,7 @@ namespace Assembler.Business
                 {
                     instructionParts = default;
                     string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
-                    Console.Write(instrAddress+" "+oppcode);
+                    if(debug) Console.Write(instrAddress+" "+oppcode);
                     instructionParts.opcode = oppcodes[oppcode].Keys.First();
                     return;
                 }
@@ -553,20 +581,20 @@ namespace Assembler.Business
                         {
                             instructionParts.offset = Convert.ToInt16(parent.ChildNodes[0].Token.Value);
                             // add the register to the instructionParts
-                            Console.WriteLine(" " + parent.ChildNodes[0].Token.Value);
+                            if(debug) Console.WriteLine(" " + parent.ChildNodes[0].Token.Value);
                             instrAddress += 2;
                             return;
                         }
                         case "identifier":
                         {
-                            string symbol = parent.ChildNodes[0].Token.Text;
+                            string label = parent.ChildNodes[0].Token.Text;
                             // add the register to the instructionParts
-                            if (symbolTable.ContainsKey(symbol))
+                            if (!symbolTable.ContainsKey(label))
                             {
-                                Console.Write(" " + symbolTable[symbol]);
+                                throw new Exception($"Unknown label: {label}");
                             }
-                            Console.WriteLine(" " + symbol + " " + (symbolTable[symbol] - instrAddress));
-                            instructionParts.offset = Convert.ToInt16(symbolTable[symbol] - instrAddress);
+                            if(debug) Console.WriteLine(" " + label + " " + (symbolTable[label] - instrAddress));
+                            instructionParts.offset = Convert.ToInt16(symbolTable[label] - instrAddress);
                             instrAddress += 2;
                             return;
                         }
@@ -592,7 +620,7 @@ namespace Assembler.Business
         {
             instructionParts = default;
             string oppcode = node.ChildNodes[0].ChildNodes[0].Token.Text.ToUpper();
-            Console.WriteLine(instrAddress+" "+oppcode);
+            if(debug) Console.WriteLine(instrAddress+" "+oppcode);
             instructionParts.opcode = oppcodes[oppcode].Keys.First();
             instrAddress += 2;
         }
@@ -604,7 +632,7 @@ namespace Assembler.Business
                 {
                     if (node.ChildNodes.Count != 0)
                     {
-                        Console.Write(" " + node.ChildNodes[0].Token.Value);
+                        if(debug) Console.Write(" " + node.ChildNodes[0].Token.Value);
                         am = 0b11;
                         offset = Convert.ToInt16(node.ChildNodes[0].Token.Value);
                         instrAddress += 2;
@@ -616,7 +644,7 @@ namespace Assembler.Business
                     if(am != 0b11)
                         am = 0b10;
                     string register = node.ChildNodes[0].Token.Text.ToUpper();
-                    Console.Write(" " + node.ChildNodes[0].Token.Text);
+                    if(debug) Console.Write(" " + node.ChildNodes[0].Token.Text);
                     reg = registers[register];
                     return;
                 }
@@ -634,13 +662,13 @@ namespace Assembler.Business
         {
             string symbol = child.ChildNodes[0].Token.Text;
             symbolTable[symbol] = symbolAddress;
-            Console.WriteLine(symbolAddress + " " + child.ChildNodes[0].Token.Text);
+            if(debug) Console.WriteLine(symbolAddress + " " + child.ChildNodes[0].Token.Text);
         }
         private void handleProc(ParseTreeNode child)
         {
             string symbol = child.ChildNodes[1].Token.Text;
             symbolTable[symbol] = symbolAddress;
-            Console.WriteLine(symbolAddress + " " + child.ChildNodes[1].Token.Text);
+            if(debug) Console.WriteLine(symbolAddress + " " + child.ChildNodes[1].Token.Text);
         }
         private Instruction assembleInstruction(InstructionParts parts, ushort type)
         {
