@@ -1,7 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Ui2.ViewModels;
-using Wpf.Ui.Controls;
-
+﻿
 namespace Ui.ViewModels.Windows
 {
     public partial class MainWindowViewModel : ObservableObject

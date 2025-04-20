@@ -7,6 +7,9 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewModel="clr-namespace:Ui.ViewModels.Windows"
     xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
+    xmlns:models1="clr-namespace:Ui.Models"
+    xmlns:components="clr-namespace:Ui.Components"
+    xmlns:helpers="clr-namespace:Ui.Helpers"
     d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -17,6 +20,25 @@
     ExtendsContentIntoTitleBar="True"
     WindowCornerPreference="Round"
     mc:Ignorable="d">
+    <Window.Resources>
+        <!-- <DataTemplate DataType="{x:Type models1:FileViewModel}"> -->
+        <!--     ~1~ <TextBox @1@ -->
+        <!--     ~1~     Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" @1@ -->
+        <!--     ~1~     AcceptsReturn="True" @1@ -->
+        <!--     ~1~     AcceptsTab="True" @1@ -->
+        <!--     ~1~     TextWrapping="Wrap" @1@ -->
+        <!--     ~1~     VerticalScrollBarVisibility="Auto" @1@ -->
+        <!--     ~1~     HorizontalScrollBarVisibility="Auto" @1@ -->
+        <!--     ~1~     BorderThickness="0" @1@ -->
+        <!--     ~1~     Background="Transparent" @1@ -->
+        <!--     ~1~     FontFamily="Consolas" @1@ -->
+        <!--     ~1~     FontSize="14"> @1@ -->
+        <!--     ~1~ </TextBox>` @1@ -->
+        <!--     <LayoutDocument -->
+        <!--         Title="{Binding Title}" -->
+        <!--         Content="{Binding Content}" /> -->
+        <!-- </DataTemplate> -->
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /> <!-- TitleBar -->
@@ -63,21 +85,66 @@
         </WrapPanel>
         <DockingManager
             Grid.Row="2"
-            ActiveContent="{Binding Workspace.SelectedDocument, Mode=TwoWay}"
+            ActiveContent="{Binding SelectedDocument, Mode=TwoWay}"
             AnchorablesSource="{Binding Tools}"
-            DocumentsSource="{Binding Workspace.Documents}">
+            DocumentsSource="{Binding Documents}"
+            DataContext="{Binding .Workspace}">
             <DockingManager.Theme>
                 <wpfui:WPFUITheme/>
             </DockingManager.Theme>
-            <DockingManager.Layout>
-                <LayoutRoot>
-                    <LayoutPanel Orientation="Vertical">
-                        <LayoutDocumentPane />
-                        <LayoutAnchorablePane Name="ToolsPane" DockHeight="150" />
-                    </LayoutPanel>
-                </LayoutRoot>
-            </DockingManager.Layout>
+            <DockingManager.LayoutItemTemplateSelector>
+                <components:PanesTemplateSelector>
+                    <components:PanesTemplateSelector.FileViewTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.FileViewTemplate>
+                    <components:PanesTemplateSelector.FileStatsViewTemplate>
+                        <DataTemplate>
+                            <Border Padding="5">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding FileSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Text="{Binding LastModified, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox IsReadOnly="True" Text="{Binding FilePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox IsReadOnly="True" Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.FileStatsViewTemplate>
+                </components:PanesTemplateSelector>
+            </DockingManager.LayoutItemTemplateSelector>
             
+            <DockingManager.LayoutItemContainerStyleSelector>
+                <components:PanesStyleSelector>
+                    <!-- <components:PanesStyleSelector.ToolStyle> -->
+                    <!--     <Style TargetType="{x:Type LayoutAnchorableItem}"> -->
+                    <!--         <Setter Property="Title" Value="{Binding Model.Title}" /> -->
+                    <!--         <Setter Property="CanClose" Value="True" /> -->
+                    <!--         <Setter Property="IconSource" Value="{Binding Model.IconSource}" /> -->
+                    <!--         <Setter Property="Visibility" Value="{Binding Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource FALSE}}" /> -->
+                    <!--         <Setter Property="ContentId" Value="{Binding Model.ContentId}" /> -->
+                    <!--         <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" /> -->
+                    <!--         <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" /> -->
+                    <!--     </Style> -->
+                    <!-- </components:PanesStyleSelector.ToolStyle> -->
+                    <components:PanesStyleSelector.FileStyle>
+                        <Style TargetType="{x:Type LayoutItem}">
+                            <Setter Property="Title" Value="{Binding Model.Title}" />
+                            <!-- <Setter Property="ToolTip" Value="{Binding Model.FilePath}" /> -->
+                            <!-- <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" /> -->
+                            <!-- <Setter Property="IconSource" Value="{Binding Model.IconSource}" /> -->
+                            <!-- <Setter Property="ContentId" Value="{Binding Model.ContentId}" /> -->
+                        </Style>
+                    </components:PanesStyleSelector.FileStyle>
+                </components:PanesStyleSelector>
+            </DockingManager.LayoutItemContainerStyleSelector>
+            
+            <DockingManager.LayoutUpdateStrategy>
+                <helpers:LayoutInitializer />
+            </DockingManager.LayoutUpdateStrategy>
         </DockingManager>
     </Grid>
 </ui:FluentWindow>

@@ -1,6 +1,7 @@
-﻿using Ui2.Models;
+﻿
+using Ui.Models;
 
-namespace Ui2.Services;
+namespace Ui.Services;
 
 public class DocumentManagementService
 {

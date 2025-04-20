@@ -1,9 +1,5 @@
 ﻿using Ui.ViewModels.Windows;
-using Ui2.ViewModels;
-using Wpf.Ui;
-using Wpf.Ui.Abstractions;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
 
 namespace Ui.Views.Windows;
 

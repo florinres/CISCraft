@@ -1,11 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using Ui2.Models;
+using FileViewModel = Ui.Models.FileViewModel;
 
-namespace Ui2.ViewModels;
+namespace Ui.ViewModels;
 
 public partial class WorkspaceViewModel : ObservableObject
 {
@@ -17,7 +14,11 @@ public partial class WorkspaceViewModel : ObservableObject
     [RelayCommand]
     private void NewDocument()
     {
-        var doc = new FileViewModel();
+        var doc = new FileViewModel()
+        {
+            Title = "Untitled",
+            Content = "Default start content",
+        };
         Documents.Add(doc);
         SelectedDocument = doc;
     }
@@ -40,11 +41,11 @@ public partial class WorkspaceViewModel : ObservableObject
         }
     }
 
-    [RelayCommand(CanExecute = nameof(CanSaveSelectedDocument))]
-    private void SaveDocument()
-    {
-        SelectedDocument?.SaveToFile();
-    }
+    // [RelayCommand(CanExecute = nameof(CanSaveSelectedDocument))]
+    // private void SaveDocument()
+    // {
+    //     SelectedDocument?.SaveToFile();
+    // }
 
-    private bool CanSaveSelectedDocument() => SelectedDocument?.IsDirty == true;
+    // private bool CanSaveSelectedDocument() => SelectedDocument?.IsDirty == true;
 }

@@ -13,9 +13,9 @@ using Ui.ViewModels.Pages.Monaco;
 using Ui.ViewModels.Windows;
 using Ui.Views.Pages;
 using Ui.Views.Windows;
-using Ui2.ViewModels;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
+using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
 
 namespace Ui;
 

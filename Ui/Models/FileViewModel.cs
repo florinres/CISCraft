@@ -1,26 +1,18 @@
 ﻿using System.IO;
-using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Ui2.Models;
+namespace Ui.Models;
 
 public partial class FileViewModel : ObservableObject
 {
-    [ObservableProperty] private string title = "Untitled";
-    [ObservableProperty] private string content = string.Empty;
-    [ObservableProperty] private string? filePath;
-    [ObservableProperty] private bool isDirty = true;
+    [ObservableProperty] private string _title = "Untitled";
+    [ObservableProperty] private string _content = string.Empty;
+    [ObservableProperty] private string? _filePath;
     
-    partial void OnContentChanged(string oldValue, string newValue)
-    {
-        IsDirty = true;
-    }
-
     public void LoadFromFile(string path)
     {
         FilePath = path;
         Content = File.ReadAllText(path);
         Title = Path.GetFileName(path);
-        IsDirty = false;
     }
 
     public void SaveToFile(string? path = null)
@@ -28,10 +20,9 @@ public partial class FileViewModel : ObservableObject
         var targetPath = path ?? FilePath;
         if (targetPath != null)
         {
-            File.WriteAllText(targetPath, Content);
+            File.WriteAllText(targetPath, (string?)Content);
             FilePath = targetPath;
             Title = Path.GetFileName(targetPath);
-            IsDirty = false;
         }
     }
 }
