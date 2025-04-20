@@ -8,12 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ui.Controllers.Monaco;
-using Ui.Services;
 using Ui.ViewModels.Pages;
 using Ui.ViewModels.Pages.Monaco;
 using Ui.ViewModels.Windows;
 using Ui.Views.Pages;
 using Ui.Views.Windows;
+using Ui2.ViewModels;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
 
@@ -24,11 +24,6 @@ namespace Ui;
 /// </summary>
 public partial class App : Application
 {
-    // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
-    // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-    // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-    // https://docs.microsoft.com/dotnet/core/extensions/configuration
-    // https://docs.microsoft.com/dotnet/core/extensions/logging
     // ReSharper disable once InconsistentNaming
     private static readonly IHost _host = Host
         .CreateDefaultBuilder()
@@ -40,26 +35,17 @@ public partial class App : Application
         {
             services.AddNavigationViewPageProvider();
 
-            services.AddHostedService<ApplicationHostService>();
-
             services.AddLogging(builder => { builder.AddConsole(); });
-            // Theme manipulation
             services.AddSingleton<IThemeService, ThemeService>();
-
-            // TaskBar manipulation
             services.AddSingleton<ITaskBarService, TaskBarService>();
-
-            // Service containing navigation, same as INavigationWindow... but without window
             services.AddSingleton<INavigationService, NavigationService>();
-
-            // External controllers
             services.AddSingleton<IMonacoController, MonacoController>();
 
-            // Main window with navigation
-            services.AddSingleton<INavigationWindow, MainWindow>();
+            services.AddSingleton<MainWindow>();
             services.AddSingleton<MainWindowViewModel>();
 
-            // Pages
+            services.AddSingleton<WorkspaceViewModel>();
+
             services.AddSingleton<DashboardPage>();
             services.AddSingleton<DashboardViewModel>();
             services.AddSingleton<DataPage>();
@@ -72,36 +58,22 @@ public partial class App : Application
             services.AddSingleton<MonacoPage>();
             services.AddSingleton<IMonacoViewModel, MonacoViewModel>();
         }).Build();
-
-    /// <summary>
-    ///     Gets services.
-    /// </summary>
-    public static IServiceProvider Services => _host.Services;
-
-    /// <summary>
-    ///     Occurs when the application is loading.
-    /// </summary>
-    private async void OnStartup(object sender, StartupEventArgs e)
+    
+    protected override async void OnStartup(StartupEventArgs e)
     {
         await _host.StartAsync();
+
+        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        mainWindow.Show();
+
+        base.OnStartup(e);
     }
 
-    /// <summary>
-    ///     Occurs when the application is closing.
-    /// </summary>
-    private async void OnExit(object sender, ExitEventArgs e)
+    protected override async void OnExit(ExitEventArgs e)
     {
         await _host.StopAsync();
-
-        _host.Dispose();
+        base.OnExit(e);
     }
 
-    /// <summary>
-    ///     Occurs when an exception is thrown by an application but not handled.
-    /// </summary>
-    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-    {
-        // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
-    }
 }
 

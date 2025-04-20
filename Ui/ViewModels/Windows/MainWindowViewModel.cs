@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Ui2.ViewModels;
 using Wpf.Ui.Controls;
 
 namespace Ui.ViewModels.Windows
@@ -7,51 +8,12 @@ namespace Ui.ViewModels.Windows
     {
         [ObservableProperty]
         private string _applicationTitle = "WPF UI - Ui";
-
         [ObservableProperty]
-        private ObservableCollection<object> _menuItems = new()
-        {
-            new NavigationViewItem()
-            {
-                Content = "Home",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
-                TargetPageType = typeof(Views.Pages.DashboardPage)
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
-                TargetPageType = typeof(Views.Pages.DataPage)
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 },
-                TargetPageType = typeof(Views.Pages.MonacoPage)
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Edit16 },
-                TargetPageType = typeof(Views.Pages.AvalonEditPage)
-            }
-        };
+        private WorkspaceViewModel _workspace;
 
-        [ObservableProperty]
-        private ObservableCollection<object> _footerMenuItems = new()
+        public MainWindowViewModel(WorkspaceViewModel workspace)
         {
-            new NavigationViewItem()
-            {
-                Content = "Settings",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
-                TargetPageType = typeof(Views.Pages.SettingsPage)
-            }
-        };
-
-        [ObservableProperty]
-        private ObservableCollection<MenuItem> _trayMenuItems = new()
-        {
-            new MenuItem { Header = "Home", Tag = "tray_home" }
-        };
+            _workspace = workspace;
+        }
     }
 }
