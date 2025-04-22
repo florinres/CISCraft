@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            MainMemory mainMemory = new MainMemory();
+            MainMemory mainMemory = MainMemory.GetMainMemoryInstance();
         }
 
     }

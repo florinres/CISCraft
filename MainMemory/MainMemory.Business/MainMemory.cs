@@ -14,7 +14,9 @@
         private int interuptsNum = 16;
         private int stackPointer;
 
-        public MainMemory()
+        private static MainMemory mainMemoryInstance;
+        private static readonly object _lock = new object();
+        private MainMemory()
         {
             this.memoryLocationsNum = 1 << 16; // 16 bit address bus
             this.memoryDump = new List<byte>(this.memoryLocationsNum);
@@ -27,6 +29,18 @@
             // the stack pointer always
             // points outside of the stack area
             // so to be correctly alligned for the first push in stack
+        }
+
+        public static MainMemory GetMainMemoryInstance(){
+
+            lock(_lock)
+            {
+                if(mainMemoryInstance == null){
+
+                    mainMemoryInstance = new MainMemory();
+                }
+            }
+            return mainMemoryInstance;
         }
     }
 }
