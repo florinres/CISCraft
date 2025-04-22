@@ -1,12 +1,17 @@
 ﻿using System.IO;
+using Ui.Models.Generics;
 
 namespace Ui.Models;
 
-public partial class FileViewModel : ObservableObject
+public partial class FileViewModel : PaneViewModel
 {
-    [ObservableProperty] private string _title = "Untitled";
     [ObservableProperty] private string _content = string.Empty;
     [ObservableProperty] private string? _filePath;
+
+    public FileViewModel()
+    {
+        Title = "Untitled";
+    }
     
     public void LoadFromFile(string path)
     {

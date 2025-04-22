@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ui.Controllers.Monaco;
+using Ui.Models;
+using Ui.Services;
 using Ui.ViewModels.Pages;
 using Ui.ViewModels.Pages.Monaco;
 using Ui.ViewModels.Windows;
@@ -44,8 +46,10 @@ public partial class App : Application
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MainWindowViewModel>();
 
+            services.AddSingleton<IActiveDocumentService, ActiveDocumentService>();
             services.AddSingleton<WorkspaceViewModel>();
-
+            services.AddSingleton<FileStatsViewModel>();
+            
             services.AddSingleton<DashboardPage>();
             services.AddSingleton<DashboardViewModel>();
             services.AddSingleton<DataPage>();

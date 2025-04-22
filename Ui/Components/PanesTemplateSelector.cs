@@ -6,28 +6,16 @@ namespace Ui.Components;
 
 public class PanesTemplateSelector : DataTemplateSelector
 {
-    public DataTemplate FileViewTemplate
+    public DataTemplate? FileViewTemplate { get; set; }
+    public DataTemplate? FileStatsViewTemplate { get; set; }
+
+    public override DataTemplate? SelectTemplate(object? item, DependencyObject container)
     {
-        get;
-        set;
-    }
-
-    public DataTemplate FileStatsViewTemplate
-    {
-        get;
-        set;
-    }
-
-    public override System.Windows.DataTemplate SelectTemplate(object item, System.Windows.DependencyObject container)
-    {
-        var itemAsLayoutContent = item as LayoutContent;
-
-        if (item is FileViewModel)
-            return FileViewTemplate;
-
-        // if (item is FileStatsViewModel)
-        //     return FileStatsViewTemplate;
-
-        return base.SelectTemplate(item, container);
+        return item switch
+        {
+            FileViewModel => FileViewTemplate,
+            FileStatsViewModel => FileStatsViewTemplate,
+            _ => base.SelectTemplate(item, container)
+        };
     }
 }

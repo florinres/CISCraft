@@ -1,4 +1,5 @@
 ﻿using AvalonDock.Layout;
+using Ui.Models.Generics;
 
 namespace Ui.Helpers;
 
@@ -26,8 +27,29 @@ class LayoutInitializer : ILayoutUpdateStrategy
     }
 
 
-    public void AfterInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorableShown)
+    public void AfterInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorable)
     {
+        if (anchorable.Content is ToolViewModel toolVm)
+        {
+            void UpdateVisibility()
+            {
+                if (toolVm.IsVisible)
+                    anchorable.Show();
+                else
+                    anchorable.Hide();
+            }
+
+            toolVm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(ToolViewModel.IsVisible))
+                {
+                    UpdateVisibility();
+                }
+            };
+
+            // Set initial state
+            UpdateVisibility();
+        }
     }
 
 

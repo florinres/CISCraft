@@ -1,15 +1,37 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.Win32;
+using Ui.Models;
+using Ui.Services;
 using FileViewModel = Ui.Models.FileViewModel;
 
 namespace Ui.ViewModels;
 
 public partial class WorkspaceViewModel : ObservableObject
 {
-    public ObservableCollection<FileViewModel> Documents { get; set; } = new();
-
+    private readonly IActiveDocumentService _documentService;
+    
+    public ObservableCollection<FileViewModel> Documents => _documentService.Documents;
+    
+    //TODO: we will somehow need to identify each of the tools individually. i would like to do that through a Dictionary at this lever but it probably isn't feasable, so it will need to be done in each 
+    // individually. This is something we can enforce through the use of interfaces. But  this will sufice for now.
+    public ObservableCollection<object> Tools { get; } = new();
+    
     [ObservableProperty]
-    private FileViewModel? _selectedDocument;
+    private FileStatsViewModel _fileStats;
+
+    public FileViewModel? SelectedDocument
+    {
+        get => _documentService.SelectedDocument;
+        set => _documentService.SelectedDocument = value;
+    }
+    
+    public WorkspaceViewModel(IActiveDocumentService documentService, FileStatsViewModel fileStatsViewModel)
+    {
+        _documentService = documentService;
+        
+        _fileStats = fileStatsViewModel;
+        Tools.Add(fileStatsViewModel);
+    }
 
     [RelayCommand]
     private void NewDocument()
@@ -40,6 +62,7 @@ public partial class WorkspaceViewModel : ObservableObject
             SelectedDocument = doc;
         }
     }
+
 
     // [RelayCommand(CanExecute = nameof(CanSaveSelectedDocument))]
     // private void SaveDocument()
