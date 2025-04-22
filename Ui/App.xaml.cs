@@ -26,10 +26,8 @@ public partial class App : Application
         {
             c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory) ?? throw new InvalidOperationException());
         })
-        .ConfigureServices((context, services) =>
+        .ConfigureServices((_, services) =>
         {
-            services.AddNavigationViewPageProvider();
-
             services.AddLogging(builder => { builder.AddConsole(); });
             services.AddSingleton<IThemeService, ThemeService>();
 
