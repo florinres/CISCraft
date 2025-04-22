@@ -1,38 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
-using Irony.Parsing;
+﻿using Irony.Parsing;
 
 namespace Assembler.Business
 {
     public class Assembler
     {
-        public ushort programStartingAddress 
+        readonly Encoder Encoder;
+        readonly CiscGrammar Grammar;
+        readonly Parser Parser;
+        public static ushort ProgramStartingAddress
         {
             get
             {
-                return Encoder.programStartingAddress;
+                return Encoder.s_programStartingAddress;
             }
             set
             {
-                Encoder.programStartingAddress = value;
+                Encoder.s_programStartingAddress = value;
             }
         }
 
-        Encoder encoder;
-        CiscGrammar grammar;
-        Parser parser;
         public Assembler()
         {
-            encoder = new Encoder();
-            grammar = new CiscGrammar();
-            parser  = new Parser(grammar);
+            Encoder = new Encoder();
+            Grammar = new CiscGrammar();
+            Parser  = new Parser(Grammar);
         }
         public byte[] Assemble(string sourceCode, out int len)
         {
-            var tree = parser.Parse(sourceCode);
+            var tree = Parser.Parse(sourceCode);
 
             if (tree.HasErrors())
             {
@@ -47,7 +42,7 @@ namespace Assembler.Business
             {
                 Console.WriteLine("Parsing successful.");
             }
-            return encoder.Encode(tree.Root, out len);
+            return Encoder.Encode(tree.Root, out len);
         }
     }
 }
