@@ -43,9 +43,9 @@ public sealed class BoolToVisibilityConverter : IValueConverter
     /// <returns></returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var visiblility = value == null ? Visibility.Hidden : (Visibility)value;
+        var visibility = value == null ? Visibility.Hidden : (Visibility)value;
         var isInverted = parameter != null && (bool)parameter;
 
-        return (visiblility == Visibility.Visible) != isInverted;
+        return (visibility == Visibility.Visible) != isInverted;
     }
 }
