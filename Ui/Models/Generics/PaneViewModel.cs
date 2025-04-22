@@ -1,4 +1,5 @@
-﻿namespace Ui.Models.Generics;
+﻿// ReSharper disable InconsistentNaming
+namespace Ui.Models.Generics;
 
 public abstract partial class PaneViewModel : ObservableObject
 {

@@ -1,20 +1,18 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using Ui.Models;
+using Ui.Models.Generics;
 using Ui.Services;
 using FileViewModel = Ui.Models.FileViewModel;
 
 namespace Ui.ViewModels;
 
-public partial class WorkspaceViewModel : ObservableObject
+public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
 {
     private readonly IActiveDocumentService _documentService;
     
     public ObservableCollection<FileViewModel> Documents => _documentService.Documents;
-    
-    //TODO: we will somehow need to identify each of the tools individually. i would like to do that through a Dictionary at this lever but it probably isn't feasable, so it will need to be done in each 
-    // individually. This is something we can enforce through the use of interfaces. But  this will sufice for now.
-    public ObservableCollection<object> Tools { get; } = new();
+    public ObservableCollection<ToolViewModel> Tools { get; } = new();
     
     [ObservableProperty]
     private FileStatsViewModel _fileStats;

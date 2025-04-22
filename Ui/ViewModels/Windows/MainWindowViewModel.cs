@@ -1,14 +1,16 @@
 ﻿
+using Ui.Helpers;
+
 namespace Ui.ViewModels.Windows
 {
-    public partial class MainWindowViewModel : ObservableObject
+    public partial class MainWindowViewModel : ObservableObject, IMainWindowViewModel
     {
         [ObservableProperty]
         private string _applicationTitle = "WPF UI - Ui";
         [ObservableProperty]
-        private WorkspaceViewModel _workspace;
+        private IWorkspaceViewModel _workspace;
 
-        public MainWindowViewModel(WorkspaceViewModel workspace)
+        public MainWindowViewModel(IWorkspaceViewModel workspace)
         {
             _workspace = workspace;
         }

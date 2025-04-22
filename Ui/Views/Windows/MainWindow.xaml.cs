@@ -6,7 +6,7 @@ namespace Ui.Views.Windows;
 public partial class MainWindow
 {
     public MainWindow(
-        MainWindowViewModel viewModel
+        IMainWindowViewModel viewModel
     )
     {
         DataContext = viewModel;

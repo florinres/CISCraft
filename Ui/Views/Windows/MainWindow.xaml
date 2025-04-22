@@ -11,7 +11,7 @@
     xmlns:components="clr-namespace:Ui.Components"
     xmlns:helpers="clr-namespace:Ui.Helpers"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
-    d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel, IsDesignTimeCreatable=False}"
+    d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
     Height="650"
@@ -47,10 +47,10 @@
                     <MenuItem Command="{Binding Workspace.NewDocumentCommand}" Header="New" />
                     <MenuItem Command="{Binding Workspace.OpenDocumentCommand}" Header="Open" />
                     <Separator />
-                    <MenuItem Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
-                    <MenuItem Command="{Binding ActiveDocument.SaveAsCommand}" Header="Save As..." />
+                    <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
+                    <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}" Header="Save As..." />
                     <Separator />
-                    <MenuItem Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
+                    <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
                 </MenuItem>
                 <MenuItem Header="Tools">
                     <MenuItem
@@ -59,13 +59,14 @@
                         IsChecked="{Binding Workspace.FileStats.IsVisible, Mode=TwoWay}" />
                 </MenuItem>
                 <MenuItem Header="Layout">
-                    <MenuItem Command="{Binding LoadLayoutCommand}" Header="Load" />
-                    <MenuItem Command="{Binding SaveLayoutCommand}" Header="Save" />
+                    <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
+                    <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
                 </MenuItem>
             </Menu>
 
             <ComboBox
                 DisplayMemberPath="Item1"
+                IsEnabled="False"
                 ItemsSource="{Binding Themes}"
                 SelectedItem="{Binding SelectedTheme}"
                 Margin="10,0,0,0" />
@@ -83,10 +84,17 @@
                 <components:PanesTemplateSelector>
                     <components:PanesTemplateSelector.FileViewTemplate>
                         <DataTemplate DataType="{x:Type models1:FileViewModel}">
-                            <TextBox
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+                            <!-- <TextBox -->
+                            <!--     Background="Transparent" -->
+                            <!--     BorderThickness="0" -->
+                            <!--     Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/> -->
+                            <components:StyledAvalonEdit
+                                x:Name="TextEditor"
+                                SyntaxHighlighting="Custom"
+                                FontFamily="Consolas"
+                                FontSize="10pt"
+                                ShowLineNumbers="True"
+                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
                     <components:PanesTemplateSelector.FileStatsViewTemplate>

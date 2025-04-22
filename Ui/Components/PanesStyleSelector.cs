@@ -6,26 +6,26 @@ namespace Ui.Components;
 
 public class PanesStyleSelector : StyleSelector
 {
-    public Style ToolStyle
+    public Style? ToolStyle
     {
         get;
         set;
     }
 
-    public Style FileStyle
+    public Style? FileStyle
     {
         get;
         set;
     }
 
-    public override System.Windows.Style SelectStyle(object item, System.Windows.DependencyObject container)
+    public override Style SelectStyle(object item, DependencyObject container)
     {
-        if (item is ToolViewModel)
-            return ToolStyle;
-
-        if (item is FileViewModel)
-            return FileStyle;
-
-        return base.SelectStyle(item, container);
+        //using ! so it breaks if there is no style
+        return item switch
+        {
+            ToolViewModel => ToolStyle!,
+            FileViewModel => FileStyle!,
+            _ => base.SelectStyle(item, container)!
+        };
     }
 }

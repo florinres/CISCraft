@@ -1,19 +1,12 @@
-﻿using System.Configuration;
-using System.Data;
-using System.IO;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Ui.Controllers.Monaco;
 using Ui.Models;
 using Ui.Services;
-using Ui.ViewModels.Pages;
-using Ui.ViewModels.Pages.Monaco;
+using Ui.ViewModels;
 using Ui.ViewModels.Windows;
-using Ui.Views.Pages;
 using Ui.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
@@ -39,28 +32,14 @@ public partial class App : Application
 
             services.AddLogging(builder => { builder.AddConsole(); });
             services.AddSingleton<IThemeService, ThemeService>();
-            services.AddSingleton<ITaskBarService, TaskBarService>();
-            services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<IMonacoController, MonacoController>();
 
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
 
             services.AddSingleton<IActiveDocumentService, ActiveDocumentService>();
-            services.AddSingleton<WorkspaceViewModel>();
+            services.AddSingleton<IWorkspaceViewModel, WorkspaceViewModel>();
             services.AddSingleton<FileStatsViewModel>();
             
-            services.AddSingleton<DashboardPage>();
-            services.AddSingleton<DashboardViewModel>();
-            services.AddSingleton<DataPage>();
-            services.AddSingleton<DataViewModel>();
-            services.AddSingleton<SettingsPage>();
-            services.AddSingleton<SettingsViewModel>();
-            services.AddSingleton<AvalonEditPage>();
-            services.AddSingleton<AvalonEditViewModel>();
-
-            services.AddSingleton<MonacoPage>();
-            services.AddSingleton<IMonacoViewModel, MonacoViewModel>();
         }).Build();
     
     protected override async void OnStartup(StartupEventArgs e)
