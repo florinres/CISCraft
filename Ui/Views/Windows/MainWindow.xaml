@@ -46,6 +46,7 @@
                 <MenuItem Header="File">
                     <MenuItem Command="{Binding Workspace.NewDocumentCommand}" Header="New" />
                     <MenuItem Command="{Binding Workspace.OpenDocumentCommand}" Header="Open" />
+                    <MenuItem Command="{Binding Workspace.AssembleSelectedFileCommand}" Header="Assemble" />
                     <Separator />
                     <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
                     <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}" Header="Save As..." />
@@ -94,7 +95,8 @@
                                 FontFamily="Consolas"
                                 FontSize="10pt"
                                 ShowLineNumbers="True"
-                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                IsReadOnly="{Binding IsReadOnly}"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
                     <components:PanesTemplateSelector.FileStatsViewTemplate>

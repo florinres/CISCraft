@@ -7,16 +7,17 @@ public partial class FileViewModel : PaneViewModel
 {
     [ObservableProperty] private string _content = string.Empty;
     [ObservableProperty] private string? _filePath;
+    [ObservableProperty] private bool _isReadOnly = false;
 
     public FileViewModel()
     {
         Title = "Untitled";
     }
     
-    public void LoadFromFile(string path)
+    public async void LoadFromFile(string path)
     {
         FilePath = path;
-        Content = File.ReadAllText(path);
+        Content = await File.ReadAllTextAsync(path);
         Title = Path.GetFileName(path);
     }
 

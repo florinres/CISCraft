@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using Ui.Models;
 using Ui.Models.Generics;
@@ -10,6 +13,8 @@ namespace Ui.ViewModels;
 public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
 {
     private readonly IActiveDocumentService _documentService;
+    private readonly Assembler.Business.Assembler _assembler;
+    private readonly ILogger<WorkspaceViewModel> _logger;
     
     public ObservableCollection<FileViewModel> Documents => _documentService.Documents;
     public ObservableCollection<ToolViewModel> Tools { get; } = new();
@@ -23,11 +28,13 @@ public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
         set => _documentService.SelectedDocument = value;
     }
     
-    public WorkspaceViewModel(IActiveDocumentService documentService, FileStatsViewModel fileStatsViewModel)
+    public WorkspaceViewModel(IActiveDocumentService documentService, FileStatsViewModel fileStatsViewModel, Assembler.Business.Assembler assembler, ILogger<WorkspaceViewModel> logger)
     {
         _documentService = documentService;
         
         _fileStats = fileStatsViewModel;
+        _assembler = assembler;
+        _logger = logger;
         Tools.Add(fileStatsViewModel);
     }
 
@@ -40,7 +47,7 @@ public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
             Content = "Default start content",
         };
         Documents.Add(doc);
-        SelectedDocument = doc;
+        SelectedDocument ??= doc;
     }
 
     [RelayCommand]
@@ -49,7 +56,7 @@ public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
         var dialog = new OpenFileDialog
         {
             Title = "Open File",
-            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+            Filter = "Text Files (*.asm)|*.asm|All Files (*.*)|*.*"
         };
 
         if (dialog.ShowDialog() == true)
@@ -57,10 +64,30 @@ public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
             var doc = new FileViewModel();
             doc.LoadFromFile(dialog.FileName);
             Documents.Add(doc);
-            SelectedDocument = doc;
+            SelectedDocument ??= doc;
         }
     }
 
+    [RelayCommand]
+    public void AssembleSelectedFile()
+    {
+        var assembledCode = _assembler.Assemble(_documentService.SelectedDocument!.Content, out int len);
+
+        // using var memoryStream = new MemoryStream(assembledCode);
+        // using var writer = new BinaryWriter(memoryStream, Encoding.Unicode, leaveOpen: true);
+        // byte[] bytes = memoryStream.ToArray();
+
+        string result = Encoding.Unicode.GetString(assembledCode);
+
+        var doc = new FileViewModel()
+        {
+            Title = "Assembled File",
+            Content = result,
+            IsReadOnly = true,
+        };
+        Documents.Add(doc);
+        SelectedDocument ??= doc;
+    }
 
     // [RelayCommand(CanExecute = nameof(CanSaveSelectedDocument))]
     // private void SaveDocument()
