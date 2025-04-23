@@ -1,14 +1,19 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using Irony.Parsing;
+=======
+﻿using Irony.Parsing;
+>>>>>>> origin/feature/integrate_Assembler_with_UI
 
 namespace Assembler.Business
 {
     public class Assembler
     {
+<<<<<<< HEAD
         public ushort programStartingAddress 
         {
             get
@@ -33,6 +38,32 @@ namespace Assembler.Business
         public byte[] Assemble(string sourceCode, out int len)
         {
             var tree = parser.Parse(sourceCode);
+=======
+        readonly Encoder Encoder;
+        readonly CiscGrammar Grammar;
+        readonly Parser Parser;
+        public static ushort ProgramStartingAddress
+        {
+            get
+            {
+                return Encoder.s_programStartingAddress;
+            }
+            set
+            {
+                Encoder.s_programStartingAddress = value;
+            }
+        }
+
+        public Assembler()
+        {
+            Encoder = new Encoder();
+            Grammar = new CiscGrammar();
+            Parser  = new Parser(Grammar);
+        }
+        public byte[] Assemble(string sourceCode, out int len)
+        {
+            var tree = Parser.Parse(sourceCode);
+>>>>>>> origin/feature/integrate_Assembler_with_UI
 
             if (tree.HasErrors())
             {
@@ -47,7 +78,11 @@ namespace Assembler.Business
             {
                 Console.WriteLine("Parsing successful.");
             }
+<<<<<<< HEAD
             return encoder.Encode(tree.Root, out len);
+=======
+            return Encoder.Encode(tree.Root, out len);
+>>>>>>> origin/feature/integrate_Assembler_with_UI
         }
     }
 }
