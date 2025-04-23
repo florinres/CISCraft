@@ -7,11 +7,35 @@ namespace Translator
         private List<Directive> directives;
         public Translator()
         {
-            string caleFisier = "microcode.json";
-            string json = File.ReadAllText(caleFisier);
+            string microcode = "microcode.json";
+            string json = File.ReadAllText(microcode);
             directives = JsonSerializer.Deserialize<List<Directive>>(json);
         }
-        public async void translateInputFile(string path)
+
+        //string[] mov = { "0000", "01", "0000", "01", "0001" }; //mov R0, R0
+        //string[] clr = { "1010", "01", "0001", "01", "0000" }; //clr R0
+        //string[] beq = { "1100", "01", "0001", "01", "0010" }; //beq ..
+        //string[] clc = { "1110", "00", "0011", "11", "0111" }; //clc
+        void GenerateMicrocode(string[] IR)
+        {
+            string[] processorCommands;
+            switch (Instruction.DetermineClass(IR))
+            {
+                case Instruction.InstructionClass.ClassA:
+                    break;
+                case Instruction.InstructionClass.ClassB:
+                    break;
+                case Instruction.InstructionClass.ClassC:
+                    break;
+                case Instruction.InstructionClass.ClassD:
+                    break;
+                case null:
+                    break;
+            }
+        }
+
+        [Obsolete("Instruction will be read from IR register")]
+        public async void TranslateInputFile(string path)
         {
             string[] codeLines = await File.ReadAllLinesAsync(path);
             Queue<int> otherProcsIndexes = new Queue<int>();
