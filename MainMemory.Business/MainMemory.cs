@@ -5,7 +5,7 @@ namespace MainMemory.Business
 {
     public class MainMemory
     {
-        private List<byte> memoryDump;
+        private byte[] memoryDump;
         private int memoryLocationsNum;
         private int stackLocationsNum;
         private int interruptTableSegment;
@@ -36,7 +36,7 @@ namespace MainMemory.Business
             //     Interupt vector table
 
             this.memoryLocationsNum = 1 << 16; // 16 bit address bus
-            this.memoryDump = new List<byte>(this.memoryLocationsNum);
+            this.memoryDump = new byte[this.memoryLocationsNum];
             this.interruptTableSegment = 0;
             this.interruptHandlersSegment = this.interruptTableSegment + this.interuptsNum;
             this.dataSegment = this.interruptHandlersSegment + this.interuptsNum * this.maxInterruptCodeSize;
@@ -82,23 +82,23 @@ namespace MainMemory.Business
             this.memoryDump[address] = content;
         }
 
-        public void SetInternalMachineCode(List<byte> machineCode)
+        public void SetInternalMachineCode(byte[] machineCode)
         {
-            if(machineCode.Count > this.memoryDump.Count)
+            if(machineCode.Length > this.memoryDump.Length)
                 throw new InvalidOperationException("Machine code size exceeds memory capacity. Please try another program.");
 
-            for (int i = 0; i < memoryDump.Count; i++)
+            for (int i = 0; i < memoryDump.Length; i++)
                 this.memoryDump[i] = machineCode[i];
         }
 
-        public List<byte> GetInternalMemoryDump()
+        public byte[] GetInternalMemoryDump()
         {
             return this.memoryDump;
         }
 
         public void CleanInternalMemory()
         {
-            for (int i = 0; i < this.memoryDump.Count; i++)
+            for (int i = 0; i < this.memoryDump.Length; i++)
                 this.memoryDump[i] = 0;
         }
 

@@ -33,7 +33,7 @@ namespace Ui.Services
 
         }
 
-        public void LoadMachineCode(List<byte> machineCode)
+        public void LoadMachineCode(byte[] machineCode)
         {
             if( machineCode == null)
                 throw new ArgumentNullException(nameof(machineCode), "Machine code cannot be null.");
@@ -41,7 +41,7 @@ namespace Ui.Services
             this.RAM.SetInternalMachineCode(machineCode);
         }
 
-        public List<byte> GetMemoryDump()
+        public byte[] GetMemoryDump()
         {
             return this.RAM.GetInternalMemoryDump();
         }
