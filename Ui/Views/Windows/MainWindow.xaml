@@ -76,7 +76,7 @@
             ActiveContent="{Binding SelectedDocument, Mode=TwoWay}"
             AnchorablesSource="{Binding Tools}"
             DocumentsSource="{Binding Documents}"
-            DataContext="{Binding .Workspace}">
+            DataContext="{Binding Workspace}">
             <DockingManager.Theme>
                 <wpfui:WPFUITheme/>
             </DockingManager.Theme>
