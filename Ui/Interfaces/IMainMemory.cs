@@ -12,5 +12,6 @@ namespace Ui.Interfaces
         public void SetMemoryLocationData(int memoryAddress, byte content);
         public void LoadMachineCode(List<byte> machineCode);
         public List<byte> GetMemoryDump();
+        public void ClearMemory();
     }
 }

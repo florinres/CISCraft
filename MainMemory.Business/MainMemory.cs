@@ -1,4 +1,5 @@
-﻿namespace MainMemory.Business
+﻿
+namespace MainMemory.Business
 {
     public class MainMemory
     {
@@ -19,8 +20,8 @@
         private int stackPointer;
         private int freeMemorySpace;
 
-        private static MainMemory mainMemoryInstance;
-        private static readonly object _lock = new object();
+        private static MainMemory? mainMemoryInstance;
+        private static readonly Lock _lock = new();
         private MainMemory()
         {
 
@@ -61,7 +62,7 @@
             return mainMemoryInstance;
         }
 
-        public void setStackSize(int stackSize)
+        public void SetInternalStackSize(int stackSize)
         {
 
             if (stackSize + this.freeMemorySpace > this.memoryLocationsNum)
@@ -69,6 +70,34 @@
 
             this.stackLocationsNum = stackSize;
             this.freeMemorySpace = this.memoryLocationsNum - this.stackLocationsNum;
+        }
+
+        public void SetInternalData(int address, byte content)
+        {
+            if( address > this.memoryLocationsNum - 1)
+                throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value");
+
+            this.memoryDump[address] = content;
+        }
+
+        public void SetInternalMachineCode(List<byte> machineCode)
+        {
+            if(machineCode.Count > this.memoryDump.Count)
+                throw new InvalidOperationException("Machine code size exceeds memory capacity. Please try another program.");
+
+            for (int i = 0; i < memoryDump.Count; i++)
+                this.memoryDump[i] = machineCode[i];
+        }
+
+        public List<byte> GetInternalMemoryDump()
+        {
+            return this.memoryDump;
+        }
+
+        public void CleanInternalMemory()
+        {
+            for (int i = 0; i < this.memoryDump.Count; i++)
+                this.memoryDump[i] = 0;
         }
     }
 }

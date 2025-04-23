@@ -56,4 +56,8 @@
       <Folder Include="Views\Pages\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />
+    </ItemGroup>
+
 </Project>
