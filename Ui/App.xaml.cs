@@ -1,21 +1,16 @@
-﻿using System.Configuration;
-using System.Data;
-using System.IO;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Ui.Controllers.Monaco;
+using Ui.Models;
 using Ui.Services;
-using Ui.ViewModels.Pages;
-using Ui.ViewModels.Pages.Monaco;
+using Ui.ViewModels;
 using Ui.ViewModels.Windows;
-using Ui.Views.Pages;
 using Ui.Views.Windows;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
+using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
 
 namespace Ui;
 
@@ -24,11 +19,6 @@ namespace Ui;
 /// </summary>
 public partial class App : Application
 {
-    // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
-    // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-    // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-    // https://docs.microsoft.com/dotnet/core/extensions/configuration
-    // https://docs.microsoft.com/dotnet/core/extensions/logging
     // ReSharper disable once InconsistentNaming
     private static readonly IHost _host = Host
         .CreateDefaultBuilder()
@@ -36,72 +26,35 @@ public partial class App : Application
         {
             c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory) ?? throw new InvalidOperationException());
         })
-        .ConfigureServices((context, services) =>
+        .ConfigureServices((_, services) =>
         {
-            services.AddNavigationViewPageProvider();
-
-            services.AddHostedService<ApplicationHostService>();
-
             services.AddLogging(builder => { builder.AddConsole(); });
-            // Theme manipulation
             services.AddSingleton<IThemeService, ThemeService>();
 
-            // TaskBar manipulation
-            services.AddSingleton<ITaskBarService, TaskBarService>();
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
 
-            // Service containing navigation, same as INavigationWindow... but without window
-            services.AddSingleton<INavigationService, NavigationService>();
-
-            // External controllers
-            services.AddSingleton<IMonacoController, MonacoController>();
-
-            // Main window with navigation
-            services.AddSingleton<INavigationWindow, MainWindow>();
-            services.AddSingleton<MainWindowViewModel>();
-
-            // Pages
-            services.AddSingleton<DashboardPage>();
-            services.AddSingleton<DashboardViewModel>();
-            services.AddSingleton<DataPage>();
-            services.AddSingleton<DataViewModel>();
-            services.AddSingleton<SettingsPage>();
-            services.AddSingleton<SettingsViewModel>();
-            services.AddSingleton<AvalonEditPage>();
-            services.AddSingleton<AvalonEditViewModel>();
-
-            services.AddSingleton<MonacoPage>();
-            services.AddSingleton<IMonacoViewModel, MonacoViewModel>();
+            services.AddSingleton<IActiveDocumentService, ActiveDocumentService>();
+            services.AddSingleton<IWorkspaceViewModel, WorkspaceViewModel>();
+            services.AddSingleton<FileStatsViewModel>();
+            
         }).Build();
-
-    /// <summary>
-    ///     Gets services.
-    /// </summary>
-    public static IServiceProvider Services => _host.Services;
-
-    /// <summary>
-    ///     Occurs when the application is loading.
-    /// </summary>
-    private async void OnStartup(object sender, StartupEventArgs e)
+    
+    protected override async void OnStartup(StartupEventArgs e)
     {
         await _host.StartAsync();
+
+        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        mainWindow.Show();
+
+        base.OnStartup(e);
     }
 
-    /// <summary>
-    ///     Occurs when the application is closing.
-    /// </summary>
-    private async void OnExit(object sender, ExitEventArgs e)
+    protected override async void OnExit(ExitEventArgs e)
     {
         await _host.StopAsync();
-
-        _host.Dispose();
+        base.OnExit(e);
     }
 
-    /// <summary>
-    ///     Occurs when an exception is thrown by an application but not handled.
-    /// </summary>
-    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-    {
-        // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
-    }
 }
 

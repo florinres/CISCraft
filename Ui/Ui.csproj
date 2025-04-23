@@ -8,6 +8,7 @@
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -38,6 +39,20 @@
     <ItemGroup>
         <Resource Include="Assets\wpfui-icon-256.png"/>
         <Resource Include="Assets\wpfui-icon-1024.png"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="AvalonDock">
+        <HintPath>..\..\..\.nuget\packages\dirkster.avalondock\4.72.1\lib\net5.0-windows7.0\AvalonDock.dll</HintPath>
+      </Reference>
+      <Reference Include="AvalonDock.Themes.WPFUI">
+        <HintPath>..\..\..\.nuget\packages\avalondock.themes.wpfui\1.1.0\lib\net9.0-windows7.0\AvalonDock.Themes.WPFUI.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ViewModels\Pages\" />
+      <Folder Include="Views\Pages\" />
     </ItemGroup>
 
 </Project>

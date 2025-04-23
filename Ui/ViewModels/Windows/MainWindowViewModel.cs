@@ -1,57 +1,18 @@
-﻿using System.Collections.ObjectModel;
-using Wpf.Ui.Controls;
+﻿
+using Ui.Helpers;
 
 namespace Ui.ViewModels.Windows
 {
-    public partial class MainWindowViewModel : ObservableObject
+    public partial class MainWindowViewModel : ObservableObject, IMainWindowViewModel
     {
         [ObservableProperty]
         private string _applicationTitle = "WPF UI - Ui";
-
         [ObservableProperty]
-        private ObservableCollection<object> _menuItems = new()
-        {
-            new NavigationViewItem()
-            {
-                Content = "Home",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
-                TargetPageType = typeof(Views.Pages.DashboardPage)
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
-                TargetPageType = typeof(Views.Pages.DataPage)
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 },
-                TargetPageType = typeof(Views.Pages.MonacoPage)
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Edit16 },
-                TargetPageType = typeof(Views.Pages.AvalonEditPage)
-            }
-        };
+        private IWorkspaceViewModel _workspace;
 
-        [ObservableProperty]
-        private ObservableCollection<object> _footerMenuItems = new()
+        public MainWindowViewModel(IWorkspaceViewModel workspace)
         {
-            new NavigationViewItem()
-            {
-                Content = "Settings",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
-                TargetPageType = typeof(Views.Pages.SettingsPage)
-            }
-        };
-
-        [ObservableProperty]
-        private ObservableCollection<MenuItem> _trayMenuItems = new()
-        {
-            new MenuItem { Header = "Home", Tag = "tray_home" }
-        };
+            _workspace = workspace;
+        }
     }
 }
