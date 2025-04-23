@@ -38,6 +38,9 @@ public partial class App : Application
             services.AddSingleton<IWorkspaceViewModel, WorkspaceViewModel>();
             services.AddSingleton<FileStatsViewModel>();
             
+            //external
+            services.AddSingleton<Assembler.Business.Assembler>();
+
         }).Build();
     
     protected override async void OnStartup(StartupEventArgs e)
