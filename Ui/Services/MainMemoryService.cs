@@ -46,9 +46,26 @@ namespace Ui.Services
             return this.RAM.GetInternalMemoryDump();
         }
 
+        public byte GetMemoryLocationData(int memoryAddress)
+        {
+            if (memoryAddress < 0)
+                throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Memory adress must be a positive number! Please try another value.");
+
+            return this.RAM.GetInternalLocationData(memoryAddress);
+        }
         public void ClearMemory()
         {
             this.RAM.CleanInternalMemory();
+        }
+
+        public void SetStackPointer(int stackAddress)
+        {
+            this.RAM.SetInternalStackPointer(stackAddress);
+        }
+
+        public int GetStackPointer()
+        {
+            return this.RAM.GetInternalStackPointer();
         }
     }
 }

@@ -10,8 +10,11 @@ namespace Ui.Interfaces
     {
         public void SetStackSize(int stackSize);
         public void SetMemoryLocationData(int memoryAddress, byte content);
-        public void LoadMachineCode(List<byte> machineCode);
+        public void SetStackPointer(int stackAddress);
+        public byte GetMemoryLocationData(int memoryAddress);
+        public int GetStackPointer();
         public List<byte> GetMemoryDump();
+        public void LoadMachineCode(List<byte> machineCode);
         public void ClearMemory();
     }
 }

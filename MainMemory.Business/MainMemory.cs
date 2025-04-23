@@ -1,4 +1,6 @@
 ﻿
+using System.Net;
+
 namespace MainMemory.Business
 {
     public class MainMemory
@@ -98,6 +100,27 @@ namespace MainMemory.Business
         {
             for (int i = 0; i < this.memoryDump.Count; i++)
                 this.memoryDump[i] = 0;
+        }
+
+        public void SetInternalStackPointer(int stackAddress)
+        {
+            if(stackAddress > this.memoryLocationsNum - 1)
+                throw new ArgumentOutOfRangeException(nameof(stackAddress), "Address is out of range. Please try another value");
+
+            this.stackPointer = stackAddress;
+        }
+
+        public int GetInternalStackPointer()
+        {
+            return this.stackPointer;
+        }
+
+        public byte GetInternalLocationData(int memoryAddress)
+        {
+            if (memoryAddress > this.memoryLocationsNum - 1)
+                throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value");
+
+            return this.memoryDump[memoryAddress];
         }
     }
 }
