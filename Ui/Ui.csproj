@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
@@ -54,6 +54,10 @@
     <ItemGroup>
       <Folder Include="ViewModels\Pages\" />
       <Folder Include="Views\Pages\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj" />
     </ItemGroup>
 
 </Project>
