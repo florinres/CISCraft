@@ -87,7 +87,7 @@ namespace MainMemory.Business
             if(machineCode.Length > this.memoryDump.Length)
                 throw new InvalidOperationException("Machine code size exceeds memory capacity. Please try another program.");
 
-            for (int i = 0; i < memoryDump.Length; i++)
+            for (int i = 0; i < machineCode.Length; i++)
                 this.memoryDump[i] = machineCode[i];
         }
 
@@ -121,6 +121,11 @@ namespace MainMemory.Business
                 throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value");
 
             return this.memoryDump[memoryAddress];
+        }
+
+        public int GetMemorySize()
+        {
+            return this.memoryLocationsNum;
         }
     }
 }
