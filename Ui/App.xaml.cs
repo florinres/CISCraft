@@ -47,6 +47,9 @@ public partial class App : Application
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
 
+        var diagramWindow = new DiagramPage();
+        diagramWindow.Show();
+        
         base.OnStartup(e);
     }
 

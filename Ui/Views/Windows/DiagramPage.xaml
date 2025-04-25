@@ -1,0 +1,116 @@
+﻿<ui:FluentWindow x:Class="Ui.Views.Windows.DiagramPage"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:local="clr-namespace:Ui.Views.Windows"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:diagram="clr-namespace:Ui.Views.UserControls.Diagram"
+                 xmlns:diagram1="clr-namespace:Ui.ViewModels.Components.Diagram"
+                 mc:Ignorable="d"
+                 Title="DiagramPage" Height="2000" Width="1500"
+                 WindowBackdropType="Mica"
+                 ExtendsContentIntoTitleBar="True"
+                 PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
+                 PreviewMouseMove="ScrollViewer_PreviewMouseMove"
+                 PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
+                 Cursor="Arrow"
+                 PreviewMouseWheel="Window_MouseWheel"
+                 d:DataContext="{d:DesignInstance Type=diagram1:DiagramViewModel, IsDesignTimeCreatable=False}">
+    
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  Background="{DynamicResource RegionBackgroundBrush}"
+                  x:Name="DiagramScrollViewer">
+        <Grid>
+            <Grid.LayoutTransform>
+                <ScaleTransform x:Name="DiagramScaleTransform" ScaleX="1" ScaleY="1"/>
+            </Grid.LayoutTransform>
+
+            <Canvas x:Name="DiagramCanvas" Width="2000" Height="1500">
+
+                <!-- Special Registers -->
+                <StackPanel x:Name="RegistersPanel"
+                            Canvas.Left="220"
+                            Canvas.Top="50"
+                            Orientation="Vertical"
+                            Margin="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                    <diagram:RegisterBlock DataContext="{Binding PCContext}"   Margin="0,5,0,0" />
+                    <diagram:RegisterBlock DataContext="{Binding IVRContext}"  Margin="0,15,0,0"/>
+                    <diagram:RegisterBlock DataContext="{Binding TContext}"    Margin="0,15,0,0" />
+                    <diagram:RegisterBlock DataContext="{Binding SPContext}"   Margin="0,15,0,0" />
+                    <diagram:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,15,0,0" />
+                </StackPanel>
+                
+                <diagram:MuxBlock
+                    Canvas.Left="100" 
+                    Canvas.Top="220"/>
+                
+                <diagram:SumBlock
+                    Canvas.Left="150" 
+                    Canvas.Top="300"/>
+                
+                <StackPanel x:Name="BitesPannel"
+                            Canvas.Left="300" 
+                            Canvas.Top="280"
+                            Orientation="Vertical"
+                            Margin="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                    <diagram:BitBlock DataContext="{Binding Pd1Context}"/>
+                    <diagram:BitBlock DataContext="{Binding PdMinus1Context}" Margin="0,55,0,0"/>
+                    <diagram:BitBlock DataContext="{Binding Pd0sContext}" Margin="0,55,0,0"/>
+                </StackPanel>
+                
+                <diagram:StraightLineBus LineWidth="8" LineHeight="500" Canvas.Left="500" Canvas.Top="50"/>
+                <diagram:StraightLineBus LineWidth="8" LineHeight="500" Canvas.Left="600" Canvas.Top="50"/>
+                
+                <StackPanel x:Name="RightRegistersPanel"
+                            Canvas.Left="800"
+                            Canvas.Top="80"
+                            Orientation="Vertical"
+                            Margin="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                    <diagram:RegisterBlock DataContext="{Binding MDRContext}" Margin="0,5,0,0"/>
+                    <diagram:RegisterBlock DataContext="{Binding ADRContext}" Margin="0,15,0,0"/>
+                    <diagram:RegisterBlock DataContext="{Binding IRContext}"  Margin="0,15,0,0"/>
+                </StackPanel>
+                <!-- R0–R15 Registers in a column -->
+                <StackPanel Canvas.Left="800" Canvas.Top="300">
+                    <diagram:RegisterBlock DataContext="{Binding R0Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R1Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R2Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R3Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R4Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R5Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R6Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R7Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R8Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R9Context }" />
+                    <diagram:RegisterBlock DataContext="{Binding R10Context}" />
+                    <diagram:RegisterBlock DataContext="{Binding R11Context}" />
+                    <diagram:RegisterBlock DataContext="{Binding R12Context}" />
+                    <diagram:RegisterBlock DataContext="{Binding R13Context}" />
+                    <diagram:RegisterBlock DataContext="{Binding R14Context}" />
+                    <diagram:RegisterBlock DataContext="{Binding R15Context}" />
+                </StackPanel>
+                
+                <diagram:MuxBlock
+                    Canvas.Left="1050" 
+                    Canvas.Top="70"
+                    IsFlipped="True"/>
+                
+                <diagram:AroundTheEdgeBus 
+                    LineThickness="10"
+                    WrapHeight="800" 
+                    WrapWidth="1100"
+                    Canvas.Left="50" 
+                    Canvas.Top="50"/>
+
+            </Canvas>
+        </Grid>
+    </ScrollViewer>
+</ui:FluentWindow>
