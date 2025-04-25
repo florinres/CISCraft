@@ -29,4 +29,12 @@ public interface IMainWindowViewModel
         [System.Diagnostics.CodeAnalysis.MemberNotNull("_menuBar")]
         set;
     }
+
+    /// <inheritdoc cref="MainWindowViewModel._actionsBar"/>
+    IActionsBarViewModel ActionsBar
+    {
+        get;
+        [System.Diagnostics.CodeAnalysis.MemberNotNull("_actionsBar")]
+        set;
+    }
 }

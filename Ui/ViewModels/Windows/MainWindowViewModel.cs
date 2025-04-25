@@ -13,11 +13,14 @@ namespace Ui.ViewModels.Windows
         private IWorkspaceViewModel _workspace;
         [ObservableProperty]
         private IMenuBarViewModel _menuBar;
+        [ObservableProperty]
+        private IActionsBarViewModel _actionsBar;
 
-        public MainWindowViewModel(IWorkspaceViewModel workspace, IMenuBarViewModel menuBar)
+        public MainWindowViewModel(IWorkspaceViewModel workspace, IMenuBarViewModel menuBar, IActionsBarViewModel actionsBar)
         {
             _workspace = workspace;
             _menuBar = menuBar;
+            _actionsBar= actionsBar;
         }
     }
 }

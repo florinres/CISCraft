@@ -5,4 +5,6 @@ using Ui.ViewModels;
 
 namespace Ui.Interfaces.Windows;
 
-public interface IWorkspaceViewModel { }
+public interface IWorkspaceViewModel
+{
+}

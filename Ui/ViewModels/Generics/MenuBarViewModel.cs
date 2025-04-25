@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Ui.Interfaces.ViewModel;
 
 namespace Ui.ViewModels.Generics;

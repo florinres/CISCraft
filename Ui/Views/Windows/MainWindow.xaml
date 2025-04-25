@@ -86,7 +86,7 @@
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
                     VerticalAlignment="Top"
@@ -112,7 +112,7 @@
                 <ui:SymbolIcon Symbol="Bug24"></ui:SymbolIcon>
             </ui:Button>
 
-            <ui:Button Command="{Binding Workspace.AssembleSelectedFileCommand}"
+            <ui:Button Command="{Binding RunAssembleSourceCodeServiceCommand}"
                        ToolTip="Assemble"
                        VerticalAlignment="Top"
                        Height="30"

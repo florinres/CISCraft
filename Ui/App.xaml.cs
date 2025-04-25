@@ -12,6 +12,7 @@ using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
 using Wpf.Ui;
 using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
+using ASMBLR = Assembler.Business.Assembler;
 
 namespace Ui;
 
@@ -34,12 +35,17 @@ public partial class App : Application
 
             services.AddSingleton<MainWindow>();
             services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
-            services.AddSingleton<IMenuBarViewModel, MenuBarViewModel>();
 
             services.AddSingleton<IActiveDocumentService, ActiveDocumentService>();
             services.AddSingleton<IWorkspaceViewModel, WorkspaceViewModel>();
             services.AddSingleton<FileStatsViewModel>();
-            
+
+            services.AddSingleton<IActionsBarViewModel, ActionsBarViewModel>();
+            services.AddSingleton<IMenuBarViewModel, MenuBarViewModel>();
+            services.AddSingleton<IAssemblerService, AssemblerService>();
+            services.AddSingleton<FileViewModel>();
+            services.AddSingleton<ASMBLR>();
+
         }).Build();
     
     protected override async void OnStartup(StartupEventArgs e)

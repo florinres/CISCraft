@@ -4,10 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ui.Interfaces.ViewModel
+namespace Ui.Interfaces.ViewModel;
+public interface IActionsBarViewModel
 {
-    interface IActionsBarViewModel
-    {
-
-    }
+    event EventHandler<byte[]>? ObjectCodeGenerated;
 }

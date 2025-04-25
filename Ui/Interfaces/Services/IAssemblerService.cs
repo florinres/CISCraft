@@ -8,6 +8,6 @@ namespace Ui.Interfaces.Services
 {
     public interface IAssemblerService
     {
-        void AssembleService();
+        byte[] AssembleSourceCodeService( string sourceCode);
     }
 }
