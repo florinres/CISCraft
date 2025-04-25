@@ -1,4 +1,4 @@
-﻿namespace Ui.ViewModels.Components.Diagram;
+namespace Ui.ViewModels.Components.Diagram;
 
 public partial class RegisterViewModel : BaseDiagramObject
 {

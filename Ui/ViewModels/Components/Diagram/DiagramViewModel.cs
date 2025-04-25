@@ -1,4 +1,4 @@
-﻿using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.ViewModels.Components.Diagram;
