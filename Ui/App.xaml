@@ -11,7 +11,7 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
-        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

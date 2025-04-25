@@ -1,5 +1,7 @@
 ﻿
 using Ui.Helpers;
+using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.Windows;
 
 namespace Ui.ViewModels.Windows
 {
@@ -9,10 +11,13 @@ namespace Ui.ViewModels.Windows
         private string _applicationTitle = "WPF UI - Ui";
         [ObservableProperty]
         private IWorkspaceViewModel _workspace;
+        [ObservableProperty]
+        private IMenuBarViewModel _menuBar;
 
-        public MainWindowViewModel(IWorkspaceViewModel workspace)
+        public MainWindowViewModel(IWorkspaceViewModel workspace, IMenuBarViewModel menuBar)
         {
             _workspace = workspace;
+            _menuBar = menuBar;
         }
     }
 }

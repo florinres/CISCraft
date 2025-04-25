@@ -3,13 +3,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Ui.Models;
+using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.Windows;
 using Ui.Services;
-using Ui.ViewModels;
+using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
 using Wpf.Ui;
-using Wpf.Ui.DependencyInjection;
 using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
 
 namespace Ui;
@@ -33,6 +34,7 @@ public partial class App : Application
 
             services.AddSingleton<MainWindow>();
             services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
+            services.AddSingleton<IMenuBarViewModel, MenuBarViewModel>();
 
             services.AddSingleton<IActiveDocumentService, ActiveDocumentService>();
             services.AddSingleton<IWorkspaceViewModel, WorkspaceViewModel>();

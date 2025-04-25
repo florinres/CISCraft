@@ -1,5 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
-namespace Ui.Models.Generics;
+namespace Ui.ViewModels.Generics;
 
 public abstract partial class ToolViewModel : PaneViewModel
 {

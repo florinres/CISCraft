@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ui.Contracts
+namespace Ui.Interfaces.Services
 {
     public interface IAssemblerService
     {
-        void AssembleService(Assembler.Business.Assembler assembler, string sourceCode, string objectCodeFileName);
+        void AssembleService();
     }
 }

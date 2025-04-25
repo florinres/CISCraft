@@ -5,13 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:viewModel="clr-namespace:Ui.ViewModels.Windows"
-    xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
-    xmlns:models1="clr-namespace:Ui.Models"
+    xmlns:interfaces="clr-namespace:Ui.Interfaces.Windows"
     xmlns:components="clr-namespace:Ui.Components"
+    xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
+    xmlns:viewmodels="clr-namespace:Ui.ViewModels.Generics"
     xmlns:helpers="clr-namespace:Ui.Helpers"
-    xmlns:system="clr-namespace:System;assembly=System.Runtime"
-    d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
+    d:DataContext="{d:DesignInstance Type=interfaces:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
     Height="650"
@@ -45,8 +45,8 @@
             <ui:TitleBar.Header>
                 <Menu Height="48" Margin="0 -9 0 0">
                     <ui:MenuItem Header="File">
-                        <MenuItem Command="{Binding Workspace.NewDocumentCommand}" Header="New" />
-                        <MenuItem Command="{Binding Workspace.OpenDocumentCommand}" Header="Open" />
+                        <MenuItem Command="{Binding MenuBar.NewDocumentCommand}" Header="New" />
+                        <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open" />
                         <Separator />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}" Header="Save As..." />
@@ -58,7 +58,7 @@
                         <MenuItem
                             Header="Properties"
                             IsCheckable="True"
-                            IsChecked="{Binding Workspace.FileStats.IsVisible, Mode=TwoWay}" />
+                            IsChecked="{Binding MenuBar.FileStats.IsVisible, Mode=TwoWay}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -178,14 +178,14 @@
             ActiveContent="{Binding SelectedDocument, Mode=TwoWay}"
             AnchorablesSource="{Binding Tools}"
             DocumentsSource="{Binding Documents}"
-            DataContext="{Binding Workspace}">
+            DataContext="{Binding MenuBar}">
             <DockingManager.Theme>
                 <wpfui:WPFUITheme/>
             </DockingManager.Theme>
             <DockingManager.LayoutItemTemplateSelector>
                 <components:PanesTemplateSelector>
                     <components:PanesTemplateSelector.FileViewTemplate>
-                        <DataTemplate DataType="{x:Type models1:FileViewModel}">
+                        <DataTemplate DataType="{x:Type viewmodels:FileViewModel}">
                             <components:StyledAvalonEdit
                                 x:Name="TextEditor"
                                 SyntaxHighlighting="Custom"
@@ -196,7 +196,7 @@
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
                     <components:PanesTemplateSelector.FileStatsViewTemplate>
-                        <DataTemplate DataType="{x:Type models1:FileStatsViewModel}">
+                        <DataTemplate DataType="{x:Type viewmodels:FileStatsViewModel}">
                             <Border Padding="5">
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Text="{Binding FileSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />

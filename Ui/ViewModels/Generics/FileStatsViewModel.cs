@@ -1,11 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
-using System.Windows.Media.Imaging;
-using Ui.Models.Generics;
-using Ui.Services;
-using Ui.ViewModels;
 
-namespace Ui.Models;
+namespace Ui.ViewModels.Generics;
 
 public partial class FileStatsViewModel : ToolViewModel
 {

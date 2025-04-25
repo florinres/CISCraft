@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
-using AvalonDock.Layout;
-using Ui.Models;
+using Ui.ViewModels.Generics;
 
 namespace Ui.Components;
 

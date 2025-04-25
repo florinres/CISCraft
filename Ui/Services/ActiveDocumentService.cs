@@ -1,7 +1,6 @@
-﻿
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using Ui.Models;
+﻿using System.Collections.ObjectModel;
+using Ui.Interfaces.Services;
+using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
 

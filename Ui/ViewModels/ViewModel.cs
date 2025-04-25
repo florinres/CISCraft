@@ -1,4 +1,6 @@
-﻿namespace Ui.ViewModels;
+﻿using Ui.Interfaces.ViewModel;
+
+namespace Ui.ViewModels;
 
 public abstract class ViewModel : ObservableObject, IViewModel
 {

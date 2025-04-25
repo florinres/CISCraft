@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Ui.Models;
+using Ui.ViewModels.Generics;
 
-namespace Ui.Services;
+namespace Ui.ViewModels.Generics;
 
 public interface IActiveDocumentService: INotifyPropertyChanged
 {

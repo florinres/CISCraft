@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using Ui.Models;
-using Ui.Models.Generics;
+using Ui.ViewModels;
+using Ui.ViewModels.Generics;
 
 namespace Ui.Components;
 

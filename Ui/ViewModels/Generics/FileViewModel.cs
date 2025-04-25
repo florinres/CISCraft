@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using Ui.Models.Generics;
 
-namespace Ui.Models;
+namespace Ui.ViewModels.Generics;
 
 public partial class FileViewModel : PaneViewModel
 {

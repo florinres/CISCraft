@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using Wpf.Ui.Abstractions.Controls;
 
-namespace Ui.ViewModels;
+namespace Ui.Interfaces.ViewModel;
 
 public interface IViewModel : INavigationAware
 {

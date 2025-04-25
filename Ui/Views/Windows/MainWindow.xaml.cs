@@ -1,4 +1,4 @@
-﻿using Ui.ViewModels.Windows;
+﻿using Ui.Interfaces.Windows;
 using Wpf.Ui.Appearance;
 
 namespace Ui.Views.Windows;

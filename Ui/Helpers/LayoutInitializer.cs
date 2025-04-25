@@ -1,5 +1,5 @@
 ﻿using AvalonDock.Layout;
-using Ui.Models.Generics;
+using Ui.ViewModels.Generics;
 
 namespace Ui.Helpers;
 

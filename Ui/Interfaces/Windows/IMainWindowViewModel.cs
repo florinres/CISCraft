@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using Ui.ViewModels.Windows;
+using Ui.Interfaces.ViewModel;
 
-namespace Ui.ViewModels.Windows;
+namespace Ui.Interfaces.Windows;
 
 public interface IMainWindowViewModel
 {
@@ -20,6 +22,11 @@ public interface IMainWindowViewModel
         set;
     }
 
-    event PropertyChangedEventHandler? PropertyChanged;
-    event PropertyChangingEventHandler? PropertyChanging;
+    /// <inheritdoc cref="MainWindowViewModel._menuBar"/>
+    IMenuBarViewModel MenuBar
+    {
+        get;
+        [System.Diagnostics.CodeAnalysis.MemberNotNull("_menuBar")]
+        set;
+    }
 }
