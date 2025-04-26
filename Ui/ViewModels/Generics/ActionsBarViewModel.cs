@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using Ui.Interfaces.Windows;
 using ASMBLR = Assembler.Business.Assembler;
 
 namespace Ui.ViewModels.Generics;
+
 public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewModel
 {
     public event EventHandler<byte[]>? ObjectCodeGenerated;

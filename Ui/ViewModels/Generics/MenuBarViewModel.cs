@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using Ui.Interfaces.ViewModel;
 
 namespace Ui.ViewModels.Generics;
+
 public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
 
