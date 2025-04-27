@@ -10,11 +10,12 @@ namespace Ui.Interfaces
     {
         public void SetStackSize(int stackSize);
         public void SetMemoryLocationData(int memoryAddress, byte content);
-        public void SetStackPointer(int stackAddress);
+
+        public void SetISR(int interruptNumber, byte[] interruptRoutine);
         public byte GetMemoryLocationData(int memoryAddress);
-        public int GetStackPointer();
         public byte[] GetMemoryDump();
         public void LoadMachineCode(byte[] machineCode);
+        public void ClearISR(int interruptNumber);
         public void ClearMemory();
     }
 }

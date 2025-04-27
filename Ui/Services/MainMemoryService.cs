@@ -58,14 +58,20 @@ namespace Ui.Services
             this.RAM.CleanInternalMemory();
         }
 
-        public void SetStackPointer(int stackAddress)
+        public void SetISR(int interruptNumber, byte[] interruptRoutine)
         {
-            this.RAM.SetInternalStackPointer(stackAddress);
+            if(interruptNumber < 0)
+                throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt number must be a positive number! Please try another value.");
+
+            this.RAM.SetInternalISR(interruptNumber, interruptRoutine);
         }
 
-        public int GetStackPointer()
+        public void ClearISR(int interruptNumber)
         {
-            return this.RAM.GetInternalStackPointer();
+            if (interruptNumber < 0)
+                throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt number must be a positive number! Please try another value.");
+
+            this.RAM.ClearInternlISR(interruptNumber);
         }
     }
 }
