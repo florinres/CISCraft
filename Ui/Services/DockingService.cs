@@ -1,6 +1,7 @@
 ﻿using AvalonDock;
 using AvalonDock.Layout;
 using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
@@ -14,7 +15,7 @@ public class DockingService : IDockingService
         _dockingManager = dockingManager;
     }
 
-    public void ToggleVisibility(ToolViewModel tool)
+    public void ToggleVisibility(IToolViewModel tool)
     {
         if (_dockingManager?.Layout == null)
             return;
@@ -29,7 +30,7 @@ public class DockingService : IDockingService
             anchorable.Hide();
     }
 
-    public void ShowTool(ToolViewModel tool)
+    public void ShowTool(IToolViewModel tool)
     {
         if (_dockingManager?.Layout == null)
             return;

@@ -1,6 +1,9 @@
-﻿namespace Ui.ViewModels.Components.Diagram;
+﻿using Ui.Interfaces.ViewModel;
+using Ui.ViewModels.Generics;
 
-public class DiagramViewModel
+namespace Ui.ViewModels.Components.Diagram;
+
+public class DiagramViewModel : ToolViewModel, IDiagramViewModel
 {
     public RegisterViewModel PCContext { get; } = new("PC");
     public RegisterViewModel IVRContext { get; } = new("IVR");

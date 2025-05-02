@@ -1,4 +1,6 @@
 ﻿using System.Windows.Controls;
+using Ui.Interfaces.ViewModel;
+using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Components;
@@ -7,6 +9,7 @@ public class PanesTemplateSelector : DataTemplateSelector
 {
     public DataTemplate? FileViewTemplate { get; set; }
     public DataTemplate? FileStatsViewTemplate { get; set; }
+    public DataTemplate? DiagramViewTemplate { get; set; }
 
     public override DataTemplate? SelectTemplate(object? item, DependencyObject container)
     {
@@ -14,6 +17,7 @@ public class PanesTemplateSelector : DataTemplateSelector
         {
             FileViewModel => FileViewTemplate,
             FileStatsViewModel => FileStatsViewTemplate,
+            IDiagramViewModel => DiagramViewTemplate,
             _ => base.SelectTemplate(item, container)
         };
     }

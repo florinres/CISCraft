@@ -1,4 +1,5 @@
 ﻿using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
@@ -12,7 +13,7 @@ public class ToolVisibilityService : IToolVisibilityService
         _dockingService = dockingService;
     }
 
-    public void ToggleToolVisibility(ToolViewModel? tool)
+    public void ToggleToolVisibility(IToolViewModel? tool)
     {
         if (tool == null)
             return;
