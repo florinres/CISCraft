@@ -1,72 +1,20 @@
-﻿using System.Collections.ObjectModel;
-using Microsoft.Win32;
-using Ui.Models;
-using Ui.Models.Generics;
-using Ui.Services;
-using FileViewModel = Ui.Models.FileViewModel;
+﻿using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
 
 namespace Ui.ViewModels;
 
 public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
 {
-    private readonly IActiveDocumentService _documentService;
-    
-    public ObservableCollection<FileViewModel> Documents => _documentService.Documents;
-    public ObservableCollection<ToolViewModel> Tools { get; } = new();
-    
-    [ObservableProperty]
-    private FileStatsViewModel _fileStats;
+    public WorkspaceViewModel(IActiveDocumentService activeDocumentsService)
+    {
+        ActiveDocumentsService = activeDocumentsService;
+    }
 
-    public FileViewModel? SelectedDocument
-    {
-        get => _documentService.SelectedDocument;
-        set => _documentService.SelectedDocument = value;
-    }
-    
-    public WorkspaceViewModel(IActiveDocumentService documentService, FileStatsViewModel fileStatsViewModel)
-    {
-        _documentService = documentService;
-        
-        _fileStats = fileStatsViewModel;
-        Tools.Add(fileStatsViewModel);
-    }
+    [ObservableProperty] public partial IActiveDocumentService ActiveDocumentsService { get; set; }
 
     [RelayCommand]
-    private void NewDocument()
+    public void ShowFileStatsCommand()
     {
-        var doc = new FileViewModel()
-        {
-            Title = "Untitled",
-            Content = "Default start content",
-        };
-        Documents.Add(doc);
-        SelectedDocument = doc;
+        ActiveDocumentsService.ToggleToolVisibility(ActiveDocumentsService.FileStats);
     }
-
-    [RelayCommand]
-    private void OpenDocument()
-    {
-        var dialog = new OpenFileDialog
-        {
-            Title = "Open File",
-            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
-        };
-
-        if (dialog.ShowDialog() == true)
-        {
-            var doc = new FileViewModel();
-            doc.LoadFromFile(dialog.FileName);
-            Documents.Add(doc);
-            SelectedDocument = doc;
-        }
-    }
-
-
-    // [RelayCommand(CanExecute = nameof(CanSaveSelectedDocument))]
-    // private void SaveDocument()
-    // {
-    //     SelectedDocument?.SaveToFile();
-    // }
-
-    // private bool CanSaveSelectedDocument() => SelectedDocument?.IsDirty == true;
 }

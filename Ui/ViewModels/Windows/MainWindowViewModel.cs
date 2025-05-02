@@ -1,18 +1,23 @@
-﻿
-using Ui.Helpers;
+﻿using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.Windows;
 
-namespace Ui.ViewModels.Windows
+namespace Ui.ViewModels.Windows;
+
+public partial class MainWindowViewModel : ObservableObject, IMainWindowViewModel
 {
-    public partial class MainWindowViewModel : ObservableObject, IMainWindowViewModel
+    public MainWindowViewModel(IWorkspaceViewModel workspace, IMenuBarViewModel menuBar,
+        IActionsBarViewModel actionsBar)
     {
-        [ObservableProperty]
-        private string _applicationTitle = "WPF UI - Ui";
-        [ObservableProperty]
-        private IWorkspaceViewModel _workspace;
-
-        public MainWindowViewModel(IWorkspaceViewModel workspace)
-        {
-            _workspace = workspace;
-        }
+        Workspace = workspace;
+        MenuBar = menuBar;
+        ActionsBar = actionsBar;
     }
+
+    [ObservableProperty] public partial string ApplicationTitle { get; set; } = "WPF UI - Ui";
+
+    [ObservableProperty] public partial IWorkspaceViewModel Workspace { get; set; }
+
+    [ObservableProperty] public partial IMenuBarViewModel MenuBar { get; set; }
+
+    [ObservableProperty] public partial IActionsBarViewModel ActionsBar { get; set; }
 }
