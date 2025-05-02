@@ -1,5 +1,4 @@
 ﻿using System.Xml;
-using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
@@ -13,10 +12,7 @@ public static class AvalonEditHelper
     {
         get
         {
-            if (_assemblyHighlightDefinition == null)
-            {
-                LoadAssembly16BitHighlighting();
-            }
+            if (_assemblyHighlightDefinition == null) LoadAssembly16BitHighlighting();
             return _assemblyHighlightDefinition!;
         }
     }

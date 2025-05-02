@@ -23,8 +23,6 @@
     mc:Ignorable="d"
     Loaded="MainWindow_OnLoaded">
     <Window.Resources>
-        <system:Boolean x:Key="True">True</system:Boolean>
-        <system:Boolean x:Key="False">False</system:Boolean>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -50,7 +48,8 @@
                         <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open" />
                         <Separator />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
-                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}" Header="Save As..." />
+                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}"
+                                  Header="Save As..." />
                         <Separator />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
                     </ui:MenuItem>
@@ -59,9 +58,8 @@
                         <MenuItem
                             Header="Properties"
                             IsCheckable="True"
-                            IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}" 
-                            Command="{Binding MenuBar.ShowFileStatsCommand}"
-                            />
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowFileStatsCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -76,15 +74,12 @@
                                 Margin="10,0,0,0" />
                         </MenuItem>
                         <MenuItem Header="Theme">
-                            <MenuItem Header="Light"/>
+                            <MenuItem Header="Light" />
                             <MenuItem Header="Dark" />
                         </MenuItem>
                     </ui:MenuItem>
-                    <ui:MenuItem Header="View">
-                    </ui:MenuItem>
-                    <ui:MenuItem Header="Help">
-
-                    </ui:MenuItem>
+                    <ui:MenuItem Header="View" />
+                    <ui:MenuItem Header="Help" />
                 </Menu>
             </ui:TitleBar.Header>
         </ui:TitleBar>
@@ -92,27 +87,27 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
-                    VerticalAlignment="Top"
-                    ToolTip="Run"
-                    Height="30"
-                    Width="30"
-                    Padding="0"
-                    Margin="10,0,10,0"
-                    Appearance="Transparent"
-                    BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F"></ui:SymbolIcon>
+                VerticalAlignment="Top"
+                ToolTip="Run"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="10,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F" />
             </ui:Button>
 
             <ui:Button
-                    VerticalAlignment="Top"
-                    ToolTip="Debug"
-                    Height="30"
-                    Width="30"
-                    Padding="0"
-                    Margin="0,0,10,0"
-                    Appearance="Transparent"
-                    BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="Bug24"></ui:SymbolIcon>
+                VerticalAlignment="Top"
+                ToolTip="Debug"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="Bug24" />
             </ui:Button>
 
             <ui:Button Command="{Binding RunAssembleSourceCodeServiceCommand}"
@@ -124,59 +119,59 @@
                        Margin="0,0,10,0"
                        Appearance="Transparent"
                        BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="Settings24"></ui:SymbolIcon>
+                <ui:SymbolIcon Symbol="Settings24" />
             </ui:Button>
 
             <ui:Button
-                    VerticalAlignment="Top"
-                    ToolTip="Step Into"
-                    Height="30"
-                    Width="30"
-                    Padding="0"
-                    Margin="0,0,10,0"
-                    Appearance="Transparent"
-                    BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="ArrowStepIn16"></ui:SymbolIcon>
+                VerticalAlignment="Top"
+                ToolTip="Step Into"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="ArrowStepIn16" />
             </ui:Button>
 
             <ui:Button
-                    VerticalAlignment="Top"
-                    ToolTip="Step Over"
-                    Height="30"
-                    Width="30"
-                    Padding="0"
-                    Margin="0,0,10,0"
-                    Appearance="Transparent"
-                    BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="ArrowStepOver16"></ui:SymbolIcon>
+                VerticalAlignment="Top"
+                ToolTip="Step Over"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="ArrowStepOver16" />
             </ui:Button>
 
             <ui:Button
-                    VerticalAlignment="Top"
-                    ToolTip="Reset"
-                    Height="30"
-                    Width="30"
-                    Padding="0"
-                    Margin="0,0,10,0"
-                    Appearance="Transparent"
-                    BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="ArrowReset24"></ui:SymbolIcon>
+                VerticalAlignment="Top"
+                ToolTip="Reset"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="ArrowReset24" />
             </ui:Button>
 
             <ui:Button
-                    VerticalAlignment="Top"
-                    ToolTip="Stop"
-                    Height="30"
-                    Width="30"
-                    Padding="0"
-                    Margin="0,0,10,0"
-                    Appearance="Transparent"
-                    BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="Stop24" Foreground="#E4FF3F3F"/>
+                VerticalAlignment="Top"
+                ToolTip="Stop"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="Stop24" Foreground="#E4FF3F3F" />
             </ui:Button>
         </StackPanel>
 
-        
+
         <!-- AnchorablesSource="{Binding ActiveDocumentsService.Tools}" -->
         <DockingManager
             x:Name="DockingManagerInstance"
@@ -185,7 +180,7 @@
             DocumentsSource="{Binding ActiveDocumentsService.Documents}"
             DataContext="{Binding Workspace}">
             <DockingManager.Theme>
-                <wpfui:WPFUITheme/>
+                <wpfui:WPFUITheme />
             </DockingManager.Theme>
             <DockingManager.LayoutItemTemplateSelector>
                 <components:PanesTemplateSelector>
@@ -197,17 +192,21 @@
                                 FontFamily="Consolas"
                                 FontSize="10pt"
                                 ShowLineNumbers="True"
-                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
                     <components:PanesTemplateSelector.FileStatsViewTemplate>
                         <DataTemplate DataType="{x:Type viewmodels:FileStatsViewModel}">
                             <Border Padding="5">
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding FileSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Text="{Binding LastModified, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox IsReadOnly="True" Text="{Binding FilePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox IsReadOnly="True" Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Text="{Binding FileSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Text="{Binding LastModified, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox IsReadOnly="True"
+                                             Text="{Binding FilePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox IsReadOnly="True"
+                                             Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

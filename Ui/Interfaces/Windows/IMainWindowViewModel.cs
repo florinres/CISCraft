@@ -1,40 +1,20 @@
-﻿using System.ComponentModel;
-using Ui.ViewModels.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
 using Ui.Interfaces.ViewModel;
+using Ui.ViewModels.Windows;
 
 namespace Ui.Interfaces.Windows;
 
 public interface IMainWindowViewModel
 {
-    /// <inheritdoc cref="MainWindowViewModel._applicationTitle"/>
-    string ApplicationTitle
-    {
-        get;
-        [System.Diagnostics.CodeAnalysis.MemberNotNull("_applicationTitle")]
-        set;
-    }
+    /// <inheritdoc cref="MainWindowViewModel._applicationTitle" />
+    string ApplicationTitle { get; [MemberNotNull("_applicationTitle")] set; }
 
-    /// <inheritdoc cref="MainWindowViewModel._workspace"/>
-    IWorkspaceViewModel Workspace
-    {
-        get;
-        [System.Diagnostics.CodeAnalysis.MemberNotNull("_workspace")]
-        set;
-    }
+    /// <inheritdoc cref="MainWindowViewModel._workspace" />
+    IWorkspaceViewModel Workspace { get; [MemberNotNull("_workspace")] set; }
 
-    /// <inheritdoc cref="MainWindowViewModel._menuBar"/>
-    IMenuBarViewModel MenuBar
-    {
-        get;
-        [System.Diagnostics.CodeAnalysis.MemberNotNull("_menuBar")]
-        set;
-    }
+    /// <inheritdoc cref="MainWindowViewModel._menuBar" />
+    IMenuBarViewModel MenuBar { get; [MemberNotNull("_menuBar")] set; }
 
-    /// <inheritdoc cref="MainWindowViewModel._actionsBar"/>
-    IActionsBarViewModel ActionsBar
-    {
-        get;
-        [System.Diagnostics.CodeAnalysis.MemberNotNull("_actionsBar")]
-        set;
-    }
+    /// <inheritdoc cref="MainWindowViewModel._actionsBar" />
+    IActionsBarViewModel ActionsBar { get; [MemberNotNull("_actionsBar")] set; }
 }

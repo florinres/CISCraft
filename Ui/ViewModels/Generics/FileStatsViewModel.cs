@@ -1,30 +1,24 @@
-﻿using System.ComponentModel;
-using System.IO;
-using Ui.Interfaces.Services;
+﻿using System.IO;
 
 namespace Ui.ViewModels.Generics;
 
 public partial class FileStatsViewModel : ToolViewModel
 {
+    public const string ToolContentId = "FileStatsTool";
 
     public FileStatsViewModel()
     {
         IsVisible = false;
     }
-    [ObservableProperty]
-    public partial long FileSize { get; set; }
 
-    [ObservableProperty]
-    public partial DateTime LastModified { get; set; }
+    [ObservableProperty] public partial long FileSize { get; set; }
 
-    [ObservableProperty]
-    public partial string FileName { get; set; } = string.Empty;
+    [ObservableProperty] public partial DateTime LastModified { get; set; }
 
-    [ObservableProperty]
-    public partial string FilePath { get; set; } = string.Empty;
+    [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
 
-    public const string ToolContentId = "FileStatsTool";
-    
+    [ObservableProperty] public partial string FilePath { get; set; } = string.Empty;
+
     public void UpdateStats(FileViewModel? doc)
     {
         if (doc?.FilePath != null && File.Exists(doc.FilePath))
@@ -43,5 +37,4 @@ public partial class FileStatsViewModel : ToolViewModel
             FilePath = string.Empty;
         }
     }
-
 }

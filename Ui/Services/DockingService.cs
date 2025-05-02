@@ -1,5 +1,6 @@
 ﻿using AvalonDock;
 using AvalonDock.Layout;
+using Ui.Interfaces.Services;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
@@ -21,16 +22,11 @@ public class DockingService : IDockingService
         var anchorable = _dockingManager.Layout.Descendents()
             .OfType<LayoutAnchorable>()
             .First(a => a.Content == tool);
-        
-        if (tool.IsVisible)
-        {
-            anchorable.Show();
-        }
-        else
-        {
-            anchorable.Hide();
-        }
 
+        if (tool.IsVisible)
+            anchorable.Show();
+        else
+            anchorable.Hide();
     }
 
     public void ShowTool(ToolViewModel tool)
@@ -55,9 +51,8 @@ public class DockingService : IDockingService
 
             pane?.Children.Add(anchorable);
             _dockingManager.UpdateLayout();
-            
+
             anchorable.Show();
         }
     }
-
 }

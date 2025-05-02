@@ -17,7 +17,7 @@ using ASMBLR = Assembler.Business.Assembler;
 namespace Ui;
 
 /// <summary>
-/// Interaction logic for App.xaml
+///     Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
 {
@@ -45,18 +45,16 @@ public partial class App : Application
             services.AddSingleton<IAssemblerService, AssemblerService>();
             services.AddSingleton<FileViewModel>();
             services.AddSingleton<ASMBLR>();
-            services.AddSingleton<IDockingService,DummyDockingService>();
-            services.AddSingleton<IToolVisibilityService,ToolVisibilityService>();
-
-
+            services.AddSingleton<IDockingService, DummyDockingService>();
+            services.AddSingleton<IToolVisibilityService, ToolVisibilityService>();
         }).Build();
-    
+
     protected override async void OnStartup(StartupEventArgs e)
     {
         await _host.StartAsync();
 
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
-        
+
         mainWindow.Show();
 
         base.OnStartup(e);
@@ -67,6 +65,4 @@ public partial class App : Application
         await _host.StopAsync();
         base.OnExit(e);
     }
-
 }
-

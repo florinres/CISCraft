@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel;
+
 public interface IActionsBarViewModel
 {
-    event EventHandler<byte[]>? ObjectCodeGenerated;
+    /// <summary>
+    ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand" /> instance wrapping
+    ///     <see cref="ActionsBarViewModel.RunAssembleSourceCodeService" />.
+    /// </summary>
+    IRelayCommand RunAssembleSourceCodeServiceCommand { get; }
 
-    /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.RunAssembleSourceCodeService"/>.</summary>
-    global::CommunityToolkit.Mvvm.Input.IRelayCommand RunAssembleSourceCodeServiceCommand { get; }
+    event EventHandler<byte[]>? ObjectCodeGenerated;
 
     event PropertyChangedEventHandler? PropertyChanged;
     event PropertyChangingEventHandler? PropertyChanging;

@@ -4,16 +4,15 @@ namespace Ui.ViewModels.Generics;
 
 public partial class FileViewModel : PaneViewModel
 {
-    [ObservableProperty]
-    public partial string Content { get; set; } = string.Empty;
-    [ObservableProperty]
-    public partial string? FilePath { get; set; }
-
     public FileViewModel()
     {
         Title = "Untitled";
     }
-    
+
+    [ObservableProperty] public partial string Content { get; set; } = string.Empty;
+
+    [ObservableProperty] public partial string? FilePath { get; set; }
+
     public void LoadFromFile(string path)
     {
         FilePath = path;

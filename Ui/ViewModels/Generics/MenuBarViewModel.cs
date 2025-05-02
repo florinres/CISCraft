@@ -1,26 +1,20 @@
 ﻿using Microsoft.Win32;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
-using Ui.Services;
 
 namespace Ui.ViewModels.Generics;
 
 public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
-
-    [ObservableProperty] 
-    public partial IActiveDocumentService DocumentService { get; set; }
-    
     private readonly IToolVisibilityService _toolVisibilityService;
-    
+
     public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService)
     {
         DocumentService = documentService;
         _toolVisibilityService = toolVisibilityService;
     }
+
+    [ObservableProperty] public partial IActiveDocumentService DocumentService { get; set; }
 
     public void SetDockingService(IDockingService dockingService)
     {
@@ -39,14 +33,15 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     [RelayCommand]
     private void NewDocument()
     {
-        var doc = new FileViewModel()
+        var doc = new FileViewModel
         {
             Title = "Untitled",
-            Content = "Default start content",
+            Content = "Default start content"
         };
         DocumentService.Documents.Add(doc);
         DocumentService.SelectedDocument ??= doc;
     }
+
     [RelayCommand]
     private void OpenDocument()
     {
@@ -57,7 +52,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         };
 
         if (dialog.ShowDialog() != true) return;
-        
+
         var doc = new FileViewModel();
         doc.LoadFromFile(dialog.FileName);
         DocumentService.Documents.Add(doc);

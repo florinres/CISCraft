@@ -12,58 +12,58 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="ViewModels\Pages\**" />
-      <Compile Remove="Views\Pages\**" />
-      <EmbeddedResource Remove="ViewModels\Pages\**" />
-      <EmbeddedResource Remove="Views\Pages\**" />
-      <None Remove="ViewModels\Pages\**" />
-      <None Remove="Views\Pages\**" />
-      <Page Remove="ViewModels\Pages\**" />
-      <Page Remove="Views\Pages\**" />
+        <Compile Remove="ViewModels\Pages\**"/>
+        <Compile Remove="Views\Pages\**"/>
+        <EmbeddedResource Remove="ViewModels\Pages\**"/>
+        <EmbeddedResource Remove="Views\Pages\**"/>
+        <None Remove="ViewModels\Pages\**"/>
+        <None Remove="Views\Pages\**"/>
+        <Page Remove="ViewModels\Pages\**"/>
+        <Page Remove="Views\Pages\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="wpfui-icon.ico" />
+        <Content Include="wpfui-icon.ico"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AvalonDock.Themes.WPFUI" Version="1.1.0" />
-        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3171-prerelease" />
-        <PackageReference Include="WPF-UI" Version="4.0.2" />
-        <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0 " />
+        <PackageReference Include="AvalonDock.Themes.WPFUI" Version="1.1.0"/>
+        <PackageReference Include="AvalonEdit" Version="6.3.0.90"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0"/>
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3171-prerelease"/>
+        <PackageReference Include="WPF-UI" Version="4.0.2"/>
+        <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.2"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0 "/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Assets\wpfui-icon-256.png" />
-        <None Remove="Assets\wpfui-icon-1024.png" />
+        <None Remove="Assets\wpfui-icon-256.png"/>
+        <None Remove="Assets\wpfui-icon-1024.png"/>
         <None Update="Assets\Monaco\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Assets\AvalonEdit\Assembly16BitHighlighting.xshd">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Assets\wpfui-icon-256.png" />
-        <Resource Include="Assets\wpfui-icon-1024.png" />
+        <Resource Include="Assets\wpfui-icon-256.png"/>
+        <Resource Include="Assets\wpfui-icon-1024.png"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="AvalonDock">
-        <HintPath>..\..\..\.nuget\packages\dirkster.avalondock\4.72.1\lib\net5.0-windows7.0\AvalonDock.dll</HintPath>
-      </Reference>
-      <Reference Include="AvalonDock.Themes.WPFUI">
-        <HintPath>..\..\..\.nuget\packages\avalondock.themes.wpfui\1.1.0\lib\net9.0-windows7.0\AvalonDock.Themes.WPFUI.dll</HintPath>
-      </Reference>
+        <Reference Include="AvalonDock">
+            <HintPath>..\..\..\.nuget\packages\dirkster.avalondock\4.72.1\lib\net5.0-windows7.0\AvalonDock.dll</HintPath>
+        </Reference>
+        <Reference Include="AvalonDock.Themes.WPFUI">
+            <HintPath>..\..\..\.nuget\packages\avalondock.themes.wpfui\1.1.0\lib\net9.0-windows7.0\AvalonDock.Themes.WPFUI.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj" />
+        <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj"/>
     </ItemGroup>
 
 </Project>

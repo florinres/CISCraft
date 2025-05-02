@@ -1,6 +1,6 @@
 ﻿using Ui.ViewModels.Generics;
 
-namespace Ui.Services;
+namespace Ui.Interfaces.Services;
 
 public interface IDockingService
 {
