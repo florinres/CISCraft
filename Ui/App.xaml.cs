@@ -3,19 +3,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Ui.Models;
+using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.Windows;
 using Ui.Services;
-using Ui.ViewModels;
+using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
 using Wpf.Ui;
-using Wpf.Ui.DependencyInjection;
 using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
+using ASMBLR = Assembler.Business.Assembler;
 
 namespace Ui;
 
 /// <summary>
-/// Interaction logic for App.xaml
+///     Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
 {
@@ -37,14 +39,22 @@ public partial class App : Application
             services.AddSingleton<IActiveDocumentService, ActiveDocumentService>();
             services.AddSingleton<IWorkspaceViewModel, WorkspaceViewModel>();
             services.AddSingleton<FileStatsViewModel>();
-            
+
+            services.AddSingleton<IActionsBarViewModel, ActionsBarViewModel>();
+            services.AddSingleton<IMenuBarViewModel, MenuBarViewModel>();
+            services.AddSingleton<IAssemblerService, AssemblerService>();
+            services.AddSingleton<FileViewModel>();
+            services.AddSingleton<ASMBLR>();
+            services.AddSingleton<IDockingService, DummyDockingService>();
+            services.AddSingleton<IToolVisibilityService, ToolVisibilityService>();
         }).Build();
-    
+
     protected override async void OnStartup(StartupEventArgs e)
     {
         await _host.StartAsync();
 
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+
         mainWindow.Show();
 
         base.OnStartup(e);
@@ -55,6 +65,4 @@ public partial class App : Application
         await _host.StopAsync();
         base.OnExit(e);
     }
-
 }
-
