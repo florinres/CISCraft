@@ -8,19 +8,22 @@ namespace Ui.ViewModels.Windows
     public partial class MainWindowViewModel : ObservableObject, IMainWindowViewModel
     {
         [ObservableProperty]
-        private string _applicationTitle = "WPF UI - Ui";
+        public partial string ApplicationTitle { get; set; } = "WPF UI - Ui";
+
         [ObservableProperty]
-        private IWorkspaceViewModel _workspace;
+        public partial IWorkspaceViewModel Workspace { get; set; }
+
         [ObservableProperty]
-        private IMenuBarViewModel _menuBar;
+        public partial IMenuBarViewModel MenuBar { get; set; }
+
         [ObservableProperty]
-        private IActionsBarViewModel _actionsBar;
+        public partial IActionsBarViewModel ActionsBar { get; set; }
 
         public MainWindowViewModel(IWorkspaceViewModel workspace, IMenuBarViewModel menuBar, IActionsBarViewModel actionsBar)
         {
-            _workspace = workspace;
-            _menuBar = menuBar;
-            _actionsBar= actionsBar;
+            Workspace = workspace;
+            MenuBar = menuBar;
+            ActionsBar = actionsBar;
         }
     }
 }

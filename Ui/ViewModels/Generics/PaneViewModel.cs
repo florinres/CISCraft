@@ -4,11 +4,14 @@ namespace Ui.ViewModels.Generics;
 public abstract partial class PaneViewModel : ObservableObject
 {
     [ObservableProperty]
-    protected string? _title = null;
+    public partial string? Title { get; set; } = null;
+
     [ObservableProperty]
-    protected string? _contentId = null;
+    public partial string? ContentId { get; set; } = null;
+
     [ObservableProperty]
-    protected bool _isSelected = false;
+    public partial bool IsSelected { get; set; } = false;
+
     [ObservableProperty]
-    protected bool _isActive = false;
+    public partial bool IsActive { get; set; } = true;
 }

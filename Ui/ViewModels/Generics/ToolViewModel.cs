@@ -4,5 +4,7 @@ namespace Ui.ViewModels.Generics;
 public abstract partial class ToolViewModel : PaneViewModel
 {
     [ObservableProperty]
-    protected bool _isVisible = false;
+    public partial bool IsVisible { get; set; } = false;
+    
+    public bool HasToolBeenLoaded { get; set; } = false;
 }

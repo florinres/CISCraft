@@ -1,42 +1,31 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using Ui.Interfaces.Services;
 
 namespace Ui.ViewModels.Generics;
 
 public partial class FileStatsViewModel : ToolViewModel
 {
-    private readonly IActiveDocumentService _documentService;
 
-    public FileStatsViewModel(IActiveDocumentService documentService)
+    public FileStatsViewModel()
     {
-        _documentService = documentService;
-        _documentService.PropertyChanged += OnDocumentChanged;
-        // initial population
-        UpdateStats(_documentService.SelectedDocument);
+        IsVisible = false;
     }
     [ObservableProperty]
-    private long _fileSize;
+    public partial long FileSize { get; set; }
 
     [ObservableProperty]
-    private DateTime _lastModified;
+    public partial DateTime LastModified { get; set; }
 
     [ObservableProperty]
-    private string _fileName = string.Empty;
+    public partial string FileName { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _filePath = string.Empty;
+    public partial string FilePath { get; set; } = string.Empty;
 
     public const string ToolContentId = "FileStatsTool";
-
-    private void OnDocumentChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(IActiveDocumentService.SelectedDocument))
-        {
-            UpdateStats(_documentService.SelectedDocument);
-        }
-    }
-
-    private void UpdateStats(FileViewModel? doc)
+    
+    public void UpdateStats(FileViewModel? doc)
     {
         if (doc?.FilePath != null && File.Exists(doc.FilePath))
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
@@ -11,21 +12,18 @@ namespace Ui.ViewModels;
 
 public partial class WorkspaceViewModel : ObservableObject, IWorkspaceViewModel
 {
-    IActiveDocumentService _activeDocument;
-    public WorkspaceViewModel(IActiveDocumentService activeDocument, IActionsBarViewModel actionsBar)
+
+    [ObservableProperty]
+    public partial IActiveDocumentService ActiveDocumentsService { get; set; }
+
+    public WorkspaceViewModel(IActiveDocumentService activeDocumentsService)
     {
-        _activeDocument = activeDocument;
-        actionsBar.ObjectCodeGenerated += OnObjectCodeGenerated;
+        ActiveDocumentsService = activeDocumentsService;
     }
-    private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
+
+    [RelayCommand]
+    public void ShowFileStatsCommand()
     {
-        string result = Encoding.Unicode.GetString(objectCode);
-        var doc = new FileViewModel()
-        {
-            Title = "Assembled File",
-            Content = result,
-        };
-        _activeDocument.Documents.Add(doc);
-        _activeDocument.SelectedDocument ??= doc;
+        ActiveDocumentsService.ToggleToolVisibility(ActiveDocumentsService.FileStats);
     }
 }

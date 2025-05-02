@@ -16,21 +16,35 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
 {
     public event EventHandler<byte[]>? ObjectCodeGenerated;
     private readonly IAssemblerService _assemblerService;
-    private readonly IActiveDocumentService _activeDocument;
+    private readonly IActiveDocumentService _activeDocumentService;
 
-    public ActionsBarViewModel(IAssemblerService assemblerService,IActiveDocumentService activeDocument)
+    public ActionsBarViewModel(IAssemblerService assemblerService,IActiveDocumentService activeDocumentService)
     {
         _assemblerService = assemblerService;
-        _activeDocument = activeDocument;
+        _activeDocumentService = activeDocumentService;
+
+        ObjectCodeGenerated += OnObjectCodeGenerated;
     }
     [RelayCommand]
     private void RunAssembleSourceCodeService()
     {
-        if (_activeDocument.SelectedDocument == null)
+        if (_activeDocumentService.SelectedDocument == null)
         {
             return;
         }
-        byte[] objectCode = _assemblerService.AssembleSourceCodeService(_activeDocument.SelectedDocument.Content);
+        var objectCode = _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content);
         ObjectCodeGenerated?.Invoke(this, objectCode);
+    }
+    
+    private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
+    {
+        string result = Encoding.Unicode.GetString(objectCode);
+        var doc = new FileViewModel()
+        {
+            Title = "Assembled File",
+            Content = result,
+        };
+        _activeDocumentService.Documents.Add(doc);
+        _activeDocumentService.SelectedDocument ??= doc;
     }
 }

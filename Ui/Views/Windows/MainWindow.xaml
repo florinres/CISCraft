@@ -20,7 +20,8 @@
     WindowBackdropType="Mica"
     ExtendsContentIntoTitleBar="True"
     WindowCornerPreference="Round"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="MainWindow_OnLoaded">
     <Window.Resources>
         <system:Boolean x:Key="True">True</system:Boolean>
         <system:Boolean x:Key="False">False</system:Boolean>
@@ -58,7 +59,9 @@
                         <MenuItem
                             Header="Properties"
                             IsCheckable="True"
-                            IsChecked="{Binding MenuBar.FileStats.IsVisible, Mode=TwoWay}" />
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}" 
+                            Command="{Binding MenuBar.ShowFileStatsCommand}"
+                            />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -173,12 +176,14 @@
             </ui:Button>
         </StackPanel>
 
+        
+        <!-- AnchorablesSource="{Binding ActiveDocumentsService.Tools}" -->
         <DockingManager
+            x:Name="DockingManagerInstance"
             Grid.Row="2"
-            ActiveContent="{Binding SelectedDocument, Mode=TwoWay}"
-            AnchorablesSource="{Binding Tools}"
-            DocumentsSource="{Binding Documents}"
-            DataContext="{Binding MenuBar}">
+            ActiveContent="{Binding ActiveDocumentsService.SelectedDocument, Mode=TwoWay}"
+            DocumentsSource="{Binding ActiveDocumentsService.Documents}"
+            DataContext="{Binding Workspace}">
             <DockingManager.Theme>
                 <wpfui:WPFUITheme/>
             </DockingManager.Theme>
@@ -216,8 +221,8 @@
                         <Style TargetType="{x:Type LayoutAnchorableItem}">
                             <Setter Property="Title" Value="{Binding Model.Title}" />
                             <Setter Property="CanClose" Value="True" />
-                            <Setter Property="Visibility"
-                                    Value="{Binding Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource False}}" />
+                            <!-- <Setter Property="Visibility" -->
+                            <!--         Value="{Binding Model.IsVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource False}}" /> -->
                             <Setter Property="ContentId" Value="{Binding Model.ToolContentId}" />
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                             <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
@@ -227,6 +232,7 @@
                         <Style TargetType="{x:Type LayoutItem}">
                             <Setter Property="Title" Value="{Binding Model.Title}" />
                             <Setter Property="ToolTip" Value="{Binding Model.FilePath}" />
+                            <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
                         </Style>
                     </components:PanesStyleSelector.FileStyle>
                 </components:PanesStyleSelector>

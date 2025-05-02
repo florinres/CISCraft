@@ -2,32 +2,38 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
+using Ui.Services;
 
 namespace Ui.ViewModels.Generics;
 
 public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
 
-    private readonly IActiveDocumentService _documentService;
-    public ObservableCollection<FileViewModel> Documents => _documentService.Documents;
-    public ObservableCollection<ToolViewModel> Tools { get; } = new();
-
-    [ObservableProperty]
-    private FileStatsViewModel _fileStats;
-
-    public FileViewModel? SelectedDocument
+    [ObservableProperty] 
+    public partial IActiveDocumentService DocumentService { get; set; }
+    
+    private readonly IToolVisibilityService _toolVisibilityService;
+    
+    public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService)
     {
-        get => _documentService.SelectedDocument;
-        set => _documentService.SelectedDocument = value;
+        DocumentService = documentService;
+        _toolVisibilityService = toolVisibilityService;
     }
 
-    public MenuBarViewModel(IActiveDocumentService documentService, FileStatsViewModel fileStatsViewModel)
+    public void SetDockingService(IDockingService dockingService)
     {
-        _documentService = documentService;
-        
-        _fileStats = fileStatsViewModel;
-        Tools.Add(fileStatsViewModel);
+        _toolVisibilityService.SetDockingService(dockingService);
+    }
+
+    public void SetToolsVisibilityOnAndOff()
+    {
+        foreach (var tool in DocumentService.Tools)
+        {
+            _toolVisibilityService.ToggleToolVisibility(tool);
+            _toolVisibilityService.ToggleToolVisibility(tool);
+        }
     }
 
     [RelayCommand]
@@ -38,8 +44,8 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
             Title = "Untitled",
             Content = "Default start content",
         };
-        Documents.Add(doc);
-        SelectedDocument = doc;
+        DocumentService.Documents.Add(doc);
+        DocumentService.SelectedDocument ??= doc;
     }
     [RelayCommand]
     private void OpenDocument()
@@ -50,13 +56,17 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
             Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
         };
 
-        if (dialog.ShowDialog() == true)
-        {
-            var doc = new FileViewModel();
-            doc.LoadFromFile(dialog.FileName);
-            Documents.Add(doc);
-            SelectedDocument = doc;
-        }
+        if (dialog.ShowDialog() != true) return;
+        
+        var doc = new FileViewModel();
+        doc.LoadFromFile(dialog.FileName);
+        DocumentService.Documents.Add(doc);
+        DocumentService.SelectedDocument ??= doc;
     }
 
+    [RelayCommand]
+    private void ShowFileStats()
+    {
+        _toolVisibilityService.ToggleToolVisibility(DocumentService.FileStats);
+    }
 }

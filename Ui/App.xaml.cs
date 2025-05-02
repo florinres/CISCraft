@@ -45,6 +45,9 @@ public partial class App : Application
             services.AddSingleton<IAssemblerService, AssemblerService>();
             services.AddSingleton<FileViewModel>();
             services.AddSingleton<ASMBLR>();
+            services.AddSingleton<IDockingService,DummyDockingService>();
+            services.AddSingleton<IToolVisibilityService,ToolVisibilityService>();
+
 
         }).Build();
     
@@ -53,6 +56,7 @@ public partial class App : Application
         await _host.StartAsync();
 
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        
         mainWindow.Show();
 
         base.OnStartup(e);
