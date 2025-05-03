@@ -6,6 +6,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:diagram="clr-namespace:Ui.Views.UserControls.Diagram"
              xmlns:diagram1="clr-namespace:Ui.ViewModels.Components.Diagram"
+             xmlns:components="clr-namespace:Ui.Views.UserControls.Diagram.Components"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=diagram1:DiagramViewModel, IsDesignTimeCreatable=False}">
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -32,11 +33,11 @@
                             Margin="0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top">
-                    <diagram:RegisterBlock DataContext="{Binding PCContext}"   Margin="0,5,0,0" />
-                    <diagram:RegisterBlock DataContext="{Binding IVRContext}"  Margin="0,15,0,0"/>
-                    <diagram:RegisterBlock DataContext="{Binding TContext}"    Margin="0,15,0,0" />
-                    <diagram:RegisterBlock DataContext="{Binding SPContext}"   Margin="0,15,0,0" />
-                    <diagram:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,15,0,0" />
+                    <components:RegisterBlock DataContext="{Binding PCContext}"   Margin="0,5,0,0" />
+                    <components:RegisterBlock DataContext="{Binding IVRContext}"  Margin="0,15,0,0"/>
+                    <components:RegisterBlock DataContext="{Binding TContext}"    Margin="0,15,0,0" />
+                    <components:RegisterBlock DataContext="{Binding SPContext}"   Margin="0,15,0,0" />
+                    <components:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,15,0,0" />
                 </StackPanel>
                 
                 <diagram:MuxBlock
@@ -69,28 +70,28 @@
                             Margin="0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top">
-                    <diagram:RegisterBlock DataContext="{Binding MDRContext}" Margin="0,5,0,0"/>
-                    <diagram:RegisterBlock DataContext="{Binding ADRContext}" Margin="0,15,0,0"/>
-                    <diagram:RegisterBlock DataContext="{Binding IRContext}"  Margin="0,15,0,0"/>
+                    <components:RegisterBlock DataContext="{Binding MDRContext}" Margin="0,5,0,0"/>
+                    <components:RegisterBlock DataContext="{Binding ADRContext}" Margin="0,15,0,0"/>
+                    <components:RegisterBlock DataContext="{Binding IRContext}"  Margin="0,15,0,0"/>
                 </StackPanel>
                 <!-- R0–R15 Registers in a column -->
                 <StackPanel Canvas.Left="800" Canvas.Top="300">
-                    <diagram:RegisterBlock DataContext="{Binding R0Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R1Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R2Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R3Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R4Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R5Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R6Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R7Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R8Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R9Context }" />
-                    <diagram:RegisterBlock DataContext="{Binding R10Context}" />
-                    <diagram:RegisterBlock DataContext="{Binding R11Context}" />
-                    <diagram:RegisterBlock DataContext="{Binding R12Context}" />
-                    <diagram:RegisterBlock DataContext="{Binding R13Context}" />
-                    <diagram:RegisterBlock DataContext="{Binding R14Context}" />
-                    <diagram:RegisterBlock DataContext="{Binding R15Context}" />
+                    <components:RegisterBlock DataContext="{Binding R0Context }" />
+                    <components:RegisterBlock DataContext="{Binding R1Context }" />
+                    <components:RegisterBlock DataContext="{Binding R2Context }" />
+                    <components:RegisterBlock DataContext="{Binding R3Context }" />
+                    <components:RegisterBlock DataContext="{Binding R4Context }" />
+                    <components:RegisterBlock DataContext="{Binding R5Context }" />
+                    <components:RegisterBlock DataContext="{Binding R6Context }" />
+                    <components:RegisterBlock DataContext="{Binding R7Context }" />
+                    <components:RegisterBlock DataContext="{Binding R8Context }" />
+                    <components:RegisterBlock DataContext="{Binding R9Context }" />
+                    <components:RegisterBlock DataContext="{Binding R10Context}" />
+                    <components:RegisterBlock DataContext="{Binding R11Context}" />
+                    <components:RegisterBlock DataContext="{Binding R12Context}" />
+                    <components:RegisterBlock DataContext="{Binding R13Context}" />
+                    <components:RegisterBlock DataContext="{Binding R14Context}" />
+                    <components:RegisterBlock DataContext="{Binding R15Context}" />
                 </StackPanel>
                 
                 <diagram:MuxBlock

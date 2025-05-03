@@ -3,11 +3,10 @@
 public partial class RegisterViewModel : BaseDiagramObject
 {
     [ObservableProperty]
-    private object _value;
-    
+    public partial object Value { get; set; }
     [ObservableProperty]
-    private string _name;
-    
+    public partial string Name { get; set; }
+
     // public EventHandler customEvent;
     //
     // private void DoSmthAfterEvent(object? sender, EventArgs e)
@@ -18,7 +17,7 @@ public partial class RegisterViewModel : BaseDiagramObject
     public RegisterViewModel(string name, object? defaultValue = null)
     {
         Name = name;
-        Value = defaultValue ?? "0000000000000000";
+        Value = defaultValue ?? "0000 0000 0000 0000";
     }
     
 }

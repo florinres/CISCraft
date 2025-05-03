@@ -34,15 +34,15 @@
                 <!-- Text="{Binding Name}" -->
             </StackPanel>
         </Border>
-        <TextBlock Text="{Binding Name}"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   TextAlignment="Center"
-                   Margin="8,0,0,0"
-                   Padding="2"
-                   Background="Transparent"
-                   MinWidth="45" 
-                   Canvas.Left="30"
-                   Canvas.Top="5"/>
+        <!-- <TextBlock Text="{Binding Name}" -->
+        <!--            Foreground="White" -->
+        <!--            HorizontalAlignment="Center" -->
+        <!--            TextAlignment="Center" -->
+        <!--            Margin="8,0,0,0" -->
+        <!--            Padding="2" -->
+        <!--            Background="Transparent" -->
+        <!--            MinWidth="45"  -->
+        <!--            Canvas.Left="30" -->
+        <!--            Canvas.Top="5"/> -->
     </Canvas>
 </UserControl>
