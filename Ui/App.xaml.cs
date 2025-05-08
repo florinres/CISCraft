@@ -59,8 +59,8 @@ public partial class App : Application
 
         mainWindow.Show();
 
-        var diagramWindow = new DiagramPage();
-        diagramWindow.Show();
+        // var diagramWindow = new DiagramPage();
+        // diagramWindow.Show();
         
         base.OnStartup(e);
     }

@@ -34,8 +34,8 @@
                     <ColumnDefinition Width="*" /> <!-- Last one expands -->
                 </Grid.ColumnDefinitions>
                 <!-- Dynamic Items -->
-                <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding MicroProgramItems}">
+                <!-- <ScrollViewer HorizontalScrollBarVisibility="Auto"> -->
+                    <ItemsControl Grid.Row="0" ItemsSource="{Binding MicroProgramItems}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -59,7 +59,7 @@
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.AlternationCount>8</ItemsControl.AlternationCount>
                     </ItemsControl>
-                </ScrollViewer>
+                <!-- </ScrollViewer> -->
             </Grid>
         </StackPanel>
     </Border>

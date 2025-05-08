@@ -20,91 +20,130 @@
                   Cursor="Arrow">
         <Grid>
             <Grid.LayoutTransform>
-                <ScaleTransform x:Name="DiagramScaleTransform" ScaleX="1" ScaleY="1"/>
+                <ScaleTransform x:Name="DiagramScaleTransform" ScaleX="1" ScaleY="1" />
             </Grid.LayoutTransform>
 
-            <Canvas x:Name="DiagramCanvas" Width="2000" Height="1500">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- Microprogram Memory Row -->
+                <RowDefinition Height="*" />    <!-- Diagram Canvas Row -->
+            </Grid.RowDefinitions>
+
+            <components:MicroprogramMemory DataContext="{Binding MemoryContext}" Grid.Row="0" Margin="0,0,0,10" />
+
+
+            <Canvas x:Name="DiagramCanvas" Width="1050" Height="720" Grid.Row="1">
+
+                <Border
+                    Canvas.Left="190"
+                    Canvas.Top="0"
+                    Background="{DynamicResource NodeBackgroundBrush}"
+                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderThickness="2"
+                    Padding="1"
+                    CornerRadius="4">
+                    <StackPanel>
+                        <TextBlock
+                            TextAlignment="Center"
+                            Foreground="White">
+                            MAIN MEMORY
+                        </TextBlock>
+                        <components:RegisterBlock DataContext="{Binding DataInContext }" Height="20" Margin="8"
+                                                  MinNameWidth="80" />
+                        <components:RegisterBlock DataContext="{Binding DataOutContext }" Height="20" Margin="8"
+                                                  MinNameWidth="80" />
+                        <components:RegisterBlock DataContext="{Binding AdrContext }" Height="20" Margin="8"
+                                                  MinNameWidth="80" />
+                    </StackPanel>
+                </Border>
 
                 <!-- Special Registers -->
                 <StackPanel x:Name="RegistersPanel"
-                            Canvas.Left="220"
-                            Canvas.Top="50"
+                            Canvas.Left="190"
+                            Canvas.Top="200"
                             Orientation="Vertical"
                             Margin="0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top">
-                    <components:RegisterBlock DataContext="{Binding PCContext}"   Margin="0,5,0,0" />
-                    <components:RegisterBlock DataContext="{Binding IVRContext}"  Margin="0,15,0,0"/>
-                    <components:RegisterBlock DataContext="{Binding TContext}"    Margin="0,15,0,0" />
-                    <components:RegisterBlock DataContext="{Binding SPContext}"   Margin="0,15,0,0" />
-                    <components:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,15,0,0" />
+                    <components:RegisterBlock DataContext="{Binding PCContext}" Margin="0,5,0,0" />
+                    <components:RegisterBlock DataContext="{Binding IVRContext}" Margin="0,8,0,0" />
+                    <components:RegisterBlock DataContext="{Binding TContext}" Margin="0,8,0,0" />
+                    <components:RegisterBlock DataContext="{Binding SPContext}" Margin="0,8,0,0" />
+                    <components:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,8,0,0" />
                 </StackPanel>
-                
+
                 <diagram:MuxBlock
-                    Canvas.Left="100" 
-                    Canvas.Top="220"/>
-                
+                    Canvas.Left="110"
+                    Canvas.Top="334" />
+
                 <diagram:SumBlock
-                    Canvas.Left="150" 
-                    Canvas.Top="300"/>
-                
+                    Canvas.Left="150"
+                    Canvas.Top="520" />
+
                 <StackPanel x:Name="BitesPannel"
-                            Canvas.Left="300" 
-                            Canvas.Top="280"
+                            Canvas.Left="300"
+                            Canvas.Top="400"
                             Orientation="Vertical"
                             Margin="0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top">
-                    <diagram:BitBlock DataContext="{Binding Pd1Context}"/>
-                    <diagram:BitBlock DataContext="{Binding PdMinus1Context}" Margin="0,55,0,0"/>
-                    <diagram:BitBlock DataContext="{Binding Pd0sContext}" Margin="0,55,0,0"/>
+                    <diagram:BitBlock DataContext="{Binding Pd1Context}" />
+                    <diagram:BitBlock DataContext="{Binding PdMinus1Context}" Margin="0,35,0,0" />
+                    <diagram:BitBlock DataContext="{Binding Pd0sContext}" Margin="0,35,0,0" />
                 </StackPanel>
-                
-                <diagram:StraightLineBus LineWidth="8" LineHeight="500" Canvas.Left="500" Canvas.Top="50"/>
-                <diagram:StraightLineBus LineWidth="8" LineHeight="500" Canvas.Left="600" Canvas.Top="50"/>
-                
+
+                <diagram:StraightLineBus LineWidth="8" LineHeight="600" Canvas.Left="500" Canvas.Top="50" />
+                <diagram:StraightLineBus LineWidth="8" LineHeight="600" Canvas.Left="600" Canvas.Top="50" />
+
                 <StackPanel x:Name="RightRegistersPanel"
-                            Canvas.Left="800"
-                            Canvas.Top="80"
+                            Canvas.Left="650"
+                            Canvas.Top="140"
                             Orientation="Vertical"
                             Margin="0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top">
-                    <components:RegisterBlock DataContext="{Binding MDRContext}" Margin="0,5,0,0"/>
-                    <components:RegisterBlock DataContext="{Binding ADRContext}" Margin="0,15,0,0"/>
-                    <components:RegisterBlock DataContext="{Binding IRContext}"  Margin="0,15,0,0"/>
+                    <components:RegisterBlock DataContext="{Binding MDRContext}" Margin="0,5,0,0" />
+                    <components:RegisterBlock DataContext="{Binding ADRContext}" Margin="0,8,0,0" />
+                    <components:RegisterBlock DataContext="{Binding IRContext}" Margin="0,8,0,0" />
                 </StackPanel>
                 <!-- R0–R15 Registers in a column -->
-                <StackPanel Canvas.Left="800" Canvas.Top="300">
-                    <components:RegisterBlock DataContext="{Binding R0Context }" />
-                    <components:RegisterBlock DataContext="{Binding R1Context }" />
-                    <components:RegisterBlock DataContext="{Binding R2Context }" />
-                    <components:RegisterBlock DataContext="{Binding R3Context }" />
-                    <components:RegisterBlock DataContext="{Binding R4Context }" />
-                    <components:RegisterBlock DataContext="{Binding R5Context }" />
-                    <components:RegisterBlock DataContext="{Binding R6Context }" />
-                    <components:RegisterBlock DataContext="{Binding R7Context }" />
-                    <components:RegisterBlock DataContext="{Binding R8Context }" />
-                    <components:RegisterBlock DataContext="{Binding R9Context }" />
-                    <components:RegisterBlock DataContext="{Binding R10Context}" />
-                    <components:RegisterBlock DataContext="{Binding R11Context}" />
-                    <components:RegisterBlock DataContext="{Binding R12Context}" />
-                    <components:RegisterBlock DataContext="{Binding R13Context}" />
-                    <components:RegisterBlock DataContext="{Binding R14Context}" />
-                    <components:RegisterBlock DataContext="{Binding R15Context}" />
-                </StackPanel>
-                
+                <Border
+                    Canvas.Left="650"
+                    Canvas.Top="270"
+                    Background="{DynamicResource NodeBackgroundBrush}"
+                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderThickness="2"
+                    Padding="1"
+                    CornerRadius="4">
+                    <StackPanel>
+                        <components:RegisterBlock DataContext="{Binding R0Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R1Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R2Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R3Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R4Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R5Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R6Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R7Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R8Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R9Context }" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R10Context}" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R11Context}" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R12Context}" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R13Context}" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R14Context}" WithBorder="False" Height="20" />
+                        <components:RegisterBlock DataContext="{Binding R15Context}" WithBorder="False" Height="20" />
+                    </StackPanel>
+                </Border>
                 <diagram:MuxBlock
-                    Canvas.Left="1050" 
-                    Canvas.Top="70"
-                    IsFlipped="True"/>
-                
-                <diagram:AroundTheEdgeBus 
+                    Canvas.Left="900"
+                    Canvas.Top="130"
+                    IsFlipped="True" />
+
+                <diagram:AroundTheEdgeBus
                     LineThickness="10"
-                    WrapHeight="800" 
-                    WrapWidth="1100"
-                    Canvas.Left="50" 
-                    Canvas.Top="50"/>
+                    WrapHeight="650"
+                    WrapWidth="950"
+                    Canvas.Left="50"
+                    Canvas.Top="50" />
 
             </Canvas>
         </Grid>

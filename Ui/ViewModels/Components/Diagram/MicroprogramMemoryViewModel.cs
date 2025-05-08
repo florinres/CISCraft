@@ -13,8 +13,6 @@ public partial class MicroprogramMemoryViewModel: ObservableObject
         "PM_FLAG",
         "(CIN+PD_COND)",
         "WRITE",
-        "IF B2 JUMP! (IR13,IR12,...)",
-        "CLR ELSE JUMP! (IR14,...)",
-        "MOV"
+        "IF B2 JUMP! (IR13,IR12,IR11,IR10,IR9,IR8,IR7,IR6) CLR ELSE JUMP! (IR14,IR13,IE12,0) MOV"
     ];
 }
