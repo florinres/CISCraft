@@ -8,7 +8,6 @@ public class DiagramViewModel : ToolViewModel, IDiagramViewModel
     public MicroprogramMemoryViewModel MemoryContext { get; } = new();
     public RegisterViewModel DataInContext { get; } = new("DATA IN");
     public RegisterViewModel DataOutContext { get; } = new("DATA OUT");
-    public RegisterViewModel AdrContext { get; } = new("ADR");
     public RegisterViewModel PCContext { get; } = new("PC");
     public RegisterViewModel IVRContext { get; } = new("IVR");
     public RegisterViewModel TContext { get; } = new("T");

@@ -51,7 +51,7 @@
                                                   MinNameWidth="80" />
                         <components:RegisterBlock DataContext="{Binding DataOutContext }" Height="20" Margin="8"
                                                   MinNameWidth="80" />
-                        <components:RegisterBlock DataContext="{Binding AdrContext }" Height="20" Margin="8"
+                        <components:RegisterBlock DataContext="{Binding ADRContext }" Height="20" Margin="8"
                                                   MinNameWidth="80" />
                     </StackPanel>
                 </Border>
