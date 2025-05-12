@@ -70,4 +70,10 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.Diagram);
     }
+    
+    [RelayCommand]
+    public void ShowHexViewer()
+    {
+        _toolVisibilityService.ToggleToolVisibility(DocumentService.HexViewer);
+    }
 }

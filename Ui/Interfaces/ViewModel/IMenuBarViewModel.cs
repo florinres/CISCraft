@@ -27,6 +27,8 @@ public interface IMenuBarViewModel
     IRelayCommand ShowFileStatsCommand { get; }
     
     IRelayCommand ShowDiagramCommand { get; }
+    
+    IRelayCommand ShowHexViewerCommand { get; }
 
     void SetDockingService(IDockingService dockingService);
     void SetToolsVisibilityOnAndOff();

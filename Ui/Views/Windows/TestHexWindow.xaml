@@ -5,6 +5,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Ui.Views.Windows"
         xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
+        xmlns:viewModel="clr-namespace:Ui.ViewModels"
+        xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
+        d:DataContext="{d:DesignInstance Type=hexViewer:HexViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Title="TestHexWindow" Height="450" Width="800">
     <Grid>

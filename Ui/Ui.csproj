@@ -97,4 +97,8 @@
         <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Interfaces\Windows\" />
+    </ItemGroup>
+
 </Project>

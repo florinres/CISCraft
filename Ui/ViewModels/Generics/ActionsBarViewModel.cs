@@ -8,11 +8,13 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
 {
     private readonly IActiveDocumentService _activeDocumentService;
     private readonly IAssemblerService _assemblerService;
+    private readonly IDockingService _dockingService;
 
-    public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService)
+    public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService ,IDockingService dockingService)
     {
         _assemblerService = assemblerService;
         _activeDocumentService = activeDocumentService;
+        _dockingService = dockingService;
 
         ObjectCodeGenerated += OnObjectCodeGenerated;
     }
@@ -29,13 +31,19 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
 
     private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
     {
-        var result = Encoding.Unicode.GetString(objectCode);
-        var doc = new FileViewModel
+        if (objectCode is not [])
         {
-            Title = "Assembled File",
-            Content = result
-        };
-        _activeDocumentService.Documents.Add(doc);
-        _activeDocumentService.SelectedDocument ??= doc;
+            _dockingService.ShowTool(_activeDocumentService.HexViewer);
+        }
+        
+        //
+        // var result = Encoding.Unicode.GetString(objectCode);
+        // var doc = new FileViewModel
+        // {
+        //     Title = "Assembled File",
+        //     Content = result
+        // };
+        // _activeDocumentService.Documents.Add(doc);
+        // _activeDocumentService.SelectedDocument ??= doc;
     }
 }

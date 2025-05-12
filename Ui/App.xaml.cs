@@ -8,6 +8,7 @@ using Ui.Interfaces.ViewModel;
 using Ui.Interfaces.Windows;
 using Ui.Services;
 using Ui.ViewModels.Components.Diagram;
+using Ui.ViewModels.Components.HexViewer;
 using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
@@ -49,6 +50,7 @@ public partial class App : Application
             services.AddSingleton<IDockingService, DummyDockingService>();
             services.AddSingleton<IToolVisibilityService, ToolVisibilityService>();
             services.AddSingleton<IDiagramViewModel, DiagramViewModel>();
+            services.AddSingleton<IHexViewModel, HexViewModel>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)

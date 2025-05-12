@@ -13,6 +13,8 @@
     xmlns:helpers="clr-namespace:Ui.Helpers"
     xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
     xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
+    xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
+    xmlns:hex="clr-namespace:Ui.Views.UserControls.Hex"
     d:DataContext="{d:DesignInstance Type=interfaces:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -67,6 +69,11 @@
                             IsCheckable="True"
                             IsChecked="{Binding Workspace.ActiveDocumentsService.Diagram.IsVisible, Mode=TwoWay}"
                             Command="{Binding MenuBar.ShowDiagramCommand}" />
+                        <MenuItem
+                            Header="HexViewer"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowHexViewerCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -223,6 +230,11 @@
                             <diagram1:DiagramUserControl ViewModel="{Binding}"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.DiagramViewTemplate>
+                    <components:PanesTemplateSelector.HexViewTemplate>
+                        <DataTemplate DataType="{x:Type hexViewer:HexViewModel}">
+                            <hex:HexControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.HexViewTemplate>
                 </components:PanesTemplateSelector>
             </DockingManager.LayoutItemTemplateSelector>
 
