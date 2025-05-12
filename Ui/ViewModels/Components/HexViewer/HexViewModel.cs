@@ -8,6 +8,7 @@ namespace Ui.ViewModels.Components.HexViewer;
 
 public partial class HexViewModel : ToolViewModel, IHexViewModel
 {
+    [ObservableProperty] public override partial string? Title { get; set; } = "HexViewer";
     private readonly IAssemblerService _assemblerService;
 
     public HexViewModel(IAssemblerService assemblerService)
@@ -25,7 +26,7 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
     private bool _isElementReadyToRender;
     
     [ObservableProperty]
-    private Stream? _hexEditorStream;
+    private Stream _hexEditorStream = new MemoryStream();
 
     private void OnSourceCodeAssembled(object? sender, byte[] code)
     {
@@ -37,6 +38,4 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
         HexEditorStream = new MemoryStream(newValue, writable: false);
         IsElementReadyToRender = newValue is { Length: > 0 };
     }
-
-
 }

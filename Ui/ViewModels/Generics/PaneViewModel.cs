@@ -4,7 +4,7 @@ namespace Ui.ViewModels.Generics;
 
 public abstract partial class PaneViewModel : ObservableObject
 {
-    [ObservableProperty] public partial string? Title { get; set; } = null;
+    public abstract  string? Title { get; set; }
 
     [ObservableProperty] public partial string? ContentId { get; set; } = null;
 

@@ -10,17 +10,17 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <wpfHexaEditor:HexEditor
+            x:Name="HexEditorControl"
             Stream="{Binding HexEditorStream, Mode=OneWay}"
             Width="Auto"
             Height="Auto"
             Margin="2"
             AllowByteCount="False"
-            AllowCustomBackgroundBlock="True"
-            AllowDrop="True"
+            AllowDrop="False"
             AllowExtend="False"
             AppendNeedConfirmation="True"
             BorderThickness="1"
-            ByteGrouping="FourByte"
+            ByteGrouping="TwoByte"
             ByteShiftLeft="{Binding LongValue, ElementName=HbBsl, UpdateSourceTrigger=PropertyChanged}"
             ByteSpacerPositioning="HexBytePanel"
             ByteSpacerVisualStyle="Dash"
@@ -30,7 +30,10 @@
             ForegroundSecondColor="Blue"
             OffSetStringVisual="Hexadecimal"
             PreloadByteInEditorMode="MaxScreenVisibleLineAtDataLoad"
-            VisualCaretMode="Overwrite" />
+            VisualCaretMode="Overwrite" 
+            Background="{DynamicResource ApplicationBackgroundBrush}"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            />
 
     </Grid>
 </UserControl>

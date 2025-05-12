@@ -8,13 +8,11 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
 {
     private readonly IActiveDocumentService _activeDocumentService;
     private readonly IAssemblerService _assemblerService;
-    private readonly IDockingService _dockingService;
 
-    public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService ,IDockingService dockingService)
+    public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService)
     {
         _assemblerService = assemblerService;
         _activeDocumentService = activeDocumentService;
-        _dockingService = dockingService;
 
         ObjectCodeGenerated += OnObjectCodeGenerated;
     }
@@ -33,7 +31,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         if (objectCode is not [])
         {
-            _dockingService.ShowTool(_activeDocumentService.HexViewer);
+            _activeDocumentService.HexViewer.IsVisible = true;
         }
         
         //

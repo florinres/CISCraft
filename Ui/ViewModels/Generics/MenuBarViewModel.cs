@@ -48,7 +48,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         var dialog = new OpenFileDialog
         {
             Title = "Open File",
-            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+            Filter = "Assembly Files (*.asm;*.s)|*.asm;*.s|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
         };
 
         if (dialog.ShowDialog() != true) return;
