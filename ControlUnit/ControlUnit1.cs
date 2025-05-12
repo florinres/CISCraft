@@ -3,7 +3,7 @@ using ControlUnit.Registers;
 
 namespace ControlUnit
 {
-    public class ControlUnit
+    public class ControlUnit1
     {
         private Generator generator;
         private Sequencer sequencer;
@@ -13,7 +13,7 @@ namespace ControlUnit
         private MAR mar;
         private MIR mir;
         private MicrocommandDecodifier microcommandDecodifier;
-        public ControlUnit()
+        public ControlUnit1()
         {
             generator = new Generator();
             sequencer = new Sequencer();
