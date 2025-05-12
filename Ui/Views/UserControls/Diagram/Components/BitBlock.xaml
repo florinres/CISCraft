@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Ui.Views.UserControls.Diagram.BitBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewModel="clr-namespace:Ui.ViewModels"
+             xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
+             d:DataContext="{d:DesignInstance Type=diagram:BitBlockViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="100">
+    <UserControl.Resources>
+        <Style x:Key="NodeStyleRectangle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="{DynamicResource NodeBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource NodeBorderBrush}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Padding" Value="4" />
+            <!-- <Setter Property="Height" Value="{x:Static const:DiagramConstants.ElementHeight}"/> -->
+            <!-- <Setter Property="Width" Value="{x:Static const:DiagramConstants.ElementWidth}"/> -->
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="30"/>
+        </Style>
+    </UserControl.Resources>
+    <Canvas>
+        <Border 
+            Style="{StaticResource NodeStyleRectangle}"
+            Canvas.Top="20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <!-- Text="{Binding Value}" -->
+                <TextBlock Text="{Binding Value}"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center" />
+                <!-- Text="{Binding Name}" -->
+            </StackPanel>
+        </Border>
+        <!-- <TextBlock Text="{Binding Name}" -->
+        <!--            Foreground="White" -->
+        <!--            HorizontalAlignment="Center" -->
+        <!--            TextAlignment="Center" -->
+        <!--            Margin="8,0,0,0" -->
+        <!--            Padding="2" -->
+        <!--            Background="Transparent" -->
+        <!--            MinWidth="45"  -->
+        <!--            Canvas.Left="30" -->
+        <!--            Canvas.Top="5"/> -->
+    </Canvas>
+</UserControl>

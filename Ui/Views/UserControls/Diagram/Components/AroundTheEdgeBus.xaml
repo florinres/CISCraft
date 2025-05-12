@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Ui.Views.UserControls.Diagram.AroundTheEdgeBus"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Ui.Views.UserControls.Diagram" xmlns:viewModel="clr-namespace:Ui.ViewModels"
+             xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
+             d:DataContext="{d:DesignInstance Type=diagram:AroundTheEdgeBusViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <!-- Black outer path -->
+        <Path Stroke="Black"
+              StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              StrokeLineJoin="Round"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round">
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="0,0" IsClosed="False">
+                        <LineSegment Point="{Binding BottomLeftpoint, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        <LineSegment Point="{Binding BottomRightpoint, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        <LineSegment Point="{Binding TopRightpoint, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+
+        <!-- Inner gray path (slightly thinner, sits on top) -->
+        <Path Stroke="Gray"
+              StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InnerThicknessConverter}}"
+              StrokeLineJoin="Round"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round">
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="0,0" IsClosed="False">
+                        <LineSegment Point="{Binding BottomLeftpoint, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        <LineSegment Point="{Binding BottomRightpoint, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        <LineSegment Point="{Binding TopRightpoint, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+    </Grid>
+</UserControl>

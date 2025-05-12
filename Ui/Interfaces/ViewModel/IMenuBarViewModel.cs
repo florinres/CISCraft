@@ -25,6 +25,8 @@ public interface IMenuBarViewModel
     ///     <see cref="MenuBarViewModel.NewDocument" />.
     /// </summary>
     IRelayCommand ShowFileStatsCommand { get; }
+    
+    IRelayCommand ShowDiagramCommand { get; }
 
     void SetDockingService(IDockingService dockingService);
     void SetToolsVisibilityOnAndOff();

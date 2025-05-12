@@ -11,6 +11,8 @@
     xmlns:system="clr-namespace:System;assembly=netstandard"
     xmlns:viewmodels="clr-namespace:Ui.ViewModels.Generics"
     xmlns:helpers="clr-namespace:Ui.Helpers"
+    xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
+    xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
     d:DataContext="{d:DesignInstance Type=interfaces:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -60,6 +62,11 @@
                             IsCheckable="True"
                             IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}"
                             Command="{Binding MenuBar.ShowFileStatsCommand}" />
+                        <MenuItem
+                            Header="Diagram"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.Diagram.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowDiagramCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -211,6 +218,11 @@
                             </Border>
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileStatsViewTemplate>
+                    <components:PanesTemplateSelector.DiagramViewTemplate>
+                        <DataTemplate DataType="{x:Type diagram:DiagramViewModel}">
+                            <diagram1:DiagramUserControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.DiagramViewTemplate>
                 </components:PanesTemplateSelector>
             </DockingManager.LayoutItemTemplateSelector>
 

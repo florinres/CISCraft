@@ -64,4 +64,10 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.FileStats);
     }
+    
+    [RelayCommand]
+    private void ShowDiagram()
+    {
+        _toolVisibilityService.ToggleToolVisibility(DocumentService.Diagram);
+    }
 }

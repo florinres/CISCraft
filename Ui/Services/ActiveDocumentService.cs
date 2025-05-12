@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
@@ -8,10 +9,12 @@ public partial class ActiveDocumentService : ObservableObject, IActiveDocumentSe
 {
     private IDockingService _dockingService;
 
-    public ActiveDocumentService(FileStatsViewModel fileStatsViewModel, IDockingService dockingService)
+    public ActiveDocumentService(FileStatsViewModel fileStatsViewModel, IDockingService dockingService, IDiagramViewModel diagramViewModel)
     {
         FileStats = fileStatsViewModel;
+        Diagram = diagramViewModel;
         Tools.Add(fileStatsViewModel);
+        Tools.Add(diagramViewModel);
 
         _dockingService = dockingService;
 
@@ -31,9 +34,10 @@ public partial class ActiveDocumentService : ObservableObject, IActiveDocumentSe
     }
 
     public ObservableCollection<FileViewModel> Documents { get; } = [];
-    public ObservableCollection<ToolViewModel> Tools { get; } = [];
+    public ObservableCollection<IToolViewModel> Tools { get; } = [];
 
     [ObservableProperty] public partial FileStatsViewModel FileStats { get; set; }
+    [ObservableProperty] public partial IDiagramViewModel Diagram { get; set; }
 
     public void ToggleToolVisibility(ToolViewModel tool)
     {
