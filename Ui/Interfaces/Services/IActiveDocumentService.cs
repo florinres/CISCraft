@@ -12,7 +12,7 @@ public interface IActiveDocumentService : INotifyPropertyChanged
     ObservableCollection<IToolViewModel> Tools { get; }
     FileStatsViewModel FileStats { get; set; }
     IDiagramViewModel Diagram { get; set; }
-
+    IHexViewModel HexViewer { get; set; }
     event EventHandler? ActiveDocumentChanged;
     void ToggleToolVisibility(ToolViewModel tool);
     void SetDockingService(IDockingService dockingService);

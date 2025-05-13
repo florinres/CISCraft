@@ -1,10 +1,11 @@
-﻿using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.ViewModels.Components.Diagram;
 
-public class DiagramViewModel : ToolViewModel, IDiagramViewModel
+public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 {
+    [ObservableProperty] public override partial string? Title { get; set; } = "Diagram";
     public MicroprogramMemoryViewModel MemoryContext { get; } = new();
     public RegisterViewModel DataInContext { get; } = new("DATA IN");
     public RegisterViewModel DataOutContext { get; } = new("DATA OUT");

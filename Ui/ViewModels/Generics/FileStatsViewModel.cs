@@ -5,6 +5,7 @@ namespace Ui.ViewModels.Generics;
 public partial class FileStatsViewModel : ToolViewModel
 {
     public const string ToolContentId = "FileStatsTool";
+    [ObservableProperty] public override partial string? Title { get; set; } = "FileStats";
 
     public FileStatsViewModel()
     {

@@ -10,6 +10,9 @@ public class PanesTemplateSelector : DataTemplateSelector
     public DataTemplate? FileViewTemplate { get; set; }
     public DataTemplate? FileStatsViewTemplate { get; set; }
     public DataTemplate? DiagramViewTemplate { get; set; }
+    
+    public DataTemplate? HexViewTemplate { get; set; }
+
 
     public override DataTemplate? SelectTemplate(object? item, DependencyObject container)
     {
@@ -18,6 +21,7 @@ public class PanesTemplateSelector : DataTemplateSelector
             FileViewModel => FileViewTemplate,
             FileStatsViewModel => FileStatsViewTemplate,
             IDiagramViewModel => DiagramViewTemplate,
+            IHexViewModel => HexViewTemplate,
             _ => base.SelectTemplate(item, container)
         };
     }

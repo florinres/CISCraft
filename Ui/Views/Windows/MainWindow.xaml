@@ -13,6 +13,8 @@
     xmlns:helpers="clr-namespace:Ui.Helpers"
     xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
     xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
+    xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
+    xmlns:hex="clr-namespace:Ui.Views.UserControls.Hex"
     d:DataContext="{d:DesignInstance Type=interfaces:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -67,6 +69,11 @@
                             IsCheckable="True"
                             IsChecked="{Binding Workspace.ActiveDocumentsService.Diagram.IsVisible, Mode=TwoWay}"
                             Command="{Binding MenuBar.ShowDiagramCommand}" />
+                        <MenuItem
+                            Header="HexViewer"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowHexViewerCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -178,19 +185,19 @@
             </ui:Button>
         </StackPanel>
 
-
-        <!-- AnchorablesSource="{Binding ActiveDocumentsService.Tools}" -->
         <DockingManager
             x:Name="DockingManagerInstance"
             Grid.Row="2"
             ActiveContent="{Binding ActiveDocumentsService.SelectedDocument, Mode=TwoWay}"
             DocumentsSource="{Binding ActiveDocumentsService.Documents}"
-            DataContext="{Binding Workspace}">
+            DataContext="{Binding Workspace}"
+            AnchorableClosing="DockManager_AnchorableClosing">
             <DockingManager.Theme>
                 <wpfui:WPFUITheme />
             </DockingManager.Theme>
             <DockingManager.LayoutItemTemplateSelector>
                 <components:PanesTemplateSelector>
+                    <!-- Text editor -->
                     <components:PanesTemplateSelector.FileViewTemplate>
                         <DataTemplate DataType="{x:Type viewmodels:FileViewModel}">
                             <components:StyledAvalonEdit
@@ -202,6 +209,7 @@
                                 Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
+                    <!-- Properties -->
                     <components:PanesTemplateSelector.FileStatsViewTemplate>
                         <DataTemplate DataType="{x:Type viewmodels:FileStatsViewModel}">
                             <Border Padding="5">
@@ -218,11 +226,18 @@
                             </Border>
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileStatsViewTemplate>
+                    <!-- Diagram -->
                     <components:PanesTemplateSelector.DiagramViewTemplate>
                         <DataTemplate DataType="{x:Type diagram:DiagramViewModel}">
                             <diagram1:DiagramUserControl ViewModel="{Binding}"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.DiagramViewTemplate>
+                    <!-- HexViewer -->
+                    <components:PanesTemplateSelector.HexViewTemplate>
+                        <DataTemplate DataType="{x:Type hexViewer:HexViewModel}">
+                            <hex:HexControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.HexViewTemplate>
                 </components:PanesTemplateSelector>
             </DockingManager.LayoutItemTemplateSelector>
 
@@ -254,7 +269,7 @@
             <LayoutRoot>
                 <LayoutPanel Orientation="Vertical">
                     <LayoutDocumentPane />
-                    <LayoutAnchorablePane Name="ToolsPane" DockHeight="150" />
+                    <LayoutAnchorablePane Name="ToolsPane" />
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>

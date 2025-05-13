@@ -43,18 +43,18 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     }
 
     [RelayCommand]
-    private void OpenDocument()
+    private async Task OpenDocument()
     {
         var dialog = new OpenFileDialog
         {
             Title = "Open File",
-            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+            Filter = "Assembly Files (*.asm;*.s)|*.asm;*.s|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
         };
 
         if (dialog.ShowDialog() != true) return;
 
         var doc = new FileViewModel();
-        doc.LoadFromFile(dialog.FileName);
+        await doc.LoadFromFile(dialog.FileName);
         DocumentService.Documents.Add(doc);
         DocumentService.SelectedDocument ??= doc;
     }
@@ -69,5 +69,11 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     private void ShowDiagram()
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.Diagram);
+    }
+    
+    [RelayCommand]
+    public void ShowHexViewer()
+    {
+        _toolVisibilityService.ToggleToolVisibility(DocumentService.HexViewer);
     }
 }

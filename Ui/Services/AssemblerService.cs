@@ -6,6 +6,8 @@ namespace Ui.Services;
 public class AssemblerService : IAssemblerService
 {
     private readonly ASMBLR _assembler;
+    
+    public event EventHandler<byte[]>? SourceCodeAssembled;
 
     public AssemblerService(ASMBLR assembler)
     {
@@ -14,8 +16,10 @@ public class AssemblerService : IAssemblerService
 
     public byte[] AssembleSourceCodeService(string sourceCode)
     {
-        var len = 0;
-        var objectCode = _assembler.Assemble(sourceCode, out len);
+        var objectCode = _assembler.Assemble(sourceCode, out _);
+        
+        SourceCodeAssembled?.Invoke(this, objectCode);
+        
         return objectCode;
     }
 }

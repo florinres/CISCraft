@@ -20,22 +20,28 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     public event EventHandler<byte[]>? ObjectCodeGenerated;
 
     [RelayCommand]
-    private void RunAssembleSourceCodeService()
+    private async Task RunAssembleSourceCodeService()
     {
         if (_activeDocumentService.SelectedDocument == null) return;
-        var objectCode = _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content);
+        var objectCode = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content));
         ObjectCodeGenerated?.Invoke(this, objectCode);
     }
 
     private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
     {
-        var result = Encoding.Unicode.GetString(objectCode);
-        var doc = new FileViewModel
+        if (objectCode is not [])
         {
-            Title = "Assembled File",
-            Content = result
-        };
-        _activeDocumentService.Documents.Add(doc);
-        _activeDocumentService.SelectedDocument ??= doc;
+            _activeDocumentService.HexViewer.IsVisible = true;
+        }
+        
+        //
+        // var result = Encoding.Unicode.GetString(objectCode);
+        // var doc = new FileViewModel
+        // {
+        //     Title = "Assembled File",
+        //     Content = result
+        // };
+        // _activeDocumentService.Documents.Add(doc);
+        // _activeDocumentService.SelectedDocument ??= doc;
     }
 }

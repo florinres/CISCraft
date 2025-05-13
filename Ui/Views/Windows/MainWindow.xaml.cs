@@ -1,4 +1,6 @@
-﻿using Ui.Interfaces.Windows;
+﻿using AvalonDock;
+using Ui.Interfaces.ViewModel;
+using Ui.Interfaces.Windows;
 using Ui.Services;
 using Wpf.Ui.Appearance;
 
@@ -43,5 +45,13 @@ public partial class MainWindow
         //Tool visibility workaround.
         //TLDRL: AvalonDock nbeeds all docking tabs to be visible in the beggining to register them. After they are registered we can do whatever we want with them but they need to be visible in the bggining
         menuBar.SetToolsVisibilityOnAndOff();
+    }
+
+    private void DockManager_AnchorableClosing(object? sender, AnchorableClosingEventArgs e)
+    {
+        if (e.Anchorable.Content is not IToolViewModel toolVm) return;
+        
+        toolVm.IsVisible = false;
+        e.Cancel = true;
     }
 }
