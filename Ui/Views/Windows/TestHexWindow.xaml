@@ -7,30 +7,9 @@
         xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
         xmlns:viewModel="clr-namespace:Ui.ViewModels"
         xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
-        d:DataContext="{d:DesignInstance Type=hexViewer:HexViewModel, IsDesignTimeCreatable=False}"
+        xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
         mc:Ignorable="d"
-        Title="TestHexWindow" Height="450" Width="800">
-    <Grid>
-        <wpfHexaEditor:HexEditor Width="Auto"
-                                 Height="Auto"
-                                 Margin="2"
-                                 AllowByteCount="False"
-                                 AllowCustomBackgroundBlock="True"
-                                 AllowDrop="True"
-                                 AllowExtend="False"
-                                 AppendNeedConfirmation="True"
-                                 BorderThickness="1"
-                                 ByteGrouping="FourByte"
-                                 ByteShiftLeft="{Binding LongValue, ElementName=HbBsl, UpdateSourceTrigger=PropertyChanged}"
-                                 ByteSpacerPositioning="HexBytePanel"
-                                 ByteSpacerVisualStyle="Dash"
-                                 ByteSpacerWidthTickness="Normal"
-                                 DataStringVisual="Hexadecimal"
-                                 DefaultCopyToClipboardMode="HexaString"
-                                 ForegroundSecondColor="Blue"
-                                 OffSetStringVisual="Hexadecimal"
-                                 PreloadByteInEditorMode="MaxScreenVisibleLineAtDataLoad"
-                                 VisualCaretMode="Overwrite"/>
-
-    </Grid>
+        Title="TestHexWindow" Height="450" Width="800"
+        Background="{DynamicResource ApplicationBackgroundBrush}">
+    <microprogram:MicroprogramControl/>
 </Window>

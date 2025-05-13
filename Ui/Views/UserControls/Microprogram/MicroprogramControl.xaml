@@ -1,0 +1,60 @@
+<UserControl x:Class="Ui.Views.UserControls.Microprogram.MicroprogramControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Ui.Views.UserControls.Microprogram"
+             xmlns:viewModel="clr-namespace:Ui.ViewModels"
+             xmlns:microprogram="clr-namespace:Ui.ViewModels.Components.Microprogram"
+             d:DataContext="{d:DesignInstance Type=microprogram:MicroprogramViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="Root">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                  PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
+                  PreviewMouseMove="ScrollViewer_PreviewMouseMove"
+                  PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
+                  PreviewMouseWheel="Window_MouseWheel"
+                  Cursor="Arrow"
+                  Background="{DynamicResource RegionBackgroundBrush}"
+                  Name="MicroprogramScrollViewer">
+        <ItemsControl ItemsSource="{Binding Rows}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition Width="60" /> <!-- Row address -->
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Address Column -->
+                        <TextBlock Text="{Binding Address, 
+                                                        Converter={StaticResource AddressFormatConverter}}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                   TextAlignment="Center"
+                                   Margin="1"
+                                   Padding="4" 
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+
+                        <!-- Data columns -->
+                        <TextBlock Grid.Column="1" Text="{Binding Item0}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Item1}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="3" Text="{Binding Item2}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="4" Text="{Binding Item3}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="5" Text="{Binding Item4}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="6" Text="{Binding Item5}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="7" Text="{Binding Item6}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                        <TextBlock Grid.Column="8" Text="{Binding Item7}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+</UserControl>

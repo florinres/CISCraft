@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Ui.Models;
 
 namespace Ui.ViewModels.Components.Diagram;
 
@@ -13,6 +14,16 @@ public partial class MicroprogramMemoryViewModel : ObservableObject
     [ObservableProperty] public partial string Item6 {get; set;} = "WRITE";
     [ObservableProperty] public partial string Item7 {get; set;} = "IF B2 JUMP! (IR13,IR12,IR11,IR10,IR9,IR8,IR7,IR6) CLR ELSE JUMP! (IR14,IR13,IE12,0) MOV";
 
+    [ObservableProperty] public partial int Address { get; set; }
+
+    public string GetFormattedAddress(NumberFormat format) => format switch
+    {
+        NumberFormat.Decimal => Address.ToString(),
+        NumberFormat.Hex => $"0x{Address:X}",
+        NumberFormat.Binary => "0b" + Convert.ToString(Address, 2).PadLeft(8, '0'),
+        _ => Address.ToString()
+    };
+    
     public string this[int index]
     {
         get => index switch
