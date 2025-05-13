@@ -13,10 +13,10 @@ public partial class FileViewModel : PaneViewModel
 
     [ObservableProperty] public partial string? FilePath { get; set; }
 
-    public void LoadFromFile(string path)
+    public async Task LoadFromFile(string path)
     {
         FilePath = path;
-        Content = File.ReadAllText(path);
+        Content = await File.ReadAllTextAsync(path);
         Title = Path.GetFileName(path);
     }
 

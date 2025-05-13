@@ -20,10 +20,10 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     public event EventHandler<byte[]>? ObjectCodeGenerated;
 
     [RelayCommand]
-    private void RunAssembleSourceCodeService()
+    private async Task RunAssembleSourceCodeService()
     {
         if (_activeDocumentService.SelectedDocument == null) return;
-        var objectCode = _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content);
+        var objectCode = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content));
         ObjectCodeGenerated?.Invoke(this, objectCode);
     }
 

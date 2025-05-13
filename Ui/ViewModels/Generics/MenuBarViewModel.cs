@@ -43,7 +43,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     }
 
     [RelayCommand]
-    private void OpenDocument()
+    private async Task OpenDocument()
     {
         var dialog = new OpenFileDialog
         {
@@ -54,7 +54,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         if (dialog.ShowDialog() != true) return;
 
         var doc = new FileViewModel();
-        doc.LoadFromFile(dialog.FileName);
+        await doc.LoadFromFile(dialog.FileName);
         DocumentService.Documents.Add(doc);
         DocumentService.SelectedDocument ??= doc;
     }

@@ -12,7 +12,7 @@ public interface IMenuBarViewModel
     ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand" /> instance wrapping
     ///     <see cref="MenuBarViewModel.OpenDocument" />.
     /// </summary>
-    IRelayCommand OpenDocumentCommand { get; }
+    IAsyncRelayCommand OpenDocumentCommand { get; }
 
     /// <summary>
     ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand" /> instance wrapping

@@ -9,7 +9,7 @@ public interface IActionsBarViewModel
     ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand" /> instance wrapping
     ///     <see cref="ActionsBarViewModel.RunAssembleSourceCodeService" />.
     /// </summary>
-    IRelayCommand RunAssembleSourceCodeServiceCommand { get; }
+    IAsyncRelayCommand RunAssembleSourceCodeServiceCommand { get; }
 
     event EventHandler<byte[]>? ObjectCodeGenerated;
 
