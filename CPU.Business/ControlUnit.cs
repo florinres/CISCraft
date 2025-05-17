@@ -7,6 +7,7 @@ namespace CPU.Business
         public event Action<int>? SbusEvent;
         public event Action<int>? DbusEvent;
         public event Action<int>? AluEvent;
+        public event Action<int>? RbusEvent;
         public event Action<int>? MemoryEvent;
         public event Action<int>? OtherEvent;
         public byte     MAR = 0;
@@ -18,7 +19,8 @@ namespace CPU.Business
         /// Value: micro-commands
         /// </summary>
 		public Dictionary<int, string[]> MPM = new Dictionary<int, string[]>();
-        public int IR = 0;
+        public short IR = 0;
+
 		private int		_mirIndex = 0;
 		private Dictionary<string, int> _microcommandsIndexes = new Dictionary<string, int>
 		{
@@ -49,9 +51,9 @@ namespace CPU.Business
 			{"PdR13S",		22 },
 			{"PdR14S",		23 },
 			{"PdR15S",		24 },
-			{"Pd0S",		25 },
-			{"Pd-1S",		26 },
-            {"PdTNegS",     27 },
+            {"PdTNegS",     25 },
+			{"Pd0S",		26 },
+			{"Pd-1S",		27 },
 
 			//DBUS
 			{"PdFlagsD",    1 },
@@ -78,9 +80,9 @@ namespace CPU.Business
             {"PdR13D",      22 },
             {"PdR14D",      23 },
             {"PdR15D",      24 },
-            {"Pd0D",        25 },
-            {"Pd-1D",       26 },
-            {"PdMDRNegD",   27 },
+            {"PdMDRNegD",   25 },
+            {"Pd0D",        26 },
+            {"Pd-1D",       27 },
 
 			//ALU
 			{"SBUS",		1 },
@@ -304,7 +306,10 @@ namespace CPU.Business
 				case 2:
                     AluEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
                     break;
-				case 3:
+                case 3:
+                    RbusEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    break;
+                case 3:
                     MemoryEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
                     break;
 				case 4:
