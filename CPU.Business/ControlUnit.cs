@@ -11,8 +11,14 @@ namespace CPU.Business
         public event Action<int>? OtherEvent;
         public byte     MAR = 0;
 		public string[] MIR = new string[10];
-		public string[] MPM = new string[1180];
-
+        /// <summary>
+        /// Micro Program Memory
+        /// ROM memory that holds microinstructions of 36 bits wide.
+        /// Key: micro-address
+        /// Value: micro-commands
+        /// </summary>
+		public Dictionary<int, string[]> MPM = new Dictionary<int, string[]>();
+        public int IR = 0;
 		private int		_mirIndex = 0;
 		private Dictionary<string, int> _microcommandsIndexes = new Dictionary<string, int>
 		{
@@ -127,25 +133,164 @@ namespace CPU.Business
             {"A(0)BE,A(0)BI", 13 },
 
         };
-		// Functie secventiator
-		internal void StepMicrocode()
+
+        /// <summary>
+        /// Implements logic for stepping through
+        /// the Sequencer, thus going through
+        /// instruction phases and sending
+        /// necessary command signals.
+        /// </summary>
+        /// <param name="initialState"></param>
+        /// <param name="ACLOWSignal"></param>
+        /// <param name="flagsRegister"></param>
+		internal void StepMicrocode(int initialState,bool ACLOWSignal, short flagsRegister)
         {
-			DecodeAndSendCommand();
+            int state = initialState;
+
+            switch (state)
+            {
+                case 0:
+                    this.MIR = this.MPM[this.MAR];
+                    state = 1;
+                    break;
+                case 1:
+                    bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
+                    if (g_function)
+                        this.MAR = (byte)(Int32.Parse(this.MIR[9]) + this.ComputeMARIndex());
+                    else this.MAR++;
+
+                    int mirALUBits = Int32.Parse(this.MIR[2]);
+                    bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
+                    bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
+                    if (!aluBIT24 & !aluBIT25)
+                        state = 2;
+                    else state = 0;
+
+                    DecodeAndSendCommand();
+
+                    break;
+                case 2:
+                    state = 3;
+                    // Note: this state would normally be reserved for DMA logic
+                    // but in the current implementation it shall be ignored.
+                    break;
+
+            }
+            DecodeAndSendCommand();
         }
 
-        private bool ComputeConditionF()
+        /// <summary>
+        /// Computes the G function which is used to
+        /// determine what address to load into MAR.
+        /// </summary>
+        /// <param name="ACLOWSignal"></param>
+        /// <param name="flagsRegister"></param>
+        /// <returns></returns>
+		private bool ComputeConditionG(bool ACLOWSignal,short flagsRegister)
 		{
-			return false;
-		}
+            bool g_flag = true;
+            bool CILFlag = false; //TBD
+            bool carryFlag = Convert.ToBoolean(flagsRegister & (1<<3));
+            bool zeroFlag = Convert.ToBoolean(flagsRegister & (1 << 2));
+            bool signFLag = Convert.ToBoolean(flagsRegister & (1 << 1));
+            bool overflowFlag = Convert.ToBoolean(flagsRegister & (1 << 0));
+            int selectValue = Int32.Parse(this.MIR[6]);
+            // Note: since we the hardware behaviour of MIR register has been
+            // abstracted, the hardware MIR[13:11] bits corespond to
+            // the software MIR[6], i.e. Selection Index
+            bool hwMIRbit = Convert.ToBoolean(Int32.Parse(this.MIR[8])); // Hardware MIR[7]
 
-		private bool ComputeConditionG()
-		{
-			return true;
+            switch (selectValue)
+            {
+                case 0:
+                    g_flag = false; //g <- hardware MIR[7] xor MIR[7]
+                    break;
+                case 1:
+                    g_flag = true; // g<- hardware Not(MIR[7]) xor MIR[7]
+                    break;
+                case 2:
+                    g_flag = (bool)(ACLOWSignal ^ hwMIRbit);
+                    break;
+                case 3:
+                    g_flag = CILFlag ^ hwMIRbit;
+                    break;
+                case 4:
+                    g_flag = carryFlag ^ hwMIRbit;
+                    break;
+                case 5:
+                    g_flag = zeroFlag ^ hwMIRbit;
+                    break;
+                case 6:
+                    g_flag = signFLag ^ hwMIRbit;
+                    break;
+                case 7:
+                    g_flag = overflowFlag ^ hwMIRbit;
+                    break;
+            }
+            return g_flag;
 		}
-		// For MAR register
-		private byte ComputeIndex()
+		/// <summary>
+        /// Computes the index used for MAR. This would corespond
+        /// to the hardware Index Selection Block.
+        /// </summary>
+        /// <returns> 7 bit address</returns>
+		private byte ComputeMARIndex()
 		{
-			return 0;
+            byte marIndex = 0;
+            int selectValue = Int32.Parse(this.MIR[7]);
+            // Note: since we the hardware behaviour of MIR register has been
+            // abstracted, the hardware MIR[10:8] bits corespond to
+            // software MIR[7] value.
+
+            int instructionClass0 =(int)((this.IR & (1 << 15)) & (this.IR & (1 << 14)));
+            //coresponds to hardware CL0
+            int instructionClass1 = (int)((this.IR & (1 << 15)) & (this.IR & (1 << 13)));
+            //coresponds to hardware CL1
+
+            switch (selectValue)
+            {
+                case 0:
+                    marIndex = 0;
+                    break;
+                case 1:
+                    marIndex = (byte)((instructionClass1 << 1) | instructionClass0);
+                    break;
+                case 2:
+                    marIndex = (byte)((this.IR & (1 << 11)) | (this.IR & (1 << 10)));
+                    break;
+                case 3:
+                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4)));
+                    break;
+                case 4:
+                    marIndex = (byte)(
+                        (this.IR & (1 << 14))
+                        | (this.IR & (1 << 13))
+                        | (this.IR & (1 << 12))
+                        );
+                    break;
+                case 5:
+                    marIndex = (byte)(
+                        (this.IR & (1 << 11))
+                        | (this.IR & (1 << 10))
+                        | (this.IR & (1 << 9))
+                        | (this.IR & (1 << 8))
+                        );
+                    break;
+                case 6:
+                    marIndex = (byte)( (
+                        (this.IR & (1 << 11))
+                        | (this.IR & (1 << 10))
+                        | (this.IR & (1 << 9))
+                        | (this.IR & (1 << 8))
+                        ) <<1);
+                    break;
+                case 7:
+                    int interruptSignal = 0; //TBD
+                    marIndex = (byte)(interruptSignal << 2);
+                    break;
+
+            }
+            return marIndex;
 		}
 		private void DecodeAndSendCommand()
 		{
