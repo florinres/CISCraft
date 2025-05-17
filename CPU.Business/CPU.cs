@@ -71,7 +71,7 @@ namespace CPU.Business
 		public short[] Registers = new short[MAX_NUM_REG];
 		public short SBUS, DBUS, RBUS;
 		private ControlUnit _controlUnit;
-        public short ACLOW, INT, CIL;
+        public bool ACLOW, INT, CIL;
 		public CPU()
 		{
 			_controlUnit = new ControlUnit();
@@ -82,9 +82,9 @@ namespace CPU.Business
             _controlUnit.MemoryEvent += OnMemoryEvent;
             _controlUnit.OtherEvent  += OnOtherEvent;
         }
-        public void StepMicrocode()
+        public string StepMicrocode()
 		{
-            _controlUnit.StepMicrocode();
+            return _controlUnit.StepMicrocode(ACLOW, Registers[(int)REGISTERS.FLAGS]);
         }
         private void OnSbusEvent(int index)
         {
@@ -146,18 +146,18 @@ namespace CPU.Business
                     break;
                 case ALU_OP.RLC:
                     {
-                        short carryIn = (short)(Registers[REGISTERS.FLAGS] & 0x3);
+                        short carryIn = (short)(Registers[(int)REGISTERS.FLAGS] & 0x3);
                         short carryOut = 0;
                         (RBUS, carryOut) = RotateLeftWithCarry(RBUS, carryIn);
-                        Registers[REGISTERS.FLAGS] |= carryOut;
+                        Registers[(int)REGISTERS.FLAGS] |= carryOut;
                     }
                     break;
                 case ALU_OP.RRC:
                     {
-                        short carryIn = (short)(Registers[REGISTERS.FLAGS] & 0x3);
+                        short carryIn = (short)(Registers[(int)REGISTERS.FLAGS] & 0x3);
                         short carryOut = 0;
                         (RBUS, carryOut) = RotateRightWithCarry(RBUS, carryIn);
-                        Registers[REGISTERS.FLAGS] |= carryOut;
+                        Registers[(int)REGISTERS.FLAGS] |= carryOut;
                     }
                     break;
             }
@@ -178,53 +178,53 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    // _controlUnit.IR = RAM.memory[Registers[REGISTERS.ADR]];
+                    //  _controlUnit.IR = RAM.memory[Registers[(int)REGISTERS.ADR]];
                     break;
                 case 2 /* READ */:
-                    // Registers[REGISTERS.MDR] = RAM.memory[Registers[REGISTERS.ADR]];
+                    //  Registers[(int)REGISTERS.MDR] = RAM.memory[Registers[(int)REGISTERS.ADR]];
                     break;
                 case 3 /* WRITE */:
-                    // RAM.memory[Registers[REGISTERS.ADR]] = Registers[REGISTERS.MDR];
+                    //  RAM.memory[Registers[(int)REGISTERS.ADR]] = Registers[(int)REGISTERS.MDR];
                     break;
             }
         }
         private void OnOtherEvent(int index)
         {
-            switch ((OTHER_EVENTS(index)))
+            switch ((OTHER_EVENTS)index)
             {
                 case OTHER_EVENTS.SP_PLUS_2:
-                    Registers[REGISTERS.SP] +=2;
+                    Registers[(int)REGISTERS.SP] +=2;
                     break;
                 case OTHER_EVENTS.SP_MINUS_2:
-                    Registers[REGISTERS.SP] -=2;
+                    Registers[(int)REGISTERS.SP] -=2;
                     break;
                 case OTHER_EVENTS.PC_PLUS_2:
-                    Registers[REGISTERS.PC] +=2;
+                    Registers[(int)REGISTERS.PC] +=2;
                     break;
                 case OTHER_EVENTS.A1BE0:
-                    ACLOW = 1;
+                    ACLOW = true;
                     break;
                 case OTHER_EVENTS.A1BE1:
-                    CIL = 1;
+                    CIL = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
-                    Registers[REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
                     break;
                 case OTHER_EVENTS.CinPdCondA:
-                    Registers[REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
                     break;
                 case OTHER_EVENTS.PdCondL:
-                    Registers[REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
                     break;
                 case OTHER_EVENTS.A1BVI:
-                    Registers[REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
                     break;
                 case OTHER_EVENTS.A0BVI:
-                    Registers[REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
                     break;
-                case OTHER_EVENTS.INTA_SP_MINUS_2
+                case OTHER_EVENTS.INTA_SP_MINUS_2:
                     // INTA = 1;
-                    Registers[REGISTERS.SP] -= 2;
+                    Registers[(int)REGISTERS.SP] -= 2;
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
                     //resetarea bitilor de exceptie;

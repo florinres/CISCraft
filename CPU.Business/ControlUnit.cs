@@ -21,7 +21,8 @@ namespace CPU.Business
 		public Dictionary<int, string[]> MPM = new Dictionary<int, string[]>();
         public short IR = 0;
 
-		private int		_mirIndex = 0;
+		private int	_mirIndex = 0;
+        private int state = 0;
 		private Dictionary<string, int> _microcommandsIndexes = new Dictionary<string, int>
 		{
 			{"None",		0 },
@@ -145,9 +146,16 @@ namespace CPU.Business
         /// <param name="initialState"></param>
         /// <param name="ACLOWSignal"></param>
         /// <param name="flagsRegister"></param>
-		internal void StepMicrocode(int initialState,bool ACLOWSignal, short flagsRegister)
+        /// <returns>
+        /// The name of the microcode it shall be executed.
+        /// This shall be used by UI.
+        /// </returns>
+		internal string StepMicrocode(bool ACLOWSignal, short flagsRegister)
         {
-            int state = initialState;
+            if(_mirIndex != 0)
+            {
+                return DecodeAndSendCommand();
+            }
 
             switch (state)
             {
@@ -167,10 +175,7 @@ namespace CPU.Business
                     if (!aluBIT24 & !aluBIT25)
                         state = 2;
                     else state = 0;
-
-                    DecodeAndSendCommand();
-
-                    break;
+                    return DecodeAndSendCommand();
                 case 2:
                     state = 3;
                     // Note: this state would normally be reserved for DMA logic
@@ -178,7 +183,7 @@ namespace CPU.Business
                     break;
 
             }
-            DecodeAndSendCommand();
+            return "None";
         }
 
         /// <summary>
@@ -294,7 +299,7 @@ namespace CPU.Business
             }
             return marIndex;
 		}
-		private void DecodeAndSendCommand()
+		private string DecodeAndSendCommand()
 		{
 			switch (_mirIndex) {
 				case 0:
@@ -309,17 +314,17 @@ namespace CPU.Business
                 case 3:
                     RbusEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
                     break;
-                case 3:
+                case 4:
                     MemoryEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
                     break;
-				case 4:
+				case 5:
                     OtherEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
                     break;
 			}
-			_mirIndex %= 5;
+			_mirIndex %= 6;
 			_mirIndex++;
+            return MIR[_mirIndex];
         }
-
 	}
 
 }
