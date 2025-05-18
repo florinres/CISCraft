@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Windows;
 
-namespace Ui.Interfaces.Windows;
+namespace Ui.Interfaces.ViewModel;
 
 public interface IMainWindowViewModel
 {
@@ -17,4 +16,6 @@ public interface IMainWindowViewModel
 
     /// <inheritdoc cref="MainWindowViewModel._actionsBar" />
     IActionsBarViewModel ActionsBar { get; [MemberNotNull("_actionsBar")] set; }
+
+    ISettingsViewModel Settings { get; set; }
 }
