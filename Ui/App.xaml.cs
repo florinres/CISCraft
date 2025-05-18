@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
-using Ui.Interfaces.Windows;
 using Ui.Services;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.HexViewer;
@@ -51,6 +50,7 @@ public partial class App : Application
             services.AddSingleton<IToolVisibilityService, ToolVisibilityService>();
             services.AddSingleton<IDiagramViewModel, DiagramViewModel>();
             services.AddSingleton<IHexViewModel, HexViewModel>();
+            services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)

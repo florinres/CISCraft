@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:interfaces="clr-namespace:Ui.Interfaces.Windows"
     xmlns:components="clr-namespace:Ui.Components"
     xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
     xmlns:system="clr-namespace:System;assembly=netstandard"
@@ -15,7 +14,9 @@
     xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
     xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
     xmlns:hex="clr-namespace:Ui.Views.UserControls.Hex"
-    d:DataContext="{d:DesignInstance Type=interfaces:IMainWindowViewModel, IsDesignTimeCreatable=False}"
+    xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
+    xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
+    d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
     Height="650"
@@ -27,6 +28,8 @@
     mc:Ignorable="d"
     Loaded="MainWindow_OnLoaded">
     <Window.Resources>
+        <helpers:ThemeToIndexConverter x:Key="ThemeToIndexConverter" />
+        <helpers:EnumEqualsConverter x:Key="EnumEqualsConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -79,17 +82,19 @@
                         <MenuItem Header="Layout">
                             <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
                             <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
-
-                            <ComboBox
-                                DisplayMemberPath="Item1"
-                                IsEnabled="False"
-                                ItemsSource="{Binding Themes}"
-                                SelectedItem="{Binding SelectedTheme}"
-                                Margin="10,0,0,0" />
                         </MenuItem>
                         <MenuItem Header="Theme">
-                            <MenuItem Header="Light" />
-                            <MenuItem Header="Dark" />
+                            <MenuItem Header="Light"
+                                      IsCheckable="True"
+                                      IsChecked="{Binding  Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
+                                      Command="{Binding Settings.ChangeThemeCommand}"
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Light}" />
+
+                            <MenuItem Header="Dark"
+                                      IsCheckable="True"
+                                      IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
+                                      Command="{Binding Settings.ChangeThemeCommand}"
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
                         </MenuItem>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View" />

@@ -1,16 +1,16 @@
 ﻿using Ui.Interfaces.ViewModel;
-using Ui.Interfaces.Windows;
 
 namespace Ui.ViewModels.Windows;
 
 public partial class MainWindowViewModel : ObservableObject, IMainWindowViewModel
 {
     public MainWindowViewModel(IWorkspaceViewModel workspace, IMenuBarViewModel menuBar,
-        IActionsBarViewModel actionsBar)
+        IActionsBarViewModel actionsBar, ISettingsViewModel settings)
     {
         Workspace = workspace;
         MenuBar = menuBar;
         ActionsBar = actionsBar;
+        Settings = settings;
     }
 
     [ObservableProperty] public partial string ApplicationTitle { get; set; } = "WPF UI - Ui";
@@ -20,4 +20,6 @@ public partial class MainWindowViewModel : ObservableObject, IMainWindowViewMode
     [ObservableProperty] public partial IMenuBarViewModel MenuBar { get; set; }
 
     [ObservableProperty] public partial IActionsBarViewModel ActionsBar { get; set; }
+    
+    [ObservableProperty] public partial ISettingsViewModel Settings { get; set; }
 }
