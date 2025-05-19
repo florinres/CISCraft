@@ -101,8 +101,8 @@
       <Folder Include="Interfaces\Windows\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />
-    </ItemGroup>
+<!--    <ItemGroup>-->
+<!--      <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />-->
+<!--    </ItemGroup>-->
 
 </Project>
