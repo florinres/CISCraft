@@ -1,9 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Reflection.Emit;
+using System.Runtime.Serialization.Formatters;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 
 namespace CPU.Business
-{ 
+{
 	public class CPU
     {
         const byte MAX_NUM_REG = 23;
@@ -82,16 +88,113 @@ namespace CPU.Business
             _controlUnit.MemoryEvent += OnMemoryEvent;
             _controlUnit.OtherEvent  += OnOtherEvent;
         }
-        public string StepMicrocode()
+        public (int MAR, int MirIndex) StepMicrocode()
 		{
             return _controlUnit.StepMicrocode(ACLOW, Registers[(int)REGISTERS.FLAGS]);
+        }
+        /// <summary>
+        /// This will load the json MPM configuration in the actual MPM.
+        /// it needs to convert it from an json object into a long array
+        /// This method might take some time so we can call it on a separate thread.
+        /// </summary>
+        /// <param name="jsonString"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void LoadJsonMpm(string jsonString, bool debug = false)
+        {
+            byte addressCounter = 0;
+            int mpmIndex = 0;
+            var deserializedData = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
+            var labelsAddresses = new Dictionary<string, byte>();
+            byte[] microcommandsBuffer = new byte[1200];
+            int bufferIndex = 0;
+
+            if (deserializedData == null) return;
+
+            foreach (var routine in deserializedData)
+            {
+                labelsAddresses[routine.Key] = addressCounter;
+                foreach (var microinstruction in routine.Value)
+                {
+                    addressCounter++;
+                }
+            }
+
+            if (debug)
+            {
+                foreach (var kvp in labelsAddresses)
+                {
+                    Console.WriteLine(kvp.Key + " " + kvp.Value);
+                }
+            }
+
+            addressCounter = 0;
+            foreach (var routine in deserializedData)
+            {
+                var microinstructions = routine.Value;
+                if (debug) Console.WriteLine(" " + routine.Key);
+                for (int i = 0; i < microinstructions.Length; i++)
+                {
+                    var microinstruction = microinstructions[i];
+                    if (debug) Console.Write(addressCounter + ": ");
+                    for (int j = 0; j < microinstruction.Length; j++)
+                    {
+                        var microcommand = microinstruction[j];
+
+                        if (microcommand == "0")
+                        {
+                            if (debug) Console.WriteLine(0);
+                            microcommandsBuffer[bufferIndex] = 0;
+                            bufferIndex++;
+                            continue;
+                        }
+
+                        if (j == 9)
+                        {
+                            if (microcommand.Contains("+"))
+                            {
+                                var label = microcommand.Substring(0, microcommand.IndexOf('+'));
+                                byte offset = Byte.Parse(microcommand.Substring(microcommand.IndexOf('+') + 1));
+                                if (debug) Console.WriteLine(labelsAddresses[label] + offset);
+                                microcommandsBuffer[bufferIndex] = (byte)(labelsAddresses[label] + offset);
+                            }
+                            else
+                            {
+                                if (debug) Console.WriteLine(labelsAddresses[microcommand]);
+                                microcommandsBuffer[bufferIndex] = labelsAddresses[microcommand];
+                            }
+                        }
+                        else
+                        {
+                            if (debug) Console.Write(ControlUnit._microcommandsIndexes[microcommand] + " ");
+                            microcommandsBuffer[bufferIndex] = (byte)ControlUnit._microcommandsIndexes[microcommand];
+                        }
+                        bufferIndex++;
+                    }
+                    addressCounter++;
+                }
+            }
+
+            for (int i = 0; i <= addressCounter*10;)
+            {
+                _controlUnit.MPM[mpmIndex] =
+                    ((long)microcommandsBuffer[i++] << ControlUnit.SbusShift)       |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.DbusShift)       |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.AluShift)        |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.RbusShift)       |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.MemOpShift)      |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.OthersShift)     |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.SuccesorShift)   |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.IndexShift)      |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.TnedFShift)      |
+                    ((long)microcommandsBuffer[i++] << ControlUnit.AddresShift);
+                mpmIndex++;
+            }
         }
         private void OnSbusEvent(int index)
         {
             SBUS = Registers[index];
             if (index == 25)
                 SBUS = (short)~SBUS;
-
         }
         private void OnDbusEvent(int index)
         {

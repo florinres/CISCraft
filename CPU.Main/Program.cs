@@ -1,4 +1,5 @@
-﻿using Cpu = CPU.Business.CPU;
+﻿using System.Security.Cryptography;
+using Cpu = CPU.Business.CPU;
 namespace CPU.Main
 {
     internal class Program
@@ -6,6 +7,8 @@ namespace CPU.Main
         static void Main(string[] args)
         {
             Cpu cpu = new Cpu();
+            string jsonString = File.ReadAllText("C:\\Users\\rudy\\Desktop\\CISCraft\\Configs\\MPM.json");
+            cpu.LoadJsonMpm(jsonString);
             cpu.StepMicrocode();
         }
     }

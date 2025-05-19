@@ -11,130 +11,143 @@ namespace CPU.Business
         public event Action<int>? MemoryEvent;
         public event Action<int>? OtherEvent;
         public byte     MAR = 0;
-		public string[] MIR = new string[10];
+		public long     MIR = 0;
         /// <summary>
         /// Micro Program Memory
         /// ROM memory that holds microinstructions of 36 bits wide.
         /// Key: micro-address
         /// Value: micro-commands
         /// </summary>
-		public Dictionary<int, string[]> MPM = new Dictionary<int, string[]>();
+        public long[] MPM = new long[120];
         public short IR = 0;
-
-		private int	_mirIndex = 0;
         private int state = 0;
-		private Dictionary<string, int> _microcommandsIndexes = new Dictionary<string, int>
-		{
-			{"None",		0 },
+        private int _mirIndex = 0;
+
+        public const long SbusMask        = 0xF00000000;
+        public const long DbusMask        = 0xF0000000;
+        public const long AluMask         = 0xF000000;
+        public const long RbusMask        = 0xF00000;
+        public const long MemOpMask       = 0xC0000;
+        public const long OthersMask      = 0x3C000;
+        public const long SuccesorMask    = 0x3800;
+        public const long IndexMask       = 0x700;
+        public const long TnegFMask       = 0x80;
+        public const long AddresMask      = 0x7F;
+        public const byte SbusShift       = 32;
+        public const byte DbusShift       = 28;
+        public const byte AluShift        = 24;
+        public const byte RbusShift       = 20;
+        public const byte MemOpShift      = 18;
+        public const byte OthersShift     = 14;
+        public const byte SuccesorShift   = 11;
+        public const byte IndexShift      = 8;
+        public const byte TnedFShift      = 7;
+        public const byte AddresShift     = 0;
+        static public Dictionary<string, int> _microcommandsIndexes = new Dictionary<string, int>
+        {
+            {"NONE",        0 },
 
 			//SBUS
-			{"PdFlagsS",	1 },
-			{"PdRgS",		2 },
-			{"PdSpS",		3 },
-			{"PdTS",		4 },
-			{"PdPcS",		5 },
-			{"PdIvrS",		6 },
-			{"PdAdrS",		7 },
-			{"PdMdrS",		8 },
-			{"PdR0S",		9 },
-			{"PdR1S",		10 },
-			{"PdR2S",		11 },
-			{"PdR3S",		12 },
-			{"PdR4S",		13 },
-			{"PdR5S",		14 },
-			{"PdR6S",		15 },
-			{"PdR7S",		16 },
-			{"PdR8S",		17 },
-			{"PdR9S",		18 },
-			{"PdR10S",		19 },
-			{"PdR11S",		20 },
-			{"PdR12S",		21 },
-			{"PdR13S",		22 },
-			{"PdR14S",		23 },
-			{"PdR15S",		24 },
-            {"PdTNegS",     25 },
-			{"Pd0S",		26 },
-			{"Pd-1S",		27 },
+			{"PdFLAGs",     1 },
+            {"PdRGs",       2 },
+            {"PdSPs",       3 },
+            {"PdTs",        4 },
+            {"PdPCs",       5 },
+            {"PdIVRs",      6 },
+            {"PdADRs",      7 },
+            {"PdMDRs",      8 },
+            {"PdIR[7...0]s",9 },
+            {"PdTsNeg",     10 },
+            {"Pd0s",        11 },
+            {"Pd-1s",       12 },
 
 			//DBUS
-			{"PdFlagsD",    1 },
-            {"PdRgD",       2 },
-            {"PdSpD",       3 },
-            {"PdTD",        4 },
-            {"PdPcD",       5 },
-            {"PdIvrD",      6 },
-            {"PdAdrD",      7 },
-            {"PdMdrD",      8 },
-            {"PdR0D",       9 },
-            {"PdR1D",       10 },
-            {"PdR2D",       11 },
-            {"PdR3D",       12 },
-            {"PdR4D",       13 },
-            {"PdR5D",       14 },
-            {"PdR6D",       15 },
-            {"PdR7D",       16 },
-            {"PdR8D",       17 },
-            {"PdR9D",       18 },
-            {"PdR10D",      19 },
-            {"PdR11D",      20 },
-            {"PdR12D",      21 },
-            {"PdR13D",      22 },
-            {"PdR14D",      23 },
-            {"PdR15D",      24 },
-            {"PdMDRNegD",   25 },
-            {"Pd0D",        26 },
-            {"Pd-1D",       27 },
+			{"PdFLAGSd",    1 },
+            {"PdRGd",       2 },
+            {"PdSPd",       3 },
+            {"PdTd",        4 },
+            {"PdPCd",       5 },
+            {"PdIVRd",      6 },
+            {"PdADRd",      7 },
+            {"PdMDRd",      8 },
+            {"PdIR[7...0]d",9 },
+            {"PdMDRdNeg",   10 },
+            {"Pd0d",        11 },
+            {"Pd-1d",       12 },
 
 			//ALU
-			{"SBUS",		1 },
+			{"SBUS",        1 },
             {"DBUS",        2 },
-            {"ADD",			3 },
-            {"SUB",			4 },
-            {"AND",			5 },
-            {"OR",			6 },
-            {"XOR",			7 },
-            {"ASL",			8 },
-            {"ASR",			9 },
-            {"LSR",			10 },
-            {"ROL",			11 },
-            {"ROR",			12 },
-            {"RLC",			13 },
-            {"RRC",			14 },
+            {"SUM",         3 },
+            {"SUB",         4 },
+            {"AND",         5 },
+            {"OR",          6 },
+            {"XOR",         7 },
+            {"ASL",         8 },
+            {"ASR",         9 },
+            {"LSR",         10 },
+            {"ROL",         11 },
+            {"ROR",         12 },
+            {"RLC",         13 },
+            {"RRC",         14 },
 
 			//RBUS
-			{"PmFlags",     1 },
-            {"PmRg",		2 },
-            {"PmSp",		3 },
-            {"PmT",			4 },
-            {"PmPC",		5 },
+			{"PmFLAG",      1 },
+            {"PmRG",        2 },
+            {"PmSP",        3 },
+            {"PmT",         4 },
+            {"PmPC",        5 },
             {"PmIVR",       6 },
             {"PmADR",       7 },
             {"PmMDR",       8 },
-			{"PmFlag0",     9 },
+            {"PmFlag0",     9 },
             {"PmFlag1",     10 },
             {"PmFlag2",     11 },
             {"PmFlag3",     12 },
 
 			// MemOp
-			{"ICFH",		1 },
-            {"RD",			2 },
-            {"WR",			3 },
+			{"IFCH",        1 },
+            {"READ",        2 },
+            {"WRITE",       3 },
 
 			// OtherOp
-            {"+2SP",		1 },
-            {"-2SP",		2 },
-            {"+2PC",		3 },
-            {"A(1)BE0",		4 },
-            {"A(1)BE1",		5 },
-            {"PdCondA",		6 },
-            {"CinPdCondA",	7 },
-            {"PdCondL",     8 },
-            {"A(1)BVI",     9 },
-            {"A(0)BVI",     10 },
-            {"A(0)BPO",     11 },
-            {"INTA,-2SP",   12 },
-            {"A(0)BE,A(0)BI", 13 },
+            {"+2SP",            1 },
+            {"-2SP",            2 },
+            {"+2PC",            3 },
+            {"A(1)BE0",         4 },
+            {"A(1)BE1",         5 },
+            {"PdCONDaritm",     6 },
+            {"Cin,PdCONDaritm", 7 },
+            {"PdCONDlog",       8 },
+            {"A(1)BVI",         9 },
+            {"A(0)BVI",         10 },
+            {"A(0)BPO",         11 },
+            {"INTA,-2SP",       12 },
+            {"A(0)BE,A(0)BI",   13 },
 
+            // SUCCESOR
+            {"STEP",            0 },
+            {"JUMPI",           1 },
+            {"IF ACLOW JUMPI",  2 },
+            {"IF CIL JUMPI",    3 },
+            {"IF C JUMPI",      4 },
+            {"IF Z JUMPI",      5 },
+            {"IF S JUMPI",      6 },
+            {"IF V JUMPI",      7 },
+
+            // INDEX
+            {"INDEX0",          0 },
+            {"INDEX1",          1 },
+            {"INDEX2",          2 },
+            {"INDEX3",          3 },
+            {"INDEX4",          4 },
+            {"INDEX5",          5 },
+            {"INDEX6",          6 },
+            {"INDEX7",          7 },
+
+            // Tneg/F
+            {"T",               0 },
+            {"F",               1 },
         };
 
         /// <summary>
@@ -150,9 +163,9 @@ namespace CPU.Business
         /// The name of the microcode it shall be executed.
         /// This shall be used by UI.
         /// </returns>
-		internal string StepMicrocode(bool ACLOWSignal, short flagsRegister)
+		internal (int MAR,int MirIndex) StepMicrocode(bool ACLOWSignal, short flagsRegister)
         {
-            if(_mirIndex != 0)
+            if (_mirIndex != 0)
             {
                 return DecodeAndSendCommand();
             }
@@ -166,10 +179,10 @@ namespace CPU.Business
                 case 1:
                     bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
                     if (g_function)
-                        this.MAR = (byte)(Int32.Parse(this.MIR[9]) + this.ComputeMARIndex());
+                        this.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
                     else this.MAR++;
 
-                    int mirALUBits = Int32.Parse(this.MIR[2]);
+                    int mirALUBits = getMirAluField();
                     bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
                     bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
                     if (!aluBIT24 & !aluBIT25)
@@ -183,7 +196,7 @@ namespace CPU.Business
                     break;
 
             }
-            return "None";
+            return (0,0);
         }
 
         /// <summary>
@@ -201,11 +214,11 @@ namespace CPU.Business
             bool zeroFlag = Convert.ToBoolean(flagsRegister & (1 << 2));
             bool signFLag = Convert.ToBoolean(flagsRegister & (1 << 1));
             bool overflowFlag = Convert.ToBoolean(flagsRegister & (1 << 0));
-            int selectValue = Int32.Parse(this.MIR[6]);
+            int selectValue = getMirSuccesorField();
             // Note: since we the hardware behaviour of MIR register has been
             // abstracted, the hardware MIR[13:11] bits corespond to
             // the software MIR[6], i.e. Selection Index
-            bool hwMIRbit = Convert.ToBoolean(Int32.Parse(this.MIR[8])); // Hardware MIR[7]
+            bool hwMIRbit = Convert.ToBoolean(getMirTNegFField());
 
             switch (selectValue)
             {
@@ -244,7 +257,7 @@ namespace CPU.Business
 		private byte ComputeMARIndex()
 		{
             byte marIndex = 0;
-            int selectValue = Int32.Parse(this.MIR[7]);
+            int selectValue = getMirSuccesorField();
             // Note: since we the hardware behaviour of MIR register has been
             // abstracted, the hardware MIR[10:8] bits corespond to
             // software MIR[7] value.
@@ -299,32 +312,72 @@ namespace CPU.Business
             }
             return marIndex;
 		}
-		private string DecodeAndSendCommand()
+		private (int MAR, int MirIndex) DecodeAndSendCommand()
 		{
 			switch (_mirIndex) {
 				case 0:
-                    SbusEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    SbusEvent?.Invoke(getMirSbusField());
                     break;
 				case 1:
-                    DbusEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    DbusEvent?.Invoke(getMirDbusField());
                     break;
 				case 2:
-                    AluEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    AluEvent?.Invoke(getMirAluField());
                     break;
                 case 3:
-                    RbusEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    RbusEvent?.Invoke(getMirRbusField());
                     break;
                 case 4:
-                    MemoryEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    MemoryEvent?.Invoke(getMirMemOpField());
                     break;
 				case 5:
-                    OtherEvent?.Invoke(_microcommandsIndexes[MIR[_mirIndex]]);
+                    OtherEvent?.Invoke(getMirOthersField());
                     break;
 			}
 			_mirIndex %= 6;
 			_mirIndex++;
-            return MIR[_mirIndex];
+            return (MAR,_mirIndex);
         }
-	}
+        private int getMirSbusField()
+        {
+            return (int)(MIR & SuccesorMask);
+        }
+        private int getMirDbusField()
+        {
+            return (int)(MIR & DbusMask);
+        }
+        private int getMirAluField()
+        {
+            return (int)(MIR & AluMask);
+        }
+        private int getMirRbusField()
+        {
+            return (int)(MIR & RbusMask);
+        }
+        private int getMirMemOpField()
+        {
+            return (int)(MIR & MemOpMask);
+        }
+        private int getMirOthersField()
+        {
+            return (int)(MIR & OthersMask);
+        }
+        private int getMirSuccesorField()
+        {
+            return (int)(MIR & SuccesorMask);
+        }
+        private int getMirIndexField()
+        {
+            return (int)(MIR & IndexMask);
+        }
+        private int getMirTNegFField()
+        {
+            return (int)(MIR & TnegFMask);
+        }
+        private int getMirAddresField()
+        {
+            return (int)(MIR & AddresMask);
+        }
+    }
 
 }
