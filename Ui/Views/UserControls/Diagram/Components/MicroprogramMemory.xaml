@@ -1,0 +1,56 @@
+<UserControl x:Class="Ui.Views.UserControls.Diagram.Components.MicroprogramMemory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
+             d:DataContext="{d:DesignInstance Type=diagram:MicroprogramMemoryViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="1050">
+    <Border BorderBrush="White" BorderThickness="1" Padding="4">
+        <StackPanel>
+            <TextBlock Grid.Row="0" Text="MICROPROGRAM MEMORY"
+                       HorizontalAlignment="Center"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       Margin="0,0,0,4" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />   <!-- Item0 -->
+                    <ColumnDefinition Width="100" />  <!-- Item1 -->
+                    <ColumnDefinition Width="90" />   <!-- Item2 -->
+                    <ColumnDefinition Width="60" />   <!-- Item3 -->
+                    <ColumnDefinition Width="90" />   <!-- Item4 -->
+                    <ColumnDefinition Width="120" />  <!-- Item5 -->
+                    <ColumnDefinition Width="75" />   <!-- Item6 -->
+                    <ColumnDefinition Width="*" />    <!-- Item7 takes remaining space -->
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item0}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="1" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item1}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="2" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item2}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="3" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item3}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="4" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item4}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="5" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item5}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="6" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item6}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+                <Border Grid.Column="7" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding Item7}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

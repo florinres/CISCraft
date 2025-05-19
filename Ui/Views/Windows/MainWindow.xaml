@@ -5,12 +5,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:viewModel="clr-namespace:Ui.ViewModels.Windows"
-    xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
-    xmlns:models1="clr-namespace:Ui.Models"
     xmlns:components="clr-namespace:Ui.Components"
+    xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
+    xmlns:viewmodels="clr-namespace:Ui.ViewModels.Generics"
     xmlns:helpers="clr-namespace:Ui.Helpers"
-    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
+    xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
+    xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
+    xmlns:hex="clr-namespace:Ui.Views.UserControls.Hex"
+    xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
+    xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
     d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -20,11 +25,11 @@
     WindowBackdropType="Mica"
     ExtendsContentIntoTitleBar="True"
     WindowCornerPreference="Round"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="MainWindow_OnLoaded">
     <Window.Resources>
-        <system:Boolean x:Key="True">True</system:Boolean>
-        <system:Boolean x:Key="False">False</system:Boolean>
-        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <helpers:ThemeToIndexConverter x:Key="ThemeToIndexConverter" />
+        <helpers:EnumEqualsConverter x:Key="EnumEqualsConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,123 +37,247 @@
             <RowDefinition Height="Auto" /> <!-- Menu / Toolbar -->
             <RowDefinition Height="*" />    <!-- AvalonDock -->
         </Grid.RowDefinitions>
+
         <ui:TitleBar
             x:Name="TitleBar"
             Title="{Binding ApplicationTitle}"
             Grid.Row="0"
-            CloseWindowByDoubleClickOnIcon="True">
+            CloseWindowByDoubleClickOnIcon="True"
+            Height="30">
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="pack://application:,,,/Assets/wpfui-icon-256.png" />
             </ui:TitleBar.Icon>
-        </ui:TitleBar>
-        <WrapPanel Grid.Row="1" Margin="5" VerticalAlignment="Center">
-            <Menu VerticalAlignment="Center">
-                <MenuItem Header="File">
-                    <MenuItem Command="{Binding Workspace.NewDocumentCommand}" Header="New" />
-                    <MenuItem Command="{Binding Workspace.OpenDocumentCommand}" Header="Open" />
-                    <Separator />
-                    <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
-                    <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}" Header="Save As..." />
-                    <Separator />
-                    <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
-                </MenuItem>
-                <MenuItem Header="Tools">
-                    <MenuItem
-                        Header="Properties"
-                        IsCheckable="True"
-                        IsChecked="{Binding Workspace.FileStats.IsVisible, Mode=TwoWay}" />
-                </MenuItem>
-                <MenuItem Header="Layout">
-                    <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
-                    <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
-                </MenuItem>
-            </Menu>
 
-            <ComboBox
-                DisplayMemberPath="Item1"
-                IsEnabled="False"
-                ItemsSource="{Binding Themes}"
-                SelectedItem="{Binding SelectedTheme}"
-                Margin="10,0,0,0" />
-        </WrapPanel>
+            <ui:TitleBar.Header>
+                <Menu Height="48" Margin="0 -9 0 0">
+                    <ui:MenuItem Header="File">
+                        <MenuItem Command="{Binding MenuBar.NewDocumentCommand}" Header="New" />
+                        <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open" />
+                        <Separator />
+                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
+                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}"
+                                  Header="Save As..." />
+                        <Separator />
+                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
+                    </ui:MenuItem>
+
+                    <ui:MenuItem Header="Tools">
+                        <MenuItem
+                            Header="Properties"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowFileStatsCommand}" />
+                        <MenuItem
+                            Header="Diagram"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.Diagram.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowDiagramCommand}" />
+                        <MenuItem
+                            Header="HexViewer"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowHexViewerCommand}" />
+                    </ui:MenuItem>
+                    <ui:MenuItem Header="Edit">
+                        <MenuItem Header="Layout">
+                            <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
+                            <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
+                        </MenuItem>
+                        <MenuItem Header="Theme">
+                            <MenuItem Header="Light"
+                                      IsCheckable="True"
+                                      IsChecked="{Binding  Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
+                                      Command="{Binding Settings.ChangeThemeCommand}"
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Light}" />
+
+                            <MenuItem Header="Dark"
+                                      IsCheckable="True"
+                                      IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
+                                      Command="{Binding Settings.ChangeThemeCommand}"
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
+                        </MenuItem>
+                    </ui:MenuItem>
+                    <ui:MenuItem Header="View" />
+                    <ui:MenuItem Header="Help" />
+                </Menu>
+            </ui:TitleBar.Header>
+        </ui:TitleBar>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
+
+            <ui:Button
+                VerticalAlignment="Top"
+                ToolTip="Run"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="10,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F" />
+            </ui:Button>
+
+            <ui:Button
+                VerticalAlignment="Top"
+                ToolTip="Debug"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="Bug24" />
+            </ui:Button>
+
+            <ui:Button Command="{Binding RunAssembleSourceCodeServiceCommand}"
+                       ToolTip="Assemble"
+                       VerticalAlignment="Top"
+                       Height="30"
+                       Width="30"
+                       Padding="0"
+                       Margin="0,0,10,0"
+                       Appearance="Transparent"
+                       BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="Settings24" />
+            </ui:Button>
+
+            <ui:Button
+                VerticalAlignment="Top"
+                ToolTip="Step Into"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="ArrowStepIn16" />
+            </ui:Button>
+
+            <ui:Button
+                VerticalAlignment="Top"
+                ToolTip="Step Over"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="ArrowStepOver16" />
+            </ui:Button>
+
+            <ui:Button
+                VerticalAlignment="Top"
+                ToolTip="Reset"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="ArrowReset24" />
+            </ui:Button>
+
+            <ui:Button
+                VerticalAlignment="Top"
+                ToolTip="Stop"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="Stop24" Foreground="#E4FF3F3F" />
+            </ui:Button>
+        </StackPanel>
+
         <DockingManager
+            x:Name="DockingManagerInstance"
             Grid.Row="2"
-            ActiveContent="{Binding SelectedDocument, Mode=TwoWay}"
-            AnchorablesSource="{Binding Tools}"
-            DocumentsSource="{Binding Documents}"
-            DataContext="{Binding Workspace}">
+            ActiveContent="{Binding ActiveDocumentsService.SelectedDocument, Mode=TwoWay}"
+            DocumentsSource="{Binding ActiveDocumentsService.Documents}"
+            DataContext="{Binding Workspace}"
+            AnchorableClosing="DockManager_AnchorableClosing">
             <DockingManager.Theme>
-                <wpfui:WPFUITheme/>
+                <wpfui:WPFUITheme />
             </DockingManager.Theme>
             <DockingManager.LayoutItemTemplateSelector>
                 <components:PanesTemplateSelector>
+                    <!-- Text editor -->
                     <components:PanesTemplateSelector.FileViewTemplate>
-                        <DataTemplate DataType="{x:Type models1:FileViewModel}">
-                            <!-- <TextBox -->
-                            <!--     Background="Transparent" -->
-                            <!--     BorderThickness="0" -->
-                            <!--     Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/> -->
+                        <DataTemplate DataType="{x:Type viewmodels:FileViewModel}">
                             <components:StyledAvalonEdit
                                 x:Name="TextEditor"
                                 SyntaxHighlighting="Custom"
                                 FontFamily="Consolas"
                                 FontSize="10pt"
                                 ShowLineNumbers="True"
-                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
+                    <!-- Properties -->
                     <components:PanesTemplateSelector.FileStatsViewTemplate>
-                        <DataTemplate DataType="{x:Type models1:FileStatsViewModel}">
+                        <DataTemplate DataType="{x:Type viewmodels:FileStatsViewModel}">
                             <Border Padding="5">
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding FileSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Text="{Binding LastModified, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox IsReadOnly="True" Text="{Binding FilePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox IsReadOnly="True" Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Text="{Binding FileSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Text="{Binding LastModified, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox IsReadOnly="True"
+                                             Text="{Binding FilePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox IsReadOnly="True"
+                                             Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileStatsViewTemplate>
+                    <!-- Diagram -->
+                    <components:PanesTemplateSelector.DiagramViewTemplate>
+                        <DataTemplate DataType="{x:Type diagram:DiagramViewModel}">
+                            <diagram1:DiagramUserControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.DiagramViewTemplate>
+                    <!-- HexViewer -->
+                    <components:PanesTemplateSelector.HexViewTemplate>
+                        <DataTemplate DataType="{x:Type hexViewer:HexViewModel}">
+                            <hex:HexControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.HexViewTemplate>
                 </components:PanesTemplateSelector>
             </DockingManager.LayoutItemTemplateSelector>
-            
+
             <DockingManager.LayoutItemContainerStyleSelector>
                 <components:PanesStyleSelector>
                     <components:PanesStyleSelector.ToolStyle>
                         <Style TargetType="{x:Type LayoutAnchorableItem}">
                             <Setter Property="Title" Value="{Binding Model.Title}" />
                             <Setter Property="CanClose" Value="True" />
-                            <!-- <Setter Property="IconSource" Value="{Binding Model.IconSource}" /> -->
-                            <Setter Property="Visibility"
-                                    Value="{Binding Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource False}}" />
+                            <!-- <Setter Property="Visibility" -->
+                            <!--         Value="{Binding Model.IsVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource False}}" /> -->
                             <Setter Property="ContentId" Value="{Binding Model.ToolContentId}" />
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                             <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
                         </Style>
                     </components:PanesStyleSelector.ToolStyle>
                     <components:PanesStyleSelector.FileStyle>
-                        <!-- For anybody looking at this. The bindings suggested by Rider is the dataContext on the element(WorkspaceViewModel) but in practice the bindings are on the actual FileViewModel -->
                         <Style TargetType="{x:Type LayoutItem}">
                             <Setter Property="Title" Value="{Binding Model.Title}" />
                             <Setter Property="ToolTip" Value="{Binding Model.FilePath}" />
-                            <!-- <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" /> -->
-                            <!-- <Setter Property="IconSource" Value="{Binding Model.IconSource}" /> -->
-                            <!-- <Setter Property="ContentId" Value="{Binding Model.ContentId}" /> -->
+                            <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
                         </Style>
                     </components:PanesStyleSelector.FileStyle>
                 </components:PanesStyleSelector>
             </DockingManager.LayoutItemContainerStyleSelector>
-            
             <DockingManager.LayoutUpdateStrategy>
                 <helpers:LayoutInitializer />
             </DockingManager.LayoutUpdateStrategy>
-            
             <LayoutRoot>
                 <LayoutPanel Orientation="Vertical">
                     <LayoutDocumentPane />
-                    <LayoutAnchorablePane Name="ToolsPane" DockHeight="150" />
+                    <LayoutAnchorablePane Name="ToolsPane" />
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
+
     </Grid>
 </ui:FluentWindow>
