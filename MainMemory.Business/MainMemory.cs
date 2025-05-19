@@ -20,10 +20,7 @@ namespace MainMemory.Business
         private int interuptsNum;
         private int maxInterruptSize;
         private ushort retiOpCode; // OpCode for Return Interrupt instruction
-
-        private static MainMemory? mainMemoryInstance;
-        private static readonly Lock _lock = new();
-        private MainMemory()
+        public MainMemory()
         {
 
             // Basic memory layout:
@@ -47,7 +44,7 @@ namespace MainMemory.Business
             this.dataSegment = 0x001f;
             this.codeSegment = 0x1234;
             this.interruptRoutinesSegment = 0x2fed;
-            // recomending the ISRs be short, we shall
+            // recomending that the ISRs be short, we shall
             // take half of this segment and give to
             // code segment
             this.freeMemorySegemnt = ((ushort)((this.memoryLocationsNum - 1 - this.codeSegment) / 4));
@@ -64,19 +61,6 @@ namespace MainMemory.Business
 
         }
 
-        public static MainMemory GetMainMemoryInstance()
-        {
-
-            lock (_lock) // ensure that only one thread can access this portion of code
-            {
-                if (mainMemoryInstance == null)
-                {
-
-                    mainMemoryInstance = new MainMemory();
-                }
-            }
-            return mainMemoryInstance;
-        }
 
         public void SetInternalStackSize(int stackSize)
         {
