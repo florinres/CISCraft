@@ -107,12 +107,20 @@ namespace MainMemory.Business
                 this._memoryContent[i] = 0;
         }
 
-        public byte GetMemoryLocationData(int memoryAddress)
+        public byte FetchByte(int memoryAddress)
         {
             if (memoryAddress > this.memoryLocationsNum - 1)
                 throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value.");
 
             return this._memoryContent[memoryAddress];
+        }
+
+        public short FetchWord(int memoryAddress)
+        {
+            if (memoryAddress > this.memoryLocationsNum - 1)
+                throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value.");
+
+            return (short)((this._memoryContent[memoryAddress + 1] << 8) | this._memoryContent[memoryAddress]);
         }
 
         public int GetMemorySize()

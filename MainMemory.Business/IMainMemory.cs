@@ -12,7 +12,8 @@ namespace MainMemory
         public void SetByteLocation(int memoryAddress, byte content);
         public void SetWordLocation(int memoryAddress, short content);
         public void SetISR(int interruptNumber, byte[] interruptRoutine);
-        public byte GetMemoryLocationData(int memoryAddress);
+        public byte FetchByte(int memoryAddress);
+        public short FetchWord(int address);
         public byte[] GetMemoryDump();
         public void LoadMachineCode(byte[] machineCode);
         public void ClearISR(int interruptNumber);
