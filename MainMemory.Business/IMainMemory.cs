@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ui.Interfaces
+namespace MainMemory
 {
     interface IMainMemory
     {
         public void SetStackSize(int stackSize);
-        public void SetMemoryLocationData(int memoryAddress, byte content);
-
+        public void SetByteLocation(int memoryAddress, byte content);
+        public void SetWordLocation(int memoryAddress, short content);
         public void SetISR(int interruptNumber, byte[] interruptRoutine);
         public byte GetMemoryLocationData(int memoryAddress);
         public byte[] GetMemoryDump();

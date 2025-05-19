@@ -1,11 +1,10 @@
-﻿
-using System.Net;
+﻿using System.Net;
 
 namespace MainMemory.Business
 {
-    public class MainMemory
+    public class MainMemory: IMainMemory
     {
-        private byte[] memoryDump;
+        private byte[] _memoryContent;
         private int memoryLocationsNum;
 
         private ushort interruptTableSegment;
@@ -33,7 +32,7 @@ namespace MainMemory.Business
 
             //Initialize memory parameters
             this.memoryLocationsNum = 1 << 16; // 16 bit address bus
-            this.memoryDump = new byte[this.memoryLocationsNum];
+            this._memoryContent = new byte[this.memoryLocationsNum];
             this.retiOpCode = 0xe00f;
             this.interuptsNum = 16;
             this.maxInterruptSize = 0x1db9;
@@ -62,7 +61,7 @@ namespace MainMemory.Business
         }
 
 
-        public void SetInternalStackSize(int stackSize)
+        public void SetStackSize(int stackSize)
         {
 
             if (this.stackSegment - stackSize < this.freeMemorySegemnt)
@@ -71,40 +70,49 @@ namespace MainMemory.Business
             this.stackBottom = ((ushort)((this.memoryLocationsNum - stackSize)));
         }
 
-        public void SetInternalData(int address, byte content)
+        public void SetByteLocation(int address, byte content)
         {
             if( address > this.memoryLocationsNum - 1)
                 throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value.");
 
-            this.memoryDump[address] = content;
+            this._memoryContent[address] = content;
         }
 
-        public void SetInternalMachineCode(byte[] machineCode)
+        public void SetWordLocation(int address, short content)
+        {
+            if (address > this.memoryLocationsNum - 1)
+                throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value.");
+
+            this._memoryContent[address+1] = (byte)(content>>8);
+            this._memoryContent[address] = (byte)(content << 8 >>8);
+        }
+
+        public void LoadMachineCode(byte[] machineCode)
         {
             if(machineCode.Length > this.interruptRoutinesSegment - this.codeSegment)
                 throw new InvalidOperationException("Machine code size exceeds memory capacity. Please try another program.");
 
             for (int i = 0; i < machineCode.Length; i++)
-                this.memoryDump[this.codeSegment + i] = machineCode[i];
+                this._memoryContent[this.codeSegment + i] = machineCode[i];
         }
 
-        public byte[] GetInternalMemoryDump()
+        public byte[] GetMemoryDump()
         {
-            return this.memoryDump;
+            return this._memoryContent;
         }
 
-        public void CleanInternalMemory()
+        public void ClearMemory()
         {
-            for (int i = 0; i < this.memoryDump.Length; i++)
-                this.memoryDump[i] = 0;
+            for (int i = 0; i < this._memoryContent.Length; i++)
+                this._memoryContent[i] = 0;
         }
 
-        public byte GetInternalLocationData(int memoryAddress)
+        public byte GetMemoryLocationData(int memoryAddress)
         {
             if (memoryAddress > this.memoryLocationsNum - 1)
                 throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value.");
 
-            return this.memoryDump[memoryAddress];
+            return this._memoryContent[memoryAddress];
         }
 
         public int GetMemorySize()
@@ -112,42 +120,42 @@ namespace MainMemory.Business
             return this.memoryLocationsNum;
         }
 
-        public void SetInternalISR(int interruptNumber, byte[] interruptRoutine)
+        public void SetISR(int interruptNumber, byte[] interruptRoutine)
         {
             if(interruptNumber > this.interuptsNum)
                 throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt number exceeds the total number of interrupts. Please try another value.");
 
-            ushort isrAddress = (ushort)((this.memoryDump[interruptNumber * 2 + 1] << 8) | this.memoryDump[interruptNumber * 2]); //little endian addressing
+            ushort isrAddress = (ushort)((this._memoryContent[interruptNumber * 2 + 1] << 8) | this._memoryContent[interruptNumber * 2]); //little endian addressing
 
             if(isrAddress + interruptRoutine.Length > this.maxInterruptSize)
                 throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt exceeds the maximum allocated space. Please try adding a smaller routine.");
 
             for (int i = 0; i < interruptRoutine.Length; i++)
-                this.memoryDump[isrAddress + i] = interruptRoutine[i];
+                this._memoryContent[isrAddress + i] = interruptRoutine[i];
 
         }
 
-        public void ClearInternlISR(int interruptNumber)
+        public void ClearISR(int interruptNumber)
         {
             if(interruptNumber > this.interuptsNum)
                 throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt number exceeds the total number of interrupts. Please try another value.");
 
-            ushort isrAddress = (ushort)((this.memoryDump[interruptNumber * 2 + 1] << 8) | this.memoryDump[interruptNumber * 2]); //little endian addressing
+            ushort isrAddress = (ushort)((this._memoryContent[interruptNumber * 2 + 1] << 8) | this._memoryContent[interruptNumber * 2]); //little endian addressing
 
             for (int i = isrAddress; i < this.maxInterruptSize - 1; i += 2)
             {
-                this.memoryDump[i] = (byte)(this.retiOpCode & 0xFF);
-                this.memoryDump[i + 1] = (byte)((this.retiOpCode >> 8) & 0xFF);
+                this._memoryContent[i] = (byte)(this.retiOpCode & 0xFF);
+                this._memoryContent[i + 1] = (byte)((this.retiOpCode >> 8) & 0xFF);
             }
         }
         private void InitializeISR(int interruptNumber)
         {
-            ushort isrAddress = (ushort)((this.memoryDump[interruptNumber * 2 + 1] << 8) | this.memoryDump[interruptNumber * 2]);
+            ushort isrAddress = (ushort)((this._memoryContent[interruptNumber * 2 + 1] << 8) | this._memoryContent[interruptNumber * 2]);
 
             for (int i = isrAddress; i < this.maxInterruptSize - 1; i+=2)
             {
-                this.memoryDump[i] = (byte)(this.retiOpCode & 0xff);
-                this.memoryDump[i + 1] = (byte)(this.retiOpCode >> 8);
+                this._memoryContent[i] = (byte)(this.retiOpCode & 0xff);
+                this._memoryContent[i + 1] = (byte)(this.retiOpCode >> 8);
             }
 
         }
