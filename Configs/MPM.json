@@ -43,7 +43,7 @@
     ],
     "FOS_AD":
     [
-        ["PdRGs",     "NONE",          "SBUS",  "PmT",         "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "FOD_AD_B1"    ]
+        ["PdRGs",     "NONE",          "SBUS",  "PmT",         "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "FOD_AM_B1"    ]
     ],
     "FOS_AI":
     [
