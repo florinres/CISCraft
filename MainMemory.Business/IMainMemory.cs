@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MainMemory
+namespace MainMemory.Business
 {
-    interface IMainMemory
+    public interface IMainMemory
     {
         public void SetStackSize(int stackSize);
         public void SetByteLocation(int memoryAddress, byte content);

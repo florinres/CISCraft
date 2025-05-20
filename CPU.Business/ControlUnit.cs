@@ -215,36 +215,35 @@ namespace CPU.Business
             bool signFLag = Convert.ToBoolean(flagsRegister & (1 << 1));
             bool overflowFlag = Convert.ToBoolean(flagsRegister & (1 << 0));
             int selectValue = getMirSuccesorField();
-            // Note: since we the hardware behaviour of MIR register has been
-            // abstracted, the hardware MIR[13:11] bits corespond to
-            // the software MIR[6], i.e. Selection Index
-            bool hwMIRbit = Convert.ToBoolean(getMirTNegFField());
+
+
+            bool bTNegF = Convert.ToBoolean(getMirTNegFField());
 
             switch (selectValue)
             {
                 case 0:
-                    g_flag = false; //g <- hardware MIR[7] xor MIR[7]
+                    g_flag = false; //g <- MIR[7] xor MIR[7]
                     break;
                 case 1:
-                    g_flag = true; // g<- hardware Not(MIR[7]) xor MIR[7]
+                    g_flag = true; // g<- Not(MIR[7]) xor MIR[7]
                     break;
                 case 2:
-                    g_flag = (bool)(ACLOWSignal ^ hwMIRbit);
+                    g_flag = (bool)(ACLOWSignal ^ bTNegF);
                     break;
                 case 3:
-                    g_flag = CILFlag ^ hwMIRbit;
+                    g_flag = CILFlag ^ bTNegF;
                     break;
                 case 4:
-                    g_flag = carryFlag ^ hwMIRbit;
+                    g_flag = carryFlag ^ bTNegF;
                     break;
                 case 5:
-                    g_flag = zeroFlag ^ hwMIRbit;
+                    g_flag = zeroFlag ^ bTNegF;
                     break;
                 case 6:
-                    g_flag = signFLag ^ hwMIRbit;
+                    g_flag = signFLag ^ bTNegF;
                     break;
                 case 7:
-                    g_flag = overflowFlag ^ hwMIRbit;
+                    g_flag = overflowFlag ^ bTNegF;
                     break;
             }
             return g_flag;
@@ -340,43 +339,43 @@ namespace CPU.Business
         }
         private int getMirSbusField()
         {
-            return (int)(MIR & SuccesorMask);
+            return (int)(MIR & SuccesorMask) >> SbusShift;
         }
         private int getMirDbusField()
         {
-            return (int)(MIR & DbusMask);
+            return (int)(MIR & DbusMask) >> DbusShift;
         }
         private int getMirAluField()
         {
-            return (int)(MIR & AluMask);
+            return (int)(MIR & AluMask) >> AluShift;
         }
         private int getMirRbusField()
         {
-            return (int)(MIR & RbusMask);
+            return (int)(MIR & RbusMask) >> RbusShift;
         }
         private int getMirMemOpField()
         {
-            return (int)(MIR & MemOpMask);
+            return (int)(MIR & MemOpMask) >> MemOpShift;
         }
         private int getMirOthersField()
         {
-            return (int)(MIR & OthersMask);
+            return (int)(MIR & OthersMask) >> OthersShift;
         }
         private int getMirSuccesorField()
         {
-            return (int)(MIR & SuccesorMask);
+            return (int)(MIR & SuccesorMask) >> SuccesorShift;
         }
         private int getMirIndexField()
         {
-            return (int)(MIR & IndexMask);
+            return (int)(MIR & IndexMask) >> IndexShift;
         }
         private int getMirTNegFField()
         {
-            return (int)(MIR & TnegFMask);
+            return (int)(MIR & TnegFMask) >> TnedFShift;
         }
         private int getMirAddresField()
         {
-            return (int)(MIR & AddresMask);
+            return (int)(MIR & AddresMask) >> AddresShift;
         }
     }
 
