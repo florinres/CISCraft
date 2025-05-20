@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -7,7 +7,6 @@ using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using CPU.Business.Models;
 using MainMemory.Business;
 
 namespace CPU.Business
@@ -34,6 +33,7 @@ namespace CPU.Business
         }
         enum REGISTERS
         {
+            None,
             FLAGS,
             RG,
             SP,
@@ -76,13 +76,12 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-		// public short[] Registers = new short[MAX_NUM_REG];
-        public RegistersList Registers;
+        public short[] Registers = new short[MAX_NUM_REG];
 		public short SBUS, DBUS, RBUS;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
-		public CPU(IMainMemory mainMemory, RegistersList registersList)
+		public CPU(IMainMemory mainMemory)
         {
             _controlUnit = new ControlUnit();
             _controlUnit.SbusEvent += OnSbusEvent;
@@ -92,7 +91,6 @@ namespace CPU.Business
             _controlUnit.MemoryEvent += OnMemoryEvent;
             _controlUnit.OtherEvent += OnOtherEvent;
             _mainMemory = mainMemory;
-            Registers = registersList;
         }
         public (int MAR, int MirIndex) StepMicrocode()
 		{
@@ -270,14 +268,9 @@ namespace CPU.Business
                     break;
             }
         }
-        private void OnRbusEvent(int obj)
+        private void OnRbusEvent(int index)
         {
-            for (int i = 1; i < MAX_NUM_REG; i++)
-            {
-                Registers[i] = RBUS;
-                if (i == 25)
-                    Registers[i] = (short)~Registers[i];
-            }
+            Registers[index] = RBUS;
         }
         private void OnMemoryEvent(int index)
         {

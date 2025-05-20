@@ -41,7 +41,8 @@ namespace MainMemory.Business
 
             this.interruptTableSegment = 0x0000;
             this.dataSegment = 0x001f;
-            this.codeSegment = 0x1234;
+            //this.codeSegment = 0x1234;
+            this.codeSegment = 0;
             this.interruptRoutinesSegment = 0x2fed;
             // recomending that the ISRs be short, we shall
             // take half of this segment and give to
