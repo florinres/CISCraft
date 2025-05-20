@@ -43,6 +43,19 @@ public class RegisterWrapper : ObservableObject
             OnPropertyChanged(nameof(_registers));
         }
     }
+    
+    public short this[GPR index]
+    {
+        get => _registers[(int)index];
+        set
+        {
+            if (_registers[(int)index] == value) return;
+            
+            _registers[(int)index] = value;
+            OnPropertyChanged($"Item[{index}]");
+            OnPropertyChanged(nameof(_registers));
+        }
+    }
     public short[] Registers => _registers;
     public short[] Gpr => _gpr;
 }
