@@ -11,6 +11,9 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
 {
     [ObservableProperty]
     public partial ObservableCollection<MicroprogramMemoryViewModel> Rows { get; set; } = [];
+    
+    [ObservableProperty]
+    public partial MicroprogramMemoryViewModel? CurrentMemoryRow { get; set; }
 
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
@@ -37,6 +40,8 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
             {
                 Rows[newValue].Items[CurrentColumn].IsCurrent = true;
             }
+            
+            CurrentMemoryRow = Rows[newValue];
         }
     }
 
