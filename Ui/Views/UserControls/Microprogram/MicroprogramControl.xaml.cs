@@ -37,6 +37,19 @@ public partial class MicroprogramControl : UserControl
         if (d is MicroprogramControl control && e.NewValue is IMicroprogramViewModel vm)
         {
             control.DataContext = vm;
+
+            vm.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName != nameof(vm.CurrentRow)) return;
+                
+                var index = vm.CurrentRow;
+                if (index < 0 || index >= control.MicroprogramScrollViewer.Items.Count) return;
+                
+                var item = control.MicroprogramScrollViewer.Items[index];
+                
+                if(item is not null)
+                    control.MicroprogramScrollViewer.ScrollIntoView(item);
+            };
         }
     }
     
@@ -46,7 +59,6 @@ public partial class MicroprogramControl : UserControl
     }
 
     private Point _scrollStartPoint;
-    private Point _scrollStartOffset;
     private bool _isDragging;
     private void ScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -87,4 +99,6 @@ public partial class MicroprogramControl : UserControl
         if (FontSize > 40) FontSize = 40;     // Max font size
         e.Handled = true;
     }
+
+    
 }

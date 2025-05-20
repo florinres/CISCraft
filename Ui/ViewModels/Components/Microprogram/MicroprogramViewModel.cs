@@ -15,6 +15,15 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
     [ObservableProperty] public partial int CurrentRow { get; set; } = 0;
+    partial void OnCurrentRowChanged(int oldValue, int newValue)
+    {
+        if (oldValue >= 0 && oldValue < Rows.Count)
+            Rows[oldValue].IsCurrent = false;
+
+        if (newValue >= 0 && newValue < Rows.Count)
+            Rows[newValue].IsCurrent = true;
+    }
+
     [ObservableProperty] public partial int CurrentColumn { get; set; } = 0;
 
     public void LoadMicroprogramFromJson(string json)

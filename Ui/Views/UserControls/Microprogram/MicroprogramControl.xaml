@@ -34,6 +34,15 @@
                 <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
             </Style>
         </ListView.Resources>
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                        <Setter Property="Background" Value="LightBlue"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ListView.ItemContainerStyle>
         <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="{DynamicResource RegionBackgroundBrush}">

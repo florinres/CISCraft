@@ -17,6 +17,7 @@ public partial class MicroprogramMemoryViewModel : ObservableObject
     [ObservableProperty] public partial string Item9 {get; set;} = "";
 
     [ObservableProperty] public partial int Address { get; set; }
+    [ObservableProperty] public partial bool IsCurrent { get; set; } = false;
 
     public string GetFormattedAddress(NumberFormat format) => format switch
     {
