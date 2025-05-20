@@ -159,7 +159,7 @@ namespace CPU.Business
         /// <param name="initialState"></param>
         /// <param name="ACLOWSignal"></param>
         /// <param name="flagsRegister"></param>
-        /// <returns>
+        /// <returns> 
         /// The name of the microcode it shall be executed.
         /// This shall be used by UI.
         /// </returns>
@@ -170,36 +170,40 @@ namespace CPU.Business
                 return DecodeAndSendCommand();
             }
 
-            switch (state)
+            do
             {
-                case 0:
-                    this.MIR = this.MPM[this.MAR];
-                    state = 1;
-                    break;
-                case 1:
-                    bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
-                    if (g_function)
-                        this.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
-                    else this.MAR++;
+                switch (state)
+                {
+                    case 0:
+                        this.MIR = this.MPM[this.MAR];
+                        state = 1;
+                        break;
+                    case 1:
+                        bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
+                        if (g_function)
+                            this.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
+                        else this.MAR++;
 
-                    int mirALUBits = getMirAluField();
-                    bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
-                    bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
-                    if (!aluBIT24 & !aluBIT25)
-                        state = 2;
-                    else state = 0;
-                    return DecodeAndSendCommand();
-                case 2:
-                    state = 3;
-                    // Note: this state would normally be reserved for DMA logic
-                    // but in the current implementation it shall be ignored.
-                    break;
-                case 3:
-                    state = 0;
-                    break;
+                        int mirALUBits = getMirAluField();
+                        bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
+                        bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
+                        if (!aluBIT24 & !aluBIT25)
+                            state = 2;
+                        else state = 0;
+                        return DecodeAndSendCommand();
+                    case 2:
+                        state = 3;
+                        // Note: this state would normally be reserved for DMA logic
+                        // but in the current implementation it shall be ignored.
+                        break;
+                    case 3:
+                        state = 0;
+                        break;
 
-            }
-            return (0,0);
+                }
+            } while (state != 2);
+
+            throw new Exception("Fatal Error: Unknown command");
         }
 
         /// <summary>
@@ -335,9 +339,11 @@ namespace CPU.Business
 				case 5:
                     OtherEvent?.Invoke(getMirOthersField());
                     break;
+                case 6:
+                    break;
 			}
             _mirIndex++;
-            _mirIndex %= 6;
+            _mirIndex %= 7;
             return (MAR,_mirIndex);
         }
         private int getMirSbusField()
