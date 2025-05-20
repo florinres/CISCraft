@@ -33,6 +33,7 @@ namespace CPU.Business
         }
         enum REGISTERS
         {
+            None,
             FLAGS,
             RG,
             SP,
@@ -75,7 +76,7 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-		public short[] Registers = new short[MAX_NUM_REG];
+        public short[] Registers = new short[MAX_NUM_REG];
 		public short SBUS, DBUS, RBUS;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
@@ -267,14 +268,9 @@ namespace CPU.Business
                     break;
             }
         }
-        private void OnRbusEvent(int obj)
+        private void OnRbusEvent(int index)
         {
-            for (int i = 1; i < MAX_NUM_REG; i++)
-            {
-                Registers[i] = RBUS;
-                if (i == 25)
-                    Registers[i] = (short)~Registers[i];
-            }
+            Registers[index] = RBUS;
         }
         private void OnMemoryEvent(int index)
         {

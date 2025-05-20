@@ -34,7 +34,12 @@ namespace CPU.Main
             string jsonString = File.ReadAllText("C:\\Users\\rudy\\Desktop\\CISCraft\\Configs\\MPM.json");
             cpu.LoadJsonMpm(jsonString);
 
-            cpu.StepMicrocode();
+            for (int i = 0; i < 100; i++)
+            {
+                int a, b;
+                (a, b) = cpu.StepMicrocode();
+                Console.WriteLine("("+a+", "+b+")");
+            }
         }
     }
 }

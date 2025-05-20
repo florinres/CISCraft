@@ -194,6 +194,9 @@ namespace CPU.Business
                     // Note: this state would normally be reserved for DMA logic
                     // but in the current implementation it shall be ignored.
                     break;
+                case 3:
+                    state = 0;
+                    break;
 
             }
             return (0,0);
@@ -256,7 +259,7 @@ namespace CPU.Business
 		private byte ComputeMARIndex()
 		{
             byte marIndex = 0;
-            int selectValue = getMirSuccesorField();
+            int selectValue = getMirIndexField();
             // Note: since we the hardware behaviour of MIR register has been
             // abstracted, the hardware MIR[10:8] bits corespond to
             // software MIR[7] value.
@@ -278,7 +281,7 @@ namespace CPU.Business
                     marIndex = (byte)((this.IR & (1 << 11)) | (this.IR & (1 << 10)));
                     break;
                 case 3:
-                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4)));
+                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4))>>4);
                     break;
                 case 4:
                     marIndex = (byte)(
@@ -313,7 +316,7 @@ namespace CPU.Business
 		}
 		private (int MAR, int MirIndex) DecodeAndSendCommand()
 		{
-			switch (_mirIndex) {
+            switch (_mirIndex) {
 				case 0:
                     SbusEvent?.Invoke(getMirSbusField());
                     break;
@@ -333,49 +336,49 @@ namespace CPU.Business
                     OtherEvent?.Invoke(getMirOthersField());
                     break;
 			}
-			_mirIndex %= 6;
-			_mirIndex++;
+            _mirIndex++;
+            _mirIndex %= 6;
             return (MAR,_mirIndex);
         }
         private int getMirSbusField()
         {
-            return (int)(MIR & SuccesorMask) >> SbusShift;
+            return (int)((MIR & SbusMask) >> SbusShift);
         }
         private int getMirDbusField()
         {
-            return (int)(MIR & DbusMask) >> DbusShift;
+            return (int)((MIR & DbusMask) >> DbusShift);
         }
         private int getMirAluField()
         {
-            return (int)(MIR & AluMask) >> AluShift;
+            return (int)((MIR & AluMask) >> AluShift);
         }
         private int getMirRbusField()
         {
-            return (int)(MIR & RbusMask) >> RbusShift;
+            return (int)((MIR & RbusMask) >> RbusShift);
         }
         private int getMirMemOpField()
         {
-            return (int)(MIR & MemOpMask) >> MemOpShift;
+            return (int)((MIR & MemOpMask) >> MemOpShift);
         }
         private int getMirOthersField()
         {
-            return (int)(MIR & OthersMask) >> OthersShift;
+            return (int)((MIR & OthersMask) >> OthersShift);
         }
         private int getMirSuccesorField()
         {
-            return (int)(MIR & SuccesorMask) >> SuccesorShift;
+            return (int)((MIR & SuccesorMask) >> SuccesorShift);
         }
         private int getMirIndexField()
         {
-            return (int)(MIR & IndexMask) >> IndexShift;
+            return (int)((MIR & IndexMask) >> IndexShift);
         }
         private int getMirTNegFField()
         {
-            return (int)(MIR & TnegFMask) >> TnedFShift;
+            return (int)((MIR & TnegFMask) >> TnedFShift);
         }
         private int getMirAddresField()
         {
-            return (int)(MIR & AddresMask) >> AddresShift;
+            return (int)((MIR & AddresMask) >> AddresShift);
         }
     }
 
