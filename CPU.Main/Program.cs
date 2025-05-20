@@ -28,10 +28,11 @@ namespace CPU.Main
             {
                 Console.WriteLine($"Error: File not found - {ex.Message}");
             }
-
+//todo: important
             ram.LoadMachineCode(objectCode);
 
             string jsonString = File.ReadAllText("C:\\Users\\rudy\\Desktop\\CISCraft\\Configs\\MPM.json");
+            //todo: mpm
             cpu.LoadJsonMpm(jsonString);
 
             for (int i = 0; i < 100; i++)

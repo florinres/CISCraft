@@ -9,14 +9,17 @@ public partial class ActiveDocumentService : ObservableObject, IActiveDocumentSe
 {
     private IDockingService _dockingService;
 
-    public ActiveDocumentService(FileStatsViewModel fileStatsViewModel, IDockingService dockingService, IDiagramViewModel diagramViewModel, IHexViewModel hexViewModel)
+    public ActiveDocumentService(FileStatsViewModel fileStatsViewModel, IDockingService dockingService, IDiagramViewModel diagramViewModel, IHexViewModel hexViewModel, IMicroprogramViewModel microprogramViewModel)
     {
         FileStats = fileStatsViewModel;
         Diagram = diagramViewModel;
         HexViewer = hexViewModel;
+        Microprogram = microprogramViewModel;
+        
         Tools.Add(fileStatsViewModel);
         Tools.Add(diagramViewModel);
         Tools.Add(hexViewModel);
+        Tools.Add(microprogramViewModel);
 
         _dockingService = dockingService;
 
@@ -42,6 +45,7 @@ public partial class ActiveDocumentService : ObservableObject, IActiveDocumentSe
     [ObservableProperty] public partial IDiagramViewModel Diagram { get; set; }
     
     [ObservableProperty] public partial IHexViewModel HexViewer { get; set; }
+    [ObservableProperty] public partial IMicroprogramViewModel Microprogram { get; set; }
 
     public void ToggleToolVisibility(ToolViewModel tool)
     {

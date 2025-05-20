@@ -50,6 +50,9 @@
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>
         </Page>
+        <None Update="Assets\Mpm.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -95,14 +98,15 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj"/>
+        <ProjectReference Include="..\CPU.Business\CPU.Business.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Interfaces\Windows\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />
-    </ItemGroup>
+<!--    <ItemGroup>-->
+<!--      <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />-->
+<!--    </ItemGroup>-->
 
 </Project>

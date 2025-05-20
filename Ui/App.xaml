@@ -15,6 +15,7 @@
             <SolidColorBrush x:Key="NodeNameBackgroundBrush" Color="#1E1E1E"/>
             <helpers:InnerThicknessConverter x:Key="InnerThicknessConverter" />
             <BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <helpers:AddressFormatConverter x:Key="AddressFormatConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

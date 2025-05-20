@@ -1,0 +1,132 @@
+<UserControl x:Class="Ui.Views.UserControls.Microprogram.MicroprogramControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Ui.Views.UserControls.Microprogram"
+             xmlns:viewModel="clr-namespace:Ui.ViewModels"
+             xmlns:microprogram="clr-namespace:Ui.ViewModels.Components.Microprogram"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:helpers="clr-namespace:Ui.Helpers"
+             d:DataContext="{d:DesignInstance Type=microprogram:MicroprogramViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="Root">
+    <UserControl.Resources>
+        <helpers:FontSizeToWidthConverter x:Key="FontSizeToWidthConverter" />
+        <system:Double x:Key="BaseWidthAddress">80</system:Double>
+        <system:Double x:Key="BaseWidthItem">60</system:Double>
+        <system:Double x:Key="BaseWidthLargeItem">120</system:Double>
+    </UserControl.Resources>
+
+    <ListView ItemsSource="{Binding Rows}"
+              x:Name="MicroprogramScrollViewer"
+              VirtualizingStackPanel.IsVirtualizing="True"
+              VirtualizingStackPanel.VirtualizationMode="Recycling"
+              ScrollViewer.CanContentScroll="True"
+              PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
+              PreviewMouseMove="ScrollViewer_PreviewMouseMove"
+              PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
+              PreviewMouseWheel="Window_MouseWheel"
+              Background="{DynamicResource RegionBackgroundBrush}">
+        <ListView.Resources>
+            <Style TargetType="Grid">
+                <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
+            </Style>
+        </ListView.Resources>
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                        <Setter Property="Background" Value="LightBlue"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ListView.ItemContainerStyle>
+        <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="{DynamicResource RegionBackgroundBrush}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="AddressCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                            <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                            <ColumnDefinition SharedSizeGroup="LargeItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                            <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                            <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                            <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                            <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                            <ColumnDefinition SharedSizeGroup="LargeItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                            <ColumnDefinition SharedSizeGroup="LargeItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                            <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Address Column -->
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Address, Converter={StaticResource AddressFormatConverter}}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                   TextAlignment="Center"
+                                   Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}"
+                                   Background="{DynamicResource RegionBackgroundBrush}" />
+
+                        <!-- Data Columns -->
+                        <TextBlock Grid.Column="1" Text="{Binding Item[0]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="2" Text="{Binding Item[1]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="3" Text="{Binding Item[2]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="4" Text="{Binding Item[3]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="5" Text="{Binding Item[4]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="6" Text="{Binding Item[5]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="7" Text="{Binding Item[6]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="8" Text="{Binding Item[7]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <TextBlock Grid.Column="9" Text="{Binding Item[8]}"
+                                   Background="{DynamicResource RegionBackgroundBrush}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
+                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                        <!-- Continue for Item2 through Item9 -->
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+</UserControl>

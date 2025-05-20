@@ -1,4 +1,6 @@
 using System.IO;
+using CPU.Business.Models;
+using MainMemory.Business;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +10,7 @@ using Ui.Interfaces.ViewModel;
 using Ui.Services;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.HexViewer;
+using Ui.ViewModels.Components.Microprogram;
 using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
@@ -51,6 +54,11 @@ public partial class App : Application
             services.AddSingleton<IDiagramViewModel, DiagramViewModel>();
             services.AddSingleton<IHexViewModel, HexViewModel>();
             services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
+            services.AddSingleton<CpuService>();
+            services.AddSingleton<IMicroprogramViewModel, MicroprogramViewModel>();
+            services.AddSingleton<IMainMemory, MainMemory.Business.MainMemory>();
+            services.AddSingleton<CPU.Business.CPU>();
+            services.AddSingleton<RegistersList>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)
@@ -60,8 +68,8 @@ public partial class App : Application
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
 
-        // var diagramWindow = new DiagramPage();
-        // diagramWindow.Show();
+        // var testWindow = new TestHexWindow();
+        // testWindow.Show();
         
         base.OnStartup(e);
     }
