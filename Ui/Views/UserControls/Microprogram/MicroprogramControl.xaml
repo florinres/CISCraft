@@ -34,15 +34,6 @@
                 <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
             </Style>
         </ListView.Resources>
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                        <Setter Property="Background" Value="LightBlue"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ListView.ItemContainerStyle>
         <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="{DynamicResource RegionBackgroundBrush}">
@@ -83,47 +74,146 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" 
+                                   >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[0].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="2" Text="{Binding Item[1]}"
-                                   Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}"                                    >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[1].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="3" Text="{Binding Item[2]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[2].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="4" Text="{Binding Item[3]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[3].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            </TextBlock>
                         <TextBlock Grid.Column="5" Text="{Binding Item[4]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[4].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="6" Text="{Binding Item[5]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[5].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="7" Text="{Binding Item[6]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            </TextBlock>
                         <TextBlock Grid.Column="8" Text="{Binding Item[7]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="9" Text="{Binding Item[8]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                                   FontSize="{Binding ElementName=Root, Path=FontSize}" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            </TextBlock>
                         <!-- Continue for Item2 through Item9 -->
                     </Grid>
                 </DataTemplate>
