@@ -12,9 +12,9 @@ public class CpuService : ICpuService
     private readonly CPU.Business.CPU _cpu;
     private readonly IMicroprogramViewModel _microprogramService;
 
-    public CpuService(IMicroprogramViewModel microprogramService)
+    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu)
     {
-        _cpu = new CPU.Business.CPU(new MainMemory.Business.MainMemory(), new RegistersList());
+        _cpu = cpu;
         _microprogramService = microprogramService;
     }
 
@@ -35,7 +35,7 @@ public class CpuService : ICpuService
         var jsonString = await File.ReadAllTextAsync(fullPath);
         //both can be paralized if necesarry
         _microprogramService.LoadMicroprogramFromJson(jsonString);
-        // _cpu.LoadJsonMpm(jsonString);
+        _cpu.LoadJsonMpm(jsonString);
     }
 
     public (int, int) StepMicrocode()

@@ -280,12 +280,12 @@
   ],
   "CLC":
   [
-    ["PdFLAGs",   "PdIR[7…0]d",    "AND",   "PmFLAG",      "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ],
+    ["PdFLAGs",   "PdIR[7...0]d",    "AND",   "PmFLAG",      "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ],
     ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ]
   ],
   "SEC":
   [
-    ["PdFLAGs",   "PdIR[7…0]d",    "OR",    "PmFLAG",      "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ],
+    ["PdFLAGs",   "PdIR[7...0]d",    "OR",    "PmFLAG",      "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ],
     ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ]
   ],
   "NOP":

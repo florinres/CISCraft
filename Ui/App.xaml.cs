@@ -1,4 +1,6 @@
 using System.IO;
+using CPU.Business.Models;
+using MainMemory.Business;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,6 +56,9 @@ public partial class App : Application
             services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
             services.AddSingleton<CpuService>();
             services.AddSingleton<IMicroprogramViewModel, MicroprogramViewModel>();
+            services.AddSingleton<IMainMemory, MainMemory.Business.MainMemory>();
+            services.AddSingleton<CPU.Business.CPU>();
+            services.AddSingleton<RegistersList>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)
@@ -63,8 +68,8 @@ public partial class App : Application
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
 
-        var testWindow = new TestHexWindow();
-        testWindow.Show();
+        // var testWindow = new TestHexWindow();
+        // testWindow.Show();
         
         base.OnStartup(e);
     }

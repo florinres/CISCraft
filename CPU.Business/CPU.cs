@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using CPU.Business.Models;
 using MainMemory.Business;
 
 namespace CPU.Business
@@ -76,12 +77,12 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-        public short[] Registers = new short[MAX_NUM_REG];
+        public RegistersList Registers;
 		public short SBUS, DBUS, RBUS;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
-		public CPU(IMainMemory mainMemory)
+		public CPU(IMainMemory mainMemory, RegistersList registers)
         {
             _controlUnit = new ControlUnit();
             _controlUnit.SbusEvent += OnSbusEvent;
@@ -91,6 +92,7 @@ namespace CPU.Business
             _controlUnit.MemoryEvent += OnMemoryEvent;
             _controlUnit.OtherEvent += OnOtherEvent;
             _mainMemory = mainMemory;
+            Registers = registers;
         }
         public (int MAR, int MirIndex) StepMicrocode()
 		{

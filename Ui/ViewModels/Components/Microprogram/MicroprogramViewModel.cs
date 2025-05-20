@@ -18,10 +18,27 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     partial void OnCurrentRowChanged(int oldValue, int newValue)
     {
         if (oldValue >= 0 && oldValue < Rows.Count)
+        {
             Rows[oldValue].IsCurrent = false;
+            Rows[oldValue][CurrentColumn].IsCurrent = false;
+        }
 
         if (newValue >= 0 && newValue < Rows.Count)
+        {
             Rows[newValue].IsCurrent = true;
+            Rows[oldValue][CurrentColumn].IsCurrent = true;
+        }
+    }
+    
+    partial void OnCurrentColumnChanged(int oldValue, int newValue)
+    {
+        if (oldValue >= 0 && oldValue < Rows.Count)
+        {
+            Rows[CurrentRow][oldValue].IsCurrent = false;
+        }
+
+        if (newValue >= 0 && newValue < Rows.Count)
+            Rows[CurrentRow][newValue].IsCurrent = true;
     }
 
     [ObservableProperty] public partial int CurrentColumn { get; set; } = 0;
@@ -35,19 +52,17 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
         Rows = new ObservableCollection<MicroprogramMemoryViewModel>(
             flatMatrix.Select((row, index) => new MicroprogramMemoryViewModel
             {
-                Item0 = row.ElementAtOrDefault(0) ?? "",
-                Item1 = row.ElementAtOrDefault(1) ?? "",
-                Item2 = row.ElementAtOrDefault(2) ?? "",
-                Item3 = row.ElementAtOrDefault(3) ?? "",
-                Item4 = row.ElementAtOrDefault(4) ?? "",
-                Item5 = row.ElementAtOrDefault(5) ?? "",
-                Item6 = row.ElementAtOrDefault(6) ?? "",
-                Item7 = row.ElementAtOrDefault(7) ?? "",
-                Item8 = row.ElementAtOrDefault(8) ?? "",
-                Item9 = row.ElementAtOrDefault(9) ?? "",
+                Items = new ObservableCollection<MicroInstructionItem>(
+                    row.Select(r => new MicroInstructionItem
+                    {
+                        Value = r,
+                        IsCurrent = false
+                    })
+                ),
                 Address = index
             })
         );
+        ;
 
     }
 
