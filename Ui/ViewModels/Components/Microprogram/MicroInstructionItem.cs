@@ -1,9 +1,9 @@
 ﻿namespace Ui.ViewModels.Components.Microprogram;
 
-public class MicroInstructionItem
+public partial class MicroInstructionItem : ObservableObject
 {
-    public string Value { get; set; } = "";
-    public bool IsCurrent { get; set; }
+    [ObservableProperty] public partial string Value { get; set; } = "";
+    [ObservableProperty] public partial bool IsCurrent { get; set; }
 
     public override string ToString()
     {

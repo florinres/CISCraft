@@ -11,35 +11,55 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
 {
     [ObservableProperty]
     public partial ObservableCollection<MicroprogramMemoryViewModel> Rows { get; set; } = [];
+    
+    [ObservableProperty]
+    public partial MicroprogramMemoryViewModel? CurrentMemoryRow { get; set; }
 
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
     [ObservableProperty] public partial int CurrentRow { get; set; } = 0;
     partial void OnCurrentRowChanged(int oldValue, int newValue)
     {
+        // Clear previous row selection
         if (oldValue >= 0 && oldValue < Rows.Count)
         {
             Rows[oldValue].IsCurrent = false;
-            Rows[oldValue][CurrentColumn].IsCurrent = false;
+            foreach (var item in Rows[oldValue].Items)
+            {
+                item.IsCurrent = false;
+            }
         }
 
+        // Set new row highlight
         if (newValue >= 0 && newValue < Rows.Count)
         {
             Rows[newValue].IsCurrent = true;
-            Rows[oldValue][CurrentColumn].IsCurrent = true;
+
+            // Optional: highlight the current column in new row if valid
+            if (CurrentColumn >= 0 && CurrentColumn < Rows[newValue].Items.Count)
+            {
+                Rows[newValue].Items[CurrentColumn].IsCurrent = true;
+            }
+            
+            CurrentMemoryRow = Rows[newValue];
         }
     }
-    
+
     partial void OnCurrentColumnChanged(int oldValue, int newValue)
     {
-        if (oldValue >= 0 && oldValue < Rows.Count)
+        // Clear old cell highlight
+        if (CurrentRow >= 0 && CurrentRow < Rows.Count)
         {
-            Rows[CurrentRow][oldValue].IsCurrent = false;
-        }
+            var row = Rows[CurrentRow];
 
-        if (newValue >= 0 && newValue < Rows.Count)
-            Rows[CurrentRow][newValue].IsCurrent = true;
+            if (oldValue >= 0 && oldValue < row.Items.Count)
+                row.Items[oldValue].IsCurrent = false;
+
+            if (newValue >= 0 && newValue < row.Items.Count)
+                row.Items[newValue].IsCurrent = true;
+        }
     }
+
 
     [ObservableProperty] public partial int CurrentColumn { get; set; } = 0;
 
