@@ -5,8 +5,13 @@ namespace Ui.ViewModels.Components.Diagram;
 
 public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 {
+    public DiagramViewModel(IMicroprogramViewModel microprogramViewModel)
+    {
+        MemoryContext = microprogramViewModel;
+    }
+    
     [ObservableProperty] public override partial string? Title { get; set; } = "Diagram";
-    public MicroprogramMemoryViewModel MemoryContext { get; } = new();
+    public IMicroprogramViewModel MemoryContext { get; set; }
     public RegisterViewModel DataInContext { get; } = new("DATA IN");
     public RegisterViewModel DataOutContext { get; } = new("DATA OUT");
     public RegisterViewModel PCContext { get; } = new("PC");
