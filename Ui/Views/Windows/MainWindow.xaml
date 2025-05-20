@@ -16,6 +16,7 @@
     xmlns:hex="clr-namespace:Ui.Views.UserControls.Hex"
     xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
     xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
+    xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
     d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -54,7 +55,7 @@
                         <MenuItem Command="{Binding MenuBar.NewDocumentCommand}" Header="New" />
                         <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open" />
                         <Separator />
-                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
+                        <MenuItem Command="{Binding ActionsBar.LoadJsonCommand}" Header="Load MPM" />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}"
                                   Header="Save As..." />
                         <Separator />
@@ -77,6 +78,11 @@
                             IsCheckable="True"
                             IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
                             Command="{Binding MenuBar.ShowHexViewerCommand}" />
+                        <MenuItem
+                            Header="Microprogram"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.Microprogram.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowMicroprogramCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
@@ -106,6 +112,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
+                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Run"
                 Height="30"
@@ -243,7 +250,14 @@
                             <hex:HexControl ViewModel="{Binding}"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.HexViewTemplate>
+                    <!-- Microprogram -->
+                    <components:PanesTemplateSelector.MicroprogramViewTemplate>
+                        <DataTemplate DataType="{x:Type diagram:MicroprogramMemoryViewModel}">
+                            <microprogram:MicroprogramControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.MicroprogramViewTemplate>
                 </components:PanesTemplateSelector>
+
             </DockingManager.LayoutItemTemplateSelector>
 
             <DockingManager.LayoutItemContainerStyleSelector>

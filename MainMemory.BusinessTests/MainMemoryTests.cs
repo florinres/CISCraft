@@ -16,7 +16,7 @@ namespace MainMemory.Business.Tests
         [TestInitialize]
         public void Setup()
         {
-            this.dummyRAM = MainMemory.GetMainMemoryInstance();
+            this.dummyRAM = new MainMemory();
         }
 
         [TestMethod()]
@@ -37,14 +37,6 @@ namespace MainMemory.Business.Tests
         {
             Assert.ThrowsException<InvalidOperationException>(() => this.dummyRAM.SetInternalStackSize(this.dummyRAM.GetMemorySize()));
 
-        }
-
-        [TestMethod()]
-        public void GetMainMemoryInstanceTest()
-        {
-            MainMemory secondaryMemory = MainMemory.GetMainMemoryInstance();
-
-            Assert.AreSame(this.dummyRAM, secondaryMemory);
         }
 
         [TestMethod()]

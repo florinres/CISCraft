@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj" />
     <ProjectReference Include="..\CPU.Business\CPU.Business.csproj" />
+    <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />
   </ItemGroup>
 
 </Project>

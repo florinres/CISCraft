@@ -5,14 +5,16 @@ namespace Ui.ViewModels.Components.Diagram;
 
 public partial class MicroprogramMemoryViewModel : ObservableObject
 {
-    [ObservableProperty] public partial string Item0 {get; set;} = "Push FLAG";
-    [ObservableProperty] public partial string Item1 {get; set;} = "pd_ir[offset]";
-    [ObservableProperty] public partial string Item2 {get; set;} = "PD FLAGS";
-    [ObservableProperty] public partial string Item3 {get; set;} = "none";
-    [ObservableProperty] public partial string Item4 {get; set;} = "PM_FLAG";
-    [ObservableProperty] public partial string Item5 {get; set;} = "(CIN+PD_COND)";
-    [ObservableProperty] public partial string Item6 {get; set;} = "WRITE";
-    [ObservableProperty] public partial string Item7 {get; set;} = "IF B2 JUMP! (IR13,IR12,IR11,IR10,IR9,IR8,IR7,IR6) CLR ELSE JUMP! (IR14,IR13,IE12,0) MOV";
+    [ObservableProperty] public partial string Item0 {get; set;} = "";
+    [ObservableProperty] public partial string Item1 {get; set;} = "";
+    [ObservableProperty] public partial string Item2 {get; set;} = "";
+    [ObservableProperty] public partial string Item3 {get; set;} = "";
+    [ObservableProperty] public partial string Item4 {get; set;} = "";
+    [ObservableProperty] public partial string Item5 {get; set;} = "";
+    [ObservableProperty] public partial string Item6 {get; set;} = "";
+    [ObservableProperty] public partial string Item7 {get; set;} = "";
+    [ObservableProperty] public partial string Item8 {get; set;} = "";
+    [ObservableProperty] public partial string Item9 {get; set;} = "";
 
     [ObservableProperty] public partial int Address { get; set; }
 

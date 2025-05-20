@@ -13,6 +13,7 @@ public interface IActiveDocumentService : INotifyPropertyChanged
     FileStatsViewModel FileStats { get; set; }
     IDiagramViewModel Diagram { get; set; }
     IHexViewModel HexViewer { get; set; }
+    IMicroprogramViewModel Microprogram { get; set; }
     event EventHandler? ActiveDocumentChanged;
     void ToggleToolVisibility(ToolViewModel tool);
     void SetDockingService(IDockingService dockingService);

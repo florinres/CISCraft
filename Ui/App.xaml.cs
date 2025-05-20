@@ -8,6 +8,7 @@ using Ui.Interfaces.ViewModel;
 using Ui.Services;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.HexViewer;
+using Ui.ViewModels.Components.Microprogram;
 using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
@@ -51,6 +52,8 @@ public partial class App : Application
             services.AddSingleton<IDiagramViewModel, DiagramViewModel>();
             services.AddSingleton<IHexViewModel, HexViewModel>();
             services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
+            services.AddSingleton<CpuService>();
+            services.AddSingleton<IMicroprogramViewModel, MicroprogramViewModel>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)

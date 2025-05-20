@@ -11,6 +11,12 @@ public interface IActionsBarViewModel
     /// </summary>
     IAsyncRelayCommand RunAssembleSourceCodeServiceCommand { get; }
 
+    /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.StepMicroprogram"/>.</summary>
+    global::CommunityToolkit.Mvvm.Input.IRelayCommand StepMicroprogramCommand { get; }
+
+    /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.LoadJson"/>.</summary>
+    global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand LoadJsonCommand { get; }
+
     event EventHandler<byte[]>? ObjectCodeGenerated;
 
     event PropertyChangedEventHandler? PropertyChanged;

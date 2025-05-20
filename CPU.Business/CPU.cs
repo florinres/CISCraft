@@ -7,6 +7,8 @@ using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using CPU.Business.Models;
+using MainMemory.Business;
 
 namespace CPU.Business
 {
@@ -74,19 +76,23 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-		public short[] Registers = new short[MAX_NUM_REG];
+		// public short[] Registers = new short[MAX_NUM_REG];
+        public RegistersList Registers;
 		public short SBUS, DBUS, RBUS;
-		private ControlUnit _controlUnit;
+        private ControlUnit _controlUnit;
+        private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
-		public CPU()
-		{
-			_controlUnit = new ControlUnit();
-            _controlUnit.SbusEvent   += OnSbusEvent;
-            _controlUnit.DbusEvent   += OnDbusEvent;
-            _controlUnit.AluEvent    += OnAluEvent;
-            _controlUnit.RbusEvent   += OnRbusEvent;
+		public CPU(IMainMemory mainMemory, RegistersList registersList)
+        {
+            _controlUnit = new ControlUnit();
+            _controlUnit.SbusEvent += OnSbusEvent;
+            _controlUnit.DbusEvent += OnDbusEvent;
+            _controlUnit.AluEvent += OnAluEvent;
+            _controlUnit.RbusEvent += OnRbusEvent;
             _controlUnit.MemoryEvent += OnMemoryEvent;
-            _controlUnit.OtherEvent  += OnOtherEvent;
+            _controlUnit.OtherEvent += OnOtherEvent;
+            _mainMemory = mainMemory;
+            Registers = registersList;
         }
         public (int MAR, int MirIndex) StepMicrocode()
 		{
@@ -203,7 +209,6 @@ namespace CPU.Business
                DBUS = (short)~DBUS;
         }
 
-        // This event is the actual alu, I won't create another wrapper method,
         // I will just use one and not try to immitate the hardware.
         private void OnAluEvent(int index)
         {
@@ -281,13 +286,13 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    //  _controlUnit.IR = RAM.memory[Registers[(int)REGISTERS.ADR]];
+                    _controlUnit.IR = _mainMemory.FetchWord(Registers[(int)REGISTERS.ADR]);
                     break;
                 case 2 /* READ */:
-                    //  Registers[(int)REGISTERS.MDR] = RAM.memory[Registers[(int)REGISTERS.ADR]];
+                    Registers[(int)REGISTERS.MDR] = _mainMemory.FetchWord(Registers[(int)REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
-                    //  RAM.memory[Registers[(int)REGISTERS.ADR]] = Registers[(int)REGISTERS.MDR];
+                    _mainMemory.SetWordLocation(Registers[(int)REGISTERS.ADR], Registers[(int)REGISTERS.MDR]);
                     break;
             }
         }

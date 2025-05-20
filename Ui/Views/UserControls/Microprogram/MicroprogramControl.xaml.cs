@@ -1,5 +1,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
+using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.Microprogram;
 
@@ -18,67 +19,30 @@ public partial class MicroprogramControl : UserControl
         get => (double)GetValue(FontSizeProperty);
         set => SetValue(FontSizeProperty, value);
     }
+    
+    public static readonly DependencyProperty ViewModelProperty =
+        DependencyProperty.Register(nameof(ViewModel), typeof(IMicroprogramViewModel), typeof(MicroprogramControl),
+            new PropertyMetadata(null, OnViewModelChanged));
 
+
+    public IMicroprogramViewModel ViewModel
+    {
+        get => (IMicroprogramViewModel)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is MicroprogramControl control && e.NewValue is IMicroprogramViewModel vm)
+        {
+            control.DataContext = vm;
+        }
+    }
+    
     public MicroprogramControl()
     {
         InitializeComponent();
-
-        var dataCOntext = new MicroprogramViewModel();
-        
-        for (int i = 0; i < 16; i++)
-        {
-            dataCOntext.Rows.Add(new MicroprogramMemoryViewModel
-            {
-                Address = i,
-                Item0 = i switch
-                {
-                    0 => "NOP",
-                    1 => "LOAD A",
-                    2 => "LOAD B",
-                    3 => "ADD",
-                    4 => "SUB",
-                    5 => "AND",
-                    6 => "OR",
-                    7 => "XOR",
-                    8 => "JUMP",
-                    9 => "CALL",
-                    10 => "RET",
-                    11 => "PUSH",
-                    12 => "POP",
-                    13 => "CMP",
-                    14 => "JZ",
-                    15 => "HALT",
-                    _ => "NOP"
-                },
-                Item1 = $"IR{i:X}", // e.g. IR0, IR1, ..., IRF
-                Item2 = i % 3 == 0 ? "FLAGS" : "ALU",
-                Item3 = i % 2 == 0 ? "EN" : "DIS",
-                Item4 = i % 4 == 0 ? "PM_SET" : "PM_CLR",
-                Item5 = (i % 2 == 0) ? "(CIN+COND)" : "(Z+N)",
-                Item6 = i % 3 == 0 ? "WRITE" : "READ",
-                Item7 = i switch
-                {
-                    0 => "IF Z JUMP 10",
-                    1 => "MOV A, B",
-                    2 => "INC A",
-                    3 => "DEC B",
-                    4 => "SHL A",
-                    5 => "SHR B",
-                    6 => "IF N JUMP 0A",
-                    7 => "CLR FLAGS",
-                    8 => "MOV M[ADDR], A",
-                    9 => "MOV A, M[ADDR]",
-                    10 => "CALL 04",
-                    11 => "RET",
-                    12 => "JMP 0F",
-                    13 => "PUSH A",
-                    14 => "POP A",
-                    15 => "END",
-                    _ => ""
-                }
-            });
-        }
-        DataContext = dataCOntext;
     }
 
     private Point _scrollStartPoint;
@@ -87,8 +51,8 @@ public partial class MicroprogramControl : UserControl
     private void ScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         _scrollStartPoint = e.GetPosition(MicroprogramScrollViewer);
-        _scrollStartOffset.X = MicroprogramScrollViewer.HorizontalOffset;
-        _scrollStartOffset.Y = MicroprogramScrollViewer.VerticalOffset;
+        // _scrollStartOffset.X = MicroprogramScrollViewer.HorizontalOffset;
+        // _scrollStartOffset.Y = MicroprogramScrollViewer.VerticalOffset;
         _isDragging = true;
         MicroprogramScrollViewer.CaptureMouse();
         MicroprogramScrollViewer.Cursor = Cursors.Hand;
@@ -101,8 +65,8 @@ public partial class MicroprogramControl : UserControl
         Point currentPoint = e.GetPosition(MicroprogramScrollViewer);
         Vector delta = currentPoint - _scrollStartPoint;
 
-        MicroprogramScrollViewer.ScrollToHorizontalOffset(_scrollStartOffset.X - delta.X);
-        MicroprogramScrollViewer.ScrollToVerticalOffset(_scrollStartOffset.Y - delta.Y);
+        // MicroprogramScrollViewer.ScrollToHorizontalOffset(_scrollStartOffset.X - delta.X);
+        // MicroprogramScrollViewer.ScrollToVerticalOffset(_scrollStartOffset.Y - delta.Y);
     }
 
     private void ScrollViewer_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
