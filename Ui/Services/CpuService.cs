@@ -18,7 +18,7 @@ public class CpuService : ICpuService
         _cpu = cpu;
         _diagram = diagram;
         _microprogramService = microprogramService;
-        
+        _ = LoadJsonMpm();
     }
 
     public async Task LoadJsonMpm(string filePath = "", bool debug = false)

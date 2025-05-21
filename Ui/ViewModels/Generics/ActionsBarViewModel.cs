@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
@@ -33,9 +34,17 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [RelayCommand]
     private async Task LoadJson()
     {
+        var dialog = new OpenFileDialog
+        {
+            Title = "Open File",
+            Filter = "MPM File (*.json)|*.json|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        };
+
+        if (dialog.ShowDialog() != true) return;
+        
         await Task.Run(
             
-            () => _cpuService.LoadJsonMpm()
+            () => _cpuService.LoadJsonMpm(dialog.FileName)
             
             );
     }
