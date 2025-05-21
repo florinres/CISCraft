@@ -33,7 +33,11 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [RelayCommand]
     private async Task LoadJson()
     {
-        await Task.Run(() => _cpuService.LoadJsonMpm());
+        await Task.Run(
+            
+            () => _cpuService.LoadJsonMpm()
+            
+            );
     }
     
     [RelayCommand]
