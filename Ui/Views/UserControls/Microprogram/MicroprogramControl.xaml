@@ -19,16 +19,75 @@
         <system:Double x:Key="BaseWidthLargeItem">120</system:Double>
     </UserControl.Resources>
 
-    <ListView ItemsSource="{Binding Rows}"
-              x:Name="MicroprogramScrollViewer"
-              VirtualizingStackPanel.IsVirtualizing="True"
-              VirtualizingStackPanel.VirtualizationMode="Recycling"
-              ScrollViewer.CanContentScroll="True"
-              PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
-              PreviewMouseMove="ScrollViewer_PreviewMouseMove"
-              PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
-              PreviewMouseWheel="Window_MouseWheel"
-              Background="{DynamicResource RegionBackgroundBrush}">
+    <Grid PreviewMouseWheel="Window_MouseWheel">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{DynamicResource HeaderBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="AddressCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}"/>
+                <ColumnDefinition SharedSizeGroup="ItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}"/>
+                <ColumnDefinition SharedSizeGroup="LargeItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                <ColumnDefinition SharedSizeGroup="ItemCol" 
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}"/>
+                <ColumnDefinition SharedSizeGroup="ItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}"/>
+                <ColumnDefinition SharedSizeGroup="ItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}"/>
+                <ColumnDefinition SharedSizeGroup="LargeItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}"/>
+                <ColumnDefinition SharedSizeGroup="LargeItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                <ColumnDefinition SharedSizeGroup="ItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                <ColumnDefinition SharedSizeGroup="ItemCol"
+                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}"/>
+            </Grid.ColumnDefinitions>
+        
+            <TextBlock Text="SBUS" Grid.Column="0" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="DBUS" Grid.Column="1" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="ALU" Grid.Column="2" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="RBUS" Grid.Column="3" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="MEMORY OP" Grid.Column="4" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="MEMORY OP" Grid.Column="5" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="SUCCESOR" Grid.Column="6" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="INDEX" Grid.Column="7" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="!T/F" Grid.Column="8" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+            <TextBlock Text="ADDRESS" Grid.Column="9" HorizontalAlignment="Center" TextAlignment="Center" Margin="1" Padding="4" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Background="{DynamicResource RegionBackgroundBrush}"
+                       FontSize="{Binding ElementName=Root, Path=FontSize}"/>
+        </Grid>
+        <ListView Grid.Row="1" ItemsSource="{Binding Rows}"
+                  x:Name="MicroprogramScrollViewer"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  ScrollViewer.CanContentScroll="True"
+                  PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
+                  PreviewMouseMove="ScrollViewer_PreviewMouseMove"
+                  PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
+                  Background="{DynamicResource RegionBackgroundBrush}">
         <ListView.Resources>
             <Style TargetType="Grid">
                 <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
@@ -219,4 +278,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+    </Grid>
 </UserControl>
