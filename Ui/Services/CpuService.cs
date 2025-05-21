@@ -11,12 +11,13 @@ public class CpuService : ICpuService
 {
     private readonly CPU.Business.CPU _cpu;
     private readonly IMicroprogramViewModel _microprogramService;
+    private readonly IDiagramViewModel _diagram;
 
-    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu)
+    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu, IDiagramViewModel diagram)
     {
         _cpu = cpu;
+        _diagram = diagram;
         _microprogramService = microprogramService;
-        LoadJsonMpm();
     }
 
     public async Task LoadJsonMpm(string filePath = "", bool debug = false)
@@ -41,6 +42,7 @@ public class CpuService : ICpuService
 
     public (int, int) StepMicrocommand()
     {
+        _diagram.ResetHighlight();
          var (row, column) = _cpu.StepMicrocommand();
          _microprogramService.CurrentRow = row;
          _microprogramService.CurrentColumn = column;

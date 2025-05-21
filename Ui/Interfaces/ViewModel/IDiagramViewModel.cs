@@ -31,4 +31,5 @@ public interface IDiagramViewModel : IToolViewModel
     BitBlockViewModel Pd1Context { get; }
     BitBlockViewModel PdMinus1Context { get; }
     BitBlockViewModel Pd0sContext { get; }
+    void ResetHighlight();
 }

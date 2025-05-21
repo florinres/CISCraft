@@ -20,7 +20,7 @@ public partial class RegisterViewModel : BaseDiagramObject
     public RegisterViewModel(string name, object? defaultValue = null)
     {
         Name = name;
-        Value = defaultValue ?? "0000 0000 0000 0000";
+        Value = defaultValue ?? 0;
     }
 
     public override string ToString()
