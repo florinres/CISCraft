@@ -20,10 +20,9 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     [ObservableProperty] public partial int CurrentRow { get; set; } = -1;
     partial void OnCurrentRowChanged(int oldValue, int newValue)
     {
-        // Clear previous row selection
         if (oldValue >= 0 && oldValue < Rows.Count)
         {
-            Rows[oldValue].IsCurrent = false;
+            //Rows[oldValue].IsCurrent = false;
             foreach (var item in Rows[oldValue].Items)
             {
                 item.IsCurrent = false;
@@ -42,6 +41,14 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
             }
             
             CurrentMemoryRow = Rows[newValue];
+        }
+    }
+
+    public void ClearAllHighlightedRows()
+    {
+        foreach (var row in Rows.Where(r => r.IsCurrent))
+        {
+            row.IsCurrent = false;
         }
     }
 

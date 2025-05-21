@@ -131,6 +131,16 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="{DynamicResource RegionBackgroundBrush}">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                                        <Setter Property="Background" Value="Orange" /> <!-- or your highlight brush -->
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition SharedSizeGroup="AddressCol"
                                               Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
