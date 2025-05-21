@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -32,35 +32,7 @@ namespace CPU.Business
             RLC,
             RRC,
         }
-        enum REGISTERS
-        {
-            None,
-            FLAGS,
-            RG,
-            SP,
-            T,
-            PC,
-            IVR,
-            ADR,
-            MDR,
-            R0,
-            R1,
-            R2,
-            R3,
-            R4,
-            R5,
-            R6,
-            R7,
-            R8,
-            R9,
-            R10,
-            R11,
-            R12,
-            R13,
-            R14,
-            R15,
-            NEG,
-        }
+
         enum OTHER_EVENTS
         {
             SP_PLUS_2 = 1,
@@ -77,12 +49,21 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
+        struct ALU_FLAGS
+        {
+            public int CarryFlag;
+            public int ZeroFlag;
+            public int SignFlag;
+            public int OverflowFlag;
+        }
+        ALU_FLAGS _aluFlags;
+
         public RegistersList Registers;
 		public short SBUS, DBUS, RBUS;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
-		public CPU(IMainMemory mainMemory, RegistersList registers)
+		public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
             _controlUnit = new ControlUnit();
             _controlUnit.SbusEvent += OnSbusEvent;
@@ -94,9 +75,9 @@ namespace CPU.Business
             _mainMemory = mainMemory;
             Registers = registers;
         }
-        public (int MAR, int MirIndex) StepMicrocode()
+        public (int MAR, int MirIndex) StepMicrocommand()
 		{
-            return _controlUnit.StepMicrocode(ACLOW, Registers[(int)REGISTERS.FLAGS]);
+            return _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
         }
         /// <summary>
         /// This will load the json MPM configuration in the actual MPM.
@@ -198,15 +179,42 @@ namespace CPU.Business
         }
         private void OnSbusEvent(int index)
         {
-            SBUS = Registers[index];
-            if (index == 25)
-                SBUS = (short)~SBUS;
+            switch((REGISTERS)index)
+            {
+                case REGISTERS.NEG:
+                    SBUS = (short)~Registers[REGISTERS.T];
+                    break;
+                case REGISTERS.RG:
+                    int gprIndex = _controlUnit.GetSourceRegister();
+                    SBUS = Registers[(GPR)gprIndex];
+                    break;
+                case REGISTERS.IR:
+                    SBUS = (byte)Registers[REGISTERS.IR];
+                    break;
+                default:
+                    SBUS = Registers[(REGISTERS)index];
+                    break;
+            }
+
         }
         private void OnDbusEvent(int index)
         {
-            DBUS = Registers[index];
-            if (index == 25)
-               DBUS = (short)~DBUS;
+            switch ((REGISTERS)index)
+            {
+                case REGISTERS.NEG:
+                    DBUS = (short)~Registers[REGISTERS.MDR];
+                    break;
+                case REGISTERS.RG:
+                    int gprIndex = _controlUnit.GetDestinationRegister();
+                    DBUS = Registers[(GPR)gprIndex];
+                    break;
+                case REGISTERS.IR:
+                    DBUS = (byte)~Registers[REGISTERS.IR];
+                    break;
+                default:
+                    DBUS = Registers[(REGISTERS)index];
+                    break;
+            }
         }
 
         // I will just use one and not try to immitate the hardware.
@@ -254,25 +262,54 @@ namespace CPU.Business
                     break;
                 case ALU_OP.RLC:
                     {
-                        short carryIn = (short)(Registers[(int)REGISTERS.FLAGS] & 0x3);
+                        short carryIn = (short)(Registers[REGISTERS.FLAGS] & 0x3);
                         short carryOut = 0;
                         (RBUS, carryOut) = RotateLeftWithCarry(RBUS, carryIn);
-                        Registers[(int)REGISTERS.FLAGS] |= carryOut;
+                        Registers[REGISTERS.FLAGS] |= carryOut;
                     }
                     break;
                 case ALU_OP.RRC:
                     {
-                        short carryIn = (short)(Registers[(int)REGISTERS.FLAGS] & 0x3);
+                        short carryIn = (short)(Registers[REGISTERS.FLAGS] & 0x3);
                         short carryOut = 0;
                         (RBUS, carryOut) = RotateRightWithCarry(RBUS, carryIn);
-                        Registers[(int)REGISTERS.FLAGS] |= carryOut;
+                        Registers[REGISTERS.FLAGS] |= carryOut;
                     }
                     break;
             }
+
+            this.ComputeALUFlags(RBUS);
+        }
+
+        /// <summary>
+        /// Computes the values for the ALU flags
+        /// that are signal events based on
+        /// arithmetical-logical unit.
+        /// </summary>
+        /// <param name="result"></param>
+        private void ComputeALUFlags(short result)
+        {
+            _aluFlags.CarryFlag = (result << 15) & (result << 14);
+            _aluFlags.OverflowFlag = (result << 15) ^ (result << 14);
+            _aluFlags.SignFlag = result & (1 << 15); // Signs = 1 means that the number in 2's complement is negative
+            _aluFlags.ZeroFlag = ~(result & (1 << 15)); // Zero = 1 means that the number is 0, thus in 2's complement
+                                                        // the most signficant bit should be 0;
         }
         private void OnRbusEvent(int index)
         {
-            Registers[index] = RBUS;
+            switch ((REGISTERS)index)
+            {
+                case REGISTERS.NEG:
+                    Registers[(REGISTERS)index] = RBUS;
+                    break;
+                case REGISTERS.RG:
+                    int gprIndex = _controlUnit.GetDestinationRegister();
+                    Registers[(GPR)gprIndex] = RBUS;
+                    break;
+                default:
+                    Registers[(REGISTERS)index] = RBUS;
+                    break;
+            }
         }
         private void OnMemoryEvent(int index)
         {
@@ -281,28 +318,36 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    _controlUnit.IR = _mainMemory.FetchWord(Registers[(int)REGISTERS.ADR]);
+                    _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
                     break;
                 case 2 /* READ */:
-                    Registers[(int)REGISTERS.MDR] = _mainMemory.FetchWord(Registers[(int)REGISTERS.ADR]);
+                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
-                    _mainMemory.SetWordLocation(Registers[(int)REGISTERS.ADR], Registers[(int)REGISTERS.MDR]);
+                    _mainMemory.SetWordLocation(Registers[REGISTERS.ADR], Registers[REGISTERS.MDR]);
                     break;
             }
         }
         private void OnOtherEvent(int index)
         {
+            int flagsMask0 = ~8;
+            int flagsMask1 = ~6;
+
+            int signBit = 1;
+            int zeroBit = 2;
+            int carryBit = 3;
+            int interruptBit = 7; // Check BVI in the documentation
+
             switch ((OTHER_EVENTS)index)
             {
                 case OTHER_EVENTS.SP_PLUS_2:
-                    Registers[(int)REGISTERS.SP] +=2;
+                    Registers[REGISTERS.SP] +=2;
                     break;
                 case OTHER_EVENTS.SP_MINUS_2:
-                    Registers[(int)REGISTERS.SP] -=2;
+                    Registers[REGISTERS.SP] -=2;
                     break;
                 case OTHER_EVENTS.PC_PLUS_2:
-                    Registers[(int)REGISTERS.PC] +=2;
+                    Registers[REGISTERS.PC] +=2;
                     break;
                 case OTHER_EVENTS.A1BE0:
                     ACLOW = true;
@@ -311,23 +356,34 @@ namespace CPU.Business
                     CIL = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
-                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[REGISTERS.FLAGS] =(short)((Registers[REGISTERS.FLAGS] & flagsMask0)
+                                                        | (_aluFlags.CarryFlag << carryBit)
+                                                        | (_aluFlags.ZeroFlag << zeroBit)
+                                                        | (_aluFlags.SignFlag << signBit)
+                                                        | (_aluFlags.OverflowFlag));
                     break;
                 case OTHER_EVENTS.CinPdCondA:
-                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask0)
+                                                        | (_aluFlags.CarryFlag << carryBit)
+                                                        | (_aluFlags.ZeroFlag << zeroBit)
+                                                        | (_aluFlags.SignFlag << signBit)
+                                                        | (_aluFlags.OverflowFlag));
+                    // TO DO CarryIn flag for ALU
                     break;
                 case OTHER_EVENTS.PdCondL:
-                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask1)
+                                                        | (_aluFlags.ZeroFlag << zeroBit)
+                                                        | (_aluFlags.SignFlag << signBit));
                     break;
                 case OTHER_EVENTS.A1BVI:
-                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
                     break;
                 case OTHER_EVENTS.A0BVI:
-                    Registers[(int)REGISTERS.FLAGS] = RBUS; // INCORECT PROBABLY
+                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
                     break;
                 case OTHER_EVENTS.INTA_SP_MINUS_2:
                     // INTA = 1;
-                    Registers[(int)REGISTERS.SP] -= 2;
+                    Registers[REGISTERS.SP] -= 2;
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
                     //resetarea bitilor de exceptie;

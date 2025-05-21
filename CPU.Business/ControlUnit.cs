@@ -10,8 +10,9 @@ namespace CPU.Business
         public event Action<int>? RbusEvent;
         public event Action<int>? MemoryEvent;
         public event Action<int>? OtherEvent;
-        public byte     MAR = 0;
-		public long     MIR = 0;
+        public byte MAR = 0;
+        public byte PrevMar = 0;
+        public long     MIR = 0;
         /// <summary>
         /// Micro Program Memory
         /// ROM memory that holds microinstructions of 36 bits wide.
@@ -23,6 +24,8 @@ namespace CPU.Business
         private int state = 0;
         private int _mirIndex = 0;
 
+        public const short IrDrMask        = 0xF;
+        public const short IrSrMask        = 0x3C0;
         public const long SbusMask        = 0xF00000000;
         public const long DbusMask        = 0xF0000000;
         public const long AluMask         = 0xF000000;
@@ -33,6 +36,8 @@ namespace CPU.Business
         public const long IndexMask       = 0x700;
         public const long TnegFMask       = 0x80;
         public const long AddresMask      = 0x7F;
+        public const byte IrDrShift       = 0;
+        public const byte IrSrShift       = 6;
         public const byte SbusShift       = 32;
         public const byte DbusShift       = 28;
         public const byte AluShift        = 24;
@@ -163,44 +168,58 @@ namespace CPU.Business
         /// The name of the microcode it shall be executed.
         /// This shall be used by UI.
         /// </returns>
-		internal (int MAR,int MirIndex) StepMicrocode(bool ACLOWSignal, short flagsRegister)
+		internal (int MAR,int MirIndex) StepMicrocommand(bool ACLOWSignal, short flagsRegister)
         {
             if (_mirIndex != 0)
             {
                 return DecodeAndSendCommand();
             }
 
-            switch (state)
+            do
             {
-                case 0:
-                    this.MIR = this.MPM[this.MAR];
-                    state = 1;
-                    break;
-                case 1:
-                    bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
-                    if (g_function)
-                        this.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
-                    else this.MAR++;
+                switch (state)
+                {
+                    case 0:
+                        PrevMar = MAR;
+                        this.MIR = this.MPM[this.MAR];
+                        state = 1;
+                        break;
+                    case 1:
+                        bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
+                        if (g_function)
+                            this.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
+                        else this.MAR++;
 
-                    int mirALUBits = getMirAluField();
-                    bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
-                    bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
-                    if (!aluBIT24 & !aluBIT25)
-                        state = 2;
-                    else state = 0;
-                    return DecodeAndSendCommand();
-                case 2:
-                    state = 3;
-                    // Note: this state would normally be reserved for DMA logic
-                    // but in the current implementation it shall be ignored.
-                    break;
-                case 3:
-                    state = 0;
-                    break;
+                        int mirALUBits = getMirAluField();
+                        bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
+                        bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
+                        if (!aluBIT24 & !aluBIT25)
+                            state = 2;
+                        else state = 0;
+                        return DecodeAndSendCommand();
+                    case 2:
+                        state = 3;
+                        // Note: this state would normally be reserved for DMA logic
+                        // but in the current implementation it shall be ignored.
+                        break;
+                    case 3:
+                        state = 0;
+                        break;
 
-            }
-            return (0,0);
+                }
+            } while (state != 2);
+
+            throw new Exception("Fatal Error: Unknown command");
         }
+        internal byte GetSourceRegister()
+        {
+            return (byte)((IR & IrSrMask) >> IrSrShift);
+        }
+        internal byte GetDestinationRegister()
+        {
+            return (byte)((IR & IrDrMask) >> IrDrShift);
+        }
+
 
         /// <summary>
         /// Computes the G function which is used to
@@ -278,25 +297,25 @@ namespace CPU.Business
                     marIndex = (byte)((instructionClass1 << 1) | instructionClass0);
                     break;
                 case 2:
-                    marIndex = (byte)((this.IR & (1 << 11)) | (this.IR & (1 << 10)));
+                    marIndex = (byte)(((this.IR & (1 << 11)) | (this.IR & (1 << 10))) >> 10);
                     break;
                 case 3:
-                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4))>>4);
+                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4)) >> 4);
                     break;
                 case 4:
-                    marIndex = (byte)(
+                    marIndex = (byte)((
                         (this.IR & (1 << 14))
                         | (this.IR & (1 << 13))
                         | (this.IR & (1 << 12))
-                        );
+                        ) >> 12);
                     break;
                 case 5:
-                    marIndex = (byte)(
+                    marIndex = (byte)((
                         (this.IR & (1 << 11))
                         | (this.IR & (1 << 10))
                         | (this.IR & (1 << 9))
                         | (this.IR & (1 << 8))
-                        );
+                        ) >> 8);
                     break;
                 case 6:
                     marIndex = (byte)( (
@@ -304,7 +323,7 @@ namespace CPU.Business
                         | (this.IR & (1 << 10))
                         | (this.IR & (1 << 9))
                         | (this.IR & (1 << 8))
-                        ) <<1);
+                        ) >> 7);
                     break;
                 case 7:
                     int interruptSignal = 0; //TBD
@@ -316,6 +335,7 @@ namespace CPU.Business
 		}
 		private (int MAR, int MirIndex) DecodeAndSendCommand()
 		{
+            int index = _mirIndex;
             switch (_mirIndex) {
 				case 0:
                     SbusEvent?.Invoke(getMirSbusField());
@@ -335,10 +355,12 @@ namespace CPU.Business
 				case 5:
                     OtherEvent?.Invoke(getMirOthersField());
                     break;
+                case 6:
+                    break;
 			}
             _mirIndex++;
-            _mirIndex %= 6;
-            return (MAR,_mirIndex);
+            _mirIndex %= 7;
+            return (PrevMar, index);
         }
         private int getMirSbusField()
         {
