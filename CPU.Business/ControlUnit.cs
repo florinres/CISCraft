@@ -10,8 +10,9 @@ namespace CPU.Business
         public event Action<int>? RbusEvent;
         public event Action<int>? MemoryEvent;
         public event Action<int>? OtherEvent;
-        public byte     MAR = 0;
-		public long     MIR = 0;
+        public byte MAR = 0;
+        public byte PrevMar = 0;
+        public long     MIR = 0;
         /// <summary>
         /// Micro Program Memory
         /// ROM memory that holds microinstructions of 36 bits wide.
@@ -23,6 +24,8 @@ namespace CPU.Business
         private int state = 0;
         private int _mirIndex = 0;
 
+        public const short IrDrMask        = 0xF;
+        public const short IrSrMask        = 0x3C0;
         public const long SbusMask        = 0xF00000000;
         public const long DbusMask        = 0xF0000000;
         public const long AluMask         = 0xF000000;
@@ -33,6 +36,8 @@ namespace CPU.Business
         public const long IndexMask       = 0x700;
         public const long TnegFMask       = 0x80;
         public const long AddresMask      = 0x7F;
+        public const byte IrDrShift       = 0;
+        public const byte IrSrShift       = 6;
         public const byte SbusShift       = 32;
         public const byte DbusShift       = 28;
         public const byte AluShift        = 24;
@@ -159,7 +164,7 @@ namespace CPU.Business
         /// <param name="initialState"></param>
         /// <param name="ACLOWSignal"></param>
         /// <param name="flagsRegister"></param>
-        /// <returns> 
+        /// <returns>
         /// The name of the microcode it shall be executed.
         /// This shall be used by UI.
         /// </returns>
@@ -175,6 +180,7 @@ namespace CPU.Business
                 switch (state)
                 {
                     case 0:
+                        PrevMar = MAR;
                         this.MIR = this.MPM[this.MAR];
                         state = 1;
                         break;
@@ -205,6 +211,15 @@ namespace CPU.Business
 
             throw new Exception("Fatal Error: Unknown command");
         }
+        internal byte GetSourceRegister()
+        {
+            return (byte)((IR & IrSrMask) >> IrSrShift);
+        }
+        internal byte GetDestinationRegister()
+        {
+            return (byte)((IR & IrDrMask) >> IrDrShift);
+        }
+
 
         /// <summary>
         /// Computes the G function which is used to
@@ -282,25 +297,25 @@ namespace CPU.Business
                     marIndex = (byte)((instructionClass1 << 1) | instructionClass0);
                     break;
                 case 2:
-                    marIndex = (byte)((this.IR & (1 << 11)) | (this.IR & (1 << 10)));
+                    marIndex = (byte)(((this.IR & (1 << 11)) | (this.IR & (1 << 10))) >> 10);
                     break;
                 case 3:
-                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4))>>4);
+                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4)) >> 4);
                     break;
                 case 4:
-                    marIndex = (byte)(
+                    marIndex = (byte)((
                         (this.IR & (1 << 14))
                         | (this.IR & (1 << 13))
                         | (this.IR & (1 << 12))
-                        );
+                        ) >> 12);
                     break;
                 case 5:
-                    marIndex = (byte)(
+                    marIndex = (byte)((
                         (this.IR & (1 << 11))
                         | (this.IR & (1 << 10))
                         | (this.IR & (1 << 9))
                         | (this.IR & (1 << 8))
-                        );
+                        ) >> 8);
                     break;
                 case 6:
                     marIndex = (byte)( (
@@ -308,7 +323,7 @@ namespace CPU.Business
                         | (this.IR & (1 << 10))
                         | (this.IR & (1 << 9))
                         | (this.IR & (1 << 8))
-                        ) <<1);
+                        ) >> 7);
                     break;
                 case 7:
                     int interruptSignal = 0; //TBD
@@ -320,6 +335,7 @@ namespace CPU.Business
 		}
 		private (int MAR, int MirIndex) DecodeAndSendCommand()
 		{
+            int index = _mirIndex;
             switch (_mirIndex) {
 				case 0:
                     SbusEvent?.Invoke(getMirSbusField());
@@ -344,7 +360,7 @@ namespace CPU.Business
 			}
             _mirIndex++;
             _mirIndex %= 7;
-            return (MAR,_mirIndex);
+            return (PrevMar, index);
         }
         private int getMirSbusField()
         {
