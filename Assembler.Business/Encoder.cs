@@ -738,15 +738,15 @@ namespace Assembler.Business
                 _program[_programIndex++] = (byte)instruction.Instr;
                 _program[_programIndex++] = (byte)(instruction.Instr >> 8);
             }
-            if(instruction.Offset1 != 0)
-            {
-                _program[_programIndex++] = (byte)instruction.Offset1;
-                _program[_programIndex++] = (byte)(instruction.Offset1>>8);
-            }
             if(instruction.Offset2 != 0)
             {
                 _program[_programIndex++] = (byte)instruction.Offset2;
                 _program[_programIndex++] = (byte)(instruction.Offset2>>8);
+            }
+            if(instruction.Offset1 != 0)
+            {
+                _program[_programIndex++] = (byte)instruction.Offset1;
+                _program[_programIndex++] = (byte)(instruction.Offset1>>8);
             }
         }
     }

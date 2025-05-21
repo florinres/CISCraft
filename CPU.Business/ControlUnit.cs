@@ -300,7 +300,7 @@ namespace CPU.Business
                     marIndex = (byte)(((this.IR & (1 << 11)) | (this.IR & (1 << 10))) >> 10);
                     break;
                 case 3:
-                    marIndex = (byte)((this.IR & (1 << 5)) | (this.IR & (1 << 4)) >> 4);
+                    marIndex = (byte)(((this.IR & (1 << 5)) | (this.IR & (1 << 4))) >> 4);
                     break;
                 case 4:
                     marIndex = (byte)((

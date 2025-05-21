@@ -37,7 +37,7 @@ namespace CPU.Main
             //todo: mpm
             cpu.LoadJsonMpm(jsonString);
 
-            for (int i = 0; i < 120; i++)
+            for (int i = 0; i < 250; i++)
             {
                 int a, b;
                 (a, b) = cpu.StepMicrocommand();

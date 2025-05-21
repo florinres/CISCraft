@@ -58,7 +58,7 @@ namespace CPU.Business
         }
         ALU_FLAGS _aluFlags;
 
-        public RegistersList Registers;
+        public RegisterWrapper Registers;
 		public short SBUS, DBUS, RBUS;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;

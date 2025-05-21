@@ -58,7 +58,7 @@ public partial class App : Application
             services.AddSingleton<IMicroprogramViewModel, MicroprogramViewModel>();
             services.AddSingleton<IMainMemory, MainMemory.Business.MainMemory>();
             services.AddSingleton<CPU.Business.CPU>();
-            services.AddSingleton<RegistersList>();
+            services.AddSingleton<RegisterWrapper>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)
