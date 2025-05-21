@@ -39,7 +39,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [RelayCommand]
     private void StepMicroprogram()
     {
-        _cpuService.StepMicrocode();
+        _cpuService.StepMicrocommand();
     }
 
     private void OnObjectCodeGenerated(object? sender, byte[] objectCode)

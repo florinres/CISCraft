@@ -66,9 +66,9 @@ namespace CPU.Business
             _mainMemory = mainMemory;
             Registers = registers;
         }
-        public (int MAR, int MirIndex) StepMicrocode()
+        public (int MAR, int MirIndex) StepMicrocommand()
 		{
-            return _controlUnit.StepMicrocode(ACLOW, Registers[REGISTERS.FLAGS]);
+            return _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
         }
         /// <summary>
         /// This will load the json MPM configuration in the actual MPM.
