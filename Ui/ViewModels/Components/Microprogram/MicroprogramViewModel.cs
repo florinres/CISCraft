@@ -51,6 +51,18 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
             row.IsCurrent = false;
         }
     }
+    
+    public void ClearAllHighlight()
+    {
+        foreach (var row in Rows)
+        {
+            foreach (var item in row.Items)
+            {
+                item.IsCurrent = false;
+            }
+            row.IsCurrent = false;
+        }
+    }
 
     partial void OnCurrentColumnChanged(int oldValue, int newValue)
     {

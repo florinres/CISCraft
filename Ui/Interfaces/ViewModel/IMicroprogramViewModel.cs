@@ -19,4 +19,5 @@ public interface IMicroprogramViewModel : IToolViewModel
     event PropertyChangedEventHandler? PropertyChanged;
     event PropertyChangingEventHandler? PropertyChanging;
     void ClearAllHighlightedRows();
+    void ClearAllHighlight();
 }
