@@ -17,7 +17,7 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
 
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
-    [ObservableProperty] public partial int CurrentRow { get; set; } = 0;
+    [ObservableProperty] public partial int CurrentRow { get; set; } = -1;
     partial void OnCurrentRowChanged(int oldValue, int newValue)
     {
         // Clear previous row selection
@@ -61,7 +61,7 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     }
 
 
-    [ObservableProperty] public partial int CurrentColumn { get; set; } = 0;
+    [ObservableProperty] public partial int CurrentColumn { get; set; } = -1;
 
     public void LoadMicroprogramFromJson(string json)
     {
@@ -82,8 +82,6 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
                 Address = index
             })
         );
-        ;
-
     }
 
     public override string? Title { get; set; } = "Microprogram";
