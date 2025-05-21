@@ -168,7 +168,7 @@ namespace CPU.Business
         /// The name of the microcode it shall be executed.
         /// This shall be used by UI.
         /// </returns>
-		internal (int MAR,int MirIndex) StepMicrocode(bool ACLOWSignal, short flagsRegister)
+		internal (int MAR,int MirIndex) StepMicrocommand(bool ACLOWSignal, short flagsRegister)
         {
             if (_mirIndex != 0)
             {

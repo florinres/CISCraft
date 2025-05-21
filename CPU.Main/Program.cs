@@ -40,7 +40,7 @@ namespace CPU.Main
             for (int i = 0; i < 120; i++)
             {
                 int a, b;
-                (a, b) = cpu.StepMicrocode();
+                (a, b) = cpu.StepMicrocommand();
                 Console.WriteLine(i+": ("+a+", "+b+")");
             }
         }

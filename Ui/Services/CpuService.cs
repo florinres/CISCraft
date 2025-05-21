@@ -38,9 +38,9 @@ public class CpuService : ICpuService
         _cpu.LoadJsonMpm(jsonString);
     }
 
-    public (int, int) StepMicrocode()
+    public (int, int) StepMicrocommand()
     {
-         var (row, column) = _cpu.StepMicrocode();
+         var (row, column) = _cpu.StepMicrocommand();
          _microprogramService.CurrentRow = row;
          _microprogramService.CurrentColumn = column;
          return (row, column);
