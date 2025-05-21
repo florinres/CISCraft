@@ -66,22 +66,35 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     public void LoadMicroprogramFromJson(string json)
     {
         var dict = JsonSerializer.Deserialize<Dictionary<string, List<List<string>>>>(json);
-        //TODO: handle null case
-        var flatMatrix = dict!.Values.SelectMany(x => x).ToList();
+        var rows = new List<MicroprogramMemoryViewModel>();
+        int index = 0;
 
-        Rows = new ObservableCollection<MicroprogramMemoryViewModel>(
-            flatMatrix.Select((row, index) => new MicroprogramMemoryViewModel
+        foreach (var kvp in dict!)
+        {
+            bool isFirst = true;
+
+            foreach (var row in kvp.Value)
             {
-                Items = new ObservableCollection<MicroInstructionItem>(
-                    row.Select(r => new MicroInstructionItem
-                    {
-                        Value = r,
-                        IsCurrent = false
-                    })
-                ),
-                Address = index
-            })
-        );
+                rows.Add(new MicroprogramMemoryViewModel
+                {
+                    Items = new ObservableCollection<MicroInstructionItem>(
+                        row.Select(r => new MicroInstructionItem
+                        {
+                            Value = r,
+                            IsCurrent = false
+                        })
+                    ),
+                    Address = index++,
+                    Tag = isFirst ? kvp.Key : "" // Only tag the first item of each group
+                });
+
+                isFirst = false;
+            }
+        }
+
+        Rows = new ObservableCollection<MicroprogramMemoryViewModel>(rows);
+
+        
     }
 
     public override string? Title { get; set; } = "Microprogram";
