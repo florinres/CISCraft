@@ -29,10 +29,11 @@
             DefaultCopyToClipboardMode="HexaString"
             ForegroundSecondColor="Blue"
             OffSetStringVisual="Hexadecimal"
-            PreloadByteInEditorMode="MaxScreenVisibleLineAtDataLoad"
+            PreloadByteInEditorMode="MaxVisibleLine"
             VisualCaretMode="Overwrite" 
             Background="{DynamicResource ApplicationBackgroundBrush}"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            ReadOnlyMode="True"
             />
 
     </Grid>
