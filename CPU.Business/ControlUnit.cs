@@ -219,8 +219,14 @@ namespace CPU.Business
         {
             return (byte)((IR & IrDrMask) >> IrDrShift);
         }
-
-
+        internal void Reset()
+        {
+            MAR = 0;
+            _mirIndex = 0;
+            state = 0;
+            IR = 0;
+            PrevMar = 0;
+        }
         /// <summary>
         /// Computes the G function which is used to
         /// determine what address to load into MAR.

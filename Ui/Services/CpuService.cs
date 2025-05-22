@@ -53,4 +53,8 @@ public class CpuService : ICpuService
          _microprogramService.CurrentColumn = column;
          return (row, column);
     }
+    public void ResetProgram()
+    {
+        _cpu.ResetProgram();
+    }
 }
