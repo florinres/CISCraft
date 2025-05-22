@@ -286,9 +286,9 @@
                 <helpers:LayoutInitializer />
             </DockingManager.LayoutUpdateStrategy>
             <LayoutRoot>
-                <LayoutPanel Orientation="Vertical">
+                <LayoutPanel Orientation="Horizontal">
                     <LayoutDocumentPane />
-                    <LayoutAnchorablePane Name="ToolsPane" />
+                    <LayoutAnchorablePane Name="ToolsPane" DockWidth="200"/>
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>

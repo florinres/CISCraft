@@ -14,14 +14,20 @@
                  Fill="{DynamicResource NodeBackgroundBrush}"
                  Stroke="{DynamicResource NodeBorderBrush}"
                  StrokeThickness="2"
-                 Canvas.Top="0"/>
+                 Canvas.Top="0">
+            <Polygon.RenderTransform>
+                <RotateTransform Angle="-90"
+                                 CenterX="30"
+                                 CenterY="30" />
+            </Polygon.RenderTransform>
+        </Polygon>
 
         <!-- Text -->
         <TextBlock Text="SUM"
                    Foreground="White"
                    FontWeight="Bold"
                    FontSize="14"
-                   Canvas.Top="35"
-                   Canvas.Left="5"/>
+                   Canvas.Top="25"
+                   Canvas.Left="25"/>
     </Canvas>
 </UserControl>

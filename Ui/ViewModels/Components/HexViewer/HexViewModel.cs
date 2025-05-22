@@ -61,29 +61,11 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
     //TODO: clean up this and make it index specific
     private void RefreshHexViewFromMemory()
     {
-        int lengthToCopy = Math.Min(_mainMemory.memoryLocationsNum, _memoryContentWrapper.MemoryContent.Length);
-
-        // Assume 4-byte aligned and data represents int32s
-        int intCount = lengthToCopy / 4;
-        byte[] limitedBuffer = new byte[intCount * 4];
-
-        for (int i = 0; i < intCount; i++)
-        {
-            int value = BitConverter.ToInt32(_memoryContentWrapper.MemoryContent, i * 4);
-
-            // Force little endian regardless of system endianness
-            byte[] leBytes = BitConverter.GetBytes(value);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(leBytes);
-
-            Array.Copy(leBytes, 0, limitedBuffer, i * 4, 4);
-        }
-
         HexEditorStream?.Dispose(); // Dispose the old stream if needed
-        HexEditorStream = new MemoryStream(limitedBuffer, writable: false);
+        HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: false);
         HexEditorStream.Position = 0;
 
-        IsElementReadyToRender = lengthToCopy > 0;
+        IsElementReadyToRender = _memoryContentWrapper.MemoryContent.Length > 0;
     }
 
 

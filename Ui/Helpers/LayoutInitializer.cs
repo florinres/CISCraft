@@ -19,7 +19,7 @@ internal class LayoutInitializer : ILayoutUpdateStrategy
             .OfType<LayoutAnchorablePane>()
             .FirstOrDefault(d => d.Name == "ToolsPane");
         if (toolsPane == null) return false;
-
+        
         toolsPane.Children.Add(anchorableToShow);
         return true;
     }
