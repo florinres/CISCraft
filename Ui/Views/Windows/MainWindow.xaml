@@ -112,7 +112,6 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
-                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Run"
                 Height="30"
@@ -149,6 +148,7 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Step Into"
                 Height="30"
@@ -173,6 +173,7 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding ResetProgramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Reset"
                 Height="30"

@@ -178,6 +178,19 @@ namespace CPU.Business
                 mpmIndex++;
             }
         }
+        public void ResetProgram()
+        {
+            for (int i = 0; i <= (int)REGISTERS.IR; i++)
+            {
+                Registers[(REGISTERS)i] = 0;
+            }
+            for (int i = 0; i <= (int)GPR.R15; i++)
+            {
+                Registers[(GPR)i] = 0;
+            }
+            _mainMemory.ClearMemory();
+            _controlUnit.Reset();
+        }
         private void OnSbusEvent(int index)
         {
             switch((REGISTERS)index)
