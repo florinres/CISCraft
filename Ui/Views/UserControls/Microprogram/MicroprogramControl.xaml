@@ -136,7 +136,7 @@
                                 <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                        <Setter Property="Background" Value="Orange" /> <!-- or your highlight brush -->
+                                        <Setter Property="Background" Value="#471d1a" /> <!-- or your highlight brush -->
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -197,7 +197,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[0].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -212,7 +212,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[1].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -228,7 +228,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[2].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -244,7 +244,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[3].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -260,7 +260,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[4].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -276,7 +276,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[5].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -285,14 +285,14 @@
                         <TextBlock Grid.Column="8" Text="{Binding Item[6]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
-                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   TextWrapping="Wrap" Margin="1 1 0 1" Padding="4 4 5 4"
                                    FontSize="{Binding ElementName=Root, Path=FontSize}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -301,14 +301,14 @@
                         <TextBlock Grid.Column="9" Text="{Binding Item[7]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
-                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   TextWrapping="Wrap" Margin="0 1 0 1" Padding="5 4 5 4"
                                    FontSize="{Binding ElementName=Root, Path=FontSize}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -317,14 +317,14 @@
                         <TextBlock Grid.Column="10" Text="{Binding Item[8]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
-                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   TextWrapping="Wrap" Margin="0 1 0 1" Padding="5 4 5 4"
                                    FontSize="{Binding ElementName=Root, Path=FontSize}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -334,14 +334,14 @@
                         <TextBlock Grid.Column="11" Text="{Binding Item[9]}"
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
-                                   TextWrapping="Wrap" Margin="1" Padding="4"
+                                   TextWrapping="Wrap" Margin="0 1 1 1" Padding="5 4 4 4"
                                    FontSize="{Binding ElementName=Root, Path=FontSize}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
+                                            <Setter Property="Background" Value="#5c3532" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
