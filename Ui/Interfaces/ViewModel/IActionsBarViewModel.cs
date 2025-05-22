@@ -16,6 +16,8 @@ public interface IActionsBarViewModel
 
     /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.LoadJson"/>.</summary>
     global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand LoadJsonCommand { get; }
+    /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.ResetProgram"/>.</summary>
+    global::CommunityToolkit.Mvvm.Input.IRelayCommand ResetProgramCommand { get; }
 
     event EventHandler<byte[]>? ObjectCodeGenerated;
 

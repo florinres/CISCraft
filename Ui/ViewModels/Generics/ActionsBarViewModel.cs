@@ -51,13 +51,16 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             
             );
     }
-    
     [RelayCommand]
     private void StepMicroprogram()
     {
         _cpuService.StepMicrocommand();
     }
-
+    [RelayCommand]
+    private void ResetProgram()
+    {
+        _cpuService.ResetProgram();
+    }
     private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
     {
         if (objectCode is not [])

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace CPU.Business
 {
@@ -219,8 +220,14 @@ namespace CPU.Business
         {
             return (byte)((IR & IrDrMask) >> IrDrShift);
         }
-
-
+        internal void Reset()
+        {
+            MAR = 0;
+            _mirIndex = 0;
+            state = 0;
+            IR = 0;
+            PrevMar = 0;
+        }
         /// <summary>
         /// Computes the G function which is used to
         /// determine what address to load into MAR.
@@ -283,9 +290,9 @@ namespace CPU.Business
             // abstracted, the hardware MIR[10:8] bits corespond to
             // software MIR[7] value.
 
-            int instructionClass0 =(int)((this.IR & (1 << 15)) & (this.IR & (1 << 14)));
+            int instructionClass1 = getBit(IR, 15) & getBit(IR, 14);
             //coresponds to hardware CL0
-            int instructionClass1 = (int)((this.IR & (1 << 15)) & (this.IR & (1 << 13)));
+            int instructionClass0 = getBit(IR, 15) & getBit(IR, 13);
             //coresponds to hardware CL1
 
             switch (selectValue)
@@ -356,6 +363,7 @@ namespace CPU.Business
                     OtherEvent?.Invoke(getMirOthersField());
                     break;
                 case 6:
+                    Debug.WriteLine("Next MAR= " + MAR.ToString());
                     break;
 			}
             _mirIndex++;
@@ -401,6 +409,10 @@ namespace CPU.Business
         private int getMirAddresField()
         {
             return (int)((MIR & AddresMask) >> AddresShift);
+        }
+        private int getBit(short register, ushort bitIndex=0)
+        {
+            return (int)((register & (1 << bitIndex)) >> bitIndex);
         }
     }
 

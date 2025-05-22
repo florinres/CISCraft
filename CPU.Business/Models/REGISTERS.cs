@@ -11,8 +11,9 @@ public enum REGISTERS
     IVR,
     ADR,
     MDR,
-    IR,
+    IRLSB,
     NEG,
     ZEROS,
-    ONES
+    ONES,
+    IR
 }
