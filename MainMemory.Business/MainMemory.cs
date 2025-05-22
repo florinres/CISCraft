@@ -6,7 +6,7 @@ namespace MainMemory.Business
     public class MainMemory: IMainMemory
     {
         private MomeryContentWrapper _memoryContent;
-        private int memoryLocationsNum;
+        public int memoryLocationsNum { get; private set; }
 
         private ushort interruptTableSegment;
         private ushort dataSegment;

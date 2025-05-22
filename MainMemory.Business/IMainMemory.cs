@@ -18,5 +18,6 @@ namespace MainMemory.Business
         public void LoadMachineCode(byte[] machineCode);
         public void ClearISR(int interruptNumber);
         public void ClearMemory();
+        int memoryLocationsNum { get; }
     }
 }
