@@ -74,6 +74,7 @@ namespace CPU.Business
             _controlUnit.OtherEvent += OnOtherEvent;
             _mainMemory = mainMemory;
             Registers = registers;
+            Registers[REGISTERS.ONES] = -1;
         }
         public (int MAR, int MirIndex) StepMicrocommand()
 		{
@@ -188,14 +189,14 @@ namespace CPU.Business
                     int gprIndex = _controlUnit.GetSourceRegister();
                     SBUS = Registers[(GPR)gprIndex];
                     break;
-                case REGISTERS.IR:
-                    SBUS = (byte)Registers[REGISTERS.IR];
+                case REGISTERS.IRLSB:
+                    SBUS = (byte)Registers[REGISTERS.IRLSB];
                     break;
                 default:
                     SBUS = Registers[(REGISTERS)index];
                     break;
             }
-
+            Debug.WriteLine("SBUS= " + SBUS.ToString());
         }
         private void OnDbusEvent(int index)
         {
@@ -208,13 +209,14 @@ namespace CPU.Business
                     int gprIndex = _controlUnit.GetDestinationRegister();
                     DBUS = Registers[(GPR)gprIndex];
                     break;
-                case REGISTERS.IR:
-                    DBUS = (byte)~Registers[REGISTERS.IR];
+                case REGISTERS.IRLSB:
+                    DBUS = (byte)~Registers[REGISTERS.IRLSB];
                     break;
                 default:
                     DBUS = Registers[(REGISTERS)index];
                     break;
             }
+            Debug.WriteLine("DBUS= " + DBUS.ToString());
         }
 
         // I will just use one and not try to immitate the hardware.
@@ -279,6 +281,7 @@ namespace CPU.Business
             }
 
             this.ComputeALUFlags(RBUS);
+            Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
         /// <summary>
@@ -319,6 +322,7 @@ namespace CPU.Business
                     break;
                 case 1 /* IFCH */:
                     _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    Registers[REGISTERS.IR] = _controlUnit.IR; // For updateing the UI
                     break;
                 case 2 /* READ */:
                     Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);

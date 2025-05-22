@@ -9,7 +9,7 @@ public partial class RegisterViewModel : BaseDiagramObject
     [ObservableProperty]
     public partial string Name { get; set; }
 
-    [ObservableProperty] public partial NumberFormat Format { get; set; } = NumberFormat.Binary;
+    [ObservableProperty] public partial NumberFormat Format { get; set; } = NumberFormat.Hex;
     // public EventHandler customEvent;
     //
     // private void DoSmthAfterEvent(object? sender, EventArgs e)
