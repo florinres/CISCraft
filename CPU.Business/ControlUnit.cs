@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace CPU.Business
 {
@@ -362,6 +363,7 @@ namespace CPU.Business
                     OtherEvent?.Invoke(getMirOthersField());
                     break;
                 case 6:
+                    Debug.WriteLine("Next MAR= " + MAR.ToString());
                     break;
 			}
             _mirIndex++;
