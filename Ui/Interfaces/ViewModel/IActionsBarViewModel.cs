@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel;

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
