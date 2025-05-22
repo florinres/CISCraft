@@ -47,6 +47,7 @@ namespace MainMemory.Business
             // recomending that the ISRs be short, we shall
             // take half of this segment and give to
             // code segment
+            this.memoryLocationsNum = 1 << 16;
             this.freeMemorySegemnt = ((ushort)((this.memoryLocationsNum - 1 - this.codeSegment) / 4));
             this.stackSegment = ((ushort)((this.memoryLocationsNum - 1)));
 
