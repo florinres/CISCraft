@@ -735,18 +735,18 @@ namespace Assembler.Business
             if(instruction.Instr != 0)
             {
                 // Little endian representation - the MSB at the low byte
-                _program[_programIndex++] = (byte)(instruction.Instr>>8);
                 _program[_programIndex++] = (byte)instruction.Instr;
-            }
-            if(instruction.Offset1 != 0)
-            {
-                _program[_programIndex++] = (byte)(instruction.Offset1>>8);
-                _program[_programIndex++] = (byte)instruction.Offset1;
+                _program[_programIndex++] = (byte)(instruction.Instr >> 8);
             }
             if(instruction.Offset2 != 0)
             {
-                _program[_programIndex++] = (byte)(instruction.Offset2>>8);
                 _program[_programIndex++] = (byte)instruction.Offset2;
+                _program[_programIndex++] = (byte)(instruction.Offset2>>8);
+            }
+            if(instruction.Offset1 != 0)
+            {
+                _program[_programIndex++] = (byte)instruction.Offset1;
+                _program[_programIndex++] = (byte)(instruction.Offset1>>8);
             }
         }
     }

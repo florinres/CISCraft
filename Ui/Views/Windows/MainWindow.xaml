@@ -1,11 +1,10 @@
-﻿<ui:FluentWindow
+<ui:FluentWindow
     x:Class="Ui.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:interfaces="clr-namespace:Ui.Interfaces.Windows"
     xmlns:components="clr-namespace:Ui.Components"
     xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
     xmlns:system="clr-namespace:System;assembly=netstandard"
@@ -15,7 +14,10 @@
     xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
     xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
     xmlns:hex="clr-namespace:Ui.Views.UserControls.Hex"
-    d:DataContext="{d:DesignInstance Type=interfaces:IMainWindowViewModel, IsDesignTimeCreatable=False}"
+    xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
+    xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
+    xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
+    d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
     Height="650"
@@ -27,6 +29,8 @@
     mc:Ignorable="d"
     Loaded="MainWindow_OnLoaded">
     <Window.Resources>
+        <helpers:ThemeToIndexConverter x:Key="ThemeToIndexConverter" />
+        <helpers:EnumEqualsConverter x:Key="EnumEqualsConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -51,7 +55,7 @@
                         <MenuItem Command="{Binding MenuBar.NewDocumentCommand}" Header="New" />
                         <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open" />
                         <Separator />
-                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveCommand}" Header="Save" />
+                        <MenuItem Command="{Binding ActionsBar.LoadJsonCommand}" Header="Load MPM" />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}"
                                   Header="Save As..." />
                         <Separator />
@@ -74,22 +78,29 @@
                             IsCheckable="True"
                             IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
                             Command="{Binding MenuBar.ShowHexViewerCommand}" />
+                        <MenuItem
+                            Header="Microprogram"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.Microprogram.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowMicroprogramCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
                             <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
                             <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
-
-                            <ComboBox
-                                DisplayMemberPath="Item1"
-                                IsEnabled="False"
-                                ItemsSource="{Binding Themes}"
-                                SelectedItem="{Binding SelectedTheme}"
-                                Margin="10,0,0,0" />
                         </MenuItem>
                         <MenuItem Header="Theme">
-                            <MenuItem Header="Light" />
-                            <MenuItem Header="Dark" />
+                            <MenuItem Header="Light"
+                                      IsCheckable="True"
+                                      IsChecked="{Binding  Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
+                                      Command="{Binding Settings.ChangeThemeCommand}"
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Light}" />
+
+                            <MenuItem Header="Dark"
+                                      IsCheckable="True"
+                                      IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
+                                      Command="{Binding Settings.ChangeThemeCommand}"
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
                         </MenuItem>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View" />
@@ -101,6 +112,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
+                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Run"
                 Height="30"
@@ -238,7 +250,14 @@
                             <hex:HexControl ViewModel="{Binding}"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.HexViewTemplate>
+                    <!-- Microprogram -->
+                    <components:PanesTemplateSelector.MicroprogramViewTemplate>
+                        <DataTemplate DataType="{x:Type diagram:MicroprogramMemoryViewModel}">
+                            <microprogram:MicroprogramControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </components:PanesTemplateSelector.MicroprogramViewTemplate>
                 </components:PanesTemplateSelector>
+
             </DockingManager.LayoutItemTemplateSelector>
 
             <DockingManager.LayoutItemContainerStyleSelector>

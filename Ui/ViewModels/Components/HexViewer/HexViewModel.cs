@@ -31,6 +31,8 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
     private void OnSourceCodeAssembled(object? sender, byte[] code)
     {
         AssembledCode = code;
+        HexEditorStream = new MemoryStream(AssembledCode, writable: false);
+        IsElementReadyToRender = AssembledCode is { Length: > 0 };
     }
 
     partial void OnAssembledCodeChanged(byte[]? oldValue, byte[] newValue)

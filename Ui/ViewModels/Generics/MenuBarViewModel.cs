@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 
@@ -75,5 +75,11 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     public void ShowHexViewer()
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.HexViewer);
+    }
+    
+    [RelayCommand]
+    public void ShowMicroprogram()
+    {
+        _toolVisibilityService.ToggleToolVisibility(DocumentService.Microprogram);
     }
 }

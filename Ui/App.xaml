@@ -12,9 +12,13 @@
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="NodeBackgroundBrush" Color="#2A2A2A"/>
             <SolidColorBrush x:Key="NodeBorderBrush" Color="#555555"/>
+            <SolidColorBrush x:Key="NodeHighlightBrush" Color="Orange"/>
+            <SolidColorBrush x:Key="HeaderBackgroundBrush" Color="#FF2D2D30"/>
             <SolidColorBrush x:Key="NodeNameBackgroundBrush" Color="#1E1E1E"/>
             <helpers:InnerThicknessConverter x:Key="InnerThicknessConverter" />
             <BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <helpers:AddressFormatConverter x:Key="AddressFormatConverter"/>
+            <helpers:RegisterFormatConverter x:Key="RegisterFormatConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
