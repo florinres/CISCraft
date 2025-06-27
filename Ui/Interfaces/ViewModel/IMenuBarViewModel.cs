@@ -29,6 +29,8 @@ public interface IMenuBarViewModel
     IRelayCommand ShowDiagramCommand { get; }
     
     IRelayCommand ShowHexViewerCommand { get; }
+    IRelayCommand SaveLayoutCommand { get; }
+    IRelayCommand LoadLayoutCommand { get; }
 
     /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="MenuBarViewModel.ShowMicroprogram"/>.</summary>
     global::CommunityToolkit.Mvvm.Input.IRelayCommand ShowMicroprogramCommand { get; }

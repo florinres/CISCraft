@@ -15,4 +15,14 @@ public class DummyDockingService : IDockingService
     {
         throw new NotImplementedException();
     }
+
+    public void SaveLayout(string filePath)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void LoadLayout(string filePath)
+    {
+        throw new NotImplementedException();
+    }
 }
