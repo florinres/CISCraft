@@ -24,7 +24,6 @@ public class MomeryContentWrapper : ObservableObject
         {
             if (value)
             {
-                // ReSharper disable once ExplicitCallerInfoArgument
                 OnPropertyChanged("Memory[0]");
                 OnPropertyChanged(nameof(_memoryContent));
             }

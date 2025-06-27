@@ -1,6 +1,7 @@
 using System.Buffers.Binary;
 using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using MainMemory.Business;
 using MainMemory.Business.Models;
 using Ui.Interfaces.Services;
@@ -52,22 +53,39 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
     }
     private void OnMemoryChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName?.StartsWith("Memory[") == true)
+        if (e.PropertyName is null)
         {
             RefreshHexViewFromMemory();
+            return;
         }
+        
+        var index = TryParseIndexFromPropertyName(e.PropertyName);
+        RefreshHexViewFromMemory(index);
     }
 
-    //TODO: clean up this and make it index specific
-    private void RefreshHexViewFromMemory()
+    private static int? TryParseIndexFromPropertyName(string name)
     {
-        HexEditorStream?.Dispose(); // Dispose the old stream if needed
-        HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: false);
-        HexEditorStream.Position = 0;
-
-        IsElementReadyToRender = _memoryContentWrapper.MemoryContent.Length > 0;
+        var match = Regex.Match(name, @"Memory\[(\d+)\]");
+        if(int.TryParse(match.Groups[1].Value, out var index))
+        {
+            return index;
+        }
+        return null;
     }
 
+    private void RefreshHexViewFromMemory(int? index = null)
+    {
+        if(HexEditorStream.CanSeek && index is not null)
+        {
+            HexEditorStream.Position = index.Value;
+            HexEditorStream.WriteByte(_memoryContentWrapper[index.Value]);
+            HexEditorStream.Position = index.Value;
+        }
+        
+        HexEditorStream?.Dispose();
+        HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
+        IsElementReadyToRender = true;
+    }
 
     
 }
