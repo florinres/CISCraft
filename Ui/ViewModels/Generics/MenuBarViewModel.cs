@@ -8,6 +8,7 @@ namespace Ui.ViewModels.Generics;
 public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
     private readonly IToolVisibilityService _toolVisibilityService;
+    private IDockingService _dockingService;
 
     public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService)
     {
@@ -19,6 +20,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 
     public void SetDockingService(IDockingService dockingService)
     {
+        _dockingService = dockingService;
         _toolVisibilityService.SetDockingService(dockingService);
     }
 
@@ -105,5 +107,19 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     public void ShowMicroprogram()
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.Microprogram);
+    }
+
+    [RelayCommand]
+    public void SaveLayout()
+    {
+        Directory.CreateDirectory("Layouts");
+
+        _dockingService.SaveLayout("Layouts\\layout1.xml");
+    }
+    
+    [RelayCommand]
+    public void LoadLayout()
+    {
+        _dockingService.LoadLayout("Layouts\\layout1.xml");
     }
 }

@@ -86,8 +86,8 @@
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <MenuItem Header="Layout">
-                            <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
-                            <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
+                            <MenuItem IsEnabled="True" Command="{Binding MenuBar.LoadLayoutCommand}" Header="Load" />
+                            <MenuItem IsEnabled="True" Command="{Binding MenuBar.SaveLayoutCommand}" Header="Save" />
                         </MenuItem>
                         <MenuItem Header="Theme">
                             <MenuItem Header="Light"
@@ -106,6 +106,7 @@
                     <ui:MenuItem Header="View" />
                     <ui:MenuItem Header="Help" />
                 </Menu>
+                
             </ui:TitleBar.Header>
         </ui:TitleBar>
 

@@ -32,10 +32,10 @@ public partial class MainWindow
 
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var realDockingService = new DockingService(DockingManagerInstance);
 
         var activeDocumentService = ((IMainWindowViewModel)DataContext).Workspace.ActiveDocumentsService;
         var menuBar = ((IMainWindowViewModel)DataContext).MenuBar;
+        var realDockingService = new DockingService(DockingManagerInstance,activeDocumentService);
 
         // Replace dummy docking service with real one
         activeDocumentService.SetDockingService(realDockingService);
