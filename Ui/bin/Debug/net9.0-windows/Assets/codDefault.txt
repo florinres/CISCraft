@@ -1,0 +1,37 @@
+proc start
+    mov r0, 5
+    call factorial
+    jmp factorial
+    nop
+    nop
+    nop
+
+    mov r2, 100
+    mov 21[r2], 12[r1]
+    mov 123[r3], r2
+
+    halt
+endp start
+
+; Input: R0
+; Output: R2
+; Modifies: R0, R1, R2, R3
+; Description: This function calculates the sum of the first R1 numbers
+proc factorial
+    mov r1, 1
+    mov r2, 1
+endp factorial
+factorialLoop:
+    mov r3,r1
+shiftLoop:
+    asl r2
+    dec r3
+    cmp r3, 0
+    bne shiftLoop
+
+    dec r0
+    inc r1
+    cmp r0, 0
+    bne factorialLoop
+
+    ret

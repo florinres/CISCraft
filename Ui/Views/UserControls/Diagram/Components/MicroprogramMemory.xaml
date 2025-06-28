@@ -20,10 +20,10 @@
                     <ColumnDefinition Width="80" />   <!-- Item0 -->
                     <ColumnDefinition Width="100" />  <!-- Item1 -->
                     <ColumnDefinition Width="90" />   <!-- Item2 -->
-                    <ColumnDefinition Width="60" />   <!-- Item3 -->
+                    <ColumnDefinition Width="80" />   <!-- Item3 -->
                     <ColumnDefinition Width="90" />   <!-- Item4 -->
-                    <ColumnDefinition Width="120" />  <!-- Item5 -->
-                    <ColumnDefinition Width="75" />   <!-- Item6 -->
+                    <ColumnDefinition Width="140" />  <!-- Item5 -->
+                    <ColumnDefinition Width="125" />   <!-- Item6 -->
                     <ColumnDefinition Width="*" />    <!-- Item7 takes remaining space -->
                 </Grid.ColumnDefinitions>
 

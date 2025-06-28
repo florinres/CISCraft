@@ -1,4 +1,4 @@
-﻿using AvalonDock;
+using AvalonDock;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
 using Wpf.Ui.Appearance;

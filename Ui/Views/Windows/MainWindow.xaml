@@ -1,4 +1,4 @@
-﻿<ui:FluentWindow
+<ui:FluentWindow
     x:Class="Ui.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -112,7 +112,6 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
-                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Run"
                 Height="30"
@@ -149,6 +148,7 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Step Into"
                 Height="30"
@@ -173,6 +173,7 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding ResetProgramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Reset"
                 Height="30"
@@ -286,9 +287,9 @@
                 <helpers:LayoutInitializer />
             </DockingManager.LayoutUpdateStrategy>
             <LayoutRoot>
-                <LayoutPanel Orientation="Vertical">
+                <LayoutPanel Orientation="Horizontal">
                     <LayoutDocumentPane />
-                    <LayoutAnchorablePane Name="ToolsPane" />
+                    <LayoutAnchorablePane Name="ToolsPane" DockWidth="200"/>
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
