@@ -69,18 +69,20 @@ public class DockingService : IDockingService
             anchorable.Show();
         }
     }
-    
-    public void SaveLayout(string filePath)
-    {
-        if (_dockingManager == null) return;
 
+    private const string layoutsFolderPath = "Layouts"; 
+    
+    public void SaveLayout(string fileName)
+    {
+        string filePath = layoutsFolderPath + $"\\{fileName}";
         var serializer = new XmlLayoutSerializer(_dockingManager);
         using var stream = new StreamWriter(filePath);
         serializer.Serialize(stream);
     }
     
-    public void LoadLayout(string filePath)
+    public void LoadLayout(string fileName)
     {
+        string filePath = layoutsFolderPath + $"\\{fileName}";
         if (!File.Exists(filePath) || _dockingManager?.Layout == null)
             return;
 
@@ -103,6 +105,24 @@ public class DockingService : IDockingService
 
         using var reader = new StreamReader(filePath);
         serializer.Deserialize(reader);
+    }
+
+    public void DeleteLayout(string fileName)
+    {
+        string filePath = layoutsFolderPath + $"\\{fileName}";
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    public List<string> GetAllLayoutNames()
+    {
+        return Directory
+            .GetFiles(layoutsFolderPath)
+            .Select(file => Path.GetFileName(file))
+            .Where(file => !string.IsNullOrWhiteSpace(file))
+            .ToList();
     }
 
 }

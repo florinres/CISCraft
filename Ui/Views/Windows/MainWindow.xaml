@@ -17,6 +17,7 @@
     xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
     xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
     xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
+    xmlns:menuBar="clr-namespace:Ui.Views.UserControls.MenuBar"
     d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -85,10 +86,7 @@
                             Command="{Binding MenuBar.ShowMicroprogramCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
-                        <MenuItem Header="Layout">
-                            <MenuItem IsEnabled="True" Command="{Binding MenuBar.LoadLayoutCommand}" Header="Load" />
-                            <MenuItem IsEnabled="True" Command="{Binding MenuBar.SaveLayoutCommand}" Header="Save" />
-                        </MenuItem>
+                        <menuBar:LayoutControl ViewModel="{Binding MenuBar.LayoutControl}"/>
                         <MenuItem Header="Theme">
                             <MenuItem Header="Light"
                                       IsCheckable="True"

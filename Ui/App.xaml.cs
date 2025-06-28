@@ -11,6 +11,7 @@ using Ui.Interfaces.ViewModel;
 using Ui.Services;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.HexViewer;
+using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Components.Microprogram;
 using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
@@ -18,6 +19,7 @@ using Ui.Views.Windows;
 using Wpf.Ui;
 using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
 using ASMBLR = Assembler.Business.Assembler;
+using MenuBarViewModel = Ui.ViewModels.Components.MenuBar.MenuBarViewModel;
 
 namespace Ui;
 
@@ -61,6 +63,7 @@ public partial class App : Application
             services.AddSingleton<CPU.Business.CPU>();
             services.AddSingleton<RegisterWrapper>();
             services.AddSingleton<MomeryContentWrapper>();
+            services.AddSingleton<ILayoutControlViewModel, LayoutControlViewModel>();
         }).Build();
 
     protected override async void OnStartup(StartupEventArgs e)

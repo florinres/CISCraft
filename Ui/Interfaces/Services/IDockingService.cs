@@ -7,6 +7,8 @@ public interface IDockingService
 {
     void ShowTool(IToolViewModel tool);
     void ToggleVisibility(IToolViewModel tool);
-    void SaveLayout(string filePath);
-    void LoadLayout(string filePath);
+    void SaveLayout(string fileName);
+    void LoadLayout(string fileName);
+    List<string> GetAllLayoutNames();
+    void DeleteLayout(string fileName);
 }

@@ -16,12 +16,22 @@ public class DummyDockingService : IDockingService
         throw new NotImplementedException();
     }
 
-    public void SaveLayout(string filePath)
+    public void SaveLayout(string fileName)
     {
         throw new NotImplementedException();
     }
 
-    public void LoadLayout(string filePath)
+    public void LoadLayout(string fileName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<string> GetAllLayoutNames()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteLayout(string fileName)
     {
         throw new NotImplementedException();
     }

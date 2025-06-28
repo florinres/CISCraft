@@ -1,10 +1,14 @@
+using System.Collections.ObjectModel;
 using Ui.Interfaces.Services;
+using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel;
 
 public interface IMenuBarViewModel
 {
+    ILayoutControlViewModel LayoutControl { get; set; }
+    
     /// <inheritdoc />
     IActiveDocumentService DocumentService { get; set; }
 
@@ -29,8 +33,6 @@ public interface IMenuBarViewModel
     IRelayCommand ShowDiagramCommand { get; }
     
     IRelayCommand ShowHexViewerCommand { get; }
-    IRelayCommand SaveLayoutCommand { get; }
-    IRelayCommand LoadLayoutCommand { get; }
 
     /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="MenuBarViewModel.ShowMicroprogram"/>.</summary>
     global::CommunityToolkit.Mvvm.Input.IRelayCommand ShowMicroprogramCommand { get; }
