@@ -124,5 +124,19 @@ public class DockingService : IDockingService
             .Where(file => !string.IsNullOrWhiteSpace(file))
             .ToList();
     }
+    
+    private const string LastUsedLayoutName = "__last_used";
+
+    public void SaveLastUsedLayout()
+    {
+        SaveLayout(LastUsedLayoutName);
+    }
+
+    public void LoadLastUsedLayout()
+    {
+        if (GetAllLayoutNames().Contains(LastUsedLayoutName))
+            LoadLayout(LastUsedLayoutName);
+    }
+
 
 }

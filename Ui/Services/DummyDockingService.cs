@@ -35,4 +35,14 @@ public class DummyDockingService : IDockingService
     {
         throw new NotImplementedException();
     }
+
+    public void SaveLastUsedLayout()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void LoadLastUsedLayout()
+    {
+        throw new NotImplementedException();
+    }
 }

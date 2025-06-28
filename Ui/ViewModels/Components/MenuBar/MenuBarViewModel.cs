@@ -28,6 +28,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         _dockingService = dockingService;
         _toolVisibilityService.SetDockingService(dockingService);
         LayoutControl.SetDockingService(dockingService);
+        _dockingService.LoadLastUsedLayout();
     }
 
     public void SetToolsVisibilityOnAndOff()
