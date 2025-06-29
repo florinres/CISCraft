@@ -37,7 +37,9 @@
             VisualCaretMode="Overwrite" 
             Background="{DynamicResource ApplicationBackgroundBrush}"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            ZoomScale="{Binding ZoomFactor, Mode=TwoWay}"
             ReadOnlyMode="True"
+            AllowZoom="True"
             />
 
     </Grid>

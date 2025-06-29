@@ -271,6 +271,7 @@
                             <Setter Property="ContentId" Value="{Binding Model.ToolContentId}" />
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                             <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
+                            
                         </Style>
                     </components:PanesStyleSelector.ToolStyle>
                     <components:PanesStyleSelector.FileStyle>

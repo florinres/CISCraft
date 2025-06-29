@@ -14,6 +14,7 @@ public interface IMicroprogramViewModel : IToolViewModel
     int CurrentRow { get; set; }
 
     int CurrentColumn { get; set; }
+    new double ZoomFactor { get; set; }
 
     void LoadMicroprogramFromJson(string json);
     event PropertyChangedEventHandler? PropertyChanged;

@@ -20,7 +20,10 @@
                   Cursor="Arrow">
         <Grid>
             <Grid.LayoutTransform>
-                <ScaleTransform x:Name="DiagramScaleTransform" ScaleX="1" ScaleY="1" />
+                <ScaleTransform x:Name="DiagramScaleTransform" 
+                                ScaleX="{Binding ZoomFactor, Mode=TwoWay}" 
+                                ScaleY="{Binding ZoomFactor, Mode=TwoWay}" 
+                                />
             </Grid.LayoutTransform>
 
             <Grid.RowDefinitions>

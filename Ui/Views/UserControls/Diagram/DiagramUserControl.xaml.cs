@@ -35,22 +35,22 @@ public partial class DiagramUserControl : UserControl
     private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
     {
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
-        
-        const double zoomFactor = 0.1;
-        var transform = DiagramScaleTransform;
+
+        const double zoomStep = 0.1;
+        var newZoom = ViewModel.ZoomFactor;
 
         if (e.Delta > 0)
         {
-            transform.ScaleX += zoomFactor;
-            transform.ScaleY += zoomFactor;
+            newZoom += zoomStep;
         }
         else
         {
-            transform.ScaleX = Math.Max(0.1, transform.ScaleX - zoomFactor);
-            transform.ScaleY = Math.Max(0.1, transform.ScaleY - zoomFactor);
+            newZoom = Math.Max(0.1, newZoom - zoomStep);
         }
 
+        ViewModel.ZoomFactor = newZoom;
         e.Handled = true;
+
     }
 
     private Point _scrollStartPoint;
