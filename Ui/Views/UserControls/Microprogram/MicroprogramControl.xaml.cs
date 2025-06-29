@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ui.Interfaces.ViewModel;
@@ -8,18 +9,6 @@ namespace Ui.Views.UserControls.Microprogram;
 
 public partial class MicroprogramControl : UserControl
 {
-    
-    public new static readonly DependencyProperty FontSizeProperty =
-        DependencyProperty.Register(
-            "FontSize", typeof(double), typeof(MicroprogramControl),
-            new PropertyMetadata(12.0));
-
-    public new double FontSize
-    {
-        get => (double)GetValue(FontSizeProperty);
-        set => SetValue(FontSizeProperty, value);
-    }
-    
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register(nameof(ViewModel), typeof(IMicroprogramViewModel), typeof(MicroprogramControl),
             new PropertyMetadata(null, OnViewModelChanged));
@@ -40,6 +29,7 @@ public partial class MicroprogramControl : UserControl
 
             vm.PropertyChanged += (_, args) =>
             {
+                control.FontSize = vm.ZoomFactor;
                 if (args.PropertyName != nameof(vm.CurrentRow)) return;
                 
                 var index = vm.CurrentRow;
@@ -95,9 +85,10 @@ public partial class MicroprogramControl : UserControl
         e.Handled = false;
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
         
-        FontSize += e.Delta > 0 ? 1 : -1;
-        if (FontSize < 8) FontSize = 8;       // Min font size
-        if (FontSize > 40) FontSize = 40;     // Max font size
+        ViewModel.ZoomFactor += e.Delta > 0 ? 1 : -1;
+        if (ViewModel.ZoomFactor < 8) ViewModel.ZoomFactor = 8;       // Min font size
+        if (ViewModel.ZoomFactor > 40) ViewModel.ZoomFactor = 40;     // Max font size
+
         e.Handled = true;
     }
 
