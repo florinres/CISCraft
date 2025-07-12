@@ -1,4 +1,4 @@
-{ "IFCH": [ ["PdPCs",     "NONE",          "SBUS",  "PmADR",       "IFCH",    "+2PC",            "IF ACLOW JUMPI",   "INDEX0",  "T",  "PWFAIL"       ],
+{ "IFCH2": [ ["PdPCs",     "NONE",          "SBUS",  "PmADR",       "IFCH",    "+2PC",            "IF ACLOW JUMPI",   "INDEX0",  "T",  "PWFAIL"       ],
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF CIL JUMPI",     "INDEX1",  "F",  "B1"           ] ],
     "ILLEGAL": [ ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "A(1)BE1",         "JUMPI",            "INDEX0",  "T",  "INT"          ] ],
     "PWFAIL": [ ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "A(1)BE0",         "JUMPI",            "INDEX0",  "T",  "INT+1"          ] ],

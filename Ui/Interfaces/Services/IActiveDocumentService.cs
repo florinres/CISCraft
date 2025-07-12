@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;

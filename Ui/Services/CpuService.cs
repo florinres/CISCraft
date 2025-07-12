@@ -11,11 +11,14 @@ public class CpuService : ICpuService
 {
     private readonly CPU.Business.CPU _cpu;
     private readonly IMicroprogramViewModel _microprogramService;
-
-    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu)
+    private readonly IDiagramViewModel _diagram;
+    
+    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu, IDiagramViewModel diagram, IMicroprogramViewModel microprogramViewModel)
     {
         _cpu = cpu;
+        _diagram = diagram;
         _microprogramService = microprogramService;
+        _ = LoadJsonMpm();
     }
 
     public async Task LoadJsonMpm(string filePath = "", bool debug = false)
@@ -38,11 +41,20 @@ public class CpuService : ICpuService
         _cpu.LoadJsonMpm(jsonString);
     }
 
-    public (int, int) StepMicrocode()
+    public (int, int) StepMicrocommand()
     {
-         var (row, column) = _cpu.StepMicrocode();
+        _diagram.ResetHighlight();
+         var (row, column) = _cpu.StepMicrocommand();
+         if (row == 0 && column == 0)
+         {
+             _microprogramService.ClearAllHighlightedRows();
+         }
          _microprogramService.CurrentRow = row;
          _microprogramService.CurrentColumn = column;
          return (row, column);
+    }
+    public void ResetProgram()
+    {
+        _cpu.ResetProgram();
     }
 }
