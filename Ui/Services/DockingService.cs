@@ -167,6 +167,11 @@ public class DockingService : IDockingService
 
     public List<string> GetAllLayoutNames()
     {
+        if (!Directory.Exists(layoutsFolderPath))
+        {
+            Directory.CreateDirectory(layoutsFolderPath);
+            return [];
+        }
         return Directory
             .GetFiles(layoutsFolderPath)
             .Select(file => Path.GetFileName(file))
