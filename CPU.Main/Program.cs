@@ -2,6 +2,7 @@
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
 using ASM = Assembler.Business.Assembler;
+using CPU.Business.Models;
 namespace CPU.Main
 {
     internal class Program
@@ -10,8 +11,9 @@ namespace CPU.Main
         {
             ASM assembler = new ASM();
             Ram ram = new Ram();
-            Cpu cpu = new Cpu(ram);
-            
+            RegisterWrapper list = new RegisterWrapper(20);
+            Cpu cpu = new Cpu(ram,list);
+
             string filePath = "main.s";
             string file;
             byte[] objectCode = new byte[200];
@@ -35,11 +37,11 @@ namespace CPU.Main
             //todo: mpm
             cpu.LoadJsonMpm(jsonString);
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 120; i++)
             {
                 int a, b;
-                (a, b) = cpu.StepMicrocode();
-                Console.WriteLine("("+a+", "+b+")");
+                (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(i+": ("+a+", "+b+")");
             }
         }
     }
