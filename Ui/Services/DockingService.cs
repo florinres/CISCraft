@@ -1,7 +1,12 @@
-﻿using AvalonDock;
+﻿using System.IO;
+using System.Text.Json;
+using System.Xml.Serialization;
+using AvalonDock;
 using AvalonDock.Layout;
+using AvalonDock.Layout.Serialization;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
+using Ui.Models.Layouts;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
@@ -9,10 +14,12 @@ namespace Ui.Services;
 public class DockingService : IDockingService
 {
     private readonly DockingManager _dockingManager;
+    private readonly IActiveDocumentService _activeDocumentService;
 
-    public DockingService(DockingManager dockingManager)
+    public DockingService(DockingManager dockingManager, IActiveDocumentService activeDocumentService)
     {
         _dockingManager = dockingManager;
+        _activeDocumentService = activeDocumentService;
     }
 
     public void ToggleVisibility(IToolViewModel tool)
@@ -29,6 +36,14 @@ public class DockingService : IDockingService
         else
             anchorable.Hide();
     }
+
+    private IToolViewModel? TryFindToolByTitle(string? title)
+    {
+        if (string.IsNullOrWhiteSpace(title)) return null;
+
+        return _activeDocumentService.Tools.FirstOrDefault(t => t.Title == title);
+    }
+
 
     public void ShowTool(IToolViewModel tool)
     {
@@ -55,5 +70,126 @@ public class DockingService : IDockingService
 
             anchorable.Show();
         }
+    }
+
+    private const string layoutsFolderPath = "Layouts";
+
+    public void SaveLayout(string fileName)
+    {
+        string filePath = layoutsFolderPath + $"\\{fileName}.layout";
+        string metaPath = layoutsFolderPath + $"\\{fileName}.layoutmeta";
+
+        var serializer = new XmlLayoutSerializer(_dockingManager);
+        using (var stream = new StreamWriter(filePath))
+        {
+            serializer.Serialize(stream);
+        }
+
+
+        var meta = new LayoutMetadata();
+
+        foreach (var tool in _activeDocumentService.Tools)
+        {
+            meta.Tools.Add(new ToolMetadata
+            {
+                Title = tool.Title,
+                ZoomFactor = tool.ZoomFactor,
+                IsVisible = tool.IsVisible
+            });
+        }
+
+        var metaSerializer = new XmlSerializer(typeof(LayoutMetadata));
+        using (var stream = new StreamWriter(metaPath))
+        {
+            metaSerializer.Serialize(stream, meta);
+        }
+    }
+
+    public void LoadLayout(string fileName)
+    {
+        string layoutPath = layoutsFolderPath + $"\\{fileName}.layout";
+        string metaPath = layoutsFolderPath + $"\\{fileName}.layoutmeta";
+
+        if (!File.Exists(layoutPath) || _dockingManager?.Layout == null)
+            return;
+
+        LayoutMetadata? meta = null;
+        if (File.Exists(metaPath))
+        {
+            var metaSerializer = new XmlSerializer(typeof(LayoutMetadata));
+            using (var stream = new StreamReader(metaPath))
+            {
+                meta = (LayoutMetadata?)metaSerializer.Deserialize(stream);
+            }
+        }
+
+        var serializer = new XmlLayoutSerializer(_dockingManager);
+        serializer.LayoutSerializationCallback += (s, args) =>
+        {
+            var anchorable = args.Model as LayoutAnchorable;
+            var title = anchorable?.Title;
+            var tool = TryFindToolByTitle(title);
+
+            if (tool != null)
+            {
+                args.Content = tool;
+
+                var toolMeta = meta?.Tools.FirstOrDefault(t => t.Title == title);
+                if (toolMeta != null)
+                {
+                    tool.ZoomFactor = toolMeta.ZoomFactor;
+                    tool.IsVisible = toolMeta.IsVisible;
+                }
+            }
+            else
+            {
+                args.Cancel = true;
+            }
+        };
+
+        using var reader = new StreamReader(layoutPath);
+        serializer.Deserialize(reader);
+    }
+
+    public void DeleteLayout(string fileName)
+    {
+        string filePath = Path.Combine(layoutsFolderPath, $"\\{fileName}.layout");
+        string metaPath = layoutsFolderPath + $"\\{fileName}.layoutmeta";
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+        if (File.Exists(metaPath))
+        {
+            File.Delete(metaPath);
+        }
+    }
+
+    public List<string> GetAllLayoutNames()
+    {
+        if (!Directory.Exists(layoutsFolderPath))
+        {
+            Directory.CreateDirectory(layoutsFolderPath);
+            return [];
+        }
+        return Directory
+            .GetFiles(layoutsFolderPath)
+            .Select(file => Path.GetFileName(file))
+            .Where(file => !string.IsNullOrWhiteSpace(file) && file.EndsWith(".layout"))
+            .Select(file => file.Replace(".layout", ""))
+            .ToList();
+    }
+
+    private const string LastUsedLayoutName = "__last_used";
+
+    public void SaveLastUsedLayout()
+    {
+        SaveLayout(LastUsedLayoutName);
+    }
+
+    public void LoadLastUsedLayout()
+    {
+        if (GetAllLayoutNames().Contains(LastUsedLayoutName))
+            LoadLayout(LastUsedLayoutName);
     }
 }

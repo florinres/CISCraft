@@ -27,12 +27,19 @@
             ByteSpacerWidthTickness="Normal"
             DataStringVisual="Hexadecimal"
             DefaultCopyToClipboardMode="HexaString"
-            ForegroundSecondColor="Blue"
+            ForegroundSecondColor="IndianRed"
+            HighLightColor="DimGray"
+            SelectionSecondColor="DimGray"
+            SelectionFirstColor="DimGray"
+            AllowAutoHighLightSelectionByte="False"
             OffSetStringVisual="Hexadecimal"
-            PreloadByteInEditorMode="MaxScreenVisibleLineAtDataLoad"
+            PreloadByteInEditorMode="MaxVisibleLine"
             VisualCaretMode="Overwrite" 
             Background="{DynamicResource ApplicationBackgroundBrush}"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            ZoomScale="{Binding ZoomFactor, Mode=TwoWay}"
+            ReadOnlyMode="True"
+            AllowZoom="True"
             />
 
     </Grid>

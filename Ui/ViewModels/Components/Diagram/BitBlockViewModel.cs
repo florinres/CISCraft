@@ -6,6 +6,6 @@ public class BitBlockViewModel : RegisterViewModel
 {
     public BitBlockViewModel(string name, object? defaultValue = null) : base(name, defaultValue)
     {
-        Value = defaultValue ?? "1";
+        Value = defaultValue ?? 0;
     }
 }

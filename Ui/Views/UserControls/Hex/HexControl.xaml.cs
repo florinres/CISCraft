@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Ui.Interfaces.ViewModel;
@@ -28,6 +29,8 @@ public partial class HexControl : UserControl
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        DataContextChanged += OnDataContextChanged;
+
     }
     
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -63,5 +66,37 @@ public partial class HexControl : UserControl
         }
         return null;
     }
+    
+    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is IHexViewModel vm)
+        {
+            vm.PropertyChanged += OnViewModelPropertyChanged;
+            if (vm.ZoomFactor < 0.5) vm.ZoomFactor = 0.5;
+            if (vm.ZoomFactor > 2.0001) vm.ZoomFactor = 2;
+            HexEditorControl.ZoomScale = vm.ZoomFactor;
+            HexEditorControl.InvalidateVisual();
+
+        }
+
+        if (e.OldValue is IHexViewModel oldVm)
+        {
+            oldVm.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+    }
+    
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(IHexViewModel.HexEditorStream))
+        {
+            Dispatcher.Invoke(() =>
+            {
+                HexEditorControl.Stream = null;
+                HexEditorControl.Stream = ((IHexViewModel)sender!).HexEditorStream;
+            });
+        }
+
+    }
+
 
 }

@@ -1,4 +1,4 @@
-﻿<ui:FluentWindow
+<ui:FluentWindow
     x:Class="Ui.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -17,6 +17,7 @@
     xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
     xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
     xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
+    xmlns:menuBar="clr-namespace:Ui.Views.UserControls.MenuBar"
     d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -85,10 +86,7 @@
                             Command="{Binding MenuBar.ShowMicroprogramCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
-                        <MenuItem Header="Layout">
-                            <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
-                            <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
-                        </MenuItem>
+                        <menuBar:LayoutControl ViewModel="{Binding MenuBar.LayoutControl}"/>
                         <MenuItem Header="Theme">
                             <MenuItem Header="Light"
                                       IsCheckable="True"
@@ -106,13 +104,13 @@
                     <ui:MenuItem Header="View" />
                     <ui:MenuItem Header="Help" />
                 </Menu>
+                
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
 
             <ui:Button
-                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Run"
                 Height="30"
@@ -149,6 +147,7 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding StepMicroprogramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Step Into"
                 Height="30"
@@ -173,6 +172,7 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding ResetProgramCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Reset"
                 Height="30"
@@ -271,6 +271,7 @@
                             <Setter Property="ContentId" Value="{Binding Model.ToolContentId}" />
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                             <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
+                            
                         </Style>
                     </components:PanesStyleSelector.ToolStyle>
                     <components:PanesStyleSelector.FileStyle>
@@ -286,9 +287,9 @@
                 <helpers:LayoutInitializer />
             </DockingManager.LayoutUpdateStrategy>
             <LayoutRoot>
-                <LayoutPanel Orientation="Vertical">
+                <LayoutPanel Orientation="Horizontal">
                     <LayoutDocumentPane />
-                    <LayoutAnchorablePane Name="ToolsPane" />
+                    <LayoutAnchorablePane Name="ToolsPane" DockWidth="200"/>
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
