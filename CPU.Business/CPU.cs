@@ -12,12 +12,12 @@ using MainMemory.Business;
 
 namespace CPU.Business
 {
-	public class CPU
+    public class CPU
     {
         const byte MAX_NUM_REG = 23;
         enum ALU_OP {
             NONE,
-		    SBUS,
+            SBUS,
             DBUS,
             ADD,
             SUB,
@@ -59,11 +59,13 @@ namespace CPU.Business
         ALU_FLAGS _aluFlags;
 
         public RegisterWrapper Registers;
-		public short SBUS, DBUS, RBUS;
+        public short SBUS, DBUS, RBUS;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
-		public CPU(IMainMemory mainMemory, RegisterWrapper registers)
+        private OrderedDictionary<string, string[][]> _microProgram;
+        public string currentLabel;
+        public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
             _controlUnit = new ControlUnit();
             _controlUnit.SbusEvent += OnSbusEvent;
@@ -73,11 +75,12 @@ namespace CPU.Business
             _controlUnit.MemoryEvent += OnMemoryEvent;
             _controlUnit.OtherEvent += OnOtherEvent;
             _mainMemory = mainMemory;
+            _microProgram = new OrderedDictionary<string, string[][]>();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
         }
         public (int MAR, int MirIndex) StepMicrocommand()
-		{
+        {
             return _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
         }
         /// <summary>
@@ -91,14 +94,14 @@ namespace CPU.Business
         {
             byte addressCounter = 0;
             int mpmIndex = 0;
-            var deserializedData = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
+            _microProgram = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
             var labelsAddresses = new Dictionary<string, byte>();
             byte[] microcommandsBuffer = new byte[1200];
             int bufferIndex = 0;
 
-            if (deserializedData == null) return;
+            if (_microProgram == null) return;
 
-            foreach (var routine in deserializedData)
+            foreach (var routine in _microProgram)
             {
                 labelsAddresses[routine.Key] = addressCounter;
                 foreach (var microinstruction in routine.Value)
@@ -116,7 +119,7 @@ namespace CPU.Business
             }
 
             addressCounter = 0;
-            foreach (var routine in deserializedData)
+            foreach (var routine in _microProgram)
             {
                 var microinstructions = routine.Value;
                 if (debug) Console.WriteLine(" " + routine.Key);
@@ -162,7 +165,7 @@ namespace CPU.Business
                 }
             }
 
-            for (int i = 0; i <= addressCounter*10;)
+            for (int i = 0; i <= addressCounter * 10;)
             {
                 _controlUnit.MPM[mpmIndex] =
                     ((long)microcommandsBuffer[i++] << ControlUnit.SbusShift)       |
@@ -191,9 +194,15 @@ namespace CPU.Business
             _mainMemory.ClearMemory();
             _controlUnit.Reset();
         }
+        public string GetCurrentLabel(int MAR)
+        {
+            var indexes = MarToMpmIndex(MAR + 1);
+            return _microProgram.ElementAt(indexes.Item1).Key + "_" + indexes.Item2;
+
+        }
         private void OnSbusEvent(int index)
         {
-            switch((REGISTERS)index)
+            switch ((REGISTERS)index)
             {
                 case REGISTERS.NEG:
                     SBUS = (short)~Registers[REGISTERS.T];
@@ -358,13 +367,13 @@ namespace CPU.Business
             switch ((OTHER_EVENTS)index)
             {
                 case OTHER_EVENTS.SP_PLUS_2:
-                    Registers[REGISTERS.SP] +=2;
+                    Registers[REGISTERS.SP] += 2;
                     break;
                 case OTHER_EVENTS.SP_MINUS_2:
-                    Registers[REGISTERS.SP] -=2;
+                    Registers[REGISTERS.SP] -= 2;
                     break;
                 case OTHER_EVENTS.PC_PLUS_2:
-                    Registers[REGISTERS.PC] +=2;
+                    Registers[REGISTERS.PC] += 2;
                     break;
                 case OTHER_EVENTS.A1BE0:
                     ACLOW = true;
@@ -373,7 +382,7 @@ namespace CPU.Business
                     CIL = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
-                    Registers[REGISTERS.FLAGS] =(short)((Registers[REGISTERS.FLAGS] & flagsMask0)
+                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask0)
                                                         | (_aluFlags.CarryFlag << carryBit)
                                                         | (_aluFlags.ZeroFlag << zeroBit)
                                                         | (_aluFlags.SignFlag << signBit)
@@ -407,7 +416,7 @@ namespace CPU.Business
                     break;
             }
         }
-        private (short result,short carryOut) RotateLeftWithCarry(short value, short carryIn)
+        private (short result, short carryOut) RotateLeftWithCarry(short value, short carryIn)
         {
             short newCarry = 0;
             short shiftedValue = (short)(value << 1);
@@ -424,6 +433,23 @@ namespace CPU.Business
             if ((short)(value & 0x1) != 0) newCarry = 0x3;
             if (carryIn == 0x3) shiftedValue |= 0x8000;
             return ((short)shiftedValue, newCarry);
+        }
+        private (int, int) MarToMpmIndex(int MAR)
+        {
+            int idx = 0;
+            int i = 0, j = 0;
+            foreach (var label in _microProgram)
+            {
+                j=0;
+                foreach (var v in label.Value)
+                {
+                    idx++;
+                    if (idx == MAR) return (i,j);
+                    j++;
+                }
+                i++;
+            }
+            return (0, 0);
         }
     }
 }
