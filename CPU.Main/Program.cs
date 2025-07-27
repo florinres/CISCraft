@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
 using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
@@ -44,14 +44,17 @@ namespace CPU.Main
             for(int j=0;j<2; j++)
             {
                 (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(cpu.GetCurrentLabel(a));
                 Console.WriteLine(i + ": (" + a + ", " + b + ")");
                 i++;
                 (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(cpu.GetCurrentLabel(a));
                 Console.WriteLine(i + ": (" + a + ", " + b + ")");
                 i++;
-                while (((a != 0) || (b != 0)))
+                while ((a != 0) || (b != 0))
                 {
                     (a, b) = cpu.StepMicrocommand();
+                    Console.WriteLine(cpu.GetCurrentLabel(a));
                     Console.WriteLine(i + ": (" + a + ", " + b + ")");
                     i++;
                 }
