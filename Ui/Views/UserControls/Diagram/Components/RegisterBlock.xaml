@@ -21,27 +21,50 @@
             <!-- <Setter Property="Width" Value="190"/> -->
             
             <Style.Triggers>
+                <!-- Hides the border if WithBorder is false -->
                 <DataTrigger Binding="{Binding WithBorder, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False">
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="BorderBrush" Value="Transparent" />
                 </DataTrigger>
+                
+                <!-- Highlights the border if IsHighlighted is true -->
+                <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource NodeHighlightBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsHighlighted}" Value="False">
+                    <Setter Property="BorderBrush" Value="{DynamicResource NodeBorderBrush}" />
+                </DataTrigger>
+                
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding WithBorder, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False" />
+                        <Condition Binding="{Binding IsHighlighted}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource NodeHighlightBrush}" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource NodeStyleRectangle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Value}"
-                       Foreground="White"
+            <TextBlock Foreground="White"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        TextAlignment="Center" 
-                       Padding="8,0,0,0"/>
+                       Padding="8,0,0,0">
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource RegisterFormatConverter}">
+                        <Binding Path="Value"/>
+                        <Binding Path="Format"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
             <Border Grid.Column="1"
                     Margin="8,0,0,0"
                     Background="{DynamicResource NodeNameBackgroundBrush}"
                     CornerRadius="0,4,4,0" 
                     MinWidth="45">
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding Name}" 
                            Foreground="White"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"

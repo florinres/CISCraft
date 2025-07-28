@@ -92,6 +92,7 @@ public partial class MicroprogramControl : UserControl
 
     private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
     {
+        e.Handled = false;
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
         
         FontSize += e.Delta > 0 ? 1 : -1;

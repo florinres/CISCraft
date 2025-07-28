@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Generics;

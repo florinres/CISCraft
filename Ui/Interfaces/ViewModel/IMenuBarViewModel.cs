@@ -1,4 +1,4 @@
-﻿using Ui.Interfaces.Services;
+using Ui.Interfaces.Services;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel;

@@ -222,12 +222,26 @@ namespace Assembler.Business
         bool _debug = false;
         internal byte[] Encode(ParseTreeNode node, out int len, bool _debug = false)
         {
+            ResetEncoder();
             this._debug = _debug;
             ConstructSymbolTabel(node.ChildNodes[0]);
             TranverseInstructionList(node);
             len = _programIndex;
             return _program;
         }
+
+        private void ResetEncoder()
+        {
+            for(int i=0;i<300;i++)
+            {
+                _program[i] = 0;
+            }
+            _instructionParts = default;
+            _instrAddress = 0x0000;
+            _symbolAddress = 0x0000;
+            _programIndex = 0x0000;
+        }
+
         private void ConstructSymbolTabel(ParseTreeNode node)
         {
             if (node == null) return;
@@ -738,15 +752,15 @@ namespace Assembler.Business
                 _program[_programIndex++] = (byte)instruction.Instr;
                 _program[_programIndex++] = (byte)(instruction.Instr >> 8);
             }
-            if(instruction.Offset1 != 0)
-            {
-                _program[_programIndex++] = (byte)instruction.Offset1;
-                _program[_programIndex++] = (byte)(instruction.Offset1>>8);
-            }
             if(instruction.Offset2 != 0)
             {
                 _program[_programIndex++] = (byte)instruction.Offset2;
                 _program[_programIndex++] = (byte)(instruction.Offset2>>8);
+            }
+            if(instruction.Offset1 != 0)
+            {
+                _program[_programIndex++] = (byte)instruction.Offset1;
+                _program[_programIndex++] = (byte)(instruction.Offset1>>8);
             }
         }
     }

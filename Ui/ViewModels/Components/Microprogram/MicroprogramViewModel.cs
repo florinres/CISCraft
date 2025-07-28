@@ -17,13 +17,12 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
 
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
-    [ObservableProperty] public partial int CurrentRow { get; set; } = 0;
+    [ObservableProperty] public partial int CurrentRow { get; set; } = -1;
     partial void OnCurrentRowChanged(int oldValue, int newValue)
     {
-        // Clear previous row selection
         if (oldValue >= 0 && oldValue < Rows.Count)
         {
-            Rows[oldValue].IsCurrent = false;
+            //Rows[oldValue].IsCurrent = false;
             foreach (var item in Rows[oldValue].Items)
             {
                 item.IsCurrent = false;
@@ -45,6 +44,26 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
         }
     }
 
+    public void ClearAllHighlightedRows()
+    {
+        foreach (var row in Rows.Where(r => r.IsCurrent))
+        {
+            row.IsCurrent = false;
+        }
+    }
+    
+    public void ClearAllHighlight()
+    {
+        foreach (var row in Rows)
+        {
+            foreach (var item in row.Items)
+            {
+                item.IsCurrent = false;
+            }
+            row.IsCurrent = false;
+        }
+    }
+
     partial void OnCurrentColumnChanged(int oldValue, int newValue)
     {
         // Clear old cell highlight
@@ -61,29 +80,40 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     }
 
 
-    [ObservableProperty] public partial int CurrentColumn { get; set; } = 0;
+    [ObservableProperty] public partial int CurrentColumn { get; set; } = -1;
 
     public void LoadMicroprogramFromJson(string json)
     {
         var dict = JsonSerializer.Deserialize<Dictionary<string, List<List<string>>>>(json);
-        //TODO: handle null case
-        var flatMatrix = dict!.Values.SelectMany(x => x).ToList();
+        var rows = new List<MicroprogramMemoryViewModel>();
+        int index = 0;
 
-        Rows = new ObservableCollection<MicroprogramMemoryViewModel>(
-            flatMatrix.Select((row, index) => new MicroprogramMemoryViewModel
+        foreach (var kvp in dict!)
+        {
+            bool isFirst = true;
+
+            foreach (var row in kvp.Value)
             {
-                Items = new ObservableCollection<MicroInstructionItem>(
-                    row.Select(r => new MicroInstructionItem
-                    {
-                        Value = r,
-                        IsCurrent = false
-                    })
-                ),
-                Address = index
-            })
-        );
-        ;
+                rows.Add(new MicroprogramMemoryViewModel
+                {
+                    Items = new ObservableCollection<MicroInstructionItem>(
+                        row.Select(r => new MicroInstructionItem
+                        {
+                            Value = r,
+                            IsCurrent = false
+                        })
+                    ),
+                    Address = index++,
+                    Tag = isFirst ? kvp.Key : "" // Only tag the first item of each group
+                });
 
+                isFirst = false;
+            }
+        }
+
+        Rows = new ObservableCollection<MicroprogramMemoryViewModel>(rows);
+
+        
     }
 
     public override string? Title { get; set; } = "Microprogram";

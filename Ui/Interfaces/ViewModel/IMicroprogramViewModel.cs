@@ -18,4 +18,6 @@ public interface IMicroprogramViewModel : IToolViewModel
     void LoadMicroprogramFromJson(string json);
     event PropertyChangedEventHandler? PropertyChanged;
     event PropertyChangingEventHandler? PropertyChanging;
+    void ClearAllHighlightedRows();
+    void ClearAllHighlight();
 }

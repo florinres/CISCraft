@@ -1,7 +1,8 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
 using ASM = Assembler.Business.Assembler;
+using CPU.Business.Models;
 namespace CPU.Main
 {
     internal class Program
@@ -10,8 +11,9 @@ namespace CPU.Main
         {
             ASM assembler = new ASM();
             Ram ram = new Ram();
-            Cpu cpu = new Cpu(ram);
-            
+            RegisterWrapper list = new RegisterWrapper(20);
+            Cpu cpu = new Cpu(ram,list);
+
             string filePath = "main.s";
             string file;
             byte[] objectCode = new byte[200];
@@ -34,12 +36,24 @@ namespace CPU.Main
             string jsonString = File.ReadAllText("C:\\Users\\rudy\\Desktop\\CISCraft\\Configs\\MPM.json");
             //todo: mpm
             cpu.LoadJsonMpm(jsonString);
+            int a, b;
+            int i = 0;
 
-            for (int i = 0; i < 100; i++)
+            for(int j=0;j<2; j++)
             {
-                int a, b;
-                (a, b) = cpu.StepMicrocode();
-                Console.WriteLine("("+a+", "+b+")");
+                (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(i + ": (" + a + ", " + b + ")");
+                i++;
+                (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(i + ": (" + a + ", " + b + ")");
+                i++;
+                while (((a != 0) || (b != 0)))
+                {
+                    (a, b) = cpu.StepMicrocommand();
+                    Console.WriteLine(i + ": (" + a + ", " + b + ")");
+                    i++;
+                }
+                Console.WriteLine();
             }
         }
     }

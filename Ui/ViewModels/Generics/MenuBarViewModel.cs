@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System.IO;
+using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 
@@ -33,10 +34,33 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     [RelayCommand]
     private void NewDocument()
     {
+        string defaultContent = string.Empty;
+        string filePath = "";
+        string fullPath;
+
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            var projectRoot = AppContext.BaseDirectory;
+            fullPath = Path.Combine(projectRoot, "Assets", "codDefault.txt");
+        }
+        else
+        {
+            fullPath = Path.GetFullPath(filePath);
+        }
+        try
+        {
+            defaultContent = File.ReadAllText(fullPath); 
+        }
+        catch (Exception ex)
+        {
+            
+            defaultContent = fullPath + " doesn't exist"; // daca nu apare fisierul pe git trb bagat manual in bin ig 
+        }
+
         var doc = new FileViewModel
         {
-            Title = "Untitled",
-            Content = "Default start content"
+            Title = "Microprogram",
+            Content = defaultContent
         };
         DocumentService.Documents.Add(doc);
         DocumentService.SelectedDocument ??= doc;

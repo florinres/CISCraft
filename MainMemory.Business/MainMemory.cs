@@ -1,11 +1,12 @@
 ﻿using System.Net;
+using MainMemory.Business.Models;
 
 namespace MainMemory.Business
 {
     public class MainMemory: IMainMemory
     {
-        private byte[] _memoryContent;
-        private int memoryLocationsNum;
+        private MomeryContentWrapper _memoryContent;
+        public int memoryLocationsNum { get; private set; }
 
         private ushort interruptTableSegment;
         private ushort dataSegment;
@@ -19,7 +20,7 @@ namespace MainMemory.Business
         private int interuptsNum;
         private int maxInterruptSize;
         private ushort retiOpCode; // OpCode for Return Interrupt instruction
-        public MainMemory()
+        public MainMemory(MomeryContentWrapper memoryWrapperContent)
         {
 
             // Basic memory layout:
@@ -31,8 +32,7 @@ namespace MainMemory.Business
             //     Interupt vector table
 
             //Initialize memory parameters
-            this.memoryLocationsNum = 1 << 16; // 16 bit address bus
-            this._memoryContent = new byte[this.memoryLocationsNum];
+            this._memoryContent = memoryWrapperContent;
             this.retiOpCode = 0xe00f;
             this.interuptsNum = 16;
             this.maxInterruptSize = 0x1db9;
@@ -47,6 +47,7 @@ namespace MainMemory.Business
             // recomending that the ISRs be short, we shall
             // take half of this segment and give to
             // code segment
+            this.memoryLocationsNum = 1 << 16;
             this.freeMemorySegemnt = ((ushort)((this.memoryLocationsNum - 1 - this.codeSegment) / 4));
             this.stackSegment = ((ushort)((this.memoryLocationsNum - 1)));
 
@@ -93,19 +94,23 @@ namespace MainMemory.Business
             if(machineCode.Length > this.interruptRoutinesSegment - this.codeSegment)
                 throw new InvalidOperationException("Machine code size exceeds memory capacity. Please try another program.");
 
+            _memoryContent.NotifyChange = false;
             for (int i = 0; i < machineCode.Length; i++)
                 this._memoryContent[this.codeSegment + i] = machineCode[i];
+            _memoryContent.NotifyChange = true;
         }
 
         public byte[] GetMemoryDump()
         {
-            return this._memoryContent;
+            return this._memoryContent.MemoryContent;
         }
 
         public void ClearMemory()
         {
+            _memoryContent.NotifyChange = false;
             for (int i = 0; i < this._memoryContent.Length; i++)
                 this._memoryContent[i] = 0;
+            _memoryContent.NotifyChange = true;
         }
 
         public byte FetchByte(int memoryAddress)
@@ -150,22 +155,25 @@ namespace MainMemory.Business
                 throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt number exceeds the total number of interrupts. Please try another value.");
 
             ushort isrAddress = (ushort)((this._memoryContent[interruptNumber * 2 + 1] << 8) | this._memoryContent[interruptNumber * 2]); //little endian addressing
-
+            _memoryContent.NotifyChange = false;
             for (int i = isrAddress; i < this.maxInterruptSize - 1; i += 2)
             {
                 this._memoryContent[i] = (byte)(this.retiOpCode & 0xFF);
                 this._memoryContent[i + 1] = (byte)((this.retiOpCode >> 8) & 0xFF);
             }
+            _memoryContent.NotifyChange = true;
         }
         private void InitializeISR(int interruptNumber)
         {
             ushort isrAddress = (ushort)((this._memoryContent[interruptNumber * 2 + 1] << 8) | this._memoryContent[interruptNumber * 2]);
 
+            _memoryContent.NotifyChange = false;
             for (int i = isrAddress; i < this.maxInterruptSize - 1; i+=2)
             {
                 this._memoryContent[i] = (byte)(this.retiOpCode & 0xff);
                 this._memoryContent[i + 1] = (byte)(this.retiOpCode >> 8);
             }
+            _memoryContent.NotifyChange = true;
 
         }
     }

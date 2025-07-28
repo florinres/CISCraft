@@ -71,13 +71,13 @@
                     <components:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,8,0,0" />
                 </StackPanel>
 
-                <diagram:MuxBlock
-                    Canvas.Left="110"
-                    Canvas.Top="334" />
+                <!-- <diagram:MuxBlock -->
+                <!--     Canvas.Left="110" -->
+                <!--     Canvas.Top="334" /> -->
 
                 <diagram:SumBlock
-                    Canvas.Left="150"
-                    Canvas.Top="520" />
+                    Canvas.Left="510"
+                    Canvas.Top="620" />
 
                 <StackPanel x:Name="BitesPannel"
                             Canvas.Left="300"
@@ -133,10 +133,10 @@
                         <components:RegisterBlock DataContext="{Binding R15Context}" WithBorder="False" Height="20" />
                     </StackPanel>
                 </Border>
-                <diagram:MuxBlock
-                    Canvas.Left="900"
-                    Canvas.Top="130"
-                    IsFlipped="True" />
+                <!-- <diagram:MuxBlock -->
+                <!--     Canvas.Left="900" -->
+                <!--     Canvas.Top="130" -->
+                <!--     IsFlipped="True" /> -->
 
                 <diagram:AroundTheEdgeBus
                     LineThickness="10"
