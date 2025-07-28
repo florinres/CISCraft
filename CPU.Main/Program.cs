@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
+using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
 using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
 namespace CPU.Main
@@ -10,7 +11,8 @@ namespace CPU.Main
         static void Main(string[] args)
         {
             ASM assembler = new ASM();
-            Ram ram = new Ram();
+            MemWrapper memWrapper = new MemWrapper();
+            Ram ram = new Ram(memWrapper);
             RegisterWrapper list = new RegisterWrapper(20);
             Cpu cpu = new Cpu(ram,list);
 
@@ -42,14 +44,17 @@ namespace CPU.Main
             for(int j=0;j<2; j++)
             {
                 (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(cpu.GetCurrentLabel(a));
                 Console.WriteLine(i + ": (" + a + ", " + b + ")");
                 i++;
                 (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(cpu.GetCurrentLabel(a));
                 Console.WriteLine(i + ": (" + a + ", " + b + ")");
                 i++;
-                while (((a != 0) || (b != 0)))
+                while ((a != 0) || (b != 0))
                 {
                     (a, b) = cpu.StepMicrocommand();
+                    Console.WriteLine(cpu.GetCurrentLabel(a));
                     Console.WriteLine(i + ": (" + a + ", " + b + ")");
                     i++;
                 }

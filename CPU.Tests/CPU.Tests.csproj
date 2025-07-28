@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="3.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj" />
+    <ProjectReference Include="..\CPU.Business\CPU.Business.csproj" />
+    <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />
+  </ItemGroup>
+
+</Project>
