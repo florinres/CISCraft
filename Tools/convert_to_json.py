@@ -5,34 +5,7 @@ import os
 
 print("Converter Launched!")
 
-def main():
-    # Get the path to the 'Input' folder located in the same directory as the script
-    dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Input')
-    print("Reading from " + dir_path)
-
-    # Check if the directory exists
-    if not os.path.exists(dir_path):
-        print("Directory does not exist.")
-        return 1
-
-    # List all files in the directory
-    files = os.listdir(dir_path)
-    if len(files) == 0:
-        print("No file found")
-        return 1
-
-    # Filter files to only Excel files (.xlsx, .xls)
-    files = [f for f in files if f.endswith(('.xlsx', '.xls'))]
-
-    if len(files) == 0:
-        print("No Excel files found")
-        return 1
-
-    # Process all the valid Excel files
-    processFiles(dir_path, files)
-    return
-
-def processFiles(dir_path, files):
+def process_files(dir_path, files):
     for f in files:
         full_path = os.path.join(dir_path, f)
         print("Reading from " + full_path)
@@ -40,16 +13,11 @@ def processFiles(dir_path, files):
             # Load the Excel file and specifically read the "mpm" sheet
             with pd.ExcelFile(full_path) as xls:
                 sheet = pd.read_excel(xls, "mpm")
-                arrangeJson(sheet)  # Convert and write JSON
+                arrange_json(sheet)  # Convert and write JSON
         except ValueError as e:
             # If the "mpm" sheet is not found or can't be opened
             print("Exception at processFiles with " + f)
     return
-
-import pandas as pd
-import openpyxl  # Required for reading Excel files (.xlsx)
-import json
-import os
 
 print("Converter Launched!")
 
@@ -77,23 +45,23 @@ def main():
         return 1
 
     # Process all the valid Excel files
-    processFiles(dir_path, files)
+    process_files(dir_path, files)
     return
 
-def processFiles(dir_path, files):
+def process_files(dir_path, files):
     for f in files:
         full_path = os.path.join(dir_path, f)
         print("Reading from " + full_path)
         try:
             with pd.ExcelFile(full_path) as xls:
                 sheet = pd.read_excel(xls, "mpm")
-                arrangeJson(sheet, f)  # Pass filename here
+                arrange_json(sheet, f)  # Pass filename here
         except ValueError as e:
             print("Exception at processFiles with " + f)
     return
 
 
-def arrangeJson(sheet, original_filename):
+def arrange_json(sheet, original_filename):
     rows, cols = sheet.shape
     result = {}
 
@@ -110,7 +78,7 @@ def arrangeJson(sheet, original_filename):
 
     # Generate output file name based on the original Excel file name
     base_name = os.path.splitext(original_filename)[0]
-    output_filename = f"mpm_{base_name}.json"
+    output_filename = f"{base_name}.json"
     output_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), output_filename)
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -127,7 +95,7 @@ def arrangeJson(sheet, original_filename):
             else:
                 f.write("  ]\n")
         f.write("}\n")
-        
+
 # Entry point: run main() if script is executed directly
 if __name__ == '__main__':
     main()
