@@ -12,7 +12,6 @@ namespace CPU.Tests
     [TestClass]
     public class B1InstructionsTests
     {
-        CpuTestsUtils? cpuTestsUtils;
         ASM? assembler;
         MemWrapper? memWrapper;
         Ram? ram;
@@ -28,7 +27,7 @@ namespace CPU.Tests
             ram = new Ram(memWrapper);
             list = new RegisterWrapper(20);
             cpu = new Cpu(ram,list);
-            cpuTestsUtils = new CpuTestsUtils();
+            realInstructionPath = new List<string>();
 
             string jsonPath = Path.GetFullPath(AppContext.BaseDirectory + "../../../../Configs/MPM.json");
             string jsonString = File.ReadAllText(jsonPath);
@@ -37,7 +36,10 @@ namespace CPU.Tests
         [TestCleanup]
         public void Cleanup()
         {
-            if ( 1 == 0 ) // Enabled if needed for debugging
+            // Enabled if needed for debugging
+            if ( (1 == 0) &&
+                (expectedInstructionPath != null && realInstructionPath != null)
+               ) 
             {
                 Console.Write("Expected Path: ");
                 foreach (var label in expectedInstructionPath)
@@ -57,16 +59,29 @@ namespace CPU.Tests
         }
 
         private void RunInstructionTest(
+            string testName,
             string sourceCode,
             List<string> expectedPath,
             Action postAssert)
         {
             int len;
             expectedInstructionPath = expectedPath;
+            List<Dictionary<string, int>> registerSnapshots = new List<Dictionary<string, int>>();
+
+            if (
+                    (ram == null)           ||
+                    (assembler == null)     ||
+                    (cpu == null)           ||
+                    (realInstructionPath == null)
+                ) return;
+
+            CpuTestsUtils.InitRegisterSnapshots(registerSnapshots);
 
             ram.LoadMachineCode(assembler.Assemble(sourceCode, out len));
-            realInstructionPath = cpuTestsUtils.GetInstructionPath(cpu);
-            cpuTestsUtils.GenerateTraceLog();
+            
+            CpuTestsUtils.CapturePathAndRegisters(cpu, realInstructionPath, registerSnapshots);
+
+            CpuTestsUtils.GenerateTraceLog(registerSnapshots, expectedInstructionPath, realInstructionPath, testName);
 
             postAssert();
         }
@@ -74,7 +89,10 @@ namespace CPU.Tests
         [TestMethod()]
         public void Mov_AD_AM_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AD_AM_Test",
                 "mov r0, 1",
                 new List<string>
                 {
@@ -96,7 +114,10 @@ namespace CPU.Tests
         // Precondition: Mov_AD_AM_Test
         public void Mov_AD_AD_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AD_AD_Test",
                 "mov r0, r0",
                 new List<string>
                 {
@@ -116,7 +137,10 @@ namespace CPU.Tests
         }
         public void Mov_AD_AI_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AD_AI_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -136,7 +160,10 @@ namespace CPU.Tests
         }
         public void Mov_AD_AX_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AD_AX_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -156,7 +183,10 @@ namespace CPU.Tests
         }
         public void Mov_AI_AM_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AI_AM_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -176,7 +206,10 @@ namespace CPU.Tests
         }
         public void Mov_AI_AI_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AI_AI_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -196,7 +229,10 @@ namespace CPU.Tests
         }
         public void Mov_AI_AX_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AI_AX_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -216,7 +252,10 @@ namespace CPU.Tests
         }
         public void Mov_AX_AM_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AX_AM_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -236,7 +275,10 @@ namespace CPU.Tests
         }
         public void Mov_AX_AD_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AX_AD_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -256,7 +298,10 @@ namespace CPU.Tests
         }
         public void Mov_AX_AI_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AX_AI_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
@@ -276,7 +321,10 @@ namespace CPU.Tests
         }
         public void Mov_AX_AX_Test()
         {
+            if (cpu == null) return;
+
             RunInstructionTest(
+                "Mov_AX_AX_Test",
                 "mov r2, [r1]",
                 new List<string>
                 {
