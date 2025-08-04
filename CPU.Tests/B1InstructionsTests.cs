@@ -28,7 +28,8 @@ namespace CPU.Tests
             list = new RegisterWrapper(20);
             cpu = new Cpu(ram,list);
 
-            string jsonString = File.ReadAllText("/home/rudy/facultate/arhitecturaSistemelorDeCalcul/CISCraft/Configs/MPM.json");
+            string jsonPath = Path.GetFullPath(AppContext.BaseDirectory + "../../../../Configs/MPM.json");
+            string jsonString = File.ReadAllText(jsonPath);
             cpu.LoadJsonMpm(jsonString);
         }
         [TestMethod()]

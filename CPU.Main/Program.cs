@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
 using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
@@ -35,8 +35,8 @@ namespace CPU.Main
 //todo: important
             ram.LoadMachineCode(objectCode);
 
-            string jsonString = File.ReadAllText("C:\\Users\\rudy\\Desktop\\CISCraft\\Configs\\MPM.json");
-            //todo: mpm
+            string jsonPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Configs/MPM.json");
+            string jsonString = File.ReadAllText(jsonPath);
             cpu.LoadJsonMpm(jsonString);
             int a, b;
             int i = 0;
