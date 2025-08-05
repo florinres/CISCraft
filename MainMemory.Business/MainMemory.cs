@@ -5,7 +5,7 @@ namespace MainMemory.Business
 {
     public class MainMemory: IMainMemory
     {
-        private MomeryContentWrapper _memoryContent;
+        private MemoryContentWrapper _memoryContent;
         public int memoryLocationsNum { get; private set; }
 
         private ushort interruptTableSegment;
@@ -20,7 +20,7 @@ namespace MainMemory.Business
         private int interuptsNum;
         private int maxInterruptSize;
         private ushort retiOpCode; // OpCode for Return Interrupt instruction
-        public MainMemory(MomeryContentWrapper memoryWrapperContent)
+        public MainMemory(MemoryContentWrapper memoryWrapperContent)
         {
 
             // Basic memory layout:

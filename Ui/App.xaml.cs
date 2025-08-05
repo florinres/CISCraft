@@ -62,7 +62,7 @@ public partial class App : Application
             services.AddSingleton<IMainMemory, MainMemory.Business.MainMemory>();
             services.AddSingleton<CPU.Business.CPU>();
             services.AddSingleton<RegisterWrapper>();
-            services.AddSingleton<MomeryContentWrapper>();
+            services.AddSingleton<MemoryContentWrapper>();
             services.AddSingleton<ILayoutControlViewModel, LayoutControlViewModel>();
         }).Build();
 

@@ -14,14 +14,14 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
 {
     [ObservableProperty] public override partial string? Title { get; set; } = "HexViewer";
     private readonly IAssemblerService _assemblerService;
-    private readonly MomeryContentWrapper _memoryContentWrapper;
+    private readonly MemoryContentWrapper _memoryContentWrapper;
     private readonly IMainMemory _mainMemory;
 
-    public HexViewModel(IAssemblerService assemblerService, MomeryContentWrapper momeryContentWrapper, IMainMemory mainMemory)
+    public HexViewModel(IAssemblerService assemblerService, MemoryContentWrapper memoryContentWrapper, IMainMemory mainMemory)
     {
         _assemblerService = assemblerService;
         _mainMemory = mainMemory;
-        _memoryContentWrapper = momeryContentWrapper;
+        _memoryContentWrapper = memoryContentWrapper;
 
         // Subscribe to the event
         _assemblerService.SourceCodeAssembled += OnSourceCodeAssembled;
