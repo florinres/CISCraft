@@ -1,11 +1,6 @@
-using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
-using Ram = MainMemory.Business.MainMemory;
-using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
-using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics.CodeAnalysis;
+using CPU.Business;
 
 namespace CPU.Tests
 {
@@ -125,7 +120,7 @@ namespace CPU.Tests
             cpu.RBUS = 0;
             cpu.INT = false;
 
-            for (int i = 0; i < (int)REGISTERS.MAX; i++)
+            for (int i = 0; i <= EnumExtensions.GetMaxValue<REGISTERS>(); i++)
             {
                 cpu.Registers[(REGISTERS)i] = 0;
             }
