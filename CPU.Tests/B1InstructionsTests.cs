@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
-using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
+using MemWrapper = MainMemory.Business.Models.MemoryContentWrapper;
 using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,22 +43,6 @@ namespace CPU.Tests
         [TestCleanup]
         public void Cleanup()
         {
-            // Enabled if needed for debugging
-            if ( (1 == 0) &&
-                (expectedInstructionPath != null && realInstructionPath != null)
-               ) 
-            {
-                Console.Write("Expected Path: ");
-                foreach (var label in expectedInstructionPath)
-                    Console.Write(label + " ");
-                Console.WriteLine();
-
-                Console.Write("Real Path: ");
-                foreach (var label in realInstructionPath)
-                    Console.Write(label + " ");
-                Console.WriteLine();
-            }
-
             if (realInstructionPath != null && expectedInstructionPath != null)
             {
                 Assert.IsTrue(realInstructionPath.SequenceEqual(expectedInstructionPath));
