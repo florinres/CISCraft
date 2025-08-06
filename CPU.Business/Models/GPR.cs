@@ -18,4 +18,5 @@ public enum GPR
     R13,
     R14,
     R15,
+    MAX
 }

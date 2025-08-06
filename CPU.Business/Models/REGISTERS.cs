@@ -15,5 +15,6 @@ public enum REGISTERS
     NEG,
     ZEROS,
     ONES,
-    IR
+    IR,
+    MAX
 }

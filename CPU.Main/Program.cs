@@ -1,6 +1,7 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
+using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
 using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
 namespace CPU.Main
@@ -10,7 +11,8 @@ namespace CPU.Main
         static void Main(string[] args)
         {
             ASM assembler = new ASM();
-            Ram ram = new Ram();
+            MemWrapper memWrapper = new MemWrapper();
+            Ram ram = new Ram(memWrapper);
             RegisterWrapper list = new RegisterWrapper(20);
             Cpu cpu = new Cpu(ram,list);
 
@@ -33,8 +35,8 @@ namespace CPU.Main
 //todo: important
             ram.LoadMachineCode(objectCode);
 
-            string jsonString = File.ReadAllText("C:\\Users\\rudy\\Desktop\\CISCraft\\Configs\\MPM.json");
-            //todo: mpm
+            string jsonPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Configs/MPM.json");
+            string jsonString = File.ReadAllText(jsonPath);
             cpu.LoadJsonMpm(jsonString);
             int a, b;
             int i = 0;
@@ -42,14 +44,17 @@ namespace CPU.Main
             for(int j=0;j<2; j++)
             {
                 (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(cpu.GetCurrentLabel(a));
                 Console.WriteLine(i + ": (" + a + ", " + b + ")");
                 i++;
                 (a, b) = cpu.StepMicrocommand();
+                Console.WriteLine(cpu.GetCurrentLabel(a));
                 Console.WriteLine(i + ": (" + a + ", " + b + ")");
                 i++;
-                while (((a != 0) || (b != 0)))
+                while ((a != 0) || (b != 0))
                 {
                     (a, b) = cpu.StepMicrocommand();
+                    Console.WriteLine(cpu.GetCurrentLabel(a));
                     Console.WriteLine(i + ": (" + a + ", " + b + ")");
                     i++;
                 }
