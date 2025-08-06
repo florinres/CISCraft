@@ -17,7 +17,7 @@ namespace CPU.Tests
         Ram? ram;
         RegisterWrapper? list;
         Cpu? cpu;
-        List<string>? realInstructionPath;
+        List<KeyValuePair<string, string>>? realInstructionPath;
         List<string>? expectedInstructionPath;
 
         [ClassInitialize]
@@ -34,7 +34,7 @@ namespace CPU.Tests
             ram = new Ram(memWrapper);
             list = new RegisterWrapper(20);
             cpu = new Cpu(ram,list);
-            realInstructionPath = new List<string>();
+            realInstructionPath = new List<KeyValuePair<string, string>>();
 
             string jsonPath = Path.GetFullPath(AppContext.BaseDirectory + "../../../../Configs/MPM.json");
             string jsonString = File.ReadAllText(jsonPath);
@@ -45,7 +45,12 @@ namespace CPU.Tests
         {
             if (realInstructionPath != null && expectedInstructionPath != null)
             {
-                Assert.IsTrue(realInstructionPath.SequenceEqual(expectedInstructionPath));
+                List<string> buf = new List<string>();
+                foreach (var kvp in realInstructionPath)
+                {
+                    buf.Add(kvp.Key);
+                }
+                Assert.IsTrue(buf.SequenceEqual(expectedInstructionPath));
             }
         }
 
@@ -125,19 +130,23 @@ namespace CPU.Tests
                     Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
                 });
         }
+        [TestMethod]
         public void Mov_AD_AI_Test()
         {
-            if (cpu == null) return;
+            if (cpu == null || ram == null) return;
 
+            ram.SetByteLocation(2, 0);
+            ram.SetByteLocation(3, 2);
+            cpu.Registers[GPR.R0] = 2;
             RunInstructionTest(
                 "Mov_AD_AI_Test",
-                "mov r2, [r1]",
+                "mov r1, [r0]",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
+                    "FOS_AI_0",
                     "FOSEND_0",
                     "FOD_AD_B1_0",
                     "MOV_0",
@@ -145,7 +154,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(2, cpu.Registers[GPR.R1]);
                 });
         }
         public void Mov_AD_AX_Test()
