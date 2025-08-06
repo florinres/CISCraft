@@ -21,6 +21,14 @@ namespace CPU.Tests
             i++;
             (a, b) = cpu.StepMicrocommand();
             i++;
+            (a, b) = cpu.StepMicrocommand();
+            i++;
+            (a, b) = cpu.StepMicrocommand();
+            i++;
+            (a, b) = cpu.StepMicrocommand();
+            i++;
+            (a, b) = cpu.StepMicrocommand();
+            i++;
             while ((a != 0) || (b != 0))
             {
                 (a, b) = cpu.StepMicrocommand();
@@ -46,18 +54,16 @@ namespace CPU.Tests
             string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../");
             string outputFile = Path.Combine(currentFolder, "SnapShots.txt");
 
-            _ = registerSnapshots[0];
-            _ = registerSnapshots[1];
 
             File.AppendAllText(outputFile, $"Trace log for test: {testName}\n\n");
-            for (int i = 2; i < registerSnapshots.Count; i++)
+            for (int i = 1; i < registerSnapshots.Count; i++)
             {
                 Dictionary<string, int>? prev = registerSnapshots[i - 1];
                 Dictionary<string, int>? curr = registerSnapshots[i];
 
                 try
                 {
-                    File.AppendAllText(outputFile, realPath[i - 2] + "\n");
+                    File.AppendAllText(outputFile, realPath[i - 1] + "\n");
                 }
                 catch (Exception ex)
                 {
@@ -108,9 +114,22 @@ namespace CPU.Tests
             registerSnapshots.Add(buf);
         }
 
-        public static void InitRegisterSnapshots(List<Dictionary<string, int>> registerSnapshots)
+        public static void InitTest(List<Dictionary<string, int>> registerSnapshots, Cpu cpu)
         {
             Dictionary<string, int> buf = new Dictionary<string, int>();
+
+            cpu.ACLOW = false;
+            cpu.CIL = false;
+            cpu.DBUS = 0;
+            cpu.SBUS = 0;
+            cpu.RBUS = 0;
+            cpu.INT = false;
+
+            for (int i = 0; i < (int)REGISTERS.MAX; i++)
+            {
+                cpu.Registers[(REGISTERS)i] = 0;
+            }
+
             for (int i = 0; i < 16; i++)
             {
                 buf["R" + i] = 0;

@@ -19,6 +19,13 @@ namespace CPU.Tests
         Cpu? cpu;
         List<string>? realInstructionPath;
         List<string>? expectedInstructionPath;
+
+        [ClassInitialize]
+        public static void Initialize(TestContext testContext)
+        {
+            File.Delete(AppContext.BaseDirectory + "../../../SnapShots.txt");
+        }
+
         [TestInitialize]
         public void Setup()
         {
@@ -75,7 +82,7 @@ namespace CPU.Tests
                     (realInstructionPath == null)
                 ) return;
 
-            CpuTestsUtils.InitRegisterSnapshots(registerSnapshots);
+            CpuTestsUtils.InitTest(registerSnapshots, cpu);
 
             ram.LoadMachineCode(assembler.Assemble(sourceCode, out len));
             
