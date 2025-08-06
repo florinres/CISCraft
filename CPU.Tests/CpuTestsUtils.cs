@@ -54,8 +54,18 @@ namespace CPU.Tests
             string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../");
             string outputFile = Path.Combine(currentFolder, "SnapShots.txt");
 
-
             File.AppendAllText(outputFile, $"Trace log for test: {testName}\n\n");
+
+            File.AppendAllText(outputFile, "Expected Path: ");
+            foreach (var label in expectedPath)
+                File.AppendAllText(outputFile,label + " ");
+            File.AppendAllText(outputFile,"\n");
+
+            File.AppendAllText(outputFile, "Real Path:     ");
+            foreach (var label in realPath)
+                File.AppendAllText(outputFile,label + " ");
+            File.AppendAllText(outputFile,"\n\n");
+
             for (int i = 1; i < registerSnapshots.Count; i++)
             {
                 Dictionary<string, int>? prev = registerSnapshots[i - 1];

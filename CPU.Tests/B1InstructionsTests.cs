@@ -43,22 +43,6 @@ namespace CPU.Tests
         [TestCleanup]
         public void Cleanup()
         {
-            // Enabled if needed for debugging
-            if ( (1 == 0) &&
-                (expectedInstructionPath != null && realInstructionPath != null)
-               ) 
-            {
-                Console.Write("Expected Path: ");
-                foreach (var label in expectedInstructionPath)
-                    Console.Write(label + " ");
-                Console.WriteLine();
-
-                Console.Write("Real Path: ");
-                foreach (var label in realInstructionPath)
-                    Console.Write(label + " ");
-                Console.WriteLine();
-            }
-
             if (realInstructionPath != null && expectedInstructionPath != null)
             {
                 Assert.IsTrue(realInstructionPath.SequenceEqual(expectedInstructionPath));
