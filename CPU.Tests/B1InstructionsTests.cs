@@ -110,22 +110,21 @@ namespace CPU.Tests
                     Assert.AreEqual(1, cpu.Registers[GPR.R0]);
                 });
         }
-
-        // Precondition: Mov_AD_AM_Test
+        [TestMethod]
         public void Mov_AD_AD_Test()
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = 1;
             RunInstructionTest(
                 "Mov_AD_AD_Test",
-                "mov r0, r0",
+                "mov r1, r0",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
-                    "FOSEND_0",
+                    "FOS_AD_0",
                     "FOD_AD_B1_0",
                     "MOV_0",
                     "WRD_1"
