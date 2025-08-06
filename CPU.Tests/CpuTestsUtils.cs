@@ -6,12 +6,13 @@ using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Emit;
 
 namespace CPU.Tests
 {
     public static class CpuTestsUtils
     {
-        internal static void CapturePathAndRegisters(Cpu cpu, List<string> realPath, List<Dictionary<string, int>> registerSnapshots)
+        internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
             int a, b, i;
             a = b = i = 0;
@@ -32,11 +33,18 @@ namespace CPU.Tests
             while ((a != 0) || (b != 0))
             {
                 (a, b) = cpu.StepMicrocommand();
-                string currentLabel = cpu.GetCurrentLabel(a);
+                var buf = cpu.GetCurrentLabel(a);
+                string currentLabel = buf.Item1;
+                string microinstruction = "";
+                foreach (var label in buf.Item2)
+                {
+                    microinstruction += label + " ";
+                }
+                var pathBuffer = new KeyValuePair<string, string>(currentLabel, microinstruction);
                 if (previousLabel != currentLabel)
                 {
                     CaptureRegisterSnapshot(cpu, registerSnapshots);
-                    realPath.Add(currentLabel);
+                    realPath.Add(pathBuffer);
                 }
                 i++;
 
@@ -48,7 +56,7 @@ namespace CPU.Tests
         public static void GenerateTraceLog(
             List<Dictionary<string, int>> registerSnapshots,
             List<string> expectedPath,
-            List<string> realPath,
+            List<KeyValuePair<string, string>> realPath,
             string testName)
         {
             string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../");
@@ -63,7 +71,7 @@ namespace CPU.Tests
 
             File.AppendAllText(outputFile, "Real Path:     ");
             foreach (var label in realPath)
-                File.AppendAllText(outputFile,label + " ");
+                File.AppendAllText(outputFile,label.Key + " ");
             File.AppendAllText(outputFile,"\n\n");
 
             for (int i = 1; i < registerSnapshots.Count; i++)
@@ -73,7 +81,8 @@ namespace CPU.Tests
 
                 try
                 {
-                    File.AppendAllText(outputFile, realPath[i - 1] + "\n");
+                    File.AppendAllText(outputFile, realPath[i - 1].Key + "\n");
+                    File.AppendAllText(outputFile, realPath[i - 1].Value + "\n\n");
                 }
                 catch (Exception ex)
                 {
