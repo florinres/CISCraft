@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using AvalonDock;
+using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
 using Wpf.Ui.Appearance;
@@ -30,13 +32,15 @@ public partial class MainWindow
         Application.Current.Shutdown();
     }
 
+    private IDockingService _docking;
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var realDockingService = new DockingService(DockingManagerInstance);
 
         var activeDocumentService = ((IMainWindowViewModel)DataContext).Workspace.ActiveDocumentsService;
         var menuBar = ((IMainWindowViewModel)DataContext).MenuBar;
+        var realDockingService = new DockingService(DockingManagerInstance,activeDocumentService);
 
+        _docking = realDockingService;
         // Replace dummy docking service with real one
         activeDocumentService.SetDockingService(realDockingService);
         menuBar.SetDockingService(realDockingService);
@@ -44,6 +48,7 @@ public partial class MainWindow
         //Tool visibility workaround.
         //TLDRL: AvalonDock nbeeds all docking tabs to be visible in the beggining to register them. After they are registered we can do whatever we want with them but they need to be visible in the bggining
         menuBar.SetToolsVisibilityOnAndOff();
+        _docking.LoadLastUsedLayout();
     }
 
     private void DockManager_AnchorableClosing(object? sender, AnchorableClosingEventArgs e)
@@ -52,5 +57,11 @@ public partial class MainWindow
         
         toolVm.IsVisible = false;
         e.Cancel = true;
+    }
+
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        _docking.SaveLastUsedLayout();
+        base.OnClosing(e);
     }
 }

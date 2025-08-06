@@ -3,16 +3,16 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MainMemory.Business.Models;
 
-public class MomeryContentWrapper : ObservableObject
+public class MemoryContentWrapper : ObservableObject
 {
     private byte[] _memoryContent { get; }
 
-    public MomeryContentWrapper(int size)
+    public MemoryContentWrapper(int size)
     {
         _memoryContent = new byte[size];
     }
     
-    public MomeryContentWrapper()
+    public MemoryContentWrapper()
     {
         _memoryContent = new byte[1 << 16];
     }

@@ -9,6 +9,11 @@ namespace Ui.ViewModels.Components.Microprogram;
 
 public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewModel
 {
+    public MicroprogramViewModel()
+    {
+        ZoomFactor = 12;
+    }
+    
     [ObservableProperty]
     public partial ObservableCollection<MicroprogramMemoryViewModel> Rows { get; set; } = [];
     

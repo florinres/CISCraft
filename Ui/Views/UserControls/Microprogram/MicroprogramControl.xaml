@@ -8,7 +8,8 @@
              xmlns:microprogram="clr-namespace:Ui.ViewModels.Components.Microprogram"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:helpers="clr-namespace:Ui.Helpers"
-             d:DataContext="{d:DesignInstance Type=microprogram:MicroprogramViewModel, IsDesignTimeCreatable=False}"
+             xmlns:viewModel1="clr-namespace:Ui.Interfaces.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewModel1:IMicroprogramViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="Root">
@@ -27,29 +28,29 @@
         <Grid Background="{DynamicResource HeaderBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition SharedSizeGroup="AddressCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
                 <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                 <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
 
             </Grid.ColumnDefinitions>
 
@@ -57,62 +58,62 @@
                        Margin="1" Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="Label" Grid.Column="1" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="SBUS" Grid.Column="2" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="DBUS" Grid.Column="3" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="ALU" Grid.Column="4" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="RBUS" Grid.Column="5" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="MEMORY OP" Grid.Column="6" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="OTHER OP" Grid.Column="7" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="SUCCESOR" Grid.Column="8" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="INDEX" Grid.Column="9" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="!T/F" Grid.Column="10" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="Jump Address" Grid.Column="11" HorizontalAlignment="Center" TextAlignment="Center"
                        Margin="1" Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Background="{DynamicResource RegionBackgroundBrush}"
-                       FontSize="{Binding ElementName=Root, Path=FontSize}" />
+                       FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
         </Grid>
         <ListView Grid.Row="1" ItemsSource="{Binding Rows}"
                   x:Name="MicroprogramScrollViewer"
@@ -143,29 +144,29 @@
                         </Grid.Style>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition SharedSizeGroup="AddressCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                             <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                             <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                             <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                             <ColumnDefinition SharedSizeGroup="ItemCol"
-                                              Width="{Binding ElementName=Root, Path=FontSize, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+                                              Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                         </Grid.ColumnDefinitions>
 
                         <!-- Address Column -->
@@ -174,7 +175,7 @@
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                    TextAlignment="Center"
                                    Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}"
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}"
                                    Background="{DynamicResource RegionBackgroundBrush}" />
 
                         <!-- Tag Column -->
@@ -183,7 +184,7 @@
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                    TextAlignment="Center"
                                    Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}"
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}"
                                    Background="{DynamicResource RegionBackgroundBrush}" />
 
                         <!-- Data Columns -->
@@ -191,7 +192,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -206,7 +207,7 @@
                         <TextBlock Grid.Column="3" Text="{Binding Item[1]}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -222,7 +223,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding }">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -238,7 +239,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -254,7 +255,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -270,7 +271,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1" Padding="4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -286,7 +287,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="1 1 0 1" Padding="4 4 5 4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -302,7 +303,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="0 1 0 1" Padding="5 4 5 4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -318,7 +319,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="0 1 0 1" Padding="5 4 5 4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
@@ -335,7 +336,7 @@
                                    Background="{DynamicResource RegionBackgroundBrush}"
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextAlignment="Center"
                                    TextWrapping="Wrap" Margin="0 1 1 1" Padding="5 4 4 4"
-                                   FontSize="{Binding ElementName=Root, Path=FontSize}">
+                                   FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />

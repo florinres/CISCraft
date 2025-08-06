@@ -1,10 +1,14 @@
+using System.Collections.ObjectModel;
 using Ui.Interfaces.Services;
+using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel;
 
 public interface IMenuBarViewModel
 {
+    ILayoutControlViewModel LayoutControl { get; set; }
+    
     /// <inheritdoc />
     IActiveDocumentService DocumentService { get; set; }
 

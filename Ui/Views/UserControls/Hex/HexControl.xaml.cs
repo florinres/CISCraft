@@ -72,6 +72,11 @@ public partial class HexControl : UserControl
         if (e.NewValue is IHexViewModel vm)
         {
             vm.PropertyChanged += OnViewModelPropertyChanged;
+            if (vm.ZoomFactor < 0.5) vm.ZoomFactor = 0.5;
+            if (vm.ZoomFactor > 2.0001) vm.ZoomFactor = 2;
+            HexEditorControl.ZoomScale = vm.ZoomFactor;
+            HexEditorControl.InvalidateVisual();
+
         }
 
         if (e.OldValue is IHexViewModel oldVm)
@@ -90,6 +95,7 @@ public partial class HexControl : UserControl
                 HexEditorControl.Stream = ((IHexViewModel)sender!).HexEditorStream;
             });
         }
+
     }
 
 

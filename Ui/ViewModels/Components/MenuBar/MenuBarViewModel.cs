@@ -1,25 +1,34 @@
-﻿using System.IO;
+using System.Collections.ObjectModel;
+using System.IO;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
+using Ui.Services;
+using Ui.ViewModels.Generics;
 
-namespace Ui.ViewModels.Generics;
+namespace Ui.ViewModels.Components.MenuBar;
 
 public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
     private readonly IToolVisibilityService _toolVisibilityService;
+    private IDockingService _dockingService;
+    [ObservableProperty] public partial ILayoutControlViewModel LayoutControl { get; set; }
 
-    public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService)
+    public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService, ILayoutControlViewModel layoutControl)
     {
         DocumentService = documentService;
         _toolVisibilityService = toolVisibilityService;
+        LayoutControl = layoutControl;
     }
 
     [ObservableProperty] public partial IActiveDocumentService DocumentService { get; set; }
 
     public void SetDockingService(IDockingService dockingService)
     {
+        _dockingService = dockingService;
         _toolVisibilityService.SetDockingService(dockingService);
+        LayoutControl.SetDockingService(dockingService);
+        _dockingService.LoadLastUsedLayout();
     }
 
     public void SetToolsVisibilityOnAndOff()

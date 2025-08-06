@@ -17,6 +17,7 @@
     xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
     xmlns:appearance="clr-namespace:Wpf.Ui.Appearance;assembly=Wpf.Ui"
     xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
+    xmlns:menuBar="clr-namespace:Ui.Views.UserControls.MenuBar"
     d:DataContext="{d:DesignInstance Type=viewModel:IMainWindowViewModel, IsDesignTimeCreatable=False}"
     Title="{Binding ApplicationTitle}"
     Width="1100"
@@ -85,19 +86,17 @@
                             Command="{Binding MenuBar.ShowMicroprogramCommand}" />
                     </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
-                        <MenuItem Header="Layout">
-                            <MenuItem IsEnabled="False" Command="{Binding LoadLayoutCommand}" Header="Load" />
-                            <MenuItem IsEnabled="False" Command="{Binding SaveLayoutCommand}" Header="Save" />
-                        </MenuItem>
+                        <menuBar:LayoutControl ViewModel="{Binding MenuBar.LayoutControl}"/>
                         <MenuItem Header="Theme">
                             <MenuItem Header="Light"
                                       IsCheckable="True"
+                                      IsEnabled="False"
                                       IsChecked="{Binding  Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
                                       Command="{Binding Settings.ChangeThemeCommand}"
                                       CommandParameter="{x:Static appearance:ApplicationTheme.Light}" />
 
                             <MenuItem Header="Dark"
-                                      IsCheckable="True"
+                                      IsCheckable="true"
                                       IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
                                       Command="{Binding Settings.ChangeThemeCommand}"
                                       CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
@@ -106,6 +105,7 @@
                     <ui:MenuItem Header="View" />
                     <ui:MenuItem Header="Help" />
                 </Menu>
+                
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
@@ -272,6 +272,7 @@
                             <Setter Property="ContentId" Value="{Binding Model.ToolContentId}" />
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                             <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}" />
+                            
                         </Style>
                     </components:PanesStyleSelector.ToolStyle>
                     <components:PanesStyleSelector.FileStyle>

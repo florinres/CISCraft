@@ -14,7 +14,6 @@ public interface IMicroprogramViewModel : IToolViewModel
     int CurrentRow { get; set; }
 
     int CurrentColumn { get; set; }
-
     void LoadMicroprogramFromJson(string json);
     event PropertyChangedEventHandler? PropertyChanged;
     event PropertyChangingEventHandler? PropertyChanging;
