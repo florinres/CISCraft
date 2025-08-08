@@ -194,10 +194,12 @@ namespace CPU.Business
             _mainMemory.ClearMemory();
             _controlUnit.Reset();
         }
-        public string GetCurrentLabel(int MAR)
+        public (string, string[]) GetCurrentLabel(int MAR)
         {
+            string label = "";
             var indexes = MarToMpmIndex(MAR + 1);
-            return _microProgram.ElementAt(indexes.Item1).Key + "_" + indexes.Item2;
+            label = _microProgram.ElementAt(indexes.Item1).Key + "_" + indexes.Item2;
+            return (label, _microProgram.ElementAt(indexes.Item1).Value[indexes.Item2]);
 
         }
         private void OnSbusEvent(int index)

@@ -75,50 +75,42 @@ namespace Assembler.Business
             ROR = 0xA2C0,
             RLC = 0xA300,
             RRC = 0xA340,
-            JMP = 0xA3C0,
-            CALL = 0xA400,
-            PUSH = 0xA440,
-            POP = 0xA4C0,
+            PUSH = 0xA3C0,
+            POP = 0xA400,
             /** B3 INSTRUCTIONS TYPE
-             * BR, BNE, BEQ, BPL, BMI, BCS, BCC, BVS, BVC
+             * BNE, BEQ, BPL, BMI, BCS, BCC, BVS, BVC, JMP, CALL
              * OPCODE: Operation Code - 8b
              * OFFSET: Offset - 8b
              * OPPCODE | OFFSET
              */
-            BR = 0xC000, /* 0xC0 */
-            BNE = 0xC100,
-            BEQ = 0xC200,
-            BPL = 0xC300,
-            BMI = 0xC400,
-            BCS = 0xC500,
-            BCC = 0xC600,
-            BVS = 0xC700,
-            BVC = 0xC800,
+            BNE = 0xC000,
+            BEQ = 0xC100,
+            BPL = 0xC200,
+            BMI = 0xC300,
+            BCS = 0xC400,
+            BCC = 0xC500,
+            BVS = 0xC600,
+            BVC = 0xC700,
+            JMP = 0xC800,
+            CALL = 0xC900,
             /** B4 INSTRUCTIONS TYPE
-             * CLC, CLV, CLZ, CLS, CCC, SEC, SEV, SEZ, SES, SCC, NOP, RET, RETI, HALT,
+             * CLC, SEC, HALT, EI, DI, PUSHPC, POPPC, PUSHF,POPF, NOP, RET, RETI
              * WAIT, PUSHPC, POPPC, PUSHF, POPF
              * OPCODE: Operation Code - 16b
              * OPPCODE
              */
             CLC = 0xE000, /* 0xE00 */
-            CLV,
-            CLZ,
-            CLS,
-            CCC,
-            SEC,
-            SEV,
-            SEZ,
-            SES,
-            SCC,
-            NOP,
-            RET,
-            RETI,
-            HALT,
-            WAIT,
-            PUSHPC,
-            POPPC,
-            PUSHF,
-            POPF,
+            SEC = 0xE200,
+            NOP = 0xE400,
+            HALT = 0xE600,
+            EI = 0xE800,
+            DI = 0xEA00,
+            PUSHPC = 0xEC00,
+            POPPC = 0xEE00,
+            PUSHF = 0xF000,
+            POPF = 0xF200,
+            RET = 0xF400,
+            RETI = 0xF600,
             /**
              * ERROR
              */
@@ -164,12 +156,9 @@ namespace Assembler.Business
             { "ROR",    new Dictionary<ushort, string> { {(ushort)OppCodes.ROR ,    "B2" } } },
             { "RLC",    new Dictionary<ushort, string> { {(ushort)OppCodes.RLC ,    "B2" } } },
             { "RRC",    new Dictionary<ushort, string> { {(ushort)OppCodes.RRC ,    "B2" } } },
-            { "JMP",    new Dictionary<ushort, string> { {(ushort)OppCodes.JMP ,    "B2" } } },
-            { "CALL",   new Dictionary<ushort, string> { {(ushort)OppCodes.CALL ,   "B2" } } },
             { "PUSH",   new Dictionary<ushort, string> { {(ushort)OppCodes.PUSH ,   "B2" } } },
             { "POP",    new Dictionary<ushort, string> { {(ushort)OppCodes.POP ,    "B2" } } },
 
-            { "BR",     new Dictionary<ushort, string> { {(ushort)OppCodes.BR ,     "B3" } } },
             { "BNE",    new Dictionary<ushort, string> { {(ushort)OppCodes.BNE ,    "B3" } } },
             { "BEQ",    new Dictionary<ushort, string> { {(ushort)OppCodes.BEQ ,    "B3" } } },
             { "BPL",    new Dictionary<ushort, string> { {(ushort)OppCodes.BPL ,    "B3" } } },
@@ -178,26 +167,21 @@ namespace Assembler.Business
             { "BCC",    new Dictionary<ushort, string> { {(ushort)OppCodes.BCC ,    "B3" } } },
             { "BVS",    new Dictionary<ushort, string> { {(ushort)OppCodes.BVS ,    "B3" } } },
             { "BVC",    new Dictionary<ushort, string> { {(ushort)OppCodes.BVC ,    "B3" } } },
+            { "JMP",    new Dictionary<ushort, string> { {(ushort)OppCodes.JMP ,    "B2" } } },
+            { "CALL",   new Dictionary<ushort, string> { {(ushort)OppCodes.CALL ,   "B2" } } },
 
             { "CLC",    new Dictionary<ushort, string> { {(ushort)OppCodes.CLC ,    "B4" } } },
-            { "CLV",    new Dictionary<ushort, string> { {(ushort)OppCodes.CLV ,    "B4" } } },
-            { "CLZ",    new Dictionary<ushort, string> { {(ushort)OppCodes.CLZ ,    "B4" } } },
-            { "CLS",    new Dictionary<ushort, string> { {(ushort)OppCodes.CLS ,    "B4" } } },
-            { "CCC",    new Dictionary<ushort, string> { {(ushort)OppCodes.CCC ,    "B4" } } },
             { "SEC",    new Dictionary<ushort, string> { {(ushort)OppCodes.SEC ,    "B4" } } },
-            { "SEV",    new Dictionary<ushort, string> { {(ushort)OppCodes.SEV ,    "B4" } } },
-            { "SEZ",    new Dictionary<ushort, string> { {(ushort)OppCodes.SEZ ,    "B4" } } },
-            { "SES",    new Dictionary<ushort, string> { {(ushort)OppCodes.SES ,    "B4" } } },
-            { "SCC",    new Dictionary<ushort, string> { {(ushort)OppCodes.SCC ,    "B4" } } },
             { "NOP",    new Dictionary<ushort, string> { {(ushort)OppCodes.NOP ,    "B4" } } },
-            { "RET",    new Dictionary<ushort, string> { {(ushort)OppCodes.RET ,    "B4" } } },
-            { "RETI",   new Dictionary<ushort, string> { {(ushort)OppCodes.RETI ,   "B4" } } },
             { "HALT",   new Dictionary<ushort, string> { {(ushort)OppCodes.HALT ,   "B4" } } },
-            { "WAIT",   new Dictionary<ushort, string> { {(ushort)OppCodes.WAIT ,   "B4" } } },
+            { "EI",     new Dictionary<ushort, string> { {(ushort)OppCodes.EI ,     "B4" } } },
+            { "DI",     new Dictionary<ushort, string> { {(ushort)OppCodes.DI ,     "B4" } } },
             { "PUSHPC", new Dictionary<ushort, string> { {(ushort)OppCodes.PUSHPC , "B4" } } },
             { "POPPC",  new Dictionary<ushort, string> { {(ushort)OppCodes.POPPC ,  "B4" } } },
             { "PUSHF",  new Dictionary<ushort, string> { {(ushort)OppCodes.PUSHF ,  "B4" } } },
             { "POPF",   new Dictionary<ushort, string> { {(ushort)OppCodes.POPF ,   "B4" } } },
+            { "RET",    new Dictionary<ushort, string> { {(ushort)OppCodes.RET ,    "B4" } } },
+            { "RETI",   new Dictionary<ushort, string> { {(ushort)OppCodes.RETI ,   "B4" } } },
 
         };
         readonly Dictionary<string, ushort> registers = new Dictionary<string, ushort>
