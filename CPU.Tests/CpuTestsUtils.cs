@@ -41,28 +41,28 @@ namespace CPU.Tests
                     microinstruction += label + " ";
                 }
                 var pathBuffer = new KeyValuePair<string, string>(currentLabel, microinstruction);
-                if (previousLabel != currentLabel)
+                if (b == 6)
                 {
                     CaptureRegisterSnapshot(cpu, registerSnapshots);
                     realPath.Add(pathBuffer);
                 }
                 i++;
-
-                previousLabel = currentLabel;
             }
-            realPath.RemoveAt(realPath.Count - 1);
         }
 
         public static void GenerateTraceLog(
             List<Dictionary<string, int>> registerSnapshots,
             List<string> expectedPath,
             List<KeyValuePair<string, string>> realPath,
-            string testName)
+            string testName,
+            string instruction,
+            string fileName)
         {
             string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../");
-            string outputFile = Path.Combine(currentFolder, "SnapShots.txt");
+            string outputFile = Path.Combine(currentFolder, fileName);
 
-            File.AppendAllText(outputFile, $"Trace log for test: {testName}\n\n");
+            File.AppendAllText(outputFile, $"Trace log for test: {testName}\n");
+            File.AppendAllText(outputFile, $"{instruction}\n\n");
 
             File.AppendAllText(outputFile, "Expected Path: ");
             foreach (var label in expectedPath)
@@ -95,7 +95,7 @@ namespace CPU.Tests
 
                     if (prevVal != currVal)
                     {
-                        File.AppendAllText(outputFile, $"  {key}: {prevVal} -> {currVal}\n");
+                        File.AppendAllText(outputFile, $"  {key}: 0x{((ushort)prevVal).ToString("X")} -> 0x{((ushort)currVal).ToString("X")}\n");
                     }
                 }
 
