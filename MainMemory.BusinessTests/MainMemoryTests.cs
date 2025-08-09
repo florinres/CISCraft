@@ -5,18 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MemWrapper = MainMemory.Business.Models.MemoryContentWrapper;
 
 namespace MainMemory.Business.Tests
 {
     [TestClass()]
     public class MainMemoryTests
     {
+        MemWrapper? memWrapper;
         MainMemory? dummyRAM;
 
         [TestInitialize]
         public void Setup()
         {
-            this.dummyRAM = new MainMemory();
+            this.memWrapper = new MemWrapper();
+            this.dummyRAM = new MainMemory(memWrapper);
         }
 
         [TestMethod()]
@@ -29,20 +32,20 @@ namespace MainMemory.Business.Tests
             for (int i = 0; i < machineCode.Length; i++)
                 machineCode[i] = (byte)rnd.Next(0, 2);
 
-            Assert.ThrowsException<InvalidOperationException>(() => this.dummyRAM.SetInternalMachineCode(machineCode));
+            Assert.ThrowsException<InvalidOperationException>(() => this.dummyRAM.LoadMachineCode(machineCode));
         }
 
         [TestMethod()]
         public void SetInternalStackSizeTest()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => this.dummyRAM.SetInternalStackSize(this.dummyRAM.GetMemorySize()));
+            Assert.ThrowsException<InvalidOperationException>(() => this.dummyRAM.SetStackSize(this.dummyRAM.GetMemorySize()));
 
         }
 
         [TestMethod()]
         public void SetInternalISRTest()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => this.dummyRAM.SetInternalISR(21, null));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => this.dummyRAM.SetISR(21, null));
 
         }
 
@@ -52,7 +55,7 @@ namespace MainMemory.Business.Tests
             ushort interruptReturnOpCode = 0xe00f;
             int interruptSizeMax = 0x1db9;
             ushort isrSegment = 0x2fed;
-            byte[] memoryDump = this.dummyRAM.GetInternalMemoryDump();
+            byte[] memoryDump = this.dummyRAM.GetMemoryDump();
             bool ok = true;
 
             for(int i = isrSegment; (i < interruptSizeMax - 1) && ok; i+=2)

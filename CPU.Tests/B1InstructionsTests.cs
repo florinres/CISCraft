@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
-using MemWrapper = MainMemory.Business.Models.MomeryContentWrapper;
+using MemWrapper = MainMemory.Business.Models.MemoryContentWrapper;
 using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

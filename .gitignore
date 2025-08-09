@@ -173,3 +173,6 @@ Assembler.Main/obj/
 /Assembler.Tests/obj/project.nuget.cache
 /Assembler.Tests/bin/Debug/net9.0/Debug - Comandă rapidă.lnk
 /ControlUnit/obj/Debug/net9.0/ref/ControlUnit.dll
+
+# Unit test trace
+/CPU.Tests/SnapShots.txt
