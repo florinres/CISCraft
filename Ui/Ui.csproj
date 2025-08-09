@@ -12,14 +12,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="ViewModels\Pages\**"/>
-        <Compile Remove="Views\Pages\**"/>
-        <EmbeddedResource Remove="ViewModels\Pages\**"/>
-        <EmbeddedResource Remove="Views\Pages\**"/>
-        <None Remove="ViewModels\Pages\**"/>
-        <None Remove="Views\Pages\**"/>
-        <Page Remove="ViewModels\Pages\**"/>
-        <Page Remove="Views\Pages\**"/>
+        <Compile Remove="ViewModels\Pages\**" />
+        <Compile Remove="Views\Pages\**" />
+        <EmbeddedResource Remove="ViewModels\Pages\**" />
+        <EmbeddedResource Remove="Views\Pages\**" />
+        <None Remove="ViewModels\Pages\**" />
+        <None Remove="Views\Pages\**" />
+        <Page Remove="ViewModels\Pages\**" />
+        <Page Remove="Views\Pages\**" />
         <Page Update="Views\UserControls\Diagram\Components\AroundTheEdgeBus.xaml">
           <Generator>MSBuild:Compile</Generator>
           <XamlRuntime>Wpf</XamlRuntime>
@@ -50,30 +50,33 @@
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>
         </Page>
+        <None Update="Assets\default_code.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Assets\Mpm.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="wpfui-icon.ico"/>
+        <Content Include="wpfui-icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AvalonDock.Themes.WPFUI" Version="1.1.0"/>
+        <PackageReference Include="AvalonDock.Themes.WPFUI" Version="1.1.0" />
         <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3296.44" />
         <PackageReference Include="WPF-UI" Version="4.0.3" />
         <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.3" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0 "/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0 " />
         <PackageReference Include="WPFHexaEditor" Version="2.1.7" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Assets\wpfui-icon-256.png"/>
-        <None Remove="Assets\wpfui-icon-1024.png"/>
+        <None Remove="Assets\wpfui-icon-256.png" />
+        <None Remove="Assets\wpfui-icon-1024.png" />
         <None Update="Assets\Monaco\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -83,8 +86,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Assets\wpfui-icon-256.png"/>
-        <Resource Include="Assets\wpfui-icon-1024.png"/>
+        <Resource Include="Assets\wpfui-icon-256.png" />
+        <Resource Include="Assets\wpfui-icon-1024.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -97,7 +100,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj"/>
+        <ProjectReference Include="..\Assembler.Business\Assembler.Business.csproj" />
         <ProjectReference Include="..\CPU.Business\CPU.Business.csproj" />
     </ItemGroup>
 
