@@ -1,0 +1,34 @@
+name: Check build
+
+on:
+  # push:
+  #   branches:
+  #     - '**' # for every branch
+  # We assume that the developer tests his build :)
+  pull_request:
+    branches:
+      - 'main'
+jobs:
+  check_build:
+    runs-on: ubuntu-latest #Ubuntu is smaller in size than Windows
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build project
+        id: build
+        run:
+          dotnet build -p:EnableWindowsTargeting=true
+          # please check https://learn.microsoft.com/en-us/dotnet/core/tools/sdk-errors/netsdk1100
+          # for more information
+
+      - name: Test project
+        if: steps.build.outcome == 'success'
+        run: dotnet test -p:EnableWindowsTargeting=true
+
