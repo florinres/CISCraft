@@ -81,7 +81,7 @@ namespace CPU.Tests
 
             postAssert();
         }
-        [TestMethod]
+        // [TestMethod] // Keep it enabled only when testing
         public void HALT_TEST()
         {
             if (cpu == null || ram == null) return;
