@@ -80,7 +80,7 @@ namespace CPU.Tests
 
             ram.LoadMachineCode(assembler.Assemble(sourceCode, out len));
             byte[] initRamDump = (byte[])ram.GetMemoryDump().Clone();
-            
+
             CpuTestsUtils.CapturePathAndRegisters(cpu, realInstructionPath, registerSnapshots);
 
             CpuTestsUtils.GenerateTraceLog(initRamDump, ram.GetMemoryDump(), registerSnapshots, expectedInstructionPath, realInstructionPath, testName, sourceCode, "SnapShots_B1.txt");
@@ -88,7 +88,7 @@ namespace CPU.Tests
             postAssert();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Mov_AD_AM_Test()
         {
             if (cpu == null) return;
@@ -133,7 +133,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(cpu.Registers[GPR.R0], cpu.Registers[GPR.R1]);
                 });
         }
         [TestMethod]
@@ -165,19 +165,21 @@ namespace CPU.Tests
                     // Assert.AreEqual(0x2, (ushort)cpu.Registers[GPR.R1]);
                 });
         }
+        [TestMethod]
         public void Mov_AD_AX_Test()
         {
             if (cpu == null) return;
 
             RunInstructionTest(
                 "Mov_AD_AX_Test",
-                "mov r2, [r1]",
+                "mov r1, 2[r0]",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
+                    "FOS_AX_0",
+                    "FOS_AX_1",
                     "FOSEND_0",
                     "FOD_AD_B1_0",
                     "MOV_0",
@@ -185,16 +187,21 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    // Memory contents:
+                    // 0: numerial value of the instruction (0xC11)
+                    // 2: offset operand of the source register (0x2)
+                    // 4 to the end: 0 
+                    Assert.AreEqual(2, cpu.Registers[GPR.R1]);
                 });
         }
+        [TestMethod]
         public void Mov_AI_AM_Test()
         {
             if (cpu == null) return;
 
             RunInstructionTest(
                 "Mov_AI_AM_Test",
-                "mov r2, [r1]",
+                "mov [r0], 2",
                 new List<string>
                 {
                     "IFCH_0",
@@ -202,68 +209,97 @@ namespace CPU.Tests
                     "B1_0",
                     "FOS_AM_0",
                     "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOD_AI_B1_0",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_2"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(2, ram.FetchWord(0));
                 });
         }
+        [TestMethod]
+        public void Mov_AI_AD_Test()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = 1;
+            RunInstructionTest(
+                "Mov_AI_AD_Test",
+                "mov [r1], r0",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AD_0",
+                    "FOD_AI_B1_0",
+                    "MOV_0",
+                    "WRD_2"
+                },
+                () =>
+                {
+                    Assert.AreEqual(1, ram.FetchWord(0));
+                });
+        }
+        [TestMethod]
         public void Mov_AI_AI_Test()
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = 2;
             RunInstructionTest(
                 "Mov_AI_AI_Test",
-                "mov r2, [r1]",
+                "mov [r1], [r0]",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
+                    "FOS_AI_0",
                     "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOD_AI_B1_0",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_2"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(0, ram.FetchWord(0));
                 });
         }
+        [TestMethod]
         public void Mov_AI_AX_Test()
         {
             if (cpu == null) return;
 
             RunInstructionTest(
                 "Mov_AI_AX_Test",
-                "mov r2, [r1]",
+                "mov [r1], 2[r0]",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
+                    "FOS_AX_0",
+                    "FOS_AX_1",
                     "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOD_AI_B1_0",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_2"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(2, ram.FetchWord(0));
                 });
         }
+        [TestMethod]
         public void Mov_AX_AM_Test()
         {
             if (cpu == null) return;
 
             RunInstructionTest(
                 "Mov_AX_AM_Test",
-                "mov r2, [r1]",
+                "mov 2[r0], 1",
                 new List<string>
                 {
                     "IFCH_0",
@@ -271,83 +307,93 @@ namespace CPU.Tests
                     "B1_0",
                     "FOS_AM_0",
                     "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOD_AX_B1_0",
+                    "FOD_AX_B1_1",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_3"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(1, ram.FetchWord(2));
                 });
         }
+        [TestMethod]
         public void Mov_AX_AD_Test()
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = 1;
             RunInstructionTest(
                 "Mov_AX_AD_Test",
-                "mov r2, [r1]",
+                "mov 2[r1], r0",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
-                    "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOS_AD_0",
+                    "FOD_AX_B1_0",
+                    "FOD_AX_B1_1",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_3"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(1, ram.FetchWord(2));
                 });
         }
+        [TestMethod]
         public void Mov_AX_AI_Test()
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = 4;
             RunInstructionTest(
                 "Mov_AX_AI_Test",
-                "mov r2, [r1]",
+                "mov 2[r1], [r0]",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
+                    "FOS_AI_0",
                     "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOD_AX_B1_0",
+                    "FOD_AX_B1_1",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_3"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(0, ram.FetchWord(2));
                 });
         }
+        [TestMethod]
         public void Mov_AX_AX_Test()
         {
             if (cpu == null) return;
 
             RunInstructionTest(
                 "Mov_AX_AX_Test",
-                "mov r2, [r1]",
+                "mov 2[r1], 6[r0]",
                 new List<string>
                 {
                     "IFCH_0",
                     "IFCH_1",
                     "B1_0",
-                    "FOS_AM_0",
+                    "FOS_AX_0",
+                    "FOS_AX_1",
                     "FOSEND_0",
-                    "FOD_AD_B1_0",
+                    "FOD_AX_B1_0",
+                    "FOD_AX_B1_1",
                     "MOV_0",
-                    "WRD_1"
+                    "WRD_3"
                 },
                 () =>
                 {
-                    Assert.AreEqual(cpu.Registers[GPR.R0],cpu.Registers[GPR.R1]);
+                    Assert.AreEqual(0, ram.FetchByte(2));
                 });
         }
+
     }
 }
