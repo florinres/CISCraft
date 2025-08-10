@@ -270,7 +270,7 @@ namespace CPU.Business
                     RBUS = (short)(SBUS + DBUS);
                     break;
                 case ALU_OP.SUB:
-                    RBUS = (short)(SBUS - DBUS);
+                    RBUS = (short)(SBUS + DBUS + 1);
                     break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);

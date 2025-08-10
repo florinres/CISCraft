@@ -102,7 +102,7 @@
     ],
     "SUB":
     [
-        ["PdTsNeg",   "PdMDRd",        "SUM",   "PmMDR",       "NONE",    "Cin,PdCONDaritm", "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["PdTsNeg",   "PdMDRd",        "SUB",   "PmMDR",       "NONE",    "Cin,PdCONDaritm", "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
     "CMP":
     [
