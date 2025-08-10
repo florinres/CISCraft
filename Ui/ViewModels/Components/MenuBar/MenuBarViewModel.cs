@@ -1,9 +1,7 @@
-using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
-using Ui.Services;
 using Ui.ViewModels.Generics;
 
 namespace Ui.ViewModels.Components.MenuBar;
@@ -45,12 +43,12 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     {
         string defaultContent = string.Empty;
         string filePath = "";
-        string fullPath;
+        string fullPath = "";
 
         if (string.IsNullOrWhiteSpace(filePath))
         {
-            var projectRoot = AppContext.BaseDirectory;
-            fullPath = Path.Combine(projectRoot, "Assets", "codDefault.txt");
+            var projectRoot = Directory.GetCurrentDirectory();
+            fullPath = Path.Combine(projectRoot, "Assets", "default_code.txt");
         }
         else
         {
@@ -58,12 +56,11 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         }
         try
         {
-            defaultContent = File.ReadAllText(fullPath); 
+            defaultContent = File.ReadAllText(fullPath);
         }
-        catch (Exception ex)
+        catch (IOException)
         {
-            
-            defaultContent = fullPath + " doesn't exist"; // daca nu apare fisierul pe git trb bagat manual in bin ig 
+            defaultContent = "";
         }
 
         var doc = new FileViewModel
