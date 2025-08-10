@@ -60,6 +60,8 @@ namespace CPU.Business
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
+        private bool BPO; //Bistabil Pornire/Oprire
+        private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
@@ -78,10 +80,15 @@ namespace CPU.Business
             _microProgram = new OrderedDictionary<string, string[][]>();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
+            BPO = true; //Enable CPU clock
+            previousMARState = 0;
+            previousMIRIndexState = 0;
         }
         public (int MAR, int MirIndex) StepMicrocommand()
         {
-            return _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            if(BPO)
+                (previousMARState,previousMIRIndexState) = _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            return (previousMARState, previousMIRIndexState);
         }
         /// <summary>
         /// This will load the json MPM configuration in the actual MPM.
@@ -193,6 +200,7 @@ namespace CPU.Business
             }
             _mainMemory.ClearMemory();
             _controlUnit.Reset();
+            BPO = true; //Reactivate CPU clock
         }
         public (string, string[]) GetCurrentLabel(int MAR)
         {
@@ -415,6 +423,11 @@ namespace CPU.Business
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
                     //resetarea bitilor de exceptie;
+                    break;
+                case OTHER_EVENTS.A0BPO:
+                    //Adu la 0 BPO
+                    //Disable CPU clock
+                    BPO = false;
                     break;
             }
         }
