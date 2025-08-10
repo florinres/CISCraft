@@ -52,6 +52,11 @@ namespace CPU.Tests
                 }
                 Assert.IsTrue(buf.SequenceEqual(expectedInstructionPath));
             }
+
+            foreach (string label in expectedInstructionPath)
+            {
+                CpuTestsUtils.CoveredMpm[label] = true;
+            }
         }
 
         private void RunInstructionTest(
@@ -74,10 +79,11 @@ namespace CPU.Tests
             CpuTestsUtils.InitTest(registerSnapshots, cpu);
 
             ram.LoadMachineCode(assembler.Assemble(sourceCode, out len));
+            byte[] initRamDump = (byte[])ram.GetMemoryDump().Clone();
             
             CpuTestsUtils.CapturePathAndRegisters(cpu, realInstructionPath, registerSnapshots);
 
-            CpuTestsUtils.GenerateTraceLog(registerSnapshots, expectedInstructionPath, realInstructionPath, testName, sourceCode, "SnapShots_B3.txt");
+            CpuTestsUtils.GenerateTraceLog(initRamDump, ram.GetMemoryDump(), registerSnapshots, expectedInstructionPath, realInstructionPath, testName, sourceCode, "SnapShots_B3.txt");
 
             postAssert();
         }
