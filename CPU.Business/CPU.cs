@@ -67,6 +67,11 @@ namespace CPU.Business
         public bool ACLOW, INT, CIL;
         private OrderedDictionary<string, string[][]> _microProgram;
         public string currentLabel;
+        private ushort overflowShift  = 0;
+        private ushort signShift      = 1;
+        private ushort zeroShift      = 2;
+        private ushort carryShift     = 3;
+        private ushort interruptShift = 7;
         public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
             _controlUnit = new ControlUnit();
@@ -86,8 +91,8 @@ namespace CPU.Business
         }
         public (int MAR, int MirIndex) StepMicrocommand()
         {
-            if(BPO)
-                (previousMARState,previousMIRIndexState) = _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            if (BPO)
+                (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
             return (previousMARState, previousMIRIndexState);
         }
         /// <summary>
@@ -312,24 +317,9 @@ namespace CPU.Business
                     break;
             }
 
-            this.ComputeALUFlags(RBUS);
             Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
-        /// <summary>
-        /// Computes the values for the ALU flags
-        /// that are signal events based on
-        /// arithmetical-logical unit.
-        /// </summary>
-        /// <param name="result"></param>
-        private void ComputeALUFlags(short result)
-        {
-            _aluFlags.CarryFlag = (result << 15) & (result << 14);
-            _aluFlags.OverflowFlag = (result << 15) ^ (result << 14);
-            _aluFlags.SignFlag = result & (1 << 15); // Signs = 1 means that the number in 2's complement is negative
-            _aluFlags.ZeroFlag = ~(result & (1 << 15)); // Zero = 1 means that the number is 0, thus in 2's complement
-                                                        // the most signficant bit should be 0;
-        }
         private void OnRbusEvent(int index)
         {
             switch ((REGISTERS)index)
@@ -392,24 +382,13 @@ namespace CPU.Business
                     CIL = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
-                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask0)
-                                                        | (_aluFlags.CarryFlag << carryBit)
-                                                        | (_aluFlags.ZeroFlag << zeroBit)
-                                                        | (_aluFlags.SignFlag << signBit)
-                                                        | (_aluFlags.OverflowFlag));
+                    Registers[REGISTERS.FLAGS] = ComputeArithmeticFlags();
                     break;
                 case OTHER_EVENTS.CinPdCondA:
-                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask0)
-                                                        | (_aluFlags.CarryFlag << carryBit)
-                                                        | (_aluFlags.ZeroFlag << zeroBit)
-                                                        | (_aluFlags.SignFlag << signBit)
-                                                        | (_aluFlags.OverflowFlag));
-                    // TO DO CarryIn flag for ALU
+                    Registers[REGISTERS.FLAGS] = ComputeArithmeticFlagsWithCin();
                     break;
                 case OTHER_EVENTS.PdCondL:
-                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask1)
-                                                        | (_aluFlags.ZeroFlag << zeroBit)
-                                                        | (_aluFlags.SignFlag << signBit));
+                    Registers[REGISTERS.FLAGS] = ComputeLogicFlags();
                     break;
                 case OTHER_EVENTS.A1BVI:
                     Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
@@ -465,6 +444,56 @@ namespace CPU.Business
                 i++;
             }
             return (0, 0);
+        }
+        // Return the status for Carry, Zero, Sign and Overflow
+        private short ComputeArithmeticFlags()
+        {
+            short flags = 0;
+
+            flags |= ComputeLogicFlags();
+
+            if ((ushort)RBUS < Math.Max((ushort)SBUS, (ushort)DBUS))
+            {
+                flags |= (short)(1 << carryShift);
+            }
+
+           if (
+                (((SBUS ^ DBUS) & 0x8000) == 0) &&
+                (((SBUS ^ RBUS) & 0x8000) != 0)
+               )
+            {
+                flags |= (short)(1 << overflowShift);
+            }
+
+            return flags;
+        }
+        // Return the status only for Zero and Sign
+        private short ComputeLogicFlags()
+        {
+            short flags = 0;
+
+            if (RBUS == 0)
+            {
+                flags |= (short)(1 << zeroShift);
+            }
+
+            if ((RBUS & 0x8000) == 0x8000)
+            {
+                flags |= (short)(1 << signShift);
+            }
+
+            return flags;
+        }
+        // Return the status for Carry, Zero, Sign and Overflow and apply Cin = 1
+        private short ComputeArithmeticFlagsWithCin()
+        {
+            short flags = 0;
+
+            flags = ComputeArithmeticFlags();
+
+            // TODO: Find out how Cin shall be handled
+
+            return flags;
         }
     }
 }
