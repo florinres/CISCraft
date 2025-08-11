@@ -394,6 +394,152 @@ namespace CPU.Tests
                     Assert.AreEqual(0, ram.FetchByte(2));
                 });
         }
+        [TestMethod]
+        public void Add_AD_AM_Test()
+        {
+            if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = 2;
+            RunInstructionTest(
+                "Add_AD_AM_Test",
+                "add r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "ADD_0",
+                    "WRD_1"
+                },
+                () =>
+                {
+                    Assert.AreEqual(4, cpu.Registers[GPR.R0]);
+                });
+        }
+        [TestMethod]
+        public void Sub_AD_AM_Test()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = 2;
+            RunInstructionTest(
+                "Sub_AD_AM_Test",
+                "sub r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "SUB_0",
+                    "WRD_1"
+                },
+                () =>
+                {
+                    Assert.AreEqual(0, cpu.Registers[GPR.R0]);
+                });
+        }
+        // [TestMethod] //TODO: Fix test
+        // public void Cmp_AD_AM_Test()
+        // {
+        //     if (cpu == null) return;
+
+        //     cpu.Registers[GPR.R0] = 2;
+        //     RunInstructionTest(
+        //         "Cmp_AD_AM_Test",
+        //         "cmp r0, 2",
+        //         new List<string>
+        //         {
+        //             "IFCH_0",
+        //             "IFCH_1",
+        //             "B1_0",
+        //             "FOS_AM_0",
+        //             "FOSEND_0",
+        //             "FOD_AD_B1_0",
+        //             "CMP_0",
+        //         },
+        //         () =>
+        //         {
+        //             Assert.AreEqual(0, cpu.Registers[GPR.R0]);
+        //         });
+        // }
+        [TestMethod]
+        public void And_AD_AM_Test()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = 2;
+            RunInstructionTest(
+                "And_AD_AM_Test",
+                "and r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "AND_0",
+                    "WRD_1",
+                },
+                () =>
+                {
+                    Assert.AreEqual(2, cpu.Registers[GPR.R0]);
+                });
+        }
+        [TestMethod]
+        public void Or_AD_AM_Test()
+        {
+            if (cpu == null) return;
+
+            RunInstructionTest(
+                "Xor_AD_AM_Test",
+                "or r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "OR_0",
+                    "WRD_1",
+                },
+                () =>
+                {
+                    Assert.AreEqual(2, cpu.Registers[GPR.R0]);
+                });
+        }
+        [TestMethod]
+        public void Xor_AD_AM_Test()
+        {
+            if (cpu == null) return;
+
+            RunInstructionTest(
+                "Xor_AD_AM_Test",
+                "xor r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "XOR_0",
+                    "WRD_1",
+                },
+                () =>
+                {
+                    Assert.AreEqual(2, cpu.Registers[GPR.R0]);
+                });
+        }
     }
 }
