@@ -444,30 +444,131 @@ namespace CPU.Tests
                     Assert.AreEqual(0, cpu.Registers[GPR.R0]);
                 });
         }
-        // [TestMethod] //TODO: Fix test
-        // public void Cmp_AD_AM_Test()
-        // {
-        //     if (cpu == null) return;
+        [TestMethod]
+        // Test Signed flag
+        public void Cmp_AD_AM_Test1()
+        {
+            if (cpu == null) return;
 
-        //     cpu.Registers[GPR.R0] = 2;
-        //     RunInstructionTest(
-        //         "Cmp_AD_AM_Test",
-        //         "cmp r0, 2",
-        //         new List<string>
-        //         {
-        //             "IFCH_0",
-        //             "IFCH_1",
-        //             "B1_0",
-        //             "FOS_AM_0",
-        //             "FOSEND_0",
-        //             "FOD_AD_B1_0",
-        //             "CMP_0",
-        //         },
-        //         () =>
-        //         {
-        //             Assert.AreEqual(0, cpu.Registers[GPR.R0]);
-        //         });
-        // }
+            cpu.Registers[GPR.R0] = 1;
+            RunInstructionTest(
+                "Cmp_AD_AM_Test1",
+                "cmp r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "CMP_0",
+                },
+                () =>
+                {
+                    Assert.AreEqual(0x0002,cpu.Registers[REGISTERS.FLAGS]);
+                });
+        }
+        [TestMethod]
+        // Test Zero and Carry flag
+        public void Cmp_AD_AM_Test2()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = 2;
+            RunInstructionTest(
+                "Cmp_AD_AM_Test2",
+                "cmp r0, 2",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "CMP_0",
+                },
+                () =>
+                {
+                    Assert.AreEqual(0x000C,cpu.Registers[REGISTERS.FLAGS]);
+                });
+        }
+        [TestMethod]
+        // Test carry flag
+        public void Cmp_AD_AM_Test3()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = 1;
+            RunInstructionTest(
+                "Cmp_AD_AM_Test3",
+                "cmp r0, 0",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "CMP_0",
+                },
+                () =>
+                {
+                    Assert.AreEqual(0x0008,cpu.Registers[REGISTERS.FLAGS]);
+                });
+        }
+        // Test overflow flag
+        [TestMethod]
+        public void Cmp_AD_AM_Test4()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = 1<<15 - 1;
+            RunInstructionTest(
+                "Cmp_AD_AM_Test4",
+                "cmp r0, -20000",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "CMP_0",
+                },
+                () =>
+                {
+                    Assert.AreEqual(0x0003,cpu.Registers[REGISTERS.FLAGS]);
+                });
+        }
+        // Test overflow and carry flag
+        [TestMethod]
+        public void Cmp_AD_AM_Test5()
+        {
+            if (cpu == null) return;
+
+            cpu.Registers[GPR.R0] = -(1<<15 - 1);
+            RunInstructionTest(
+                "Cmp_AD_AM_Test5",
+                "cmp r0, 20000",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B1_0",
+                    "FOS_AM_0",
+                    "FOSEND_0",
+                    "FOD_AD_B1_0",
+                    "CMP_0",
+                },
+                () =>
+                {
+                    Assert.AreEqual(0x0009,cpu.Registers[REGISTERS.FLAGS]);
+                });
+        }
         [TestMethod]
         public void And_AD_AM_Test()
         {
