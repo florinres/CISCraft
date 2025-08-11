@@ -130,7 +130,7 @@
     ],
     "INC":
     [
-        ["Pd0s",      "PdMDRd",        "SUM",   "PmMDR",       "NONE",    "Cin,PdCONDaritm", "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["Pd-1s",     "PdMDRd",        "SUB",   "PmMDR",       "NONE",    "PdCONDaritm",     "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
     "DEC":
     [
