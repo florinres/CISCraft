@@ -98,15 +98,15 @@
     ],
     "ADD":
     [
-        ["PdTs",      "PdMDRd",        "SUM",   "PmMDR",       "NONE",    "Cin,PdCONDaritm", "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["PdTs",      "PdMDRd",        "SUM",   "PmMDR",       "NONE",    "PdCONDaritm",     "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
     "SUB":
     [
-        ["PdTsNeg",   "PdMDRd",        "SUB",   "PmMDR",       "NONE",    "Cin,PdCONDaritm", "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["PdTsNeg",   "PdMDRd",        "SUB",   "PmMDR",       "NONE",    "PdCONDaritm", "JUMPI",                "INDEX3",  "T",  "WRD"          ]
     ],
     "CMP":
     [
-        ["PdTsNeg",   "PdMDRd",        "SUM",   "NONE",        "NONE",    "Cin,PdCONDaritm", "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["PdTsNeg",   "PdMDRd",        "SUB",   "NONE",        "NONE",    "PdCONDaritm", "JUMPI",                "INDEX7",  "T",  "IFCH"         ]
     ],
     "AND":
     [
