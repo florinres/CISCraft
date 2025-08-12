@@ -65,18 +65,18 @@ namespace Assembler.Business
              * OPPCODE | AMD | DR
             */
             CLR = 0xA000, /* 0x800 */
-            NEG = 0xA040,
-            INC = 0xA0C0,
-            DEC = 0xA100,
-            ASL = 0xA140,
-            ASR = 0xA1C0,
-            LSR = 0xA200,
-            ROL = 0xA240,
-            ROR = 0xA2C0,
-            RLC = 0xA300,
-            RRC = 0xA340,
-            PUSH = 0xA3C0,
-            POP = 0xA400,
+            NEG = 0xA100,
+            INC = 0xA200,
+            DEC = 0xA300,
+            ASL = 0xA400,
+            ASR = 0xA500,
+            LSR = 0xA600,
+            ROL = 0xA700,
+            ROR = 0xA800,
+            RLC = 0xA900,
+            RRC = 0xAA00,
+            PUSH = 0xAB00,
+            POP = 0xAC00,
             /** B3 INSTRUCTIONS TYPE
              * BNE, BEQ, BPL, BMI, BCS, BCC, BVS, BVC, JMP, CALL
              * OPCODE: Operation Code - 8b
