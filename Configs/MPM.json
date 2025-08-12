@@ -85,12 +85,12 @@
     ],
     "FOD_AI_B2":
     [
-        ["NONE",      "PdRGd",         "DBUS",  "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX4",  "T",  "CLR"          ]
+        ["NONE",      "PdRGd",         "DBUS",  "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX5",  "T",  "CLR"          ]
     ],
     "FOD_AX_B2":
     [
         ["NONE",      "PdPCd",         "DBUS",  "PmADR",       "READ",    "+2PC",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "PdRGd",         "SUM",   "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX4",  "T",  "CLR"          ]
+        ["PdMDRs",    "PdRGd",         "SUM",   "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX5",  "T",  "CLR"          ]
     ],
     "MOV":
     [
