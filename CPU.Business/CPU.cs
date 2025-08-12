@@ -60,6 +60,7 @@ namespace CPU.Business
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
+        private short Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
@@ -72,6 +73,9 @@ namespace CPU.Business
         private ushort zeroShift      = 2;
         private ushort carryShift     = 3;
         private ushort interruptShift = 7;
+        private bool CinPdCondaritm = false;
+        private bool PdCondaritm = false;
+        private bool PdCondlogic = false;
         public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
             _controlUnit = new ControlUnit();
@@ -272,10 +276,11 @@ namespace CPU.Business
                     RBUS = DBUS;
                     break;
                 case ALU_OP.ADD:
-                    RBUS = (short)(SBUS + DBUS);
+                    RBUS = (short)(SBUS + DBUS + Cin);
+                    Cin = 0;
                     break;
-                case ALU_OP.SUB:
-                    RBUS = (short)(SBUS - DBUS);
+                // case ALU_OP.SUB:
+                //     RBUS = (short)(SBUS - DBUS);
                     break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
@@ -317,6 +322,7 @@ namespace CPU.Business
                     break;
             }
 
+            ComputeFlags();
             Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
@@ -382,13 +388,14 @@ namespace CPU.Business
                     CIL = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
-                    Registers[REGISTERS.FLAGS] = ComputeArithmeticFlags();
+                    PdCondaritm = true;
                     break;
                 case OTHER_EVENTS.CinPdCondA:
-                    Registers[REGISTERS.FLAGS] = ComputeArithmeticFlagsWithCin();
+                    CinPdCondaritm = true;
+                    Cin = 1;
                     break;
                 case OTHER_EVENTS.PdCondL:
-                    Registers[REGISTERS.FLAGS] = ComputeLogicFlags();
+                    PdCondlogic = true;
                     break;
                 case OTHER_EVENTS.A1BVI:
                     Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
@@ -446,15 +453,13 @@ namespace CPU.Business
             return (0, 0);
         }
         // Return the status for Carry, Zero, Sign and Overflow
-        private short ComputeArithmeticFlags()
+        private void ComputeArithmeticFlags()
         {
-            short flags = 0;
-
-            flags |= ComputeLogicFlags();
+            ComputeLogicFlags();
 
             if ((ushort)RBUS < Math.Max((ushort)SBUS, (ushort)DBUS))
             {
-                flags |= (short)(1 << carryShift);
+                Registers[REGISTERS.FLAGS] |= (short)(1 << carryShift);
             }
 
            if (
@@ -462,38 +467,32 @@ namespace CPU.Business
                 (((SBUS ^ RBUS) & 0x8000) != 0)
                )
             {
-                flags |= (short)(1 << overflowShift);
+                Registers[REGISTERS.FLAGS] |= (short)(1 << overflowShift);
             }
-
-            return flags;
         }
         // Return the status only for Zero and Sign
-        private short ComputeLogicFlags()
+        private void ComputeLogicFlags()
         {
-            short flags = 0;
-
             if (RBUS == 0)
             {
-                flags |= (short)(1 << zeroShift);
+                Registers[REGISTERS.FLAGS] |= (short)(1 << zeroShift);
             }
 
             if ((RBUS & 0x8000) == 0x8000)
             {
-                flags |= (short)(1 << signShift);
+                Registers[REGISTERS.FLAGS] |= (short)(1 << signShift);
             }
-
-            return flags;
         }
-        // Return the status for Carry, Zero, Sign and Overflow and apply Cin = 1
-        private short ComputeArithmeticFlagsWithCin()
+        private void ComputeFlags()
         {
-            short flags = 0;
+            if (CinPdCondaritm || PdCondaritm)
+                ComputeArithmeticFlags();
+            if (PdCondlogic)
+                ComputeLogicFlags();
 
-            flags = ComputeArithmeticFlags();
-
-            // TODO: Find out how Cin shall be handled
-
-            return flags;
+            CinPdCondaritm = false;
+            PdCondaritm = false;
+            PdCondlogic = false;
         }
     }
 }
