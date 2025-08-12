@@ -12,6 +12,7 @@ namespace CPU.Tests
 {
     public static class CpuTestsUtils
     {
+        public static Dictionary<string, bool> CoveredMpm = new Dictionary<string, bool>();
         internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
             int a, b, i;
@@ -51,6 +52,8 @@ namespace CPU.Tests
         }
 
         public static void GenerateTraceLog(
+            byte[] beforeDump,
+            byte[] afterDump,
             List<Dictionary<string, int>> registerSnapshots,
             List<string> expectedPath,
             List<KeyValuePair<string, string>> realPath,
@@ -64,15 +67,22 @@ namespace CPU.Tests
             File.AppendAllText(outputFile, $"Trace log for test: {testName}\n");
             File.AppendAllText(outputFile, $"{instruction}\n\n");
 
+            File.AppendAllText(outputFile, "Dump before [0-10]:\n");
+            foreach (byte i in beforeDump[0..10])
+            {
+                File.AppendAllText(outputFile, "0x"+ i.ToString("X") + " ");
+            }
+            File.AppendAllText(outputFile, "\n\n");
+
             File.AppendAllText(outputFile, "Expected Path: ");
             foreach (var label in expectedPath)
-                File.AppendAllText(outputFile,label + " ");
-            File.AppendAllText(outputFile,"\n");
+                File.AppendAllText(outputFile, label + " ");
+            File.AppendAllText(outputFile, "\n");
 
             File.AppendAllText(outputFile, "Real Path:     ");
             foreach (var label in realPath)
-                File.AppendAllText(outputFile,label.Key + " ");
-            File.AppendAllText(outputFile,"\n\n");
+                File.AppendAllText(outputFile, label.Key + " ");
+            File.AppendAllText(outputFile, "\n\n");
 
             for (int i = 1; i < registerSnapshots.Count; i++)
             {
@@ -101,6 +111,14 @@ namespace CPU.Tests
 
                 File.AppendAllText(outputFile, "\n");
             }
+
+            File.AppendAllText(outputFile, "Dump after [0-10]:\n");
+            foreach (byte i in afterDump[0..10])
+            {
+                File.AppendAllText(outputFile, "0x" + i.ToString("X") + " ");
+            }
+            File.AppendAllText(outputFile, "\n\n");
+
         }
 
         // Captures the registers that changed after executing one microinstruction

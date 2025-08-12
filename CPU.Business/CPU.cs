@@ -328,19 +328,22 @@ namespace CPU.Business
 
         private void OnRbusEvent(int index)
         {
+            if (index == 0)
+                return;
+
             switch ((REGISTERS)index)
-            {
-                case REGISTERS.NEG:
-                    Registers[(REGISTERS)index] = RBUS;
-                    break;
-                case REGISTERS.RG:
-                    int gprIndex = _controlUnit.GetDestinationRegister();
-                    Registers[(GPR)gprIndex] = RBUS;
-                    break;
-                default:
-                    Registers[(REGISTERS)index] = RBUS;
-                    break;
-            }
+                {
+                    case REGISTERS.NEG:
+                        Registers[(REGISTERS)index] = RBUS;
+                        break;
+                    case REGISTERS.RG:
+                        int gprIndex = _controlUnit.GetDestinationRegister();
+                        Registers[(GPR)gprIndex] = RBUS;
+                        break;
+                    default:
+                        Registers[(REGISTERS)index] = RBUS;
+                        break;
+                }
         }
         private void OnMemoryEvent(int index)
         {
