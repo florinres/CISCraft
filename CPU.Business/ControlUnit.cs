@@ -351,16 +351,16 @@ namespace CPU.Business
                     DbusEvent?.Invoke(getMirDbusField());
                     break;
 				case 2:
+                    OtherEvent?.Invoke(getMirOthersField());
+                    break;
+				case 3:
                     AluEvent?.Invoke(getMirAluField());
                     break;
-                case 3:
+                case 4:
                     RbusEvent?.Invoke(getMirRbusField());
                     break;
-                case 4:
+                case 5:
                     MemoryEvent?.Invoke(getMirMemOpField());
-                    break;
-				case 5:
-                    OtherEvent?.Invoke(getMirOthersField());
                     break;
                 case 6:
                     Debug.WriteLine("Next MAR= " + MAR.ToString());
