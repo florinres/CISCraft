@@ -100,7 +100,7 @@ namespace Assembler.Business
              * OPPCODE
              */
             CLC = 0xE000, /* 0xE00 */
-            SEC = 0xE200,
+            SEC = 0xE208,
             NOP = 0xE400,
             HALT = 0xE600,
             EI = 0xE800,

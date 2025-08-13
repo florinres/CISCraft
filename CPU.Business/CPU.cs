@@ -232,7 +232,7 @@ namespace CPU.Business
                     SBUS = Registers[(GPR)gprIndex];
                     break;
                 case REGISTERS.IRLSB:
-                    SBUS = (byte)Registers[REGISTERS.IRLSB];
+                    SBUS = (short)(Registers[REGISTERS.IR] & 0xFF);
                     break;
                 default:
                     SBUS = Registers[(REGISTERS)index];
@@ -252,7 +252,7 @@ namespace CPU.Business
                     DBUS = Registers[(GPR)gprIndex];
                     break;
                 case REGISTERS.IRLSB:
-                    DBUS = (byte)~Registers[REGISTERS.IRLSB];
+                    DBUS = (short)(Registers[REGISTERS.IR] & 0xFF);
                     break;
                 default:
                     DBUS = Registers[(REGISTERS)index];

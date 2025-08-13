@@ -416,6 +416,7 @@ namespace CPU.Tests
                     "B2_0",
                     "FOD_AD_B2_0",
                     "PUSH_0",
+                    "IFCH_0",
                     "IFCH_1",
                     "B2_0",
                     "FOD_AD_B2_0",
