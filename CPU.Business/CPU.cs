@@ -15,7 +15,8 @@ namespace CPU.Business
     public class CPU
     {
         const byte MAX_NUM_REG = 23;
-        enum ALU_OP {
+        enum ALU_OP
+        {
             NONE,
             SBUS,
             DBUS,
@@ -60,7 +61,7 @@ namespace CPU.Business
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
-        private short Cin = 0;
+        public short Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
@@ -68,10 +69,10 @@ namespace CPU.Business
         public bool ACLOW, INT, CIL;
         private OrderedDictionary<string, string[][]> _microProgram;
         public string currentLabel;
-        private ushort overflowShift  = 0;
-        private ushort signShift      = 1;
-        private ushort zeroShift      = 2;
-        private ushort carryShift     = 3;
+        private ushort overflowShift = 0;
+        private ushort signShift = 1;
+        private ushort zeroShift = 2;
+        private ushort carryShift = 3;
         private ushort interruptShift = 7;
         private bool CinPdCondaritm = false;
         private bool PdCondaritm = false;
@@ -279,8 +280,8 @@ namespace CPU.Business
                     RBUS = (short)(SBUS + DBUS + Cin);
                     Cin = 0;
                     break;
-                // case ALU_OP.SUB:
-                //     RBUS = (short)(SBUS - DBUS);
+                    // case ALU_OP.SUB:
+                    //     RBUS = (short)(SBUS - DBUS);
                     break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
@@ -295,30 +296,24 @@ namespace CPU.Business
                     RBUS <<= 1;
                     break;
                 case ALU_OP.ASR:
-                case ALU_OP.LSR:
+                    short msbRbus = (short)(RBUS & 0x8000);
                     RBUS >>= 1;
+                    RBUS |= msbRbus;
+                    break;
+                case ALU_OP.LSR:
+                    RBUS = (short)((ushort)RBUS >> 1);
                     break;
                 case ALU_OP.ROL:
-                    RBUS = (short)BitOperations.RotateLeft((uint)RBUS, 1);
+                    RBUS = (short)RotateLeft((ushort)RBUS, 1);
                     break;
                 case ALU_OP.ROR:
-                    RBUS = (short)BitOperations.RotateRight((uint)RBUS, 1);
+                    RBUS = (short)RotateRight((ushort)RBUS, 1);
                     break;
                 case ALU_OP.RLC:
-                    {
-                        short carryIn = (short)(Registers[REGISTERS.FLAGS] & 0x3);
-                        short carryOut = 0;
-                        (RBUS, carryOut) = RotateLeftWithCarry(RBUS, carryIn);
-                        Registers[REGISTERS.FLAGS] |= carryOut;
-                    }
+                    RotateLeftWithCarry();
                     break;
                 case ALU_OP.RRC:
-                    {
-                        short carryIn = (short)(Registers[REGISTERS.FLAGS] & 0x3);
-                        short carryOut = 0;
-                        (RBUS, carryOut) = RotateRightWithCarry(RBUS, carryIn);
-                        Registers[REGISTERS.FLAGS] |= carryOut;
-                    }
+                    RotateRightWithCarry();
                     break;
             }
 
@@ -332,18 +327,18 @@ namespace CPU.Business
                 return;
 
             switch ((REGISTERS)index)
-                {
-                    case REGISTERS.NEG:
-                        Registers[(REGISTERS)index] = RBUS;
-                        break;
-                    case REGISTERS.RG:
-                        int gprIndex = _controlUnit.GetDestinationRegister();
-                        Registers[(GPR)gprIndex] = RBUS;
-                        break;
-                    default:
-                        Registers[(REGISTERS)index] = RBUS;
-                        break;
-                }
+            {
+                case REGISTERS.NEG:
+                    Registers[(REGISTERS)index] = RBUS;
+                    break;
+                case REGISTERS.RG:
+                    int gprIndex = _controlUnit.GetDestinationRegister();
+                    Registers[(GPR)gprIndex] = RBUS;
+                    break;
+                default:
+                    Registers[(REGISTERS)index] = RBUS;
+                    break;
+            }
         }
         private void OnMemoryEvent(int index)
         {
@@ -420,23 +415,29 @@ namespace CPU.Business
                     break;
             }
         }
-        private (short result, short carryOut) RotateLeftWithCarry(short value, short carryIn)
+        private void RotateLeftWithCarry()
         {
-            short newCarry = 0;
-            short shiftedValue = (short)(value << 1);
+            ushort buf = 0;
+            ushort oldCarry = GetCarryFlag();
 
-            if ((short)(value & 0x8000) != 0) newCarry = 0x3;
-            if (carryIn == 0x3) shiftedValue |= 1;
-            return (shiftedValue, newCarry);
+            SetCarryFlag((ushort)((RBUS & -0x8000) >> 16));
+            buf = RotateLeft((ushort)RBUS, 1);
+            buf &= (ushort)(buf & ~1);
+            buf |= oldCarry;
+
+            RBUS = (short)buf;
         }
-        private (short result, short carryOut) RotateRightWithCarry(short value, short carryIn)
+        private void RotateRightWithCarry()
         {
-            short newCarry = 0;
-            ushort shiftedValue = (ushort)(value >> 1);
+            ushort buf = 0;
+            ushort oldCarry = GetCarryFlag();
 
-            if ((short)(value & 0x1) != 0) newCarry = 0x3;
-            if (carryIn == 0x3) shiftedValue |= 0x8000;
-            return ((short)shiftedValue, newCarry);
+            SetCarryFlag((ushort)(RBUS & 0x1));
+            buf = RotateRight((ushort)RBUS, 1);
+            buf = (ushort)(buf & ~0x8000);
+            buf |= (ushort)(oldCarry << 16);
+
+            RBUS = (short)buf;
         }
         private (int, int) MarToMpmIndex(int MAR)
         {
@@ -444,11 +445,11 @@ namespace CPU.Business
             int i = 0, j = 0;
             foreach (var label in _microProgram)
             {
-                j=0;
+                j = 0;
                 foreach (var v in label.Value)
                 {
                     idx++;
-                    if (idx == MAR) return (i,j);
+                    if (idx == MAR) return (i, j);
                     j++;
                 }
                 i++;
@@ -465,10 +466,10 @@ namespace CPU.Business
                 Registers[REGISTERS.FLAGS] |= (short)(1 << carryShift);
             }
 
-           if (
-                (((SBUS ^ DBUS) & 0x8000) == 0) &&
-                (((SBUS ^ RBUS) & 0x8000) != 0)
-               )
+            if (
+                 (((SBUS ^ DBUS) & 0x8000) == 0) &&
+                 (((SBUS ^ RBUS) & 0x8000) != 0)
+                )
             {
                 Registers[REGISTERS.FLAGS] |= (short)(1 << overflowShift);
             }
@@ -496,6 +497,26 @@ namespace CPU.Business
             CinPdCondaritm = false;
             PdCondaritm = false;
             PdCondlogic = false;
+        }
+        private ushort RotateLeft(ushort value, int count)
+        {
+            const ushort bits = 16;
+            count &= bits - 1;
+            return (ushort)((value << count) | (value >> (bits - count)));
+        }
+        private ushort RotateRight(ushort value, int count)
+        {
+            const ushort bits = 16;
+            count &= bits - 1;
+            return (ushort)((value >> count) | (value << (bits - count)));
+        }
+        public ushort GetCarryFlag()
+        {
+            return (ushort)((Registers[REGISTERS.FLAGS] & (1<<carryShift)) >> carryShift);
+        }
+        private void SetCarryFlag(ushort value)
+        {
+            Registers[REGISTERS.FLAGS] |= (short)((value & 1) << carryShift);
         }
     }
 }
