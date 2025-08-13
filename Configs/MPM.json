@@ -170,9 +170,9 @@
     ],
     "POP":
     [
-        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",             "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdTs",      "NONE",          "SBUS",  "PmADR",       "NONE",    "+2SP",            "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["PdTs",      "NONE",          "SBUS",  "PmADR",       "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
     "WRD":
     [
