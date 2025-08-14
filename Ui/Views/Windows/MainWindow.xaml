@@ -211,7 +211,8 @@
             ActiveContent="{Binding ActiveDocumentsService.SelectedDocument, Mode=TwoWay}"
             DocumentsSource="{Binding ActiveDocumentsService.Documents}"
             DataContext="{Binding Workspace}"
-            AnchorableClosing="DockManager_AnchorableClosing">
+            AnchorableClosing="DockManager_AnchorableClosing"
+            DocumentClosing="DockingManagerInstance_DocumentClosing">
             <DockingManager.Theme>
                 <wpfui:WPFUITheme />
             </DockingManager.Theme>

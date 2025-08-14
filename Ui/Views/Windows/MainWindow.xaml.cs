@@ -5,6 +5,7 @@ using ICSharpCode.AvalonEdit;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
+using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 using Wpf.Ui.Appearance;
 
@@ -69,6 +70,14 @@ public partial class MainWindow
     {
         _docking.SaveLastUsedLayout();
         base.OnClosing(e);
+    }
+
+    private void DockingManagerInstance_DocumentClosing(object sender, DocumentClosingEventArgs e)
+    {
+        if(e.Document.Content is FileViewModel thisFile)
+        {
+            MenuBarViewModel.closeDocument(thisFile);
+        }
     }
     private void OnEditorLoaded(object sender, RoutedEventArgs e)
     {
