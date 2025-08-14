@@ -6,6 +6,7 @@ using CPU.Business.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
+using CPU.Business;
 
 namespace CPU.Tests
 {
