@@ -50,8 +50,9 @@
             <TextBlock Foreground="White"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       TextAlignment="Center" 
-                       Padding="8,0,0,0">
+                       TextAlignment="Left" 
+                       Padding="8,0,0,0"
+                       Width="90">
                 <TextBlock.Text>
                     <MultiBinding Converter="{StaticResource RegisterFormatConverter}">
                         <Binding Path="Value"/>

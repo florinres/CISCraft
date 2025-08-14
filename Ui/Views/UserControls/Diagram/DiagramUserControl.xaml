@@ -62,7 +62,7 @@
                 <!-- Special Registers -->
                 <StackPanel x:Name="RegistersPanel"
                             Canvas.Left="190"
-                            Canvas.Top="200"
+                            Canvas.Top="170"
                             Orientation="Vertical"
                             Margin="0"
                             HorizontalAlignment="Left"
@@ -72,6 +72,8 @@
                     <components:RegisterBlock DataContext="{Binding TContext}" Margin="0,8,0,0" />
                     <components:RegisterBlock DataContext="{Binding SPContext}" Margin="0,8,0,0" />
                     <components:RegisterBlock DataContext="{Binding FLAGContext}" Margin="0,8,0,0" />
+                    <components:RegisterBlock DataContext="{Binding MirContext}" Margin="0,8,0,0" />
+                    <components:RegisterBlock DataContext="{Binding MarContext}" Margin="0,8,0,0" />
                 </StackPanel>
 
                 <!-- <diagram:MuxBlock -->

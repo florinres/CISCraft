@@ -15,7 +15,7 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
         set
         {
             if (_mar == value) return;
-            
+            _mar = value;
             OnPropertyChanged($"{nameof(MAR)}");
         }
     }
@@ -28,7 +28,7 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
         set
         {
             if (_mir == value) return;
-            
+            _mir = value;
             OnPropertyChanged($"{nameof(MIR)}");
         }
     }
