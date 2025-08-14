@@ -69,7 +69,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     private void SetUpContext()
     {
-        //this could be done through some sort of discovery or annotations but i don't see the point
+        // This could be done through some sort of discovery or annotations, but I don't see the point.
         Contexts =
         [
             DataInContext,
