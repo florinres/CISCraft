@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
@@ -10,6 +11,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
     private readonly IToolVisibilityService _toolVisibilityService;
     private IDockingService _dockingService;
+    public static ObservableCollection<FileViewModel> files;
     [ObservableProperty] public partial ILayoutControlViewModel LayoutControl { get; set; }
 
     public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService, ILayoutControlViewModel layoutControl)
@@ -27,6 +29,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         _toolVisibilityService.SetDockingService(dockingService);
         LayoutControl.SetDockingService(dockingService);
         _dockingService.LoadLastUsedLayout();
+        files = DocumentService.Documents;
     }
 
     public void SetToolsVisibilityOnAndOff()
@@ -60,7 +63,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         }
         catch (IOException)
         {
-            defaultContent = "";
+            defaultContent = fullPath + " doesn't exist"; // daca nu apare fisierul pe git trb bagat manual in bin ig 
         }
 
         var doc = new FileViewModel
@@ -111,5 +114,39 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     public void ShowMicroprogram()
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.Microprogram);
+    }
+
+    public static void closeDocument(FileViewModel file)
+    {
+        string filePath = file.FilePath;
+        if (!File.Exists(filePath))
+        {
+            MessageBoxResult result = MessageBox.Show(
+                "Fișierul nu este salvat. Dorești să îl salvezi înainte de închidere?",
+                "Atenție",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Warning
+            );
+            if(result == MessageBoxResult.Yes)
+            {
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Title = "Salvează fișier",
+                    Filter = "Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt",
+                    DefaultExt = "asm",
+                    AddExtension = true,
+                    FileName = file.Title,
+                };
+                if(saveFileDialog.ShowDialog() == true)
+                {
+                    File.WriteAllText(saveFileDialog.FileName, file.Content);
+                }
+            }
+            else if(result == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+            {
+                return;
+            }
+            files.Remove(file);
+        }   
     }
 }
