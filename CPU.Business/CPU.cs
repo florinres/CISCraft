@@ -60,11 +60,22 @@ namespace CPU.Business
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
+        private short Cin = 0;
+        private bool BPO; //Bistabil Pornire/Oprire
+        private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
         private OrderedDictionary<string, string[][]> _microProgram;
         public string currentLabel;
+        private ushort overflowShift  = 0;
+        private ushort signShift      = 1;
+        private ushort zeroShift      = 2;
+        private ushort carryShift     = 3;
+        private ushort interruptShift = 7;
+        private bool CinPdCondaritm = false;
+        private bool PdCondaritm = false;
+        private bool PdCondlogic = false;
         public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
             _controlUnit = new ControlUnit(registers);
@@ -78,10 +89,15 @@ namespace CPU.Business
             _microProgram = new OrderedDictionary<string, string[][]>();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
+            BPO = true; //Enable CPU clock
+            previousMARState = 0;
+            previousMIRIndexState = 0;
         }
         public (int MAR, int MirIndex) StepMicrocommand()
         {
-            return _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            if (BPO)
+                (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            return (previousMARState, previousMIRIndexState);
         }
         /// <summary>
         /// This will load the json MPM configuration in the actual MPM.
@@ -193,11 +209,14 @@ namespace CPU.Business
             }
             _mainMemory.ClearMemory();
             _controlUnit.Reset();
+            BPO = true; //Reactivate CPU clock
         }
-        public string GetCurrentLabel(int MAR)
+        public (string, string[]) GetCurrentLabel(int MAR)
         {
+            string label = "";
             var indexes = MarToMpmIndex(MAR + 1);
-            return _microProgram.ElementAt(indexes.Item1).Key + "_" + indexes.Item2;
+            label = _microProgram.ElementAt(indexes.Item1).Key + "_" + indexes.Item2;
+            return (label, _microProgram.ElementAt(indexes.Item1).Value[indexes.Item2]);
 
         }
         private void OnSbusEvent(int index)
@@ -257,10 +276,11 @@ namespace CPU.Business
                     RBUS = DBUS;
                     break;
                 case ALU_OP.ADD:
-                    RBUS = (short)(SBUS + DBUS);
+                    RBUS = (short)(SBUS + DBUS + Cin);
+                    Cin = 0;
                     break;
-                case ALU_OP.SUB:
-                    RBUS = (short)(SBUS - DBUS);
+                // case ALU_OP.SUB:
+                //     RBUS = (short)(SBUS - DBUS);
                     break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
@@ -302,39 +322,28 @@ namespace CPU.Business
                     break;
             }
 
-            this.ComputeALUFlags(RBUS);
+            ComputeFlags();
             Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
-        /// <summary>
-        /// Computes the values for the ALU flags
-        /// that are signal events based on
-        /// arithmetical-logical unit.
-        /// </summary>
-        /// <param name="result"></param>
-        private void ComputeALUFlags(short result)
-        {
-            _aluFlags.CarryFlag = (result << 15) & (result << 14);
-            _aluFlags.OverflowFlag = (result << 15) ^ (result << 14);
-            _aluFlags.SignFlag = result & (1 << 15); // Signs = 1 means that the number in 2's complement is negative
-            _aluFlags.ZeroFlag = ~(result & (1 << 15)); // Zero = 1 means that the number is 0, thus in 2's complement
-                                                        // the most signficant bit should be 0;
-        }
         private void OnRbusEvent(int index)
         {
+            if (index == 0)
+                return;
+
             switch ((REGISTERS)index)
-            {
-                case REGISTERS.NEG:
-                    Registers[(REGISTERS)index] = RBUS;
-                    break;
-                case REGISTERS.RG:
-                    int gprIndex = _controlUnit.GetDestinationRegister();
-                    Registers[(GPR)gprIndex] = RBUS;
-                    break;
-                default:
-                    Registers[(REGISTERS)index] = RBUS;
-                    break;
-            }
+                {
+                    case REGISTERS.NEG:
+                        Registers[(REGISTERS)index] = RBUS;
+                        break;
+                    case REGISTERS.RG:
+                        int gprIndex = _controlUnit.GetDestinationRegister();
+                        Registers[(GPR)gprIndex] = RBUS;
+                        break;
+                    default:
+                        Registers[(REGISTERS)index] = RBUS;
+                        break;
+                }
         }
         private void OnMemoryEvent(int index)
         {
@@ -382,24 +391,14 @@ namespace CPU.Business
                     CIL = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
-                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask0)
-                                                        | (_aluFlags.CarryFlag << carryBit)
-                                                        | (_aluFlags.ZeroFlag << zeroBit)
-                                                        | (_aluFlags.SignFlag << signBit)
-                                                        | (_aluFlags.OverflowFlag));
+                    PdCondaritm = true;
                     break;
                 case OTHER_EVENTS.CinPdCondA:
-                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask0)
-                                                        | (_aluFlags.CarryFlag << carryBit)
-                                                        | (_aluFlags.ZeroFlag << zeroBit)
-                                                        | (_aluFlags.SignFlag << signBit)
-                                                        | (_aluFlags.OverflowFlag));
-                    // TO DO CarryIn flag for ALU
+                    CinPdCondaritm = true;
+                    Cin = 1;
                     break;
                 case OTHER_EVENTS.PdCondL:
-                    Registers[REGISTERS.FLAGS] = (short)((Registers[REGISTERS.FLAGS] & flagsMask1)
-                                                        | (_aluFlags.ZeroFlag << zeroBit)
-                                                        | (_aluFlags.SignFlag << signBit));
+                    PdCondlogic = true;
                     break;
                 case OTHER_EVENTS.A1BVI:
                     Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
@@ -413,6 +412,11 @@ namespace CPU.Business
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
                     //resetarea bitilor de exceptie;
+                    break;
+                case OTHER_EVENTS.A0BPO:
+                    //Adu la 0 BPO
+                    //Disable CPU clock
+                    BPO = false;
                     break;
             }
         }
@@ -450,6 +454,48 @@ namespace CPU.Business
                 i++;
             }
             return (0, 0);
+        }
+        // Return the status for Carry, Zero, Sign and Overflow
+        private void ComputeArithmeticFlags()
+        {
+            ComputeLogicFlags();
+
+            if ((ushort)RBUS < Math.Max((ushort)SBUS, (ushort)DBUS))
+            {
+                Registers[REGISTERS.FLAGS] |= (short)(1 << carryShift);
+            }
+
+           if (
+                (((SBUS ^ DBUS) & 0x8000) == 0) &&
+                (((SBUS ^ RBUS) & 0x8000) != 0)
+               )
+            {
+                Registers[REGISTERS.FLAGS] |= (short)(1 << overflowShift);
+            }
+        }
+        // Return the status only for Zero and Sign
+        private void ComputeLogicFlags()
+        {
+            if (RBUS == 0)
+            {
+                Registers[REGISTERS.FLAGS] |= (short)(1 << zeroShift);
+            }
+
+            if ((RBUS & 0x8000) == 0x8000)
+            {
+                Registers[REGISTERS.FLAGS] |= (short)(1 << signShift);
+            }
+        }
+        private void ComputeFlags()
+        {
+            if (CinPdCondaritm || PdCondaritm)
+                ComputeArithmeticFlags();
+            if (PdCondlogic)
+                ComputeLogicFlags();
+
+            CinPdCondaritm = false;
+            PdCondaritm = false;
+            PdCondlogic = false;
         }
     }
 }

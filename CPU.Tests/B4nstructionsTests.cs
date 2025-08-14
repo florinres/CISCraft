@@ -1,10 +1,127 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Security.Cryptography;
+using Cpu = CPU.Business.CPU;
+using Ram = MainMemory.Business.MainMemory;
+using MemWrapper = MainMemory.Business.Models.MemoryContentWrapper;
+using ASM = Assembler.Business.Assembler;
+using CPU.Business.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CPU.Tests
 {
     [TestClass]
     public class B4InstructionsTests
     {
+        ASM? assembler;
+        MemWrapper? memWrapper;
+        Ram? ram;
+        RegisterWrapper? list;
+        Cpu? cpu;
+        List<KeyValuePair<string, string>>? realInstructionPath;
+        List<string>? expectedInstructionPath;
 
+        [ClassInitialize]
+        public static void Initialize(TestContext testContext)
+        {
+            File.Delete(AppContext.BaseDirectory + "../../../SnapShots_B4.txt");
+        }
+
+        [TestInitialize]
+        public void Setup()
+        {
+            assembler = new ASM();
+            memWrapper = new MemWrapper();
+            ram = new Ram(memWrapper);
+            list = new RegisterWrapper(20);
+            cpu = new Cpu(ram,list);
+            realInstructionPath = new List<KeyValuePair<string, string>>();
+
+            string jsonPath = Path.GetFullPath(AppContext.BaseDirectory + "../../../../Configs/MPM.json");
+            string jsonString = File.ReadAllText(jsonPath);
+            cpu.LoadJsonMpm(jsonString);
+        }
+        [TestCleanup]
+        public void Cleanup()
+        {
+            if (realInstructionPath != null && expectedInstructionPath != null)
+            {
+                List<string> buf = new List<string>();
+                foreach (var kvp in realInstructionPath)
+                {
+                    buf.Add(kvp.Key);
+                }
+                Assert.IsTrue(buf.SequenceEqual(expectedInstructionPath));
+            }
+
+            foreach (string label in expectedInstructionPath)
+            {
+                CpuTestsUtils.CoveredMpm[label] = true;
+            }
+        }
+
+        private void RunInstructionTest(
+            string testName,
+            string sourceCode,
+            List<string> expectedPath,
+            Action postAssert)
+        {
+            int len;
+            expectedInstructionPath = expectedPath;
+            List<Dictionary<string, int>> registerSnapshots = new List<Dictionary<string, int>>();
+
+            if (
+                    (ram == null)           ||
+                    (assembler == null)     ||
+                    (cpu == null)           ||
+                    (realInstructionPath == null)
+                ) return;
+
+            CpuTestsUtils.InitTest(registerSnapshots, cpu);
+
+            ram.LoadMachineCode(assembler.Assemble(sourceCode, out len));
+            byte[] initRamDump = (byte[])ram.GetMemoryDump().Clone();
+            
+            CpuTestsUtils.CapturePathAndRegisters(cpu, realInstructionPath, registerSnapshots);
+
+            CpuTestsUtils.GenerateTraceLog(initRamDump, ram.GetMemoryDump(), registerSnapshots, expectedInstructionPath, realInstructionPath, testName, sourceCode,"SnapShots_B4.txt");
+
+            postAssert();
+        }
+        // [TestMethod] // Keep it enabled only when testing
+        public void HALT_TEST()
+        {
+            if (cpu == null || ram == null) return;
+
+            RunInstructionTest(
+                "HALT_TEST",
+                "halt",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B4_0",
+                    "HALT_0",
+                    "HALT_1",
+                    "EI_0"
+                },
+                () => { });
+        }
+        [TestMethod]
+        public void NOP_TEST()
+        {
+            if (cpu == null || ram == null) return;
+
+            RunInstructionTest(
+                "NOP_TEST",
+                "nop",
+                new List<string>
+                {
+                    "IFCH_0",
+                    "IFCH_1",
+                    "B4_0",
+                    "NOP_0"
+                },
+                () => { });
+        }
     }
 }

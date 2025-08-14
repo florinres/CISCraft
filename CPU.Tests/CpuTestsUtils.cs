@@ -1,12 +1,18 @@
 using Cpu = CPU.Business.CPU;
+using Ram = MainMemory.Business.MainMemory;
+using MemWrapper = MainMemory.Business.Models.MemoryContentWrapper;
+using ASM = Assembler.Business.Assembler;
 using CPU.Business.Models;
-using CPU.Business;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Emit;
 
 namespace CPU.Tests
 {
     public static class CpuTestsUtils
     {
-        internal static void CapturePathAndRegisters(Cpu cpu, List<string> realPath, List<Dictionary<string, int>> registerSnapshots)
+        public static Dictionary<string, bool> CoveredMpm = new Dictionary<string, bool>();
+        internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
             int a, b, i;
             a = b = i = 0;
@@ -27,30 +33,56 @@ namespace CPU.Tests
             while ((a != 0) || (b != 0))
             {
                 (a, b) = cpu.StepMicrocommand();
-                string currentLabel = cpu.GetCurrentLabel(a);
-                if (previousLabel != currentLabel)
+                var buf = cpu.GetCurrentLabel(a);
+                string currentLabel = buf.Item1;
+                string microinstruction = "";
+                foreach (var label in buf.Item2)
+                {
+                    microinstruction += label + " ";
+                }
+                var pathBuffer = new KeyValuePair<string, string>(currentLabel, microinstruction);
+                if (b == 6)
                 {
                     CaptureRegisterSnapshot(cpu, registerSnapshots);
-                    realPath.Add(currentLabel);
+                    realPath.Add(pathBuffer);
                 }
                 i++;
-
-                previousLabel = currentLabel;
             }
-            realPath.RemoveAt(realPath.Count - 1);
         }
 
         public static void GenerateTraceLog(
+            byte[] beforeDump,
+            byte[] afterDump,
             List<Dictionary<string, int>> registerSnapshots,
             List<string> expectedPath,
-            List<string> realPath,
-            string testName)
+            List<KeyValuePair<string, string>> realPath,
+            string testName,
+            string instruction,
+            string fileName)
         {
             string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../");
-            string outputFile = Path.Combine(currentFolder, "SnapShots.txt");
+            string outputFile = Path.Combine(currentFolder, fileName);
 
+            File.AppendAllText(outputFile, $"Trace log for test: {testName}\n");
+            File.AppendAllText(outputFile, $"{instruction}\n\n");
 
-            File.AppendAllText(outputFile, $"Trace log for test: {testName}\n\n");
+            File.AppendAllText(outputFile, "Dump before [0-10]:\n");
+            foreach (byte i in beforeDump[0..10])
+            {
+                File.AppendAllText(outputFile, "0x"+ i.ToString("X") + " ");
+            }
+            File.AppendAllText(outputFile, "\n\n");
+
+            File.AppendAllText(outputFile, "Expected Path: ");
+            foreach (var label in expectedPath)
+                File.AppendAllText(outputFile, label + " ");
+            File.AppendAllText(outputFile, "\n");
+
+            File.AppendAllText(outputFile, "Real Path:     ");
+            foreach (var label in realPath)
+                File.AppendAllText(outputFile, label.Key + " ");
+            File.AppendAllText(outputFile, "\n\n");
+
             for (int i = 1; i < registerSnapshots.Count; i++)
             {
                 Dictionary<string, int>? prev = registerSnapshots[i - 1];
@@ -58,7 +90,8 @@ namespace CPU.Tests
 
                 try
                 {
-                    File.AppendAllText(outputFile, realPath[i - 1] + "\n");
+                    File.AppendAllText(outputFile, realPath[i - 1].Key + "\n");
+                    File.AppendAllText(outputFile, realPath[i - 1].Value + "\n\n");
                 }
                 catch (Exception ex)
                 {
@@ -71,12 +104,20 @@ namespace CPU.Tests
 
                     if (prevVal != currVal)
                     {
-                        File.AppendAllText(outputFile, $"  {key}: {prevVal} -> {currVal}\n");
+                        File.AppendAllText(outputFile, $"  {key}: 0x{((ushort)prevVal).ToString("X")} -> 0x{((ushort)currVal).ToString("X")}\n");
                     }
                 }
 
                 File.AppendAllText(outputFile, "\n");
             }
+
+            File.AppendAllText(outputFile, "Dump after [0-10]:\n");
+            foreach (byte i in afterDump[0..10])
+            {
+                File.AppendAllText(outputFile, "0x" + i.ToString("X") + " ");
+            }
+            File.AppendAllText(outputFile, "\n\n");
+
         }
 
         // Captures the registers that changed after executing one microinstruction
