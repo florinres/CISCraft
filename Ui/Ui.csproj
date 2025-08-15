@@ -4,6 +4,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net9.0-windows</TargetFramework>
         <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AssemblyName>MicroCISC</AssemblyName>
         <ApplicationIcon>wpfui-icon.ico</ApplicationIcon>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
