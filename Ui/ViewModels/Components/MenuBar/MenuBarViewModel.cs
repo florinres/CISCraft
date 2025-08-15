@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
@@ -29,6 +30,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         _toolVisibilityService.SetDockingService(dockingService);
         LayoutControl.SetDockingService(dockingService);
         _dockingService.LoadLastUsedLayout();
+        files = DocumentService.Documents;
     }
 
     public void SetToolsVisibilityOnAndOff()
@@ -63,7 +65,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         }
         catch (IOException)
         {
-            defaultContent = fullPath + " doesn't exist"; // daca nu apare fisierul pe git trb bagat manual in bin ig 
+            defaultContent = fullPath + Static_Messages.FILE_NOT_EXIST_TEXT;
         }
         fileName = GetNextAvailableFileName();
 
@@ -122,8 +124,8 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     {
         var dialog = new OpenFileDialog
         {
-            Title = "Open File",
-            Filter = "Assembly Files (*.asm;*.s)|*.asm;*.s|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+            Title = Static_Messages.OPEN_FILE_TEXT,
+            Filter = Static_Messages.OPEN_FILE_FILTER
         };
 
         if (dialog.ShowDialog() != true) return;
@@ -164,8 +166,8 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         if (!File.Exists(filePath))
         {
             MessageBoxResult result = MessageBox.Show(
-                "Fișierul nu este salvat. Dorești să îl salvezi înainte de închidere?",
-                "Atenție",
+                Static_Messages.SAVE_FILE_TEXT,
+                Static_Messages.ATTENTION,
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Warning
             );
@@ -173,9 +175,9 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
             {
                 var saveFileDialog = new SaveFileDialog
                 {
-                    Title = "Salvează fișier",
-                    Filter = "Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt",
-                    DefaultExt = "asm",
+                    Title = Static_Messages.SAVE_FILE_LABEL,
+                    Filter = Static_Messages.SAVE_FILE_FILTER,
+                    DefaultExt = Static_Messages.DEFAULT_EXTENSION,
                     AddExtension = true,
                     FileName = file.Title,
                 };
