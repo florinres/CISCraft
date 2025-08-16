@@ -114,7 +114,7 @@ namespace CPU.Business
             int mpmIndex = 0;
             _microProgram = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
             var labelsAddresses = new Dictionary<string, byte>();
-            byte[] microcommandsBuffer = new byte[1500];
+            byte[] microcommandsBuffer = new byte[1700];
             int bufferIndex = 0;
 
             if (_microProgram == null) return;
