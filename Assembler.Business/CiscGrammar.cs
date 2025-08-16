@@ -84,7 +84,7 @@ namespace Assembler.Business
                 ToTerm("EI")     |
                 ToTerm("DI")     |
                 ToTerm("RET")    |
-                ToTerm("RETI")   |
+                ToTerm("IRET")   |
                 ToTerm("HALT")   |
                 ToTerm("WAIT")   |
                 ToTerm("PUSHPC") |
