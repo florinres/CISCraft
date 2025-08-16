@@ -170,7 +170,7 @@
     ],
     "POP":
     [
-        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",             "STEP",             "INDEX0",  "T",  "0"            ],
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdTs",      "NONE",          "SBUS",  "PmADR",       "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
@@ -315,8 +315,10 @@
     ],
     "POP PC":
     [
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "NONE",          "SBUS",  "PmPC",        "NONE",    "+2SP",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["PdMDRs",    "NONE",          "SBUS",  "PmPC",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+
     ],
     "PUSH FLAG":
     [
@@ -325,19 +327,23 @@
     ],
     "POP FLAG":
     [
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "NONE",          "SBUS",  "PmFLAG",      "NONE",    "+2SP",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["PdMDRs",    "NONE",          "SBUS",  "PmFLAG",      "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "RET":
     [
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "NONE",          "SBUS",  "PmPC",        "NONE",    "+2SP",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["PdMDRs",    "NONE",          "SBUS",  "PmPC",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "IRET":
     [
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "NONE",          "SBUS",  "PmPC",        "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
+        ["PdMDRs",    "NONE",          "SBUS",  "PmPC",        "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "NONE",          "SBUS",  "PmFLAG",      "NONE",    "+2SP",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["PdMDRs",    "NONE",          "SBUS",  "PmFLAG",      "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ]
 }
