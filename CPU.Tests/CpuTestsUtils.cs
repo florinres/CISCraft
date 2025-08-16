@@ -12,6 +12,8 @@ namespace CPU.Tests
 {
     public static class CpuTestsUtils
     {
+        public const short stackPointer = 0xA;
+        const short MaxMemoryDump = 20;
         public static Dictionary<string, bool> CoveredMpm = new Dictionary<string, bool>();
         internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
@@ -52,13 +54,6 @@ namespace CPU.Tests
             File.AppendAllText(outputFile, $"Trace log for test: {testName}\n");
             File.AppendAllText(outputFile, $"{instruction}\n\n");
 
-            File.AppendAllText(outputFile, "Dump before [0-10]:\n");
-            foreach (byte i in beforeDump[0..10])
-            {
-                File.AppendAllText(outputFile, "0x"+ i.ToString("X") + " ");
-            }
-            File.AppendAllText(outputFile, "\n\n");
-
             File.AppendAllText(outputFile, "Expected Path: ");
             foreach (var label in expectedPath)
                 File.AppendAllText(outputFile, label + " ");
@@ -97,8 +92,16 @@ namespace CPU.Tests
                 File.AppendAllText(outputFile, "\n");
             }
 
-            File.AppendAllText(outputFile, "Dump after [0-10]:\n");
-            foreach (byte i in afterDump[0..10])
+            File.AppendAllText(outputFile, $"Dump before [0-{MaxMemoryDump}]:\n");
+            foreach (byte i in beforeDump[0..MaxMemoryDump])
+            {
+                File.AppendAllText(outputFile, "0x"+ i.ToString("X") + " ");
+            }
+
+            File.AppendAllText(outputFile, "\n");
+
+            File.AppendAllText(outputFile, $"Dump after [0-{MaxMemoryDump}]:\n");
+            foreach (byte i in afterDump[0..MaxMemoryDump])
             {
                 File.AppendAllText(outputFile, "0x" + i.ToString("X") + " ");
             }
@@ -162,7 +165,7 @@ namespace CPU.Tests
                 cpu.Registers[(REGISTERS)i] = 0;
             }
             cpu.Registers[REGISTERS.ONES] = -1;
-            cpu.Registers[REGISTERS.SP] = 0x6;
+            cpu.Registers[REGISTERS.SP] = stackPointer;
 
             for (int i = 0; i < 16; i++)
             {
@@ -172,7 +175,7 @@ namespace CPU.Tests
             buf["None"]  = 0;
             buf["FLAGS"] = 0;
             buf["RG"]    = 0;
-            buf["SP"]    = 0x6;
+            buf["SP"]    = stackPointer;
             buf["T "]    = 0;
             buf["PC"]    = 0;
             buf["IVR"]   = 0;
