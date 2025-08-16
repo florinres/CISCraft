@@ -135,11 +135,6 @@
                         <Grid.Style>
                             <Style TargetType="Grid">
                                 <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                        <Setter Property="Background" Value="#471d1a" /> <!-- or your highlight brush -->
-                                    </DataTrigger>
-                                </Style.Triggers>
                             </Style>
                         </Grid.Style>
                         <Grid.ColumnDefinitions>
@@ -198,7 +193,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[0].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -213,7 +208,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[1].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -229,7 +224,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[2].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -245,7 +240,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[3].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -261,7 +256,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[4].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -277,7 +272,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[5].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -293,7 +288,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -309,7 +304,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -325,7 +320,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -342,7 +337,7 @@
                                     <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Items[6].IsCurrent}" Value="True">
-                                            <Setter Property="Background" Value="#5c3532" />
+                                            <Setter Property="Background" Value="#FFFF2424" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
