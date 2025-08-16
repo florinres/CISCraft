@@ -264,7 +264,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(14, cpu.Registers[REGISTERS.PC]); 
+                    Assert.AreEqual(12, cpu.Registers[REGISTERS.PC]); 
                 });
         }
         [TestMethod]
@@ -359,7 +359,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(0x12, cpu.Registers[REGISTERS.PC]); 
+                    Assert.AreEqual(0x10, cpu.Registers[REGISTERS.PC]); 
                     Assert.AreEqual(CpuTestsUtils.stackPointer, cpu.Registers[REGISTERS.SP]); 
                 });
         }
@@ -403,7 +403,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(0x12, cpu.Registers[REGISTERS.PC]); 
+                    Assert.AreEqual(0x10, cpu.Registers[REGISTERS.PC]); 
                     Assert.AreEqual(CpuTestsUtils.stackPointer, cpu.Registers[REGISTERS.SP]); 
                     Assert.AreEqual(0x8, cpu.Registers[REGISTERS.FLAGS]); 
                 });

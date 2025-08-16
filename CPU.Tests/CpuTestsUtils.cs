@@ -15,11 +15,11 @@ namespace CPU.Tests
         public const short stackPointer = 0xA;
         const short MaxMemoryDump = 20;
         public static Dictionary<string, bool> CoveredMpm = new Dictionary<string, bool>();
-        internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
+        internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string, string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
             int a, b, i;
 
-            while(!IsIrEmpty(cpu))
+            while (!IsIrEmpty(cpu))
             {
                 (a, b) = cpu.StepMicrocommand();
                 var buf = cpu.GetCurrentLabel(a);
@@ -36,6 +36,7 @@ namespace CPU.Tests
                     realPath.Add(pathBuffer);
                 }
             }
+            cpu.Registers[REGISTERS.PC] -= 2;
         }
 
         public static void GenerateTraceLog(
