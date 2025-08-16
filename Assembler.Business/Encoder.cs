@@ -84,10 +84,10 @@ namespace Assembler.Business
              * OFFSET: Offset - 8b
              * OPPCODE | OFFSET
              */
-            BNE = 0xC000,
-            BEQ = 0xC100,
-            BPL = 0xC200,
-            BMI = 0xC300,
+            BEQ = 0xC000,
+            BNE = 0xC100,
+            BMI = 0xC200,
+            BPL = 0xC300,
             BCS = 0xC400,
             BCC = 0xC500,
             BVS = 0xC600,
@@ -345,29 +345,17 @@ namespace Assembler.Business
                     }
 
                 case "B2Instr":
+                case "B3Instr":
                     {
                         try
                         {
-                            HandleB2Instruction(child);
+                            HandleB2B3Instruction(child);
                             instr = AssembleInstruction(_instructionParts, 2);
                         }
                         catch(Exception e)
                         {
                             Console.WriteLine($"Error: {e.Message}");
                         }
-                        break;
-                    }
-                case "B3Instr":
-                    {
-                        try
-                        {
-                            HandleB3Instruction(child);
-                        }
-                        catch(Exception e)
-                        {
-                            Console.WriteLine($"Error: {e.Message}");
-                        }
-                        instr = AssembleInstruction(_instructionParts, 3);
                         break;
                     }
                 case "B4Instr":
@@ -426,45 +414,13 @@ namespace Assembler.Business
         *   Input: The node that points to the "Instr" Non-termianl
         *   Output: The parts of the instruction stored in _instructionParts
         */
-        private void HandleB2Instruction(ParseTreeNode node)
+        private void HandleB2B3Instruction(ParseTreeNode node)
         {
             var parent = node;
             // add the oppcode to the _instructionParts
             switch (node.Term.Name)
             {
                 case "B2Oppcodes":
-                {
-                    _instructionParts = default;
-                    string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
-                    if(_debug) Console.Write(_instrAddress+" "+oppcode);
-                    _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
-                    return;
-                }
-                case "B2Operand":
-                {
-                    CheckB2Operand(node.ChildNodes[0]);
-                    return;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            foreach(var childNode in parent.ChildNodes)
-            {
-                HandleB2Instruction(childNode);
-            }
-        }
-
-        /**
-        *   Input: The node that points to the "Instr" Non-termianl
-        *   Output: The parts of the instruction stored in _instructionParts
-        */
-        private void HandleB3Instruction(ParseTreeNode node)
-        {
-            var parent = node;
-            switch (node.Term.Name)
-            {
                 case "B3Oppcodes":
                 {
                     _instructionParts = default;
@@ -473,9 +429,10 @@ namespace Assembler.Business
                     _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
                     return;
                 }
+                case "B2Operand":
                 case "B3Operand":
                 {
-                    CheckB3Operand(node.ChildNodes[0]);
+                    CheckB2B3Operand(node.ChildNodes[0]);
                     return;
                 }
                 default:
@@ -485,7 +442,7 @@ namespace Assembler.Business
             }
             foreach(var childNode in parent.ChildNodes)
             {
-                HandleB3Instruction(childNode);
+                HandleB2B3Instruction(childNode);
             }
         }
 
@@ -501,34 +458,7 @@ namespace Assembler.Business
             _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
             _instrAddress += 2;
         }
-        private void CheckB3Operand(ParseTreeNode node)
-        {
-            switch (node.Term.Name)
-            {
-                case "number":
-                {
-                    _instructionParts.Offset = Convert.ToInt16(node.Token.Value);
-                    // add the register to the _instructionPartS
-                    if(_debug) Console.WriteLine(" " + node.Token.Value);
-                    _instrAddress += 2;
-                    return;
-                }
-                case "identifier":
-                {
-                    string label = node.Token.Text;
-                    // add the register to the _instructionPartS
-                    if (!SymbolTable.ContainsKey(label))
-                    {
-                        throw new ArgumentException($"Unknown label: {label}");
-                    }
-                    if(_debug) Console.WriteLine(" " + label + " " + (SymbolTable[label] - _instrAddress));
-                    _instructionParts.Offset = Convert.ToInt16(SymbolTable[label] - _instrAddress);
-                    _instrAddress += 2;
-                    return;
-                }
-            }
-        }
-        private void CheckB2Operand(ParseTreeNode node)
+        private void CheckB2B3Operand(ParseTreeNode node)
         {
             switch(node.Term.Name)
             {
@@ -689,11 +619,7 @@ namespace Assembler.Business
                     }
                 case 2:
                     {
-                        return AssembleB2(parts);
-                    }
-                case 3:
-                    {
-                        return AssembleB3(parts);
+                        return AssembleB2B3(parts);
                     }
                 case 4:
                     {
@@ -710,18 +636,12 @@ namespace Assembler.Business
             instr.Offset2 = parts.Offset2;
             return instr;
         }
-        private Instruction AssembleB2(InstructionParts parts)
+        private Instruction AssembleB2B3(InstructionParts parts)
         {
             Instruction instr = default;
             instr.Instr   = (ushort)(parts.Oppcode | (parts.Mad << 4) | parts.Rd);
             instr.Offset1 = (short)(parts.Offset1 + s_programStartingAddress);
             instr.Offset2 = (short)(parts.Offset2 + s_programStartingAddress);
-            return instr;
-        }
-        private Instruction AssembleB3(InstructionParts parts)
-        {
-            Instruction instr = default;
-            instr.Instr = (ushort)(parts.Oppcode | ((ushort)parts.Offset & (ushort)0xFF));
             return instr;
         }
         private Instruction AssembleB4(InstructionParts parts)

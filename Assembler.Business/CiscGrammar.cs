@@ -118,7 +118,7 @@ namespace Assembler.Business
             b1Operand1.Rule  = register | mem;
             b1Operand2.Rule  = register | number | mem;
             b2Operand.Rule   = register | number | mem | str;
-            b3Operand.Rule   = number   | str;
+            b3Operand.Rule   = register | number | mem | str;
 
             b1Instr.Rule = b1Oppcodes + b1Operand1 + COMMA + b1Operand2;
             b2Instr.Rule = b2Oppcodes + b2Operand;
