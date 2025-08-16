@@ -184,51 +184,52 @@
     "BEQ":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF Z JUMPI",       "INDEX3",  "T",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BNE":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF Z JUMPI",       "INDEX3",  "F",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BMI":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF S JUMPI",       "INDEX3",  "T",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BPL":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF S JUMPI",       "INDEX3",  "F",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BCS":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF C JUMPI",       "INDEX3",  "T",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BCC":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF C JUMPI",       "INDEX3",  "F",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BVS":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF V JUMPI",       "INDEX3",  "T",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "BVC":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF V JUMPI",       "INDEX3",  "F",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX7",  "T",  "IFCH"         ]
     ],
     "JMP":
     [
         ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "JMP_AM"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "STEP",             "INDEX0",  "T",  "0"            ]
     ],
     "CALL":
     [
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "CALL_AM"      ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "CALL_AM"      ],
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "+2PC",            "JUMPI",            "INDEX3",  "T",  "CALL_AM"      ]
     ],
     "CALL_AM":
     [
