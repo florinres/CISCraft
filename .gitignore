@@ -175,4 +175,8 @@ Assembler.Main/obj/
 /ControlUnit/obj/Debug/net9.0/ref/ControlUnit.dll
 
 # Unit test trace
-/CPU.Tests/SnapShots.txt
+/CPU.Tests/SnapShots_*
+
+# Application release
+/Release/*
+Release.rar

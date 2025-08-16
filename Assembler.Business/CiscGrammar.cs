@@ -62,13 +62,10 @@ namespace Assembler.Business
                 ToTerm("ROR")  |
                 ToTerm("RLC")  |
                 ToTerm("RRC")  |
-                ToTerm("JMP")  |
-                ToTerm("CALL") |
                 ToTerm("PUSH") |
                 ToTerm("POP");
 
             b3Oppcodes.Rule =
-                ToTerm("BR")  |
                 ToTerm("BNE") |
                 ToTerm("BEQ") |
                 ToTerm("BPL") |
@@ -76,20 +73,16 @@ namespace Assembler.Business
                 ToTerm("BCS") |
                 ToTerm("BCC") |
                 ToTerm("BVS") |
-                ToTerm("BVC");
+                ToTerm("BVC") |
+                ToTerm("JMP") |
+                ToTerm("CALL");
 
             b4Oppcodes.Rule =
                 ToTerm("CLC")    |
-                ToTerm("CLV")    |
-                ToTerm("CLZ")    |
-                ToTerm("CLS")    |
-                ToTerm("CCC")    |
                 ToTerm("SEC")    |
-                ToTerm("SEV")    |
-                ToTerm("SEZ")    |
-                ToTerm("SES")    |
-                ToTerm("SCC")    |
                 ToTerm("NOP")    |
+                ToTerm("EI")     |
+                ToTerm("DI")     |
                 ToTerm("RET")    |
                 ToTerm("RETI")   |
                 ToTerm("HALT")   |

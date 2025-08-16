@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Ui.Components;
 
 namespace Ui.ViewModels.Generics;
 
@@ -12,7 +13,9 @@ public partial class FileViewModel : PaneViewModel
     [ObservableProperty] public partial string Content { get; set; } = string.Empty;
 
     [ObservableProperty] public partial string? FilePath { get; set; }
-    
+
+    public StyledAvalonEdit? EditorInstance { get; set; }
+
     public async Task LoadFromFile(string path)
     {
         FilePath = path;

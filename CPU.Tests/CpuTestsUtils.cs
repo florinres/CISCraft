@@ -16,22 +16,8 @@ namespace CPU.Tests
         internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
             int a, b, i;
-            a = b = i = 0;
-            string previousLabel = "";
 
-            (a, b) = cpu.StepMicrocommand();
-            i++;
-            (a, b) = cpu.StepMicrocommand();
-            i++;
-            (a, b) = cpu.StepMicrocommand();
-            i++;
-            (a, b) = cpu.StepMicrocommand();
-            i++;
-            (a, b) = cpu.StepMicrocommand();
-            i++;
-            (a, b) = cpu.StepMicrocommand();
-            i++;
-            while ((a != 0) || (b != 0))
+            while(!IsIrEmpty(cpu))
             {
                 (a, b) = cpu.StepMicrocommand();
                 var buf = cpu.GetCurrentLabel(a);
@@ -47,7 +33,6 @@ namespace CPU.Tests
                     CaptureRegisterSnapshot(cpu, registerSnapshots);
                     realPath.Add(pathBuffer);
                 }
-                i++;
             }
         }
 
@@ -151,6 +136,16 @@ namespace CPU.Tests
             registerSnapshots.Add(buf);
         }
 
+        private static bool IsIrEmpty(Cpu cpu)
+        {
+            cpu.StepMicrocommand();
+            cpu.StepMicrocommand();
+            cpu.StepMicrocommand();
+            cpu.StepMicrocommand();
+            cpu.StepMicrocommand();
+            cpu.StepMicrocommand();
+            return cpu.Registers[REGISTERS.IR] == 0;
+        }
         public static void InitTest(List<Dictionary<string, int>> registerSnapshots, Cpu cpu)
         {
             Dictionary<string, int> buf = new Dictionary<string, int>();
@@ -166,6 +161,8 @@ namespace CPU.Tests
             {
                 cpu.Registers[(REGISTERS)i] = 0;
             }
+            cpu.Registers[REGISTERS.ONES] = -1;
+            cpu.Registers[REGISTERS.SP] = 0x6;
 
             for (int i = 0; i < 16; i++)
             {
@@ -175,7 +172,7 @@ namespace CPU.Tests
             buf["None"]  = 0;
             buf["FLAGS"] = 0;
             buf["RG"]    = 0;
-            buf["SP"]    = 0;
+            buf["SP"]    = 0x6;
             buf["T "]    = 0;
             buf["PC"]    = 0;
             buf["IVR"]   = 0;
@@ -184,7 +181,7 @@ namespace CPU.Tests
             buf["IRLSB"] = 0;
             buf["NEG"]   = 0;
             buf["ZEROS"] = 0;
-            buf["ONES"]  = 0;
+            buf["ONES"]  = -1;
             buf["IR"]    = 0;
             buf["SBUS"]  = 0;
             buf["DBUS"]  = 0;

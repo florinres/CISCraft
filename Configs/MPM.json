@@ -85,12 +85,12 @@
     ],
     "FOD_AI_B2":
     [
-        ["NONE",      "PdRGd",         "DBUS",  "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX4",  "T",  "CLR"          ]
+        ["NONE",      "PdRGd",         "DBUS",  "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX5",  "T",  "CLR"          ]
     ],
     "FOD_AX_B2":
     [
         ["NONE",      "PdPCd",         "DBUS",  "PmADR",       "READ",    "+2PC",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdMDRs",    "PdRGd",         "SUM",   "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX4",  "T",  "CLR"          ]
+        ["PdMDRs",    "PdRGd",         "SUM",   "PmADR",       "READ",    "NONE",            "JUMPI",            "INDEX5",  "T",  "CLR"          ]
     ],
     "MOV":
     [
@@ -98,7 +98,7 @@
     ],
     "ADD":
     [
-        ["PdTs",      "PdMDRd",        "SUM",   "PmMDR",       "NONE",    "PdCONDaritm", "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["PdTs",      "PdMDRd",        "SUM",   "PmMDR",       "NONE",    "PdCONDaritm",     "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
     "SUB":
     [
@@ -170,9 +170,9 @@
     ],
     "POP":
     [
-        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
+        ["PdADRs",    "NONE",          "SBUS",  "PmT",         "NONE",    "+2SP",             "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdTs",      "NONE",          "SBUS",  "PmADR",       "NONE",    "+2SP",            "JUMPI",            "INDEX3",  "T",  "WRD"          ]
+        ["PdTs",      "NONE",          "SBUS",  "PmADR",       "NONE",    "NONE",            "JUMPI",            "INDEX3",  "T",  "WRD"          ]
     ],
     "WRD":
     [

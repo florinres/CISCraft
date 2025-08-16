@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using AvalonDock;
+using Ui.Components;
+using ICSharpCode.AvalonEdit;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
@@ -11,13 +13,16 @@ namespace Ui.Views.Windows;
 
 public partial class MainWindow
 {
+    ICpuService _cpuService;
     public MainWindow(
-        IMainWindowViewModel viewModel
+        IMainWindowViewModel viewModel,
+        ICpuService cpuService
     )
     {
         DataContext = viewModel;
         SystemThemeWatcher.Watch(this);
         InitializeComponent();
+        _cpuService = cpuService;
     }
 
     public void SetServiceProvider(IServiceProvider serviceProvider)
@@ -72,6 +77,15 @@ public partial class MainWindow
         if(e.Document.Content is FileViewModel thisFile)
         {
             MenuBarViewModel.CloseDocument(thisFile);
+        }
+    }
+  
+    private void OnEditorLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is StyledAvalonEdit editor && editor.DataContext is FileViewModel vm)
+        {
+            vm.EditorInstance = editor;
+            _cpuService.SetActiveEditor(vm);
         }
     }
 }

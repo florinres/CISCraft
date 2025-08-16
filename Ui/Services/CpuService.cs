@@ -1,9 +1,13 @@
 
 using System.IO;
+using System.Windows.Media;
 using CPU.Business.Models;
+using ICSharpCode.AvalonEdit;
+using Ui.Components;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Components.Microprogram;
+using Ui.ViewModels.Generics;
 
 namespace Ui.Services;
 
@@ -12,12 +16,21 @@ public class CpuService : ICpuService
     private readonly CPU.Business.CPU _cpu;
     private readonly IMicroprogramViewModel _microprogramService;
     private readonly IDiagramViewModel _diagram;
-    
-    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu, IDiagramViewModel diagram, IMicroprogramViewModel microprogramViewModel)
+    private FileViewModel? _fileViewModel;
+    Color _semiTransparentYellow;
+    int i = 1;
+    public HighlightCurrentLineBackgroundRenderer? Highlight
+    {
+        get;
+        set;
+    }
+
+    public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu, IDiagramViewModel diagram)
     {
         _cpu = cpu;
         _diagram = diagram;
         _microprogramService = microprogramService;
+        _semiTransparentYellow = Color.FromArgb(38, 255, 255, 0);
         _ = LoadJsonMpm();
     }
 
@@ -51,10 +64,36 @@ public class CpuService : ICpuService
          }
          _microprogramService.CurrentRow = row;
          _microprogramService.CurrentColumn = column;
-         return (row, column);
+
+        if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+        {
+            Highlight?.SetLine(++i);
+        }
+        return (row, column);
     }
     public void ResetProgram()
     {
         _cpu.ResetProgram();
+    }
+    public void SetActiveEditor(FileViewModel fileViewModel)
+    {
+        _fileViewModel = fileViewModel;
+
+    }
+    public void StartDebugging()
+    {
+        if (_fileViewModel?.EditorInstance != null)
+        {
+            Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, i, _semiTransparentYellow);
+            _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Add(Highlight);
+        }
+    }
+    public void StopDebugging()
+    {
+        if (Highlight != null && _fileViewModel?.EditorInstance != null)
+        {
+            _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Remove(Highlight);
+            Highlight = null;
+        }
     }
 }

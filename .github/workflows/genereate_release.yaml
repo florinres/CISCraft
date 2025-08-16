@@ -1,0 +1,38 @@
+name: Generate Release
+
+on:
+  push:
+    tags:
+    - '*'
+env:
+  RELEASE_DIR: Release
+  EXECUTABLE_PROJ: Ui
+jobs:
+  gen_release:
+    runs-on: ubuntu-latest #Ubuntu is smaller in size than Windows
+    permissions:
+      contents: write # permission to upload artefacts
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Publish application
+        id: publish
+        run:
+          dotnet publish -c Release -r win-x64 -p:EnableWindowsTargeting=true -p:PublishSingleFile=true -p:SelfContained=true -o $RELEASE_DIR $EXECUTABLE_PROJ/$EXECUTABLE_PROJ.csproj
+          # please check https://learn.microsoft.com/en-us/dotnet/core/tools/sdk-errors/netsdk1100
+          # for more information
+      - name: Archive release
+        run: |
+          sudo apt install -y  zip
+          zip -r $RELEASE_DIR.zip $RELEASE_DIR
+
+      - name: Upload release
+        uses: ncipollo/release-action@v1
+        with:
+           artifacts: ${{ env.RELEASE_DIR }}.zip
