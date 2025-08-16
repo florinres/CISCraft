@@ -66,18 +66,18 @@ namespace Assembler.Business
              * OPPCODE | AMD | DR
             */
             CLR = 0xA000, /* 0x800 */
-            NEG = 0xA100,
-            INC = 0xA200,
-            DEC = 0xA300,
-            ASL = 0xA400,
-            ASR = 0xA500,
-            LSR = 0xA600,
-            ROL = 0xA700,
-            ROR = 0xA800,
-            RLC = 0xA900,
-            RRC = 0xAA00,
-            PUSH = 0xAB00,
-            POP = 0xAC00,
+            NEG = 0xA000  | (0x01 << 7),
+            INC = 0xA000  | (0x02 << 7),
+            DEC = 0xA000  | (0x03 << 7),
+            ASL = 0xA000  | (0x04 << 7),
+            ASR = 0xA000  | (0x05 << 7),
+            LSR = 0xA000  | (0x06 << 7),
+            ROL = 0xA000  | (0x07 << 7),
+            ROR = 0xA000  | (0x08 << 7),
+            RLC = 0xA000  | (0x09 << 7),
+            RRC = 0xA000  | (0x0A << 7),
+            PUSH = 0xA000 | (0x0B << 7),
+            POP = 0xA000  | (0x0C << 7),
             /** B3 INSTRUCTIONS TYPE
              * BNE, BEQ, BPL, BMI, BCS, BCC, BVS, BVC, JMP, CALL
              * OPCODE: Operation Code - 8b
@@ -100,18 +100,18 @@ namespace Assembler.Business
              * OPCODE: Operation Code - 16b
              * OPPCODE
              */
-            CLC = 0xE000, /* 0xE00 */
-            SEC = 0xE208,
-            NOP = 0xE400,
-            HALT = 0xE600,
-            EI = 0xE800,
-            DI = 0xEA00,
-            PUSHPC = 0xEC00,
-            POPPC = 0xEE00,
-            PUSHF = 0xF000,
-            POPF = 0xF200,
-            RET = 0xF400,
-            RETI = 0xF600,
+            CLC     = 0xE000, /* 0xE00 */
+            SEC     = 0xE008 | (0x02 << 7),
+            NOP     = 0xE000 | (0x04 << 7),
+            HALT    = 0xE000 | (0x06 << 7),
+            EI      = 0xE000 | (0x08 << 7),
+            DI      = 0xE000 | (0x0A << 7),
+            PUSHPC  = 0xE000 | (0x0C << 7),
+            POPPC   = 0xE000 | (0x0E << 7),
+            PUSHF   = 0xE000 | (0x11 << 7),
+            POPF    = 0xE000 | (0x13 << 7),
+            RET     = 0xE000 | (0x16 << 7),
+            RETI    = 0xE000 | (0x19 << 7),
             /**
              * ERROR
              */
@@ -183,7 +183,7 @@ namespace Assembler.Business
             { "PUSHF",  new Dictionary<ushort, string> { {(ushort)OppCodes.PUSHF ,  "B4" } } },
             { "POPF",   new Dictionary<ushort, string> { {(ushort)OppCodes.POPF ,   "B4" } } },
             { "RET",    new Dictionary<ushort, string> { {(ushort)OppCodes.RET ,    "B4" } } },
-            { "RETI",   new Dictionary<ushort, string> { {(ushort)OppCodes.RETI ,   "B4" } } },
+            { "IRET",   new Dictionary<ushort, string> { {(ushort)OppCodes.RETI ,   "B4" } } },
 
         };
         readonly Dictionary<string, ushort> registers = new Dictionary<string, ushort>
