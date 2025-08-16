@@ -124,6 +124,8 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding StartDebugCommand}"
+                IsEnabled="{Binding NotDebugging}"
                 VerticalAlignment="Top"
                 ToolTip="Debug"
                 Height="30"
@@ -149,6 +151,7 @@
 
             <ui:Button
                 Command="{Binding StepMicroprogramCommand}"
+                IsEnabled="{Binding IsDebugging}"
                 VerticalAlignment="Top"
                 ToolTip="Step Into"
                 Height="30"
@@ -163,6 +166,7 @@
             <ui:Button
                 VerticalAlignment="Top"
                 ToolTip="Step Over"
+                IsEnabled="{Binding IsDebugging}"
                 Height="30"
                 Width="30"
                 Padding="0"
@@ -174,6 +178,7 @@
 
             <ui:Button
                 Command="{Binding ResetProgramCommand}"
+                IsEnabled="{Binding IsDebugging}"
                 VerticalAlignment="Top"
                 ToolTip="Reset"
                 Height="30"
@@ -186,7 +191,9 @@
             </ui:Button>
 
             <ui:Button
+                Command="{Binding StopDebugCommand}"
                 VerticalAlignment="Top"
+                IsEnabled="{Binding IsDebugging}"
                 ToolTip="Stop"
                 Height="30"
                 Width="30"
@@ -219,7 +226,8 @@
                                 FontFamily="Consolas"
                                 FontSize="10pt"
                                 ShowLineNumbers="True"
-                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                Loaded="OnEditorLoaded"/>
                         </DataTemplate>
                     </components:PanesTemplateSelector.FileViewTemplate>
                     <!-- Properties -->

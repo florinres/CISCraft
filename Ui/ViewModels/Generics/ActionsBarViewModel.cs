@@ -10,15 +10,22 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
 {
     private readonly IActiveDocumentService _activeDocumentService;
     private readonly IAssemblerService _assemblerService;
-    private readonly CpuService _cpuService;
+    private readonly ICpuService _cpuService;
     private readonly IToolVisibilityService _toolVisibilityService;
 
-    public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService, CpuService cpuService, IToolVisibilityService toolVisibilityService)
+    [ObservableProperty]
+    public partial bool IsDebugging { get; set; }
+    [ObservableProperty]
+    public partial bool NotDebugging { get; set; }
+
+    public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService, ICpuService cpuService, IToolVisibilityService toolVisibilityService)
     {
         _assemblerService = assemblerService;
         _activeDocumentService = activeDocumentService;
         _cpuService = cpuService;
         _toolVisibilityService = toolVisibilityService;
+        IsDebugging = false;
+        NotDebugging = true;
         ObjectCodeGenerated += OnObjectCodeGenerated;
     }
 
@@ -55,6 +62,26 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     private void StepMicroprogram()
     {
         _cpuService.StepMicrocommand();
+    }
+    [RelayCommand]
+    private void StartDebug()
+    {
+        if (_activeDocumentService.SelectedDocument != null)
+        {
+            _cpuService.StartDebugging();
+            IsDebugging = true;
+            NotDebugging = false;
+        }
+    }
+    [RelayCommand]
+    private void StopDebug()
+    {
+        if (_activeDocumentService.SelectedDocument != null)
+        {
+            _cpuService.StopDebugging();
+            IsDebugging = false;
+            NotDebugging = true;
+        }
     }
     [RelayCommand]
     private void ResetProgram()

@@ -57,7 +57,7 @@ public partial class App : Application
             services.AddSingleton<IDiagramViewModel, DiagramViewModel>();
             services.AddSingleton<IHexViewModel, HexViewModel>();
             services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
-            services.AddSingleton<CpuService>();
+            services.AddSingleton<ICpuService, CpuService>();
             services.AddSingleton<IMicroprogramViewModel, MicroprogramViewModel>();
             services.AddSingleton<IMainMemory, MainMemory.Business.MainMemory>();
             services.AddSingleton<CPU.Business.CPU>();
