@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Ui.Models;
 
 namespace Ui.ViewModels.Components.Diagram;
@@ -5,7 +6,13 @@ namespace Ui.ViewModels.Components.Diagram;
 public partial class RegisterViewModel : BaseDiagramObject
 {
     [ObservableProperty]
-    public partial object Value { get; set; }
+    private object _value;
+
+    partial void OnValueChanged(object? value)
+    {
+        IsHighlighted = true;
+    }
+    
     [ObservableProperty]
     public partial string Name { get; set; }
 

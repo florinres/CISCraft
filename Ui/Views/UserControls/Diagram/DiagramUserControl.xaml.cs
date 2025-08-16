@@ -30,8 +30,6 @@ public partial class DiagramUserControl : UserControl
         InitializeComponent();
     }
     
-    
-    
     private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
     {
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
