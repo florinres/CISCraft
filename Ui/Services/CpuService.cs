@@ -52,8 +52,8 @@ public class CpuService : ICpuService
         
         if (filePath == "")
         {
-            var projectRoot = AppContext.BaseDirectory!;
-            fullPath = Path.Combine(projectRoot, "Assets", "Mpm.json");
+            var projectRoot = AppContext.BaseDirectory + "../../../";
+            fullPath = Path.Combine(projectRoot, "../Configs", "Mpm.json");
         }
         else
         {
