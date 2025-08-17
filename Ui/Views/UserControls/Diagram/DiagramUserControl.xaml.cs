@@ -212,7 +212,6 @@ public partial class DiagramUserControl : UserControl
                     new Point(ioEdge.X + (io == IO0 ? offset : -offset), ioEdge.Y + offset / 2),
                     new Point(sieEdge.X + (io == IO0 ? -offset : offset), ioEdge.Y + offset / 2),
                     new Point(sieEdge.X + (io == IO0 ? -offset : offset), sieEdge.Y)
-                    // sieEdge
                 };
             }
 
