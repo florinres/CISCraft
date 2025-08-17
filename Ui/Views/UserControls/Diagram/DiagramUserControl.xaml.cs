@@ -240,7 +240,7 @@ public partial class DiagramUserControl : UserControl
         }
     }
     
-    private void AddGeneralRegostersConnections()
+    private void AddGeneralRegistersConnections()
     {
         //R7 just because it is in the center, no particular reason
         var connectionPoints = R7.GetConnectionPoints(MainDiagramGrid);
