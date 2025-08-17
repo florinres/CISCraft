@@ -347,11 +347,11 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    _controlUnit.IR = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     Registers[REGISTERS.IR] = _controlUnit.IR; // For updateing the UI
                     break;
                 case 2 /* READ */:
-                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
                     _mainMemory.SetWordLocation(Registers[REGISTERS.ADR], Registers[REGISTERS.MDR]);
