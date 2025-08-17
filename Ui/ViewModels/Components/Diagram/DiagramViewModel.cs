@@ -49,10 +49,14 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
     public RegisterViewModel R13Context      { get; } = new("R13");
     public RegisterViewModel R14Context      { get; } = new("R14");
     public RegisterViewModel R15Context      { get; } = new("R15");
+    public RegisterViewModel MirContext      { get; } = new("MIR");
+    public RegisterViewModel MarContext      { get; } = new("MAR");
     
     public BitBlockViewModel Pd1Context      { get; } = new("Pd1");
     public BitBlockViewModel PdMinus1Context { get; } = new("Pd-1");
     public BitBlockViewModel Pd0sContext     { get; } = new("Pd0s");
+    public BitBlockViewModel xContext      { get; } = new("x");
+    public BitBlockViewModel yContext { get; } = new("y");
     #endregion
 
     public List<BaseDiagramObject> Contexts { get; set; } = [];
@@ -67,6 +71,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     private void SetUpContext()
     {
+        // This could be done through some sort of discovery or annotations, but I don't see the point.
         Contexts =
         [
             DataInContext,
@@ -97,7 +102,9 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             R15Context,
             Pd1Context,
             PdMinus1Context,
-            Pd0sContext
+            Pd0sContext,
+            MirContext,
+            MarContext
         ];
         ResetHighlight();
     }
@@ -111,6 +118,9 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         
         foreach (GPR gpr in Enum.GetValues<GPR>())
             UpdateGpr(gpr, _registers[gpr]);
+        
+        Update(MirContext, _registers.MIR);
+        Update(MarContext, _registers.MAR);
     }
     
     private void OnRegistersChanged(object? sender, PropertyChangedEventArgs e)
@@ -127,6 +137,14 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             if (Enum.TryParse<GPR>(name, out var gpr))
                 UpdateGpr(gpr, _registers[gpr]);
         }
+        else if (e.PropertyName?.StartsWith("MIR") == true)
+        {
+            Update(MirContext, _registers.MIR);
+        }
+        else if (e.PropertyName?.StartsWith("MAR") == true)
+        {
+            Update(MarContext, _registers.MAR);
+        }
     }
 
     private BaseDiagramObject? _lastUpdatedObject;
@@ -136,9 +154,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         switch (reg)
         {
             case REGISTERS.FLAGS:
-                FLAGContext.Value = value;
-                FLAGContext.IsHighlighted = true;
-                _lastUpdatedObject = FLAGContext;
+                Update(FLAGContext, value);
                 break;
             // case REGISTERS.RG:
             //     PCContext.Value = value;
@@ -146,39 +162,25 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             //     LastUpdatedObject = PCContext;
             //     break;
             case REGISTERS.SP:
-                SPContext.Value = value;
-                SPContext.IsHighlighted = true;
-                _lastUpdatedObject = SPContext;
+                Update(SPContext, value);
                 break;
             case REGISTERS.T:
-                TContext.Value = value;
-                TContext.IsHighlighted = true;
-                _lastUpdatedObject = TContext;
+                Update(TContext, value);
                 break;
             case REGISTERS.PC:
-                PCContext.Value = value;
-                PCContext.IsHighlighted = true;
-                _lastUpdatedObject = PCContext;
+                Update(PCContext, value);
                 break;
             case REGISTERS.IVR:
-                IVRContext.Value = value;
-                IVRContext.IsHighlighted = true;
-                _lastUpdatedObject = IVRContext;
+                Update(IVRContext, value);
                 break;
             case REGISTERS.ADR:
-                ADRContext.Value = value;
-                ADRContext.IsHighlighted = true;
-                _lastUpdatedObject = ADRContext;
+                Update(ADRContext, value);
                 break;
             case REGISTERS.MDR:
-                MDRContext.Value = value;
-                MDRContext.IsHighlighted = true;
-                _lastUpdatedObject = MDRContext;
+                Update(MDRContext, value);
                 break;
             case REGISTERS.IR:
-                IRContext.Value = value;
-                IRContext.IsHighlighted = true;
-                _lastUpdatedObject = IRContext;
+                Update(IRContext, value);
                 break;
             // Handle others as needed
         }
@@ -189,86 +191,60 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         switch (gpr)
         {
             case GPR.R0:
-                R0Context.Value = value;
-                R0Context.IsHighlighted = true;
-                _lastUpdatedObject = R0Context;
+                Update(R0Context, value);
                 break;
             case GPR.R1:
-                R1Context.Value = value;
-                R1Context.IsHighlighted = true;
-                _lastUpdatedObject = R1Context;
+                Update(R1Context, value);
                 break;
             case GPR.R2:
-                R2Context.Value = value;
-                R2Context.IsHighlighted = true;
-                _lastUpdatedObject = R2Context;
+                Update(R2Context, value);
                 break;
             case GPR.R3:
-                R3Context.Value = value;
-                R3Context.IsHighlighted = true;
-                _lastUpdatedObject = R3Context;
+                Update(R3Context, value);
                 break;
             case GPR.R4:
-                R4Context.Value = value;
-                R4Context.IsHighlighted = true;
-                _lastUpdatedObject = R4Context;
+                Update(R4Context, value);
                 break;
             case GPR.R5:
-                R5Context.Value = value;
-                R5Context.IsHighlighted = true;
-                _lastUpdatedObject = R5Context;
+                Update(R5Context, value);
                 break;
             case GPR.R6:
-                R6Context.Value = value;
-                R6Context.IsHighlighted = true;
-                _lastUpdatedObject = R6Context;
+                Update(R6Context, value);
                 break;
             case GPR.R7:
-                R7Context.Value = value;
-                R7Context.IsHighlighted = true;
-                _lastUpdatedObject = R7Context;
+                Update(R7Context, value);
                 break;
             case GPR.R8:
-                R8Context.Value = value;
-                R8Context.IsHighlighted = true;
-                _lastUpdatedObject = R8Context;
+                Update(R8Context, value);
                 break;
             case GPR.R9:
-                R9Context.Value = value;
-                R9Context.IsHighlighted = true;
-                _lastUpdatedObject = R9Context;
+                Update(R9Context, value);
                 break;
             case GPR.R10:
-                R10Context.Value = value;
-                R10Context.IsHighlighted = true;
-                _lastUpdatedObject = R10Context;
+                Update(R10Context, value);
                 break;
             case GPR.R11:
-                R11Context.Value = value;
-                R11Context.IsHighlighted = true;
-                _lastUpdatedObject = R11Context;
+                Update(R11Context, value);
                 break;
             case GPR.R12:
-                R12Context.Value = value;
-                R12Context.IsHighlighted = true;
-                _lastUpdatedObject = R12Context;
+                Update(R12Context, value);
                 break;
             case GPR.R13:
-                R13Context.Value = value;
-                R13Context.IsHighlighted = true;
-                _lastUpdatedObject = R13Context;
+                Update(R13Context, value);
                 break;
             case GPR.R14:
-                R14Context.Value = value;
-                R14Context.IsHighlighted = true;
-                _lastUpdatedObject = R14Context;
+                Update(R14Context, value);
                 break;
             case GPR.R15:
-                R15Context.Value = value;
-                R15Context.IsHighlighted = true;
-                _lastUpdatedObject = R15Context;
+                Update(R15Context, value);
                 break;
         }
+    }
+
+    private void Update(RegisterViewModel register, object value)
+    {
+        register.Value = value;
+        _lastUpdatedObject = register;
     }
 
 

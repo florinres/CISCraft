@@ -79,7 +79,7 @@ namespace CPU.Business
         private bool PdCondlogic = false;
         public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
-            _controlUnit = new ControlUnit();
+            _controlUnit = new ControlUnit(registers);
             _controlUnit.SbusEvent += OnSbusEvent;
             _controlUnit.DbusEvent += OnDbusEvent;
             _controlUnit.AluEvent += OnAluEvent;
