@@ -140,7 +140,7 @@ public partial class DiagramUserControl : UserControl
             ConnectionCanvas.Children.Add(rBusHighlight);
         }
 
-        //bullshit
+        // Add connections for IR and other components
         RegisterBlockAddConnections(Ir, sBusEdges, dBusEdges);
         AddAddressConnections();
         AddDataOutConnections();
