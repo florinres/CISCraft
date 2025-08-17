@@ -33,10 +33,12 @@ public partial class DiagramUserControl : UserControl
     {
         InitializeComponent();
 
+        DiagramScrollViewer.LostMouseCapture += (s, e) => _isDragging = false;
         MainDiagramGrid.Loaded += (s, e) =>
         {
             Dispatcher.BeginInvoke(new Action(DrawConnections), System.Windows.Threading.DispatcherPriority.Loaded);
         };
+
     }
 
     private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -44,18 +46,20 @@ public partial class DiagramUserControl : UserControl
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
 
         const double zoomStep = 0.1;
-        var newZoom = ViewModel.ZoomFactor;
+        double oldZoom = ViewModel.ZoomFactor;
+        double newZoom = e.Delta > 0 ? oldZoom + zoomStep : Math.Max(0.1, oldZoom - zoomStep);
 
-        if (e.Delta > 0)
-        {
-            newZoom += zoomStep;
-        }
-        else
-        {
-            newZoom = Math.Max(0.1, newZoom - zoomStep);
-        }
+        // Calculate position relative to scrollviewer
+        var mousePos = e.GetPosition(DiagramScrollViewer);
+        double relativeX = mousePos.X + DiagramScrollViewer.HorizontalOffset;
+        double relativeY = mousePos.Y + DiagramScrollViewer.VerticalOffset;
 
         ViewModel.ZoomFactor = newZoom;
+
+        // Adjust scroll to keep zoom centered on mouse
+        DiagramScrollViewer.ScrollToHorizontalOffset(relativeX * newZoom / oldZoom - mousePos.X);
+        DiagramScrollViewer.ScrollToVerticalOffset(relativeY * newZoom / oldZoom - mousePos.Y);
+
         e.Handled = true;
     }
 
