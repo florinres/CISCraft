@@ -9,6 +9,7 @@ public class AssemblerService : IAssemblerService
     private readonly ASMBLR _assembler;
     private readonly IMainMemory _mainMemory;
     public event EventHandler<byte[]>? SourceCodeAssembled;
+    public Dictionary<short, ushort> DebugSymbols { get; set; }
 
     public AssemblerService(ASMBLR assembler, IMainMemory memory)
     {
@@ -22,7 +23,7 @@ public class AssemblerService : IAssemblerService
         _mainMemory.LoadMachineCode(objectCode);
         
         SourceCodeAssembled?.Invoke(this, objectCode);
-        
+        DebugSymbols =  _assembler.GetDebugSymbols();
         return objectCode;
     }
 }

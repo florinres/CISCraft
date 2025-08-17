@@ -18,7 +18,7 @@ public class CpuService : ICpuService
     private readonly IDiagramViewModel _diagram;
     private FileViewModel? _fileViewModel;
     Color _semiTransparentYellow;
-    int i = 1;
+    private Dictionary<short, ushort> _debugSymbls;
     public HighlightCurrentLineBackgroundRenderer? Highlight
     {
         get;
@@ -32,6 +32,7 @@ public class CpuService : ICpuService
         _microprogramService = microprogramService;
         _semiTransparentYellow = Color.FromArgb(38, 255, 255, 0);
         _ = LoadJsonMpm();
+        _debugSymbls = new Dictionary<short, ushort>();
     }
 
     public async Task LoadJsonMpm(string filePath = "", bool debug = false)
@@ -67,7 +68,8 @@ public class CpuService : ICpuService
 
         if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
         {
-            Highlight?.SetLine(++i);
+            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
         }
         return (row, column);
     }
@@ -84,7 +86,8 @@ public class CpuService : ICpuService
     {
         if (_fileViewModel?.EditorInstance != null)
         {
-            Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, i, _semiTransparentYellow);
+            ushort lineNum = _debugSymbls[_cpu.Registers[REGISTERS.PC]];
+            Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, lineNum, _semiTransparentYellow);
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Add(Highlight);
         }
     }
@@ -95,5 +98,9 @@ public class CpuService : ICpuService
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Remove(Highlight);
             Highlight = null;
         }
+    }
+    public void SetDebugSymbols(Dictionary<short, ushort> debugSymbols)
+    {
+        _debugSymbls = debugSymbols;
     }
 }
