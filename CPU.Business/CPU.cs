@@ -90,6 +90,7 @@ namespace CPU.Business
             _microProgram = new OrderedDictionary<string, string[][]>();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             BPO = true; //Enable CPU clock
             previousMARState = 0;
             previousMIRIndexState = 0;
@@ -208,7 +209,8 @@ namespace CPU.Business
             {
                 Registers[(GPR)i] = 0;
             }
-            _mainMemory.ClearMemory();
+            Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             _controlUnit.Reset();
             BPO = true; //Reactivate CPU clock
         }
@@ -347,11 +349,11 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    _controlUnit.IR = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     Registers[REGISTERS.IR] = _controlUnit.IR; // For updateing the UI
                     break;
                 case 2 /* READ */:
-                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
                     _mainMemory.SetWordLocation(Registers[REGISTERS.ADR], Registers[REGISTERS.MDR]);

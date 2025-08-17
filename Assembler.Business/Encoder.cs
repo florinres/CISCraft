@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -133,7 +134,8 @@ namespace Assembler.Business
             public short  Offset1;
             public short  Offset2;
         }
-        readonly Dictionary<string, ushort> _symbolTable = new Dictionary<string, ushort>();
+        public readonly Dictionary<string, ushort> SymbolTable = new Dictionary<string, ushort>();
+        public readonly Dictionary<short, ushort> DebugSymbols = new Dictionary<short, ushort>();
         readonly Dictionary<string, Dictionary<ushort,string>> _oppcodes = new Dictionary<string, Dictionary<ushort,string>>
         {
             // Numerical value    ,                                     Mnemonic, Type
@@ -230,6 +232,7 @@ namespace Assembler.Business
         {
             if (node == null) return;
 
+            ushort previousAddress = 0;
             foreach (var buf in node.ChildNodes)
             {
                 var child = buf.ChildNodes[0];
@@ -239,6 +242,7 @@ namespace Assembler.Business
                     child.Term.Name == "B4Instr")
                 {
                     IncrementInstructionAddress(child);
+                    DebugSymbols[(short)(previousAddress)] = (ushort)(child.Span.Location.Line + 1);
                 }
                 else if (child.Term.Name == "Label")
                 {
@@ -252,6 +256,7 @@ namespace Assembler.Business
                 {
                     TranverseInstructionList(child);
                 }
+                previousAddress = _symbolAddress;
             }
         }
         private void IncrementInstructionAddress(ParseTreeNode node)
@@ -260,13 +265,9 @@ namespace Assembler.Business
             {
                 case "B1Instr":
                 case "B2Instr":
-                    {
-                        VerifyOperands(node);
-                        _symbolAddress += 2;
-                        break;
-                    }
                 case "B3Instr":
                     {
+                        VerifyOperands(node);
                         _symbolAddress += 2;
                         break;
                     }
@@ -286,14 +287,15 @@ namespace Assembler.Business
             if(
                 node.Term.Name == "B1Operand1" ||
                 node.Term.Name == "B1Operand2" ||
-                node.Term.Name == "B2Operand"
+                node.Term.Name == "B2Operand"  ||
+                node.Term.Name == "B3Operand"
             )
             {
                 if(node.ChildNodes[0].Term.Name == "MemoryAccess")
                 {
                     VerifyMemoryAccess(node.ChildNodes[0]);
                 }
-                if(node.ChildNodes[0].Term.Name == "identifier" || (node.ChildNodes[0].Term.Name == "number" && node.Term.Name == "B2Operand"))
+                if(node.ChildNodes[0].Term.Name == "identifier" || (node.ChildNodes[0].Term.Name == "number"))
                 {
                     _symbolAddress += 2;
                 }
@@ -515,12 +517,12 @@ namespace Assembler.Business
                 {
                     string label = node.Token.Text;
                     // add the register to the _instructionPartS
-                    if (!_symbolTable.ContainsKey(label))
+                    if (!SymbolTable.ContainsKey(label))
                     {
                         throw new ArgumentException($"Unknown label: {label}");
                     }
-                    if(_debug) Console.WriteLine(" " + label + " " + (_symbolTable[label] - _instrAddress));
-                    _instructionParts.Offset = Convert.ToInt16(_symbolTable[label] - _instrAddress);
+                    if(_debug) Console.WriteLine(" " + label + " " + (SymbolTable[label] - _instrAddress));
+                    _instructionParts.Offset = Convert.ToInt16(SymbolTable[label] - _instrAddress);
                     _instrAddress += 2;
                     return;
                 }
@@ -564,13 +566,13 @@ namespace Assembler.Business
                 case "identifier":
                 {
                     string label = node.Token.Text;
-                    if (!_symbolTable.ContainsKey(label))
+                    if (!SymbolTable.ContainsKey(label))
                     {
                         throw new ArgumentException($"Unknown label: {label}");
                     }
-                    _instructionParts.Offset1 = Convert.ToInt16(_symbolTable[label]);
+                    _instructionParts.Offset1 = Convert.ToInt16(SymbolTable[label]);
                     // add the register to the _instructionParts
-                    if(_debug) Console.WriteLine(" " + label + " " + _symbolTable[label]);
+                    if(_debug) Console.WriteLine(" " + label + " " + SymbolTable[label]);
                     _instrAddress += 4;
                     return;
                 }
@@ -668,13 +670,13 @@ namespace Assembler.Business
         private void HandleLabel(ParseTreeNode child)
         {
             string symbol = child.ChildNodes[0].Token.Text;
-            _symbolTable[symbol] = _symbolAddress;
+            SymbolTable[symbol] = _symbolAddress;
             if(_debug) Console.WriteLine(_symbolAddress + " " + child.ChildNodes[0].Token.Text);
         }
         private void HandleProc(ParseTreeNode child)
         {
             string symbol = child.ChildNodes[1].Token.Text;
-            _symbolTable[symbol] = _symbolAddress;
+            SymbolTable[symbol] = _symbolAddress;
             if(_debug) Console.WriteLine(_symbolAddress + " " + child.ChildNodes[1].Token.Text);
         }
         private Instruction AssembleInstruction(InstructionParts parts, ushort type)
