@@ -11,15 +11,19 @@
              d:DataContext="{d:DesignInstance Type=diagram1:DiagramViewModel, IsDesignTimeCreatable=False}"
              >
     <Grid>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto"
-                  Background="{DynamicResource RegionBackgroundBrush}"
-                  x:Name="DiagramScrollViewer"
-                  PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
-                  PreviewMouseMove="ScrollViewer_PreviewMouseMove"
-                  PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
-                  PreviewMouseWheel="Window_MouseWheel"
-                  Cursor="Arrow">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      Background="{DynamicResource RegionBackgroundBrush}"
+                      x:Name="DiagramScrollViewer"
+                      PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
+                      PreviewMouseMove="ScrollViewer_PreviewMouseMove"
+                      PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
+                      PreviewMouseWheel="Window_MouseWheel"
+                      Cursor="Arrow">
         <Grid Width="1500" Height="700"
               Background="Transparent">
             <Grid ShowGridLines="False"
@@ -466,9 +470,11 @@
             </Grid>
         </Grid>
     </ScrollViewer>
-        <components:MicroprogramMemory DataContext="{Binding MemoryContext}"
-                                       Margin="0,0,0,10"
-                                       VerticalAlignment="Bottom"
-                                       HorizontalAlignment="Stretch"/>
+        <components:MicroprogramMemory
+            Grid.Row="1"
+            DataContext="{Binding MemoryContext}"
+            Margin="0,0,0,10"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>
