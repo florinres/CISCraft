@@ -7,7 +7,15 @@ namespace Ui.Views.UserControls.Diagram.Components;
 
 public partial class HighlightableConnector : UserControl
 {
-public HighlightableConnector()
+/// <summary>
+/// Represents a connector control that can be highlighted and customized with various properties such as stroke, thickness, and points.
+/// </summary>
+public partial class HighlightableConnector : UserControl
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HighlightableConnector"/> class.
+    /// </summary>
+    public HighlightableConnector()
     {
         InitializeComponent();
         UpdatePath();
