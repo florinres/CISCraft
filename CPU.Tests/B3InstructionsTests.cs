@@ -600,7 +600,7 @@ namespace CPU.Tests
 
             RunInstructionTest(
                 "Call_AM_Test",
-                "call 6",
+                "call 2",
                 new List<string>
                 {
                     "IFCH_0",
@@ -615,7 +615,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xA, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(0x6, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
