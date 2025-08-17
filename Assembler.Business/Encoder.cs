@@ -66,28 +66,28 @@ namespace Assembler.Business
              * OPPCODE | AMD | DR
             */
             CLR = 0xA000, /* 0x800 */
-            NEG = 0xA100,
-            INC = 0xA200,
-            DEC = 0xA300,
-            ASL = 0xA400,
-            ASR = 0xA500,
-            LSR = 0xA600,
-            ROL = 0xA700,
-            ROR = 0xA800,
-            RLC = 0xA900,
-            RRC = 0xAA00,
-            PUSH = 0xAB00,
-            POP = 0xAC00,
+            NEG = 0xA000  | (0x01 << 7),
+            INC = 0xA000  | (0x02 << 7),
+            DEC = 0xA000  | (0x03 << 7),
+            ASL = 0xA000  | (0x04 << 7),
+            ASR = 0xA000  | (0x05 << 7),
+            LSR = 0xA000  | (0x06 << 7),
+            ROL = 0xA000  | (0x07 << 7),
+            ROR = 0xA000  | (0x08 << 7),
+            RLC = 0xA000  | (0x09 << 7),
+            RRC = 0xA000  | (0x0A << 7),
+            PUSH = 0xA000 | (0x0B << 7),
+            POP = 0xA000  | (0x0C << 7),
             /** B3 INSTRUCTIONS TYPE
              * BNE, BEQ, BPL, BMI, BCS, BCC, BVS, BVC, JMP, CALL
              * OPCODE: Operation Code - 8b
              * OFFSET: Offset - 8b
              * OPPCODE | OFFSET
              */
-            BNE = 0xC000,
-            BEQ = 0xC100,
-            BPL = 0xC200,
-            BMI = 0xC300,
+            BEQ = 0xC000,
+            BNE = 0xC100,
+            BMI = 0xC200,
+            BPL = 0xC300,
             BCS = 0xC400,
             BCC = 0xC500,
             BVS = 0xC600,
@@ -100,18 +100,18 @@ namespace Assembler.Business
              * OPCODE: Operation Code - 16b
              * OPPCODE
              */
-            CLC = 0xE000, /* 0xE00 */
-            SEC = 0xE208,
-            NOP = 0xE400,
-            HALT = 0xE600,
-            EI = 0xE800,
-            DI = 0xEA00,
-            PUSHPC = 0xEC00,
-            POPPC = 0xEE00,
-            PUSHF = 0xF000,
-            POPF = 0xF200,
-            RET = 0xF400,
-            RETI = 0xF600,
+            CLC     = 0xE000, /* 0xE00 */
+            SEC     = 0xE008 | (0x02 << 7),
+            NOP     = 0xE000 | (0x04 << 7),
+            HALT    = 0xE000 | (0x06 << 7),
+            EI      = 0xE000 | (0x08 << 7),
+            DI      = 0xE000 | (0x0A << 7),
+            PUSHPC  = 0xE000 | (0x0C << 7),
+            POPPC   = 0xE000 | (0x0E << 7),
+            PUSHF   = 0xE000 | (0x11 << 7),
+            POPF    = 0xE000 | (0x13 << 7),
+            RET     = 0xE000 | (0x16 << 7),
+            RETI    = 0xE000 | (0x19 << 7),
             /**
              * ERROR
              */
@@ -183,7 +183,7 @@ namespace Assembler.Business
             { "PUSHF",  new Dictionary<ushort, string> { {(ushort)OppCodes.PUSHF ,  "B4" } } },
             { "POPF",   new Dictionary<ushort, string> { {(ushort)OppCodes.POPF ,   "B4" } } },
             { "RET",    new Dictionary<ushort, string> { {(ushort)OppCodes.RET ,    "B4" } } },
-            { "RETI",   new Dictionary<ushort, string> { {(ushort)OppCodes.RETI ,   "B4" } } },
+            { "IRET",   new Dictionary<ushort, string> { {(ushort)OppCodes.RETI ,   "B4" } } },
 
         };
         readonly Dictionary<string, ushort> registers = new Dictionary<string, ushort>
@@ -345,29 +345,17 @@ namespace Assembler.Business
                     }
 
                 case "B2Instr":
+                case "B3Instr":
                     {
                         try
                         {
-                            HandleB2Instruction(child);
+                            HandleB2B3Instruction(child);
                             instr = AssembleInstruction(_instructionParts, 2);
                         }
                         catch(Exception e)
                         {
                             Console.WriteLine($"Error: {e.Message}");
                         }
-                        break;
-                    }
-                case "B3Instr":
-                    {
-                        try
-                        {
-                            HandleB3Instruction(child);
-                        }
-                        catch(Exception e)
-                        {
-                            Console.WriteLine($"Error: {e.Message}");
-                        }
-                        instr = AssembleInstruction(_instructionParts, 3);
                         break;
                     }
                 case "B4Instr":
@@ -426,45 +414,13 @@ namespace Assembler.Business
         *   Input: The node that points to the "Instr" Non-termianl
         *   Output: The parts of the instruction stored in _instructionParts
         */
-        private void HandleB2Instruction(ParseTreeNode node)
+        private void HandleB2B3Instruction(ParseTreeNode node)
         {
             var parent = node;
             // add the oppcode to the _instructionParts
             switch (node.Term.Name)
             {
                 case "B2Oppcodes":
-                {
-                    _instructionParts = default;
-                    string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
-                    if(_debug) Console.Write(_instrAddress+" "+oppcode);
-                    _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
-                    return;
-                }
-                case "B2Operand":
-                {
-                    CheckB2Operand(node.ChildNodes[0]);
-                    return;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            foreach(var childNode in parent.ChildNodes)
-            {
-                HandleB2Instruction(childNode);
-            }
-        }
-
-        /**
-        *   Input: The node that points to the "Instr" Non-termianl
-        *   Output: The parts of the instruction stored in _instructionParts
-        */
-        private void HandleB3Instruction(ParseTreeNode node)
-        {
-            var parent = node;
-            switch (node.Term.Name)
-            {
                 case "B3Oppcodes":
                 {
                     _instructionParts = default;
@@ -473,9 +429,10 @@ namespace Assembler.Business
                     _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
                     return;
                 }
+                case "B2Operand":
                 case "B3Operand":
                 {
-                    CheckB3Operand(node.ChildNodes[0]);
+                    CheckB2B3Operand(node.ChildNodes[0]);
                     return;
                 }
                 default:
@@ -485,7 +442,7 @@ namespace Assembler.Business
             }
             foreach(var childNode in parent.ChildNodes)
             {
-                HandleB3Instruction(childNode);
+                HandleB2B3Instruction(childNode);
             }
         }
 
@@ -501,34 +458,7 @@ namespace Assembler.Business
             _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
             _instrAddress += 2;
         }
-        private void CheckB3Operand(ParseTreeNode node)
-        {
-            switch (node.Term.Name)
-            {
-                case "number":
-                {
-                    _instructionParts.Offset = Convert.ToInt16(node.Token.Value);
-                    // add the register to the _instructionPartS
-                    if(_debug) Console.WriteLine(" " + node.Token.Value);
-                    _instrAddress += 2;
-                    return;
-                }
-                case "identifier":
-                {
-                    string label = node.Token.Text;
-                    // add the register to the _instructionPartS
-                    if (!SymbolTable.ContainsKey(label))
-                    {
-                        throw new ArgumentException($"Unknown label: {label}");
-                    }
-                    if(_debug) Console.WriteLine(" " + label + " " + (SymbolTable[label] - _instrAddress));
-                    _instructionParts.Offset = Convert.ToInt16(SymbolTable[label] - _instrAddress);
-                    _instrAddress += 2;
-                    return;
-                }
-            }
-        }
-        private void CheckB2Operand(ParseTreeNode node)
+        private void CheckB2B3Operand(ParseTreeNode node)
         {
             switch(node.Term.Name)
             {
@@ -689,11 +619,7 @@ namespace Assembler.Business
                     }
                 case 2:
                     {
-                        return AssembleB2(parts);
-                    }
-                case 3:
-                    {
-                        return AssembleB3(parts);
+                        return AssembleB2B3(parts);
                     }
                 case 4:
                     {
@@ -710,18 +636,12 @@ namespace Assembler.Business
             instr.Offset2 = parts.Offset2;
             return instr;
         }
-        private Instruction AssembleB2(InstructionParts parts)
+        private Instruction AssembleB2B3(InstructionParts parts)
         {
             Instruction instr = default;
             instr.Instr   = (ushort)(parts.Oppcode | (parts.Mad << 4) | parts.Rd);
             instr.Offset1 = (short)(parts.Offset1 + s_programStartingAddress);
             instr.Offset2 = (short)(parts.Offset2 + s_programStartingAddress);
-            return instr;
-        }
-        private Instruction AssembleB3(InstructionParts parts)
-        {
-            Instruction instr = default;
-            instr.Instr = (ushort)(parts.Oppcode | ((ushort)parts.Offset & (ushort)0xFF));
             return instr;
         }
         private Instruction AssembleB4(InstructionParts parts)

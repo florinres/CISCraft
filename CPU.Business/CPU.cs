@@ -64,7 +64,7 @@ namespace CPU.Business
         public short Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
         private int previousMIRIndexState, previousMARState;
-        private ControlUnit _controlUnit;
+        public ControlUnit _controlUnit;
         private IMainMemory _mainMemory;
         public bool ACLOW, INT, CIL;
         private OrderedDictionary<string, string[][]> _microProgram;
@@ -114,7 +114,7 @@ namespace CPU.Business
             int mpmIndex = 0;
             _microProgram = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
             var labelsAddresses = new Dictionary<string, byte>();
-            byte[] microcommandsBuffer = new byte[1200];
+            byte[] microcommandsBuffer = new byte[1700];
             int bufferIndex = 0;
 
             if (_microProgram == null) return;
@@ -398,7 +398,7 @@ namespace CPU.Business
                     PdCondlogic = true;
                     break;
                 case OTHER_EVENTS.A1BVI:
-                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
+                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] | (1 << interruptBit));
                     break;
                 case OTHER_EVENTS.A0BVI:
                     Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
@@ -519,6 +519,10 @@ namespace CPU.Business
         private void SetCarryFlag(ushort value)
         {
             Registers[REGISTERS.FLAGS] |= (short)((value & 1) << carryShift);
+        }
+        public ushort GetInterruptFlag()
+        {
+            return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
         }
     }
 }

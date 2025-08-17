@@ -22,7 +22,7 @@ namespace CPU.Business
         /// Key: micro-address
         /// Value: micro-commands
         /// </summary>
-        public long[] MPM = new long[120];
+        public long[] MPM = new long[150];
         public short IR = 0;
         private int state = 0;
         private int _mirIndex = 0;
@@ -324,7 +324,8 @@ namespace CPU.Business
                         | (this.IR & (1 << 10))
                         | (this.IR & (1 << 9))
                         | (this.IR & (1 << 8))
-                        ) >> 8);
+                        | (this.IR & (1 << 7))
+                        ) >> 7);
                     break;
                 case 6:
                     marIndex = (byte)( (
