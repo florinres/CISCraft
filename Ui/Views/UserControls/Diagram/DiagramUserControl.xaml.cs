@@ -146,7 +146,7 @@ public partial class DiagramUserControl : UserControl
         AddDataOutConnections();
         AddDataInConnections();
         AddDataOutIrConnections();
-        AddGeneralRegostersConnections();
+        AddGeneralRegistersConnections();
         ConnectIOsToSie();
         AddPdsConnections();
     }

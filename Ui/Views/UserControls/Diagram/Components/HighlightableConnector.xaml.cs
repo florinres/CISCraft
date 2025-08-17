@@ -5,8 +5,6 @@ using System.Windows.Shapes;
 
 namespace Ui.Views.UserControls.Diagram.Components;
 
-public partial class HighlightableConnector : UserControl
-{
 /// <summary>
 /// Represents a connector control that can be highlighted and customized with various properties such as stroke, thickness, and points.
 /// </summary>
