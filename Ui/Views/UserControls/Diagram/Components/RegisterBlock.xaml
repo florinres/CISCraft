@@ -46,7 +46,7 @@
         </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource NodeStyleRectangle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+        <Grid x:Name="RegisterBlockBorder" HorizontalAlignment="Stretch" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />   <!-- Left side -->
                 <ColumnDefinition Width="Auto" /> <!-- Right side -->

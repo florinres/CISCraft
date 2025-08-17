@@ -21,7 +21,9 @@
                   PreviewMouseWheel="Window_MouseWheel"
                   Cursor="Arrow">
         <Grid ShowGridLines="False"
-              x:Name="MainDiagramGrid">
+              Margin="0"
+              x:Name="MainDiagramGrid"
+              UseLayoutRounding="True">
             <Grid.LayoutTransform>
                 <ScaleTransform x:Name="DiagramScaleTransform"
                                 ScaleX="{Binding ZoomFactor, Mode=TwoWay}"
@@ -102,7 +104,7 @@
             <!-- RAM -->
             <Border
                 Grid.Column="0"
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.RowSpan="3"
                 Grid.ColumnSpan="3"
                 Background="{DynamicResource NodeBackgroundBrush}"
@@ -127,16 +129,130 @@
                         Margin="0,5">
                         RAM
                     </TextBlock>
-                    <components:RegisterBlock DataContext="{Binding DataInContext }" Height="20" Margin="8"
-                                              MinNameWidth="80"
-                                              Grid.Row="1" />
-                    <components:RegisterBlock DataContext="{Binding DataOutContext }" Height="20" Margin="8"
-                                              MinNameWidth="80"
-                                              Grid.Row="2" />
-                    <components:RegisterBlock DataContext="{Binding ADRContext }" Height="20" Margin="8"
-                                              MinNameWidth="80"
-                                              Grid.Row="3" />
+                    <components:RegisterBlock 
+                        x:Name="DataIn"
+                        DataContext="{Binding DataInContext }" Height="20" Margin="8"
+                        MinNameWidth="80"
+                        Grid.Row="1" />
+                    <components:RegisterBlock 
+                        x:Name="DataOut"
+                        DataContext="{Binding DataOutContext }" Height="20" Margin="8"
+                        MinNameWidth="80"
+                        Grid.Row="2" />
+                    <components:RegisterBlock 
+                        x:Name="Address"
+                        DataContext="{Binding ADRContext }" Height="20" Margin="8"
+                        MinNameWidth="80"
+                        Grid.Row="3" />
                 </Grid>
+            </Border>
+            <!-- IO -->
+            <Border
+                x:Name="IO0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Grid.Row="0"
+                Background="{DynamicResource NodeBackgroundBrush}"
+                BorderBrush="{DynamicResource NodeBorderBrush}"
+                BorderThickness="2"
+                Padding="1"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                CornerRadius="4">
+                <TextBlock Text="I/O 0" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Padding="2"
+                           Width="180"/>
+            </Border>
+            <Border
+                x:Name="IO1"
+                Grid.Column="3"
+                Grid.ColumnSpan="3"
+                Grid.Row="0"
+                Background="{DynamicResource NodeBackgroundBrush}"
+                BorderBrush="{DynamicResource NodeBorderBrush}"
+                BorderThickness="2"
+                Padding="1"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                CornerRadius="4">
+                <TextBlock Text="I/O 1" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Padding="2"
+                           Width="180"/>
+            </Border>
+            
+            <Border
+                x:Name="IO2"
+                Grid.Column="6"
+                Grid.ColumnSpan="3"
+                Grid.Row="0"
+                Background="{DynamicResource NodeBackgroundBrush}"
+                BorderBrush="{DynamicResource NodeBorderBrush}"
+                BorderThickness="2"
+                Padding="1"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                CornerRadius="4">
+                <TextBlock Text="I/O 2" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Padding="2"
+                           Width="180"/>
+            </Border>
+            
+            <Border
+                x:Name="IO3"
+                Grid.Column="9"
+                Grid.ColumnSpan="3"
+                Grid.Row="0"
+                Background="{DynamicResource NodeBackgroundBrush}"
+                BorderBrush="{DynamicResource NodeBorderBrush}"
+                BorderThickness="2"
+                Padding="1"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                CornerRadius="4">
+                <TextBlock Text="I/O 3" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Width="180"
+                           Padding="2"/>
+            </Border>
+            
+            <!-- SIE -->
+            <Border
+                x:Name="Sie"
+                Grid.Column="5"
+                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                Background="{DynamicResource NodeBackgroundBrush}"
+                BorderBrush="{DynamicResource NodeBorderBrush}"
+                BorderThickness="2"
+                Padding="1"
+                VerticalAlignment="Center"
+                CornerRadius="4">
+                <TextBlock Text="SIE" 
+                           Foreground="White"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Padding="2"/>
             </Border>
             
             <components:RegisterBlock 
@@ -211,22 +327,22 @@
                 HorizontalAlignment="Stretch"
                 DataContext="{Binding ADRContext}"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="7" VerticalAlignment="Center" HorizontalAlignment="Center" > SBus</TextBlock>
-            <diagram:StraightLineBus
+            <!-- <TextBlock Grid.Row="2" Grid.Column="7" VerticalAlignment="Center" HorizontalAlignment="Center" > SBus</TextBlock> -->
+            <components:StraightLineBus
                 x:Name="SBus"
                 Grid.Row="2"
                 Grid.RowSpan="6"
                 Grid.Column="7"
-                LineWidth="8" 
+                LineWidth="8"
                 LineHeight="500"/>
-            
-            <TextBlock Grid.Row="2" Grid.Column="8" VerticalAlignment="Center" HorizontalAlignment="Center" > DBus</TextBlock>
-            <diagram:StraightLineBus
+            <!-- -->
+            <!-- <TextBlock Grid.Row="2" Grid.Column="8" VerticalAlignment="Center" HorizontalAlignment="Center" > DBus</TextBlock> -->
+            <components:StraightLineBus
                 x:Name="DBus"
                 Grid.Row="2"
                 Grid.RowSpan="6"
                 Grid.Column="8"
-                LineWidth="8" 
+                LineWidth="8"
                 LineHeight="500"/>
             
             <diagram:SumBlock
@@ -308,71 +424,73 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="12"
                 IsHitTestVisible="False" 
-                Background="Transparent">
+                Background="Transparent"
+                Margin="0"
+                UseLayoutRounding="True">
                 <!-- ReSharper disable InconsistentNaming -->
-                <components:HighlightableConnector
-                    x:Name="Ir_SBus"
-                    Points="258,183 671,183"/>
-                <components:HighlightableConnector
-                    x:Name="Ir_DBus"
-                    Points="258,175 761,175"/>
-                
-                <components:HighlightableConnector
-                    x:Name="Ivr_SBus"
-                    Points="628,142 671,142"/>
-                <components:HighlightableConnector
-                    x:Name="Ivr_DBus"
-                    Points="628,132 761,132"/>
-                
-                <components:HighlightableConnector
-                    x:Name="Pc_SBus"
-                    Points="628,218 671,218"/>
-                <components:HighlightableConnector
-                    x:Name="Pc_DBus"
-                    Points="628,208 761,208"/>
-                
-                <components:HighlightableConnector
-                    x:Name="T_SBus"
-                    Points="628,246 671,246"/>
-                <components:HighlightableConnector
-                    x:Name="T_DBus"
-                    Points="628,236 761,236"/>
-                
-                <components:HighlightableConnector
-                    x:Name="Sp_SBus"
-                    Points="628,273 671,273"/>
-                <components:HighlightableConnector
-                    x:Name="Sp_DBus"
-                    Points="628,263 761,263"/>
-                
-                <components:HighlightableConnector
-                    x:Name="Flags_SBus"
-                    Points="628,302 671,302"/>
-                <components:HighlightableConnector
-                    x:Name="Flags_DBus"
-                    Points="628,292 761,292"/>
-                
-                <components:HighlightableConnector
-                    x:Name="MDR_SBus"
-                    Points="628,368 671,368"/>
-                <components:HighlightableConnector
-                    x:Name="MDR_DBus"
-                    Points="628,358 761,358"/>
-                
-                <components:HighlightableConnector
-                    x:Name="ADR_SBus"
-                    Points="628,391 671,391"
-                    IsHighlighted="True"/>
-                <components:HighlightableConnector
-                    x:Name="ADR_DBus"
-                    Points="628,381 761,381"/>
-                
-                <components:HighlightableConnector
-                    x:Name="DATAIN_SBus"
-                    Points="230,341 230,335 650,335 650,368"/>
-                <components:HighlightableConnector
-                    x:Name="DATAIN_IR"
-                    Points="13,349 7,349 7,180 13,180"/>
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Ir_SBus" -->
+                <!--     Points="258,183 671,183"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Ir_DBus" -->
+                <!--     Points="258,175 761,175"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Ivr_SBus" -->
+                <!--     Points="628,142 671,142"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Ivr_DBus" -->
+                <!--     Points="628,132 761,132"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Pc_SBus" -->
+                <!--     Points="628,218 671,218"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Pc_DBus" -->
+                <!--     Points="628,208 761,208"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="T_SBus" -->
+                <!--     Points="628,246 671,246"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="T_DBus" -->
+                <!--     Points="628,236 761,236"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Sp_SBus" -->
+                <!--     Points="628,273 671,273"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Sp_DBus" -->
+                <!--     Points="628,263 761,263"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Flags_SBus" -->
+                <!--     Points="628,302 671,302"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="Flags_DBus" -->
+                <!--     Points="628,292 761,292"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="MDR_SBus" -->
+                <!--     Points="628,368 671,368"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="MDR_DBus" -->
+                <!--     Points="628,358 761,358"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="ADR_SBus" -->
+                <!--     Points="628,391 671,391" -->
+                <!--     IsHighlighted="True"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="ADR_DBus" -->
+                <!--     Points="628,381 761,381"/> -->
+                <!-- -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="DATAIN_SBus" -->
+                <!--     Points="230,341 230,335 650,335 650,368"/> -->
+                <!-- <components:HighlightableConnector -->
+                <!--     x:Name="DATAIN_IR" -->
+                <!--     Points="13,349 7,349 7,180 13,180"/> -->
                 
                 
                 

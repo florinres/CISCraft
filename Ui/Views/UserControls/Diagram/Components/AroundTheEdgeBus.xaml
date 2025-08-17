@@ -10,7 +10,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <!-- Black outer path -->
-        <Path Stroke="Black"
+        <Path x:Name="AroundTheEdgePath"
+                Stroke="Black"
               StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"
