@@ -1,4 +1,5 @@
 
+using System.Data.Common;
 using System.IO;
 using System.Windows.Media;
 using CPU.Business.Models;
@@ -19,6 +20,16 @@ public class CpuService : ICpuService
     private FileViewModel? _fileViewModel;
     Color _semiTransparentYellow;
     private Dictionary<short, ushort> _debugSymbls;
+    private Dictionary<int, int> _mirLookUpIndex = new Dictionary<int, int>
+    {
+        {0, 0},
+        {1, 1},
+        {2, 5},
+        {3, 2},
+        {4, 3},
+        {5, 4},
+        {6, 6}
+    };
     public HighlightCurrentLineBackgroundRenderer? Highlight
     {
         get;
@@ -63,19 +74,23 @@ public class CpuService : ICpuService
          {
              _microprogramService.ClearAllHighlightedRows();
          }
-         _microprogramService.CurrentRow = row;
-         _microprogramService.CurrentColumn = column;
 
-        if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
-        {
+         _microprogramService.CurrentRow = row;
+         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+
+         if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+         {
             if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
                 Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
-        }
+         }
         return (row, column);
     }
     public void ResetProgram()
     {
         _cpu.ResetProgram();
+        _microprogramService.CurrentRow = -1;
+        _microprogramService.CurrentColumn = -1;
+        _microprogramService.ClearAllHighlightedRows();
     }
     public void SetActiveEditor(FileViewModel fileViewModel)
     {
@@ -97,6 +112,10 @@ public class CpuService : ICpuService
         {
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Remove(Highlight);
             Highlight = null;
+            _cpu.ResetProgram();
+            _microprogramService.CurrentRow = -1;
+            _microprogramService.CurrentColumn = -1;
+            _microprogramService.ClearAllHighlightedRows();
         }
     }
     public void SetDebugSymbols(Dictionary<short, ushort> debugSymbols)

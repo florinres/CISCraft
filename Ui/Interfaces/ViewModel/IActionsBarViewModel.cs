@@ -25,7 +25,7 @@ public interface IActionsBarViewModel
 
     bool IsDebugging { get; set; }
     bool CanDebug { get; set; }
-    bool IsEditor { get; set; }
+    bool CanAssemble { get; set; }
 
     event EventHandler<byte[]>? ObjectCodeGenerated;
 

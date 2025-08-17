@@ -17,7 +17,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [ObservableProperty]
     public partial bool CanDebug { get; set; }
     [ObservableProperty]
-    public partial bool IsEditor{ get; set; }
+    public partial bool CanAssemble{ get; set; }
 
     public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService, ICpuService cpuService, IToolVisibilityService toolVisibilityService)
     {
@@ -27,7 +27,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         _toolVisibilityService = toolVisibilityService;
         IsDebugging = false;
         CanDebug = false;
-        IsEditor = false;
+        CanAssemble = false;
         ObjectCodeGenerated += OnObjectCodeGenerated;
     }
 
@@ -42,6 +42,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
         CanDebug = true;
+        CanAssemble = false;
     }
     
     [RelayCommand]
@@ -75,6 +76,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             _cpuService.StartDebugging();
             IsDebugging = true;
             CanDebug = false;
+            CanAssemble = false;
         }
     }
     [RelayCommand]
@@ -85,6 +87,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             _cpuService.StopDebugging();
             IsDebugging = false;
             CanDebug = true;
+            CanAssemble = true;
         }
     }
     [RelayCommand]

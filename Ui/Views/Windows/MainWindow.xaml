@@ -139,7 +139,7 @@
 
             <ui:Button Command="{Binding RunAssembleSourceCodeServiceCommand}"
                        ToolTip="Assemble"
-                       IsEnabled="{Binding IsEditor}"
+                       IsEnabled="{Binding CanAssemble}"
                        VerticalAlignment="Top"
                        Height="30"
                        Width="30"
@@ -223,6 +223,7 @@
                     <components:PanesTemplateSelector.FileViewTemplate>
                         <DataTemplate DataType="{x:Type viewmodels:FileViewModel}">
                             <components:StyledAvalonEdit
+                                IsReadOnly="{Binding DataContext.ActionsBar.IsDebugging,RelativeSource={RelativeSource AncestorType=Window}}"
                                 x:Name="TextEditor"
                                 SyntaxHighlighting="Custom"
                                 FontFamily="Consolas"

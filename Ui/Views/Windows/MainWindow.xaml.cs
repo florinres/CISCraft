@@ -88,16 +88,17 @@ public partial class MainWindow
         {
             vm.EditorInstance = editor;
             _cpuService.SetActiveEditor(vm);
-            _actionsBarViewModel.IsEditor = true;
+            _actionsBarViewModel.CanAssemble = true;
             editor.Unloaded += OnEditorUnloaded;
         }
     }
     private void OnTextChanged(object sender, EventArgs e)
     {
         _actionsBarViewModel.CanDebug = false;
+        _actionsBarViewModel.CanAssemble = true;
     }
     private void OnEditorUnloaded(object sender, EventArgs e)
     {
-        _actionsBarViewModel.IsEditor = false;
+        _actionsBarViewModel.CanAssemble = false;
     }
 }
