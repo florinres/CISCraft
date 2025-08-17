@@ -136,14 +136,15 @@ public partial class DiagramUserControl : UserControl
             ConnectionCanvas.Children.Add(rBusHighlight);
         }
 
+        //bullshit
         RegisterBlockAddConnections(Ir, sBusEdges, dBusEdges);
         AddAddressConnections();
         AddDataOutConnections();
         AddDataInConnections();
-        AddDataInIrConnections();
+        AddDataOutIrConnections();
         AddGeneralRegostersConnections();
         ConnectIOsToSie();
-        //Here the real bullshit starts
+        AddPdsConnections();
     }
 
     public void ConnectIOsToSie()
@@ -235,8 +236,7 @@ public partial class DiagramUserControl : UserControl
             canvas.Children.Add(connector2);
         }
     }
-
-
+    
     private void AddGeneralRegostersConnections()
     {
         //R7 just because it is in the center, no particular reason
@@ -285,9 +285,9 @@ public partial class DiagramUserControl : UserControl
         ConnectionCanvas.Children.Add(rBusHighLight);
     }
 
-    private void AddDataInIrConnections()
+    private void AddDataOutIrConnections()
     {
-        var connectionPointsDataIn = DataIn.GetConnectionPoints(MainDiagramGrid);
+        var connectionPointsDataOut = DataOut.GetConnectionPoints(MainDiagramGrid);
         var connectionPointsIr = Ir.GetConnectionPoints(MainDiagramGrid);
 
         var offset = 7;
@@ -296,13 +296,13 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPointsDataIn.MidLeft,
-                connectionPointsDataIn.MidLeft with { X = connectionPointsDataIn.MidLeft.X - offset },
-                connectionPointsIr.MidLeft with { X = connectionPointsDataIn.MidLeft.X - offset },
+                connectionPointsDataOut.MidLeft,
+                connectionPointsDataOut.MidLeft with { X = connectionPointsDataOut.MidLeft.X - offset },
+                connectionPointsIr.MidLeft with { X = connectionPointsDataOut.MidLeft.X - offset },
                 connectionPointsIr.MidLeft
             ],
             StrokeThickness = 2,
-            Name = $"{DataIn.Name}_{Ir.Name}"
+            Name = $"{DataOut.Name}_{Ir.Name}"
         };
 
         ConnectionCanvas.Children.Add(connection);
@@ -334,7 +334,7 @@ public partial class DiagramUserControl : UserControl
     private void AddDataOutConnections()
     {
         var connectionPointsDataOut = DataOut.GetConnectionPoints(MainDiagramGrid);
-        var connectionPointsAdr = Adr.GetConnectionPoints(MainDiagramGrid);
+        var connectionPointsMdr = Mdr.GetConnectionPoints(MainDiagramGrid);
 
         var offset = 150;
 
@@ -342,15 +342,15 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPointsDataOut.RightMinusOffset,
-                connectionPointsDataOut.RightMinusOffset with
+                connectionPointsDataOut.MidRight,
+                connectionPointsDataOut.MidRight with
                 {
-                    X = connectionPointsDataOut.RightMinusOffset.X + offset
+                    X = connectionPointsDataOut.MidRight.X + offset
                 },
-                connectionPointsAdr.MidLeft with { X = connectionPointsDataOut.RightMinusOffset.X + offset }
+                connectionPointsMdr.MidLeft with { X = connectionPointsDataOut.MidRight.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"{Adr.Name}_RBus"
+            Name = $"{Mdr.Name}_RBus"
         };
 
         ConnectionCanvas.Children.Add(connection);
@@ -378,6 +378,40 @@ public partial class DiagramUserControl : UserControl
         };
 
         ConnectionCanvas.Children.Add(connection);
+    }
+
+    private void AddPdsConnections()
+    {
+        var flagConnections = Flags.GetConnectionPoints(MainDiagramGrid);
+
+        var relevantY = flagConnections.MidBottom.Y;
+        
+        var pdCollection = new List<BitBlock>()
+        {
+            Pd0s,
+            Pd1,
+            Pdx,
+            Pdy,
+            PdMinus1
+        };
+
+        foreach (var bitBlock in pdCollection)
+        {
+            var bitBlockConnectionPoint = bitBlock.GetConnectionPointRelativeTo(MainDiagramGrid);
+
+            var connection = new HighlightableConnector
+            {
+                Points =
+                [
+                    bitBlockConnectionPoint,
+                    bitBlockConnectionPoint with { Y = relevantY }
+                ],
+                StrokeThickness = 2,
+                Name = $"{bitBlock.Name}_{Flags.Name}"
+            };
+            
+            ConnectionCanvas.Children.Add(connection);
+        }
     }
 
     private RegisterBlockConnectionPoints RegisterBlockAddConnections(RegisterBlock registerBlock,

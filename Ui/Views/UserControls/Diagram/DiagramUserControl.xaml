@@ -266,14 +266,15 @@
                 HorizontalAlignment="Stretch"/>
             
             <Grid 
-                Grid.Row="4"
+                Grid.Row="3"
                 Grid.Column="5"
                 Grid.ColumnSpan="2"
-                Grid.RowSpan="3"
-                        Margin="0"
+                Grid.RowSpan="4"
+                        Margin="0,25,0,0"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top">
+                        VerticalAlignment="Center">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -307,6 +308,23 @@
                     Margin="0,1,0,0" 
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch" />
+                <Grid Grid.Row="4"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Margin="0,15,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <components:BitBlock x:Name="Pd1" Grid.Column="0" DataContext="{Binding Pd1Context}" />
+                    <components:BitBlock x:Name="PdMinus1" Grid.Column="1" DataContext="{Binding PdMinus1Context}" />
+                    <components:BitBlock x:Name="Pd0s" Grid.Column="2" DataContext="{Binding Pd0sContext}" />
+                    <components:BitBlock x:Name="Pdx" Grid.Column="3" DataContext="{Binding xContext}" />
+                    <components:BitBlock x:Name="Pdy" Grid.Column="4" DataContext="{Binding yContext}" />
+                </Grid>
             </Grid>
             
             <components:RegisterBlock 

@@ -55,6 +55,8 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
     public BitBlockViewModel Pd1Context      { get; } = new("Pd1");
     public BitBlockViewModel PdMinus1Context { get; } = new("Pd-1");
     public BitBlockViewModel Pd0sContext     { get; } = new("Pd0s");
+    public BitBlockViewModel xContext      { get; } = new("x");
+    public BitBlockViewModel yContext { get; } = new("y");
     #endregion
 
     public List<BaseDiagramObject> Contexts { get; set; } = [];

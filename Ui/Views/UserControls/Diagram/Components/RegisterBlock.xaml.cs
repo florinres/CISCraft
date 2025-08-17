@@ -51,7 +51,8 @@ public partial class RegisterBlock : UserControl
         result.LeftMinusOffset = new Point(bounds.Left, bounds.Top + bounds.Height / 2 - 5);
         result.TopOffsetMinus = new Point(bounds.Left + bounds.Width / 2 - 30, bounds.Top);
         result.TopOffsetPlus = new Point(bounds.Left + bounds.Width / 2 + 30, bounds.Top);
-
+        result.MidBottom = new Point(bounds.Left + bounds.Width / 2, bounds.Bottom);
+        
         return result;
     }
     
