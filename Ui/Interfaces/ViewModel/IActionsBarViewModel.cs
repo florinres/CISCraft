@@ -24,7 +24,8 @@ public interface IActionsBarViewModel
     global::CommunityToolkit.Mvvm.Input.IRelayCommand ResetProgramCommand { get; }
 
     bool IsDebugging { get; set; }
-    bool NotDebugging { get; set; }
+    bool CanDebug { get; set; }
+    bool IsEditor { get; set; }
 
     event EventHandler<byte[]>? ObjectCodeGenerated;
 

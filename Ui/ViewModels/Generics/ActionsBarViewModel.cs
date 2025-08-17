@@ -12,11 +12,12 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     private readonly IAssemblerService _assemblerService;
     private readonly ICpuService _cpuService;
     private readonly IToolVisibilityService _toolVisibilityService;
-
     [ObservableProperty]
     public partial bool IsDebugging { get; set; }
     [ObservableProperty]
-    public partial bool NotDebugging { get; set; }
+    public partial bool CanDebug { get; set; }
+    [ObservableProperty]
+    public partial bool IsEditor{ get; set; }
 
     public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService, ICpuService cpuService, IToolVisibilityService toolVisibilityService)
     {
@@ -25,7 +26,8 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         _cpuService = cpuService;
         _toolVisibilityService = toolVisibilityService;
         IsDebugging = false;
-        NotDebugging = true;
+        CanDebug = false;
+        IsEditor = false;
         ObjectCodeGenerated += OnObjectCodeGenerated;
     }
 
@@ -39,6 +41,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         ObjectCodeGenerated?.Invoke(this, objectCode);
         
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
+        CanDebug = true;
     }
     
     [RelayCommand]
@@ -68,9 +71,10 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         if (_activeDocumentService.SelectedDocument != null)
         {
+            _cpuService.SetDebugSymbols(_assemblerService.DebugSymbols);
             _cpuService.StartDebugging();
             IsDebugging = true;
-            NotDebugging = false;
+            CanDebug = false;
         }
     }
     [RelayCommand]
@@ -80,7 +84,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         {
             _cpuService.StopDebugging();
             IsDebugging = false;
-            NotDebugging = true;
+            CanDebug = true;
         }
     }
     [RelayCommand]
