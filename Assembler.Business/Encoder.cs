@@ -500,9 +500,14 @@ namespace Assembler.Business
                     {
                         throw new ArgumentException($"Unknown label: {label}");
                     }
-                    _instructionParts.Offset1 = Convert.ToInt16(SymbolTable[label]);
+                    _instructionParts.Offset1 = Convert.ToInt16(SymbolTable[label] - (_instrAddress + 4));
                     // add the register to the _instructionParts
-                    if(_debug) Console.WriteLine(" " + label + " " + SymbolTable[label]);
+
+                    if (_debug)
+                    {
+                        Console.WriteLine(" " + label + " " + SymbolTable[label]);
+                        Console.WriteLine((_instrAddress + 2) + " " + (int)_instructionParts.Offset1);
+                    }
                     _instrAddress += 4;
                     return;
                 }
