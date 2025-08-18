@@ -125,7 +125,7 @@
 
             <ui:Button
                 Command="{Binding StartDebugCommand}"
-                IsEnabled="{Binding NotDebugging}"
+                IsEnabled="{Binding CanDebug}"
                 VerticalAlignment="Top"
                 ToolTip="Debug"
                 Height="30"
@@ -139,6 +139,7 @@
 
             <ui:Button Command="{Binding RunAssembleSourceCodeServiceCommand}"
                        ToolTip="Assemble"
+                       IsEnabled="{Binding CanAssemble}"
                        VerticalAlignment="Top"
                        Height="30"
                        Width="30"
@@ -222,11 +223,13 @@
                     <components:PanesTemplateSelector.FileViewTemplate>
                         <DataTemplate DataType="{x:Type viewmodels:FileViewModel}">
                             <components:StyledAvalonEdit
+                                IsReadOnly="{Binding DataContext.ActionsBar.IsDebugging,RelativeSource={RelativeSource AncestorType=Window}}"
                                 x:Name="TextEditor"
                                 SyntaxHighlighting="Custom"
                                 FontFamily="Consolas"
                                 FontSize="10pt"
                                 ShowLineNumbers="True"
+                                TextChanged="OnTextChanged"
                                 Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 Loaded="OnEditorLoaded"/>
                         </DataTemplate>

@@ -1,26 +1,28 @@
 using System;
 using System.Diagnostics;
+using CPU.Business.Models;
 
 namespace CPU.Business
 {
-	public class ControlUnit
-	{
+	public class ControlUnit(RegisterWrapper registersWrapper)
+    {
         public event Action<int>? SbusEvent;
         public event Action<int>? DbusEvent;
         public event Action<int>? AluEvent;
         public event Action<int>? RbusEvent;
         public event Action<int>? MemoryEvent;
         public event Action<int>? OtherEvent;
-        public byte MAR = 0;
+
+        private readonly RegisterWrapper _registersWrapper = registersWrapper;
+
         public byte PrevMar = 0;
-        public long     MIR = 0;
         /// <summary>
         /// Micro Program Memory
         /// ROM memory that holds microinstructions of 36 bits wide.
         /// Key: micro-address
         /// Value: micro-commands
         /// </summary>
-        public long[] MPM = new long[120];
+        public long[] MPM = new long[150];
         public short IR = 0;
         private int state = 0;
         private int _mirIndex = 0;
@@ -189,15 +191,15 @@ namespace CPU.Business
                 switch (state)
                 {
                     case 0:
-                        PrevMar = MAR;
-                        this.MIR = this.MPM[this.MAR];
+                        PrevMar = _registersWrapper.MAR;
+                        _registersWrapper.MIR = MPM[_registersWrapper.MAR];
                         state = 1;
                         break;
                     case 1:
                         bool g_function = this.ComputeConditionG(ACLOWSignal, flagsRegister);
                         if (g_function)
-                            this.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
-                        else this.MAR++;
+                            _registersWrapper.MAR = (byte)(getMirAddresField() + this.ComputeMARIndex());
+                        else _registersWrapper.MAR++;
 
                         int mirALUBits = getMirAluField();
                         bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
@@ -230,7 +232,7 @@ namespace CPU.Business
         }
         internal void Reset()
         {
-            MAR = 0;
+            _registersWrapper.MAR = 0;
             _mirIndex = 0;
             state = 0;
             IR = 0;
@@ -330,7 +332,8 @@ namespace CPU.Business
                         | (this.IR & (1 << 10))
                         | (this.IR & (1 << 9))
                         | (this.IR & (1 << 8))
-                        ) >> 8);
+                        | (this.IR & (1 << 7))
+                        ) >> 7);
                     break;
                 case 6:
                     marIndex = (byte)( (
@@ -370,7 +373,7 @@ namespace CPU.Business
                     MemoryEvent?.Invoke(getMirMemOpField());
                     break;
                 case 6:
-                    Debug.WriteLine("Next MAR= " + MAR.ToString());
+                    Debug.WriteLine("Next MAR= " + _registersWrapper.MAR);
                     break;
 			}
             _mirIndex++;
@@ -379,43 +382,43 @@ namespace CPU.Business
         }
         private int getMirSbusField()
         {
-            return (int)((MIR & SbusMask) >> SbusShift);
+            return (int)((_registersWrapper.MIR & SbusMask) >> SbusShift);
         }
         private int getMirDbusField()
         {
-            return (int)((MIR & DbusMask) >> DbusShift);
+            return (int)((_registersWrapper.MIR & DbusMask) >> DbusShift);
         }
         private int getMirAluField()
         {
-            return (int)((MIR & AluMask) >> AluShift);
+            return (int)((_registersWrapper.MIR & AluMask) >> AluShift);
         }
         private int getMirRbusField()
         {
-            return (int)((MIR & RbusMask) >> RbusShift);
+            return (int)((_registersWrapper.MIR & RbusMask) >> RbusShift);
         }
         private int getMirMemOpField()
         {
-            return (int)((MIR & MemOpMask) >> MemOpShift);
+            return (int)((_registersWrapper.MIR & MemOpMask) >> MemOpShift);
         }
         private int getMirOthersField()
         {
-            return (int)((MIR & OthersMask) >> OthersShift);
+            return (int)((_registersWrapper.MIR & OthersMask) >> OthersShift);
         }
         private int getMirSuccesorField()
         {
-            return (int)((MIR & SuccesorMask) >> SuccesorShift);
+            return (int)((_registersWrapper.MIR & SuccesorMask) >> SuccesorShift);
         }
         private int getMirIndexField()
         {
-            return (int)((MIR & IndexMask) >> IndexShift);
+            return (int)((_registersWrapper.MIR & IndexMask) >> IndexShift);
         }
         private int getMirTNegFField()
         {
-            return (int)((MIR & TnegFMask) >> TnedFShift);
+            return (int)((_registersWrapper.MIR & TnegFMask) >> TnedFShift);
         }
         private int getMirAddresField()
         {
-            return (int)((MIR & AddresMask) >> AddresShift);
+            return (int)((_registersWrapper.MIR & AddresMask) >> AddresShift);
         }
         private int getBit(short register, ushort bitIndex=0)
         {

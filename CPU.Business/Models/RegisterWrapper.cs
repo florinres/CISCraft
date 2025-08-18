@@ -2,26 +2,47 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CPU.Business.Models;
 
-public class RegisterWrapper : ObservableObject
+public class RegisterWrapper(int amount = 23) : ObservableObject
 {
     private short[] _registers { get; }
     private short[] _gpr { get; }
     private bool[] _irqs { get; }
     private bool[] _exceptions { get; }
+    private short[] _registers { get; } = new short[amount];
+    private short[] _gpr { get; } = new short[16];
 
-    public RegisterWrapper(int amount)
+    private byte _mar = 0;
+
+    public byte MAR
     {
         _registers = new short[amount];
         _gpr = new short[16];
         _irqs = new bool[4];
         _exceptions = new bool[4];
+        get => _mar;
+        set
+        {
+            if (_mar == value) return;
+            _mar = value;
+            OnPropertyChanged($"{nameof(MAR)}");
+        }
     }
-    public RegisterWrapper()
+    
+    private long _mir = 0;
+
+    public long MIR
     {
         _registers = new short[23];
         _gpr = new short[16];
         _irqs = new bool[4];
         _exceptions = new bool[4];
+        get => _mir;
+        set
+        {
+            if (_mir == value) return;
+            _mir = value;
+            OnPropertyChanged($"{nameof(MIR)}");
+        }
     }
 
     public short this[REGISTERS index]

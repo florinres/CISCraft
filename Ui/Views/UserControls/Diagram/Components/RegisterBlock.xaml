@@ -46,11 +46,17 @@
         </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource NodeStyleRectangle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Foreground="White"
-                       HorizontalAlignment="Center"
+        <Grid x:Name="RegisterBlockBorder" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />   <!-- Left side -->
+                <ColumnDefinition Width="Auto" /> <!-- Right side -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Left-aligned Text -->
+            <TextBlock Grid.Column="0"
+                       Foreground="White"
                        VerticalAlignment="Center"
-                       TextAlignment="Center" 
+                       TextAlignment="Left"
                        Padding="8,0,0,0">
                 <TextBlock.Text>
                     <MultiBinding Converter="{StaticResource RegisterFormatConverter}">
@@ -59,10 +65,12 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
+
+            <!-- Right-aligned Name -->
             <Border Grid.Column="1"
                     Margin="8,0,0,0"
                     Background="{DynamicResource NodeNameBackgroundBrush}"
-                    CornerRadius="0,4,4,0" 
+                    CornerRadius="0,4,4,0"
                     MinWidth="45">
                 <TextBlock Text="{Binding Name}" 
                            Foreground="White"
@@ -73,6 +81,6 @@
                            MinWidth="{Binding MinNameWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
                            Padding="2"/>
             </Border>
-        </StackPanel>
+        </Grid>
     </Border>
 </UserControl>

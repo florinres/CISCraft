@@ -58,6 +58,8 @@ namespace CPU.Business
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
         private InterruptController _interruptController;
+        public ControlUnit _controlUnit;
+
         private IMainMemory _mainMemory;
         private OrderedDictionary<string, string[][]> _microProgram;
         public string currentLabel;
@@ -72,7 +74,7 @@ namespace CPU.Business
         private bool PdCondlogic = false;
         public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
-            _controlUnit = new ControlUnit();
+            _controlUnit = new ControlUnit(registers);
             _controlUnit.SbusEvent += OnSbusEvent;
             _controlUnit.DbusEvent += OnDbusEvent;
             _controlUnit.AluEvent += OnAluEvent;
@@ -84,6 +86,7 @@ namespace CPU.Business
             _interruptController = new InterruptController();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             BPO = true; //Enable CPU clock
             previousMARState = 0;
             previousMIRIndexState = 0;
@@ -135,7 +138,7 @@ namespace CPU.Business
             int mpmIndex = 0;
             _microProgram = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
             var labelsAddresses = new Dictionary<string, byte>();
-            byte[] microcommandsBuffer = new byte[1200];
+            byte[] microcommandsBuffer = new byte[1700];
             int bufferIndex = 0;
 
             if (_microProgram == null) return;
@@ -230,7 +233,8 @@ namespace CPU.Business
             {
                 Registers[(GPR)i] = 0;
             }
-            _mainMemory.ClearMemory();
+            Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             _controlUnit.Reset();
             BPO = true; //Reactivate CPU clock
         }
@@ -369,11 +373,11 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    _controlUnit.IR = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     Registers[REGISTERS.IR] = _controlUnit.IR; // For updateing the UI
                     break;
                 case 2 /* READ */:
-                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
                     _mainMemory.SetWordLocation(Registers[REGISTERS.ADR], Registers[REGISTERS.MDR]);
@@ -418,7 +422,7 @@ namespace CPU.Business
                     PdCondlogic = true;
                     break;
                 case OTHER_EVENTS.A1BVI:
-                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
+                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] | (1 << interruptBit));
                     break;
                 case OTHER_EVENTS.A0BVI:
                     Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
@@ -539,6 +543,10 @@ namespace CPU.Business
         private void SetCarryFlag(ushort value)
         {
             Registers[REGISTERS.FLAGS] |= (short)((value & 1) << carryShift);
+        }
+        public ushort GetInterruptFlag()
+        {
+            return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
         }
     }
 }
