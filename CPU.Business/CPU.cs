@@ -50,23 +50,16 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-        struct ALU_FLAGS
-        {
-            public int CarryFlag;
-            public int ZeroFlag;
-            public int SignFlag;
-            public int OverflowFlag;
-        }
-        ALU_FLAGS _aluFlags;
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
         public short Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
         private int previousMIRIndexState, previousMARState;
-        public ControlUnit _controlUnit;
+        private ControlUnit _controlUnit;
+        private InterruptController _interruptController;
+
         private IMainMemory _mainMemory;
-        public bool ACLOW, INT, CIL;
         private OrderedDictionary<string, string[][]> _microProgram;
         public string currentLabel;
         private ushort overflowShift = 0;
@@ -74,6 +67,7 @@ namespace CPU.Business
         private ushort zeroShift = 2;
         private ushort carryShift = 3;
         private ushort interruptShift = 7;
+        private bool _globalIRQ = false;
         private bool CinPdCondaritm = false;
         private bool PdCondaritm = false;
         private bool PdCondlogic = false;
@@ -88,6 +82,7 @@ namespace CPU.Business
             _controlUnit.OtherEvent += OnOtherEvent;
             _mainMemory = mainMemory;
             _microProgram = new OrderedDictionary<string, string[][]>();
+            _interruptController = new InterruptController();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
             Registers[REGISTERS.SP] = 0x200;
@@ -98,7 +93,49 @@ namespace CPU.Business
         public (int MAR, int MirIndex) StepMicrocommand()
         {
             if (BPO)
-                (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            {
+                _controlUnit.SetGlobalIRQState(_globalIRQ);
+                (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
+
+                bool[] irqs = new bool[]
+                {
+                    Registers[IRQs.IRQ0],
+                    Registers[IRQs.IRQ1],
+                    Registers[IRQs.IRQ2],
+                    Registers[IRQs.IRQ3]
+                };
+                bool[] exceptions = new bool[]
+                {
+                    Registers[Exceptions.ACLOW],
+                    Registers[Exceptions.CIL],
+                    Registers[Exceptions.Reserved0],
+                    Registers[Exceptions.Reserved1]
+                };
+
+                Dictionary<string, bool> interruptPriorities = new Dictionary<string, bool>();
+                interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
+                bool interrupAck = Convert.ToBoolean(Registers[REGISTERS.FLAGS] & (1 << interruptShift));
+
+                if (interrupAck)
+                {
+                    int i = 0;
+                    bool prioritisedInterruptsState = false;
+                    foreach (var kvp in interruptPriorities)
+                    {
+                        if (kvp.Value)
+                        {
+                            irqs[i] = false;
+                        }
+                        prioritisedInterruptsState |= kvp.Value;
+                        i++;
+                    }
+                    _globalIRQ = interrupAck & prioritisedInterruptsState;
+                }
+                if (_globalIRQ)
+                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
+
+
+            }
             return (previousMARState, previousMIRIndexState);
         }
         /// <summary>
@@ -285,7 +322,6 @@ namespace CPU.Business
                     break;
                     // case ALU_OP.SUB:
                     //     RBUS = (short)(SBUS - DBUS);
-                    break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
                     ComputeFlags();
@@ -390,10 +426,10 @@ namespace CPU.Business
                     Registers[REGISTERS.PC] += 2;
                     break;
                 case OTHER_EVENTS.A1BE0:
-                    ACLOW = true;
+                    Registers[Exceptions.ACLOW] = true;
                     break;
                 case OTHER_EVENTS.A1BE1:
-                    CIL = true;
+                    Registers[Exceptions.CIL] = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
                     PdCondaritm = true;

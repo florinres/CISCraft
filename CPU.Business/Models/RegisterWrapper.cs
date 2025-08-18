@@ -6,6 +6,8 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
 {
     private short[] _registers { get; } = new short[amount];
     private short[] _gpr { get; } = new short[16];
+    private bool[] _irqs { get; } = new bool[4];
+    private bool[] _exceptions { get; } = new bool[4];
 
     private byte _mar = 0;
 
@@ -19,7 +21,7 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
             OnPropertyChanged($"{nameof(MAR)}");
         }
     }
-    
+
     private long _mir = 0;
 
     public long MIR
@@ -58,6 +60,32 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
             OnPropertyChanged(nameof(_gpr));
         }
     }
+    public bool this[IRQs index]
+    {
+        get => _irqs[(int)index];
+        set
+        {
+            if (_irqs[(int)index] == value) return;
+
+            _irqs[(int)index] = value;
+            OnPropertyChanged($"Registers[{_irqs}]");
+            OnPropertyChanged(nameof(_irqs));
+        }
+    }
+    public bool this[Exceptions index]
+    {
+        get => _exceptions[(int)index];
+        set
+        {
+            if (_exceptions[(int)index] == value) return;
+
+            _irqs[(int)index] = value;
+            OnPropertyChanged($"Registers[{_exceptions}]");
+            OnPropertyChanged(nameof(_exceptions));
+        }
+    }
     public short[] Registers => _registers;
     public short[] Gpr => _gpr;
+    public bool[] Irqs => _irqs;
+    public bool[] Exceptions => _exceptions;
 }

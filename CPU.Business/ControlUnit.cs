@@ -26,7 +26,7 @@ namespace CPU.Business
         public short IR = 0;
         private int state = 0;
         private int _mirIndex = 0;
-
+        private int _globalIRQState = 0;
         public const short IrDrMask        = 0xF;
         public const short IrSrMask        = 0x3C0;
         public const long SbusMask        = 0xF00000000;
@@ -157,7 +157,15 @@ namespace CPU.Business
             {"T",               0 },
             {"F",               1 },
         };
-
+        /// <summary>
+        /// Sets or resets the state of the global interrupt flag
+        /// which is used to enter into interrupt phase.
+        /// </summary>
+        /// <param name="irqReq"></param>
+        public void SetGlobalIRQState(bool irqReq)
+        {
+            _globalIRQState = Convert.ToInt32(irqReq);
+        }
         /// <summary>
         /// Implements logic for stepping through
         /// the Sequencer, thus going through
@@ -336,8 +344,7 @@ namespace CPU.Business
                         ) >> 7);
                     break;
                 case 7:
-                    int interruptSignal = 0; //TBD
-                    marIndex = (byte)(interruptSignal << 2);
+                    marIndex = (byte)(_globalIRQState << 2);
                     break;
 
             }
