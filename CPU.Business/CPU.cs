@@ -50,14 +50,6 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-        struct ALU_FLAGS
-        {
-            public int CarryFlag;
-            public int ZeroFlag;
-            public int SignFlag;
-            public int OverflowFlag;
-        }
-        ALU_FLAGS _aluFlags;
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
@@ -75,7 +67,6 @@ namespace CPU.Business
         private ushort carryShift = 3;
         private ushort interruptShift = 7;
         private bool _globalIRQ = false;
-        private bool _a0BESignal = false;
         private bool CinPdCondaritm = false;
         private bool PdCondaritm = false;
         private bool PdCondlogic = false;
@@ -101,6 +92,7 @@ namespace CPU.Business
         {
             if (BPO)
             {
+                _controlUnit.SetGlobalIRQState(_globalIRQ);
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
                 bool[] irqs = new bool[] { Registers[IRQs.IRQ0], Registers[IRQs.IRQ1], Registers[IRQs.IRQ2], Registers[IRQs.IRQ3] };
                 bool[] exceptions = new bool[] { Registers[Exceptions.ACLOW], Registers[Exceptions.CIL], Registers[Exceptions.Reserved0], Registers[Exceptions.Reserved1] };
@@ -110,19 +102,21 @@ namespace CPU.Business
                 if (interrupAck)
                 {
                     int i = 0;
+                    bool prioritisedInterruptsState = false;
                     foreach (var kvp in interruptPriorities)
                     {
                         if (kvp.Value)
                         {
                             irqs[i] = false;
-                            break;
-                            //only one I/O IRQ can be acknowledged at a time
                         }
+                        prioritisedInterruptsState |= kvp.Value;
                         i++;
                     }
-                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
+                    _globalIRQ = interrupAck & prioritisedInterruptsState;
+                   
                 }
-
+                if (_globalIRQ)
+                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
 
 
             }
@@ -409,11 +403,9 @@ namespace CPU.Business
                     break;
                 case OTHER_EVENTS.A1BE0:
                     Registers[Exceptions.ACLOW] = true;
-                    _a0BESignal = true;
                     break;
                 case OTHER_EVENTS.A1BE1:
                     Registers[Exceptions.CIL] = true;
-                    _a0BESignal = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
                     PdCondaritm = true;
