@@ -66,7 +66,7 @@ public class CpuService : ICpuService
         _cpu.LoadJsonMpm(jsonString);
     }
 
-    public (int, int) StepMicrocommand()
+    public void StepMicrocommand()
     {
         _diagram.ResetHighlight();
         var (row, column) = _cpu.StepMicrocommand();
@@ -84,8 +84,48 @@ public class CpuService : ICpuService
 
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+    }
+    public void StepMicroinstruction()
+    {
+        _diagram.ResetHighlight();
+        int row, column;
+        row = 1;
+        column = 1;
+        while (column != 6)
+        {
+            (row, column) = _cpu.StepMicrocommand();
+        }
+        if (row == 0)
+        {
+            _microprogramService.ClearAllHighlightedRows();
+        }
 
-        return (row, column);
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = -1;
+
+        if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+        {
+            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+        }
+    }
+    public void StepInstruction()
+    {
+        _diagram.ResetHighlight();
+        int row, col;
+        row = 1;
+        col = 1;
+        _cpu.StepMicrocommand();
+        while (row != 0 || col != 0)
+        {
+            (row, col) = _cpu.StepMicrocommand();
+        }
+
+        if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+        {
+            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+        }
     }
     public void ResetProgram()
     {
