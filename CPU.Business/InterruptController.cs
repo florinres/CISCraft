@@ -25,9 +25,8 @@ namespace CPU.Business
         /// <param name="irqs"></param>
         /// <param name="exceptions"></param>
         /// <returns>globalIRQ, prioritisedIRQs[]</returns>
-        public (bool,Dictionary<string,bool>) CheckInterruptSignals(bool []irqs, bool[] exceptions)
+        public Dictionary<string,bool> CheckInterruptSignals(bool []irqs, bool[] exceptions)
         {
-            bool globalIRQ = false;
             bool exceptionExclude = !(exceptions[0] | exceptions[1] | exceptions[2] | exceptions[3]);
             //if any exception is detected, exclude all of the interrupt requests
 
@@ -35,7 +34,7 @@ namespace CPU.Business
             prioritisedIRQs["I1p"] = irqs[1] & !irqs[0] & exceptionExclude;
             prioritisedIRQs["I2p"] = irqs[2] & !irqs[1] & !irqs[0] & exceptionExclude;
             prioritisedIRQs["I3p"] = irqs[3] & irqs[2] & !irqs[1] & !irqs[0] & exceptionExclude;
-            return (globalIRQ,prioritisedIRQs);
+            return prioritisedIRQs;
         }
         /// <summary>
         /// Prioritises the detected interruptions.

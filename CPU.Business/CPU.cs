@@ -96,11 +96,26 @@ namespace CPU.Business
             {
                 _controlUnit.SetGlobalIRQState(_globalIRQ);
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
-                bool[] irqs = new bool[] { Registers[IRQs.IRQ0], Registers[IRQs.IRQ1], Registers[IRQs.IRQ2], Registers[IRQs.IRQ3] };
-                bool[] exceptions = new bool[] { Registers[Exceptions.ACLOW], Registers[Exceptions.CIL], Registers[Exceptions.Reserved0], Registers[Exceptions.Reserved1] };
+
+                bool[] irqs = new bool[]
+                {
+                    Registers[IRQs.IRQ0],
+                    Registers[IRQs.IRQ1],
+                    Registers[IRQs.IRQ2],
+                    Registers[IRQs.IRQ3]
+                };
+                bool[] exceptions = new bool[]
+                {
+                    Registers[Exceptions.ACLOW],
+                    Registers[Exceptions.CIL],
+                    Registers[Exceptions.Reserved0],
+                    Registers[Exceptions.Reserved1]
+                };
+
                 Dictionary<string, bool> interruptPriorities = new Dictionary<string, bool>();
-                (_globalIRQ, interruptPriorities) = _interruptController.CheckInterruptSignals(irqs, exceptions);
+                interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
                 bool interrupAck = Convert.ToBoolean(Registers[REGISTERS.FLAGS] & (1 << interruptShift));
+
                 if (interrupAck)
                 {
                     int i = 0;
@@ -115,7 +130,6 @@ namespace CPU.Business
                         i++;
                     }
                     _globalIRQ = interrupAck & prioritisedInterruptsState;
-                   
                 }
                 if (_globalIRQ)
                     Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
