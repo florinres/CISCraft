@@ -116,6 +116,17 @@ namespace CPU.Business
                 interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
                 bool interrupAck = Convert.ToBoolean(Registers[REGISTERS.FLAGS] & (1 << interruptShift));
 
+                if (previousMARState == 0 && previousMIRIndexState == 0)
+                {
+                    // check only when entering the Instruction Fetch phase
+
+                    bool okInstructionCode = CheckInstructionCode();
+
+                    if (okInstructionCode)
+                        Registers[Exceptions.CIL] = false;
+                    else Registers[Exceptions.CIL] = true;
+                }
+
                 if (interrupAck)
                 {
                     int i = 0;
@@ -131,9 +142,11 @@ namespace CPU.Business
                     }
                     _globalIRQ = interrupAck & prioritisedInterruptsState;
                 }
+
+
                 if (_globalIRQ)
                     Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
-
+                _controlUnit.SetCILState(Registers[Exceptions.CIL]);
 
             }
             return (previousMARState, previousMIRIndexState);
@@ -568,6 +581,30 @@ namespace CPU.Business
         public ushort GetInterruptFlag()
         {
             return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
+        }
+        /// <summary>
+        /// Checks instruction code if it belongs to classes B1 to B4. Returns 'true' if so.
+        /// Returns 'false' if illegal code (CIL) is detected.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckInstructionCode()
+        {
+            short instructionCode = _controlUnit.IR;
+
+            short b1Bit = (short)(instructionCode & (1 << 15));
+            short b2Bit = (short)(instructionCode & (1 << 14));
+            short b3Bit = (short)(instructionCode & (1 << 13));
+            short b4Bit = (short)(instructionCode & (1 << 12));
+
+            if (b1Bit == 0) // B1 class
+                return true;
+            else if (b2Bit == 0) //B2 class
+                return true;
+            else if (b3Bit == 0) // B3 class
+                return true;
+            else if (b4Bit == 0) // B4 class
+                return true;
+            else return false; // CIL
         }
     }
 }
