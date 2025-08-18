@@ -90,6 +90,7 @@ namespace CPU.Business
             _microProgram = new OrderedDictionary<string, string[][]>();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             BPO = true; //Enable CPU clock
             previousMARState = 0;
             previousMIRIndexState = 0;
@@ -208,7 +209,8 @@ namespace CPU.Business
             {
                 Registers[(GPR)i] = 0;
             }
-            _mainMemory.ClearMemory();
+            Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             _controlUnit.Reset();
             BPO = true; //Reactivate CPU clock
         }
