@@ -79,9 +79,10 @@ public partial class MainWindow
     {
         if(e.Document.Content is FileViewModel thisFile)
         {
-            MenuBarViewModel.closeDocument(thisFile);
+            MenuBarViewModel.CloseDocument(thisFile);
         }
     }
+  
     private void OnEditorLoaded(object sender, RoutedEventArgs e)
     {
         if (sender is StyledAvalonEdit editor && editor.DataContext is FileViewModel vm)

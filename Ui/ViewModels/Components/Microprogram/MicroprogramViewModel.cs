@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
@@ -105,7 +105,7 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
                         row.Select(r => new MicroInstructionItem
                         {
                             Value = r,
-                            IsCurrent = false
+                            IsCurrent = false,
                         })
                     ),
                     Address = index++,
@@ -115,10 +115,7 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
                 isFirst = false;
             }
         }
-
         Rows = new ObservableCollection<MicroprogramMemoryViewModel>(rows);
-
-        
     }
 
     public override string? Title { get; set; } = "Microprogram";
