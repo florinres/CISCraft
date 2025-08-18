@@ -27,6 +27,7 @@ namespace CPU.Business
         private int state = 0;
         private int _mirIndex = 0;
         private int _globalIRQState = 0;
+        private bool _cilState = false;
         public const short IrDrMask        = 0xF;
         public const short IrSrMask        = 0x3C0;
         public const long SbusMask        = 0xF00000000;
@@ -157,6 +158,7 @@ namespace CPU.Business
             {"T",               0 },
             {"F",               1 },
         };
+
         /// <summary>
         /// Sets or resets the state of the global interrupt flag
         /// which is used to enter into interrupt phase.
@@ -166,6 +168,17 @@ namespace CPU.Business
         {
             _globalIRQState = Convert.ToInt32(irqReq);
         }
+
+        /// <summary>
+        /// Sets or resets the state of the illegal instruction (CIL)
+        /// flag which leads to Exception1 i.e. halt.
+        /// </summary>
+        /// <param name="cil"></param>
+        public void SetCILState(bool cil)
+        {
+            _cilState = cil;
+        }
+
         /// <summary>
         /// Implements logic for stepping through
         /// the Sequencer, thus going through
@@ -248,7 +261,7 @@ namespace CPU.Business
 		private bool ComputeConditionG(bool ACLOWSignal,short flagsRegister)
 		{
             bool g_flag = true;
-            bool CILFlag = false; //TBD
+            bool CILFlag = _cilState;
             bool carryFlag = Convert.ToBoolean(flagsRegister & (1<<3));
             bool zeroFlag = Convert.ToBoolean(flagsRegister & (1 << 2));
             bool signFLag = Convert.ToBoolean(flagsRegister & (1 << 1));
