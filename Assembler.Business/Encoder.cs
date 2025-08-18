@@ -12,7 +12,7 @@ namespace Assembler.Business
 {
     internal class Encoder
     {
-        InstructionParts _instructionParts = default;
+        InstructionParts _instructionParts = new InstructionParts();
         ushort _instrAddress  = 0x0000;
         ushort _symbolAddress = 0x0000;
         ushort _programIndex  = 0x0000;
@@ -124,15 +124,30 @@ namespace Assembler.Business
             public ushort Mad;
             public ushort Rs;
             public ushort Rd;
-            public short  Offset;
-            public short  Offset1;
-            public short  Offset2;
+            public uint Offset1;
+            public uint Offset2;
+            public InstructionParts()
+            {
+                Oppcode = 0;
+                Mad = 0;
+                Mas = 0;
+                Rs = 0;
+                Rd = 0;
+                Offset1 = uint.MaxValue;
+                Offset2 = uint.MaxValue;
+            }
         }
         struct Instruction
         {
             public ushort Instr;
-            public short  Offset1;
-            public short  Offset2;
+            public uint Offset1;
+            public uint Offset2;
+            public Instruction()
+            {
+                Instr = 0;
+                Offset1 = uint.MaxValue;
+                Offset2 = uint.MaxValue;
+            }
         }
         public readonly Dictionary<string, ushort> SymbolTable = new Dictionary<string, ushort>();
         public readonly Dictionary<short, ushort> DebugSymbols = new Dictionary<short, ushort>();
@@ -222,7 +237,7 @@ namespace Assembler.Business
             {
                 _program[i] = 0;
             }
-            _instructionParts = default;
+            _instructionParts = new InstructionParts();
             _instrAddress = 0x0000;
             _symbolAddress = 0x0000;
             _programIndex = 0x0000;
@@ -332,7 +347,7 @@ namespace Assembler.Business
         private void HandleInstructions(ParseTreeNode node)
         {
             var child = node.ChildNodes[0];
-            Instruction instr = default;
+            Instruction instr = new Instruction();
             switch(child.Term.Name)
             {
                 case "B1Instr":
@@ -383,7 +398,7 @@ namespace Assembler.Business
             {
                 case "B1Oppcodes":
                 {
-                    _instructionParts = default;
+                    _instructionParts = new InstructionParts();
                     string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
                     _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
                     if(_debug) Console.Write(_instrAddress+" "+ oppcode);
@@ -423,7 +438,7 @@ namespace Assembler.Business
                 case "B2Oppcodes":
                 case "B3Oppcodes":
                 {
-                    _instructionParts = default;
+                    _instructionParts = new InstructionParts();
                     string oppcode = node.ChildNodes[0].Token.Text.ToUpper();
                     if(_debug) Console.Write(_instrAddress+" "+oppcode);
                     _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
@@ -452,7 +467,7 @@ namespace Assembler.Business
         */
         private void HandleB4Instruction(ParseTreeNode node)
         {
-            _instructionParts = default;
+            _instructionParts = new InstructionParts();
             string oppcode = node.ChildNodes[0].ChildNodes[0].Token.Text.ToUpper();
             if(_debug) Console.WriteLine(_instrAddress+" "+oppcode);
             _instructionParts.Oppcode = _oppcodes[oppcode].Keys.First();
@@ -482,7 +497,7 @@ namespace Assembler.Business
                 }
                 case "number":
                 {
-                    _instructionParts.Offset1 = Convert.ToInt16(node.Token.Value);
+                    _instructionParts.Offset1 = (uint)Convert.ToInt16(node.Token.Value);
                     // add the register to the _instructionPartS
                     if(_debug)
                     {
@@ -500,9 +515,14 @@ namespace Assembler.Business
                     {
                         throw new ArgumentException($"Unknown label: {label}");
                     }
-                    _instructionParts.Offset1 = Convert.ToInt16(SymbolTable[label]);
+                    _instructionParts.Offset1 = (uint)Convert.ToInt16(SymbolTable[label] - (_instrAddress + 4));
                     // add the register to the _instructionParts
-                    if(_debug) Console.WriteLine(" " + label + " " + SymbolTable[label]);
+
+                    if (_debug)
+                    {
+                        Console.WriteLine(" " + label + " " + SymbolTable[label]);
+                        Console.WriteLine((_instrAddress + 2) + " " + (int)_instructionParts.Offset1);
+                    }
                     _instrAddress += 4;
                     return;
                 }
@@ -537,7 +557,7 @@ namespace Assembler.Business
                         Console.WriteLine(" " + node.Token.Value);
                         Console.WriteLine(_instrAddress + 2 + " " + node.Token.Value);
                     }
-                    _instructionParts.Offset2 = Convert.ToInt16(node.Token.Value);
+                    _instructionParts.Offset2 = (uint)Convert.ToInt16(node.Token.Value);
                     _instrAddress += 4;
                     return;
                 }
@@ -563,7 +583,7 @@ namespace Assembler.Business
                 }
             }
         }
-        private void HandleMemoryAccess(ParseTreeNode node,ref ushort am,ref ushort reg, ref short offset)
+        private void HandleMemoryAccess(ParseTreeNode node,ref ushort am,ref ushort reg, ref uint offset)
         {
             switch (node.Term.Name)
             {
@@ -573,7 +593,7 @@ namespace Assembler.Business
                     {
                         if(_debug) Console.Write(" " + node.ChildNodes[0].Token.Value);
                         am = 0b11;
-                        offset = Convert.ToInt16(node.ChildNodes[0].Token.Value);
+                        offset = Convert.ToUInt32(node.ChildNodes[0].Token.Value);
                         _instrAddress += 2;
                     }
                     return;
@@ -630,7 +650,7 @@ namespace Assembler.Business
         }
         private Instruction AssembleB1(InstructionParts parts)
         {
-            Instruction instr = default;
+            Instruction instr = new Instruction();
             instr.Instr   = (ushort)(parts.Oppcode | (parts.Mas << 10) | (parts.Rs << 6) | (parts.Mad << 4) | parts.Rd);
             instr.Offset1 = parts.Offset1;
             instr.Offset2 = parts.Offset2;
@@ -638,15 +658,15 @@ namespace Assembler.Business
         }
         private Instruction AssembleB2B3(InstructionParts parts)
         {
-            Instruction instr = default;
+            Instruction instr = new Instruction();
             instr.Instr   = (ushort)(parts.Oppcode | (parts.Mad << 4) | parts.Rd);
-            instr.Offset1 = (short)(parts.Offset1 + s_programStartingAddress);
-            instr.Offset2 = (short)(parts.Offset2 + s_programStartingAddress);
+            instr.Offset1 = parts.Offset1 + s_programStartingAddress;
+            instr.Offset2 = parts.Offset2 + s_programStartingAddress;
             return instr;
         }
         private Instruction AssembleB4(InstructionParts parts)
         {
-            Instruction instr = default;
+            Instruction instr = new Instruction();
             instr.Instr = parts.Oppcode;
             return instr;
         }
@@ -658,12 +678,12 @@ namespace Assembler.Business
                 _program[_programIndex++] = (byte)instruction.Instr;
                 _program[_programIndex++] = (byte)(instruction.Instr >> 8);
             }
-            if(instruction.Offset2 != 0)
+            if(instruction.Offset2 != uint.MaxValue)
             {
                 _program[_programIndex++] = (byte)instruction.Offset2;
                 _program[_programIndex++] = (byte)(instruction.Offset2>>8);
             }
-            if(instruction.Offset1 != 0)
+            if(instruction.Offset1 != uint.MaxValue)
             {
                 _program[_programIndex++] = (byte)instruction.Offset1;
                 _program[_programIndex++] = (byte)(instruction.Offset1>>8);

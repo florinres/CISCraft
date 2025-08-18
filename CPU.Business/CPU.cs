@@ -20,7 +20,7 @@ namespace CPU.Business
             NONE,
             SBUS,
             DBUS,
-            ADD,
+            SUM,
             SUB,
             AND,
             OR,
@@ -278,38 +278,47 @@ namespace CPU.Business
                 case ALU_OP.DBUS:
                     RBUS = DBUS;
                     break;
-                case ALU_OP.ADD:
+                case ALU_OP.SUM:
                     RBUS = (short)(SBUS + DBUS + Cin);
                     Cin = 0;
+                    ComputeFlags();
                     break;
                     // case ALU_OP.SUB:
                     //     RBUS = (short)(SBUS - DBUS);
                     break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
+                    ComputeFlags();
                     break;
                 case ALU_OP.OR:
                     RBUS = (short)(SBUS | DBUS);
+                    ComputeFlags();
                     break;
                 case ALU_OP.XOR:
                     RBUS = (short)(SBUS ^ DBUS);
+                    ComputeFlags();
                     break;
                 case ALU_OP.ASL:
                     RBUS <<= 1;
+                    ComputeFlags();
                     break;
                 case ALU_OP.ASR:
                     short msbRbus = (short)(RBUS & 0x8000);
                     RBUS >>= 1;
                     RBUS |= msbRbus;
+                    ComputeFlags();
                     break;
                 case ALU_OP.LSR:
                     RBUS = (short)((ushort)RBUS >> 1);
+                    ComputeFlags();
                     break;
                 case ALU_OP.ROL:
                     RBUS = (short)RotateLeft((ushort)RBUS, 1);
+                    ComputeFlags();
                     break;
                 case ALU_OP.ROR:
                     RBUS = (short)RotateRight((ushort)RBUS, 1);
+                    ComputeFlags();
                     break;
                 case ALU_OP.RLC:
                     RotateLeftWithCarry();
@@ -319,7 +328,6 @@ namespace CPU.Business
                     break;
             }
 
-            ComputeFlags();
             Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
@@ -479,6 +487,7 @@ namespace CPU.Business
         // Return the status only for Zero and Sign
         private void ComputeLogicFlags()
         {
+            Registers[REGISTERS.FLAGS] = 0;
             if (RBUS == 0)
             {
                 Registers[REGISTERS.FLAGS] |= (short)(1 << zeroShift);

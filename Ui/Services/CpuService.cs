@@ -69,20 +69,22 @@ public class CpuService : ICpuService
     public (int, int) StepMicrocommand()
     {
         _diagram.ResetHighlight();
-         var (row, column) = _cpu.StepMicrocommand();
-         if (row == 0 && column == 0)
-         {
-             _microprogramService.ClearAllHighlightedRows();
-         }
+        var (row, column) = _cpu.StepMicrocommand();
 
-         _microprogramService.CurrentRow = row;
-         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+        if (row == 0 && column == 0)
+        {
+            _microprogramService.ClearAllHighlightedRows();
 
-         if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
-         {
-            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
-                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
-         }
+            if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+            {
+                if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                    Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+            }
+        }
+
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+
         return (row, column);
     }
     public void ResetProgram()
