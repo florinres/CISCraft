@@ -58,7 +58,6 @@ namespace CPU.Business
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
         private InterruptController _interruptController;
-        public ControlUnit _controlUnit;
 
         private IMainMemory _mainMemory;
         private OrderedDictionary<string, string[][]> _microProgram;
@@ -308,7 +307,6 @@ namespace CPU.Business
                     break;
                     // case ALU_OP.SUB:
                     //     RBUS = (short)(SBUS - DBUS);
-                    break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
                     break;

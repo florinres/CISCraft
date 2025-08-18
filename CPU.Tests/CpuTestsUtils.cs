@@ -154,12 +154,11 @@ namespace CPU.Tests
         {
             Dictionary<string, int> buf = new Dictionary<string, int>();
 
-            cpu.ACLOW = false;
-            cpu.CIL = false;
+            cpu.Registers[Exceptions.ACLOW] = false;
+            cpu.Registers[Exceptions.CIL] = false;
             cpu.DBUS = 0;
             cpu.SBUS = 0;
             cpu.RBUS = 0;
-            cpu.INT = false;
 
             for (int i = 0; i <= EnumExtensions.GetMaxValue<REGISTERS>(); i++)
             {

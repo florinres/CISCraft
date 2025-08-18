@@ -4,21 +4,15 @@ namespace CPU.Business.Models;
 
 public class RegisterWrapper(int amount = 23) : ObservableObject
 {
-    private short[] _registers { get; }
-    private short[] _gpr { get; }
-    private bool[] _irqs { get; }
-    private bool[] _exceptions { get; }
     private short[] _registers { get; } = new short[amount];
     private short[] _gpr { get; } = new short[16];
+    private bool[] _irqs { get; } = new bool[4];
+    private bool[] _exceptions { get; } = new bool[4];
 
     private byte _mar = 0;
 
     public byte MAR
     {
-        _registers = new short[amount];
-        _gpr = new short[16];
-        _irqs = new bool[4];
-        _exceptions = new bool[4];
         get => _mar;
         set
         {
@@ -27,15 +21,11 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
             OnPropertyChanged($"{nameof(MAR)}");
         }
     }
-    
+
     private long _mir = 0;
 
     public long MIR
     {
-        _registers = new short[23];
-        _gpr = new short[16];
-        _irqs = new bool[4];
-        _exceptions = new bool[4];
         get => _mir;
         set
         {
