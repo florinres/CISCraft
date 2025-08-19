@@ -101,6 +101,20 @@
                                       Command="{Binding Settings.ChangeThemeCommand}"
                                       CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
                         </MenuItem>
+                        <MenuItem Header="Step Level">
+                            <MenuItem Header="Microcommand"
+                                     IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Microcommand}"  
+                                     Command="{Binding ActionsBar.SetStepLevelCommand}"  
+                                     CommandParameter="{x:Static viewModel:StepLevel.Microcommand}" />
+                            <MenuItem Header="Microinstructions"  
+                                  IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Microinstruction}"  
+                                  Command="{Binding ActionsBar.SetStepLevelCommand}"  
+                                  CommandParameter="{x:Static viewModel:StepLevel.Microinstruction}" />
+                            <MenuItem Header="Instruction"
+                                  IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Instruction}"  
+                                  Command="{Binding ActionsBar.SetStepLevelCommand}"  
+                                  CommandParameter="{x:Static viewModel:StepLevel.Instruction}" />
+                        </MenuItem>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View" />
                     <ui:MenuItem Header="Help" />
@@ -151,7 +165,7 @@
             </ui:Button>
 
             <ui:Button
-                Command="{Binding StepMicroprogramCommand}"
+                Command="{Binding StepCommand}"
                 IsEnabled="{Binding IsDebugging}"
                 VerticalAlignment="Top"
                 ToolTip="Step Into"
@@ -162,19 +176,6 @@
                 Appearance="Transparent"
                 BorderBrush="{x:Null}">
                 <ui:SymbolIcon Symbol="ArrowStepIn16" />
-            </ui:Button>
-
-            <ui:Button
-                VerticalAlignment="Top"
-                ToolTip="Step Over"
-                IsEnabled="{Binding IsDebugging}"
-                Height="30"
-                Width="30"
-                Padding="0"
-                Margin="0,0,10,0"
-                Appearance="Transparent"
-                BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="ArrowStepOver16" />
             </ui:Button>
 
             <ui:Button
