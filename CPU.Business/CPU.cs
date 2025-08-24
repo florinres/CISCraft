@@ -71,9 +71,9 @@ namespace CPU.Business
         private bool CinPdCondaritm = false;
         private bool PdCondaritm = false;
         private bool PdCondlogic = false;
-        public CPU(IMainMemory mainMemory, RegisterWrapper registers)
+        public CPU(IMainMemory mainMemory, ControlUnit controlUnit, RegisterWrapper registers)
         {
-            _controlUnit = new ControlUnit(registers);
+            _controlUnit = controlUnit;
             _controlUnit.SbusEvent += OnSbusEvent;
             _controlUnit.DbusEvent += OnDbusEvent;
             _controlUnit.AluEvent += OnAluEvent;

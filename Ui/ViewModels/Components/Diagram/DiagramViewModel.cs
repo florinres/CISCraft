@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using CPU.Business;
 using CPU.Business.Models;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Generics;
@@ -8,12 +9,15 @@ namespace Ui.ViewModels.Components.Diagram;
 public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 {
     private readonly RegisterWrapper _registers;
+    private readonly ControlUnit _controlUnit;
 
-    public DiagramViewModel(IMicroprogramViewModel microprogramViewModel, RegisterWrapper registers)
+    public DiagramViewModel(IMicroprogramViewModel microprogramViewModel, RegisterWrapper registers, ControlUnit controlUnit)
     {
         MemoryContext = microprogramViewModel;
         _registers = registers;
+        _controlUnit = controlUnit;
         BindToRegisters();
+        BindConnectionEvents();
         SetUpContext();
     }
     
@@ -109,7 +113,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         ResetHighlight();
     }
     
-    public void BindToRegisters()
+    private void BindToRegisters()
     {
         _registers.PropertyChanged += OnRegistersChanged;
 
@@ -121,6 +125,46 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         
         Update(MirContext, _registers.MIR);
         Update(MarContext, _registers.MAR);
+    }
+
+    private void BindConnectionEvents()
+    {
+        _controlUnit.SbusEvent += OnSbusEvent;
+        _controlUnit.DbusEvent += OnDBusEvent;
+        _controlUnit.RbusEvent += OnRBusEvent;
+    }
+
+    public void OnSbusEvent(int index)
+    {
+        switch ((REGISTERS)index)
+        {
+            case REGISTERS.NEG:
+                // SBUS = (short)~Registers[REGISTERS.T];
+                break;
+            case REGISTERS.RG:
+                Contexts.First(c => c.Name == "R_SBus").IsHighlighted = true;
+                // int gprIndex = _controlUnit.GetSourceRegister();
+                // SBUS = Registers[(GPR)gprIndex];
+                break;
+            case REGISTERS.IRLSB:
+                Contexts.First(c => c.Name == "T_SBus").IsHighlighted = true;
+                // SBUS = (short)(Registers[REGISTERS.IR] & 0xFF);
+                break;
+            default:
+                 Contexts.First(c => c.Name == $"{((REGISTERS)index).ToString()}_SBus").IsHighlighted = true;
+                break;
+        }
+        // Debug.WriteLine("SBUS= " + SBUS.ToString());
+    }
+
+    public void OnDBusEvent(int index)
+    {
+        
+    }
+
+    public void OnRBusEvent(int index)
+    {
+        
     }
     
     private void OnRegistersChanged(object? sender, PropertyChangedEventArgs e)

@@ -12,9 +12,6 @@ public partial class RegisterViewModel : BaseDiagramObject
     {
         IsHighlighted = true;
     }
-    
-    [ObservableProperty]
-    public partial string Name { get; set; }
 
     [ObservableProperty] public partial NumberFormat Format { get; set; } = NumberFormat.Hex;
     // public EventHandler customEvent;

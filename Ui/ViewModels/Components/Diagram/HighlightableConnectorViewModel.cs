@@ -6,7 +6,4 @@ public partial class HighlightableConnectorViewModel : BaseDiagramObject
     {
         Name = name;
     }
-
-    [ObservableProperty]
-    public partial string Name { get; set; }
 }

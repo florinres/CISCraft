@@ -1,4 +1,5 @@
 using System.IO;
+using CPU.Business;
 using CPU.Business.Models;
 using MainMemory.Business;
 using MainMemory.Business.Models;
@@ -63,6 +64,7 @@ public partial class App : Application
             services.AddSingleton<CPU.Business.CPU>();
             services.AddSingleton<RegisterWrapper>();
             services.AddSingleton<MemoryContentWrapper>();
+            services.AddSingleton<ControlUnit>();
             services.AddSingleton<ILayoutControlViewModel, LayoutControlViewModel>();
         }).Build();
 

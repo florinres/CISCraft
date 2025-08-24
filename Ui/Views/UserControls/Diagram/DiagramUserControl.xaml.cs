@@ -38,7 +38,6 @@ public partial class DiagramUserControl : UserControl
         {
             Dispatcher.BeginInvoke(new Action(DrawConnections), System.Windows.Threading.DispatcherPriority.Loaded);
         };
-
     }
 
     private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -116,7 +115,7 @@ public partial class DiagramUserControl : UserControl
         List<RegisterBlock> registersCollection =
         [
             Ivr,
-            Pc,
+            PC,
             T,
             Sp,
             Flags,
@@ -239,7 +238,7 @@ public partial class DiagramUserControl : UserControl
             canvas.Children.Add(connector2);
         }
     }
-    
+
     private void AddGeneralRegistersConnections()
     {
         //R7 just because it is in the center, no particular reason
@@ -248,44 +247,24 @@ public partial class DiagramUserControl : UserControl
         var sBusEdges = SBus.GetEdges(MainDiagramGrid);
         var dBusEdges = DBus.GetEdges(MainDiagramGrid);
         var rBusRightInnerEdge = RBus.GetEdgeAbsolute(PathSide.Right, EdgeType.Inner, MainDiagramGrid);
-
-        var sBusHighlight = new HighlightableConnector
-        {
-            Points =
+        
+        AddConnection($"R_SBus", 
             [
                 connectionPoints.LeftMinusOffset,
                 connectionPoints.LeftMinusOffset with { X = sBusEdges.Right },
-            ],
-            StrokeThickness = 2,
-            Name = $"R_SBus"
-        };
-        var dBusHighlight = new HighlightableConnector
-        {
-            Points =
+            ]);
+        
+        AddConnection($"R_DBus",
             [
                 connectionPoints.LeftPlusOffset,
                 connectionPoints.LeftPlusOffset with { X = dBusEdges.Right },
-            ],
-            StrokeThickness = 2,
-            Name = $"R_DBus"
-        };
-
-        var foo = new PointCollection
-        {
-            connectionPoints.MidRight,
-            connectionPoints.MidRight with { X = rBusRightInnerEdge }
-        };
-
-        var rBusHighLight = new HighlightableConnector
-        {
-            Points = foo,
-            StrokeThickness = 2,
-            Name = $"R_RBus"
-        };
-
-        ConnectionCanvas.Children.Add(sBusHighlight);
-        ConnectionCanvas.Children.Add(dBusHighlight);
-        ConnectionCanvas.Children.Add(rBusHighLight);
+            ]);
+        
+        AddConnection("R_RBus",
+            [
+                connectionPoints.MidRight,
+                connectionPoints.MidRight with { X = rBusRightInnerEdge }
+            ]);
     }
 
     private void AddDataOutIrConnections()
@@ -294,21 +273,14 @@ public partial class DiagramUserControl : UserControl
         var connectionPointsIr = Ir.GetConnectionPoints(MainDiagramGrid);
 
         var offset = 7;
-
-        var connection = new HighlightableConnector
-        {
-            Points =
+        
+        AddConnection($"{DataOut.Name}_{Ir.Name}", 
             [
                 connectionPointsDataOut.MidLeft,
                 connectionPointsDataOut.MidLeft with { X = connectionPointsDataOut.MidLeft.X - offset },
                 connectionPointsIr.MidLeft with { X = connectionPointsDataOut.MidLeft.X - offset },
                 connectionPointsIr.MidLeft
-            ],
-            StrokeThickness = 2,
-            Name = $"{DataOut.Name}_{Ir.Name}"
-        };
-
-        ConnectionCanvas.Children.Add(connection);
+            ]);
     }
 
     private void AddAddressConnections()
@@ -317,21 +289,14 @@ public partial class DiagramUserControl : UserControl
         var connectionPointsAdr = Adr.GetConnectionPoints(MainDiagramGrid);
 
         var offset = 10;
-
-        var connection = new HighlightableConnector
-        {
-            Points =
+        
+        AddConnection($"{Adr.Name}_DBus",
             [
                 connectionPointsAdress.TopOffsetPlus,
                 connectionPointsAdress.TopOffsetPlus with { Y = connectionPointsAdress.TopOffsetPlus.Y - offset },
                 new(connectionPointsAdr.RightPlusOffset.X + offset, connectionPointsAdress.TopOffsetPlus.Y - offset),
                 connectionPointsAdr.RightPlusOffset with { X = connectionPointsAdr.RightPlusOffset.X + offset }
-            ],
-            StrokeThickness = 2,
-            Name = $"{Adr.Name}_DBus"
-        };
-
-        ConnectionCanvas.Children.Add(connection);
+            ]);
     }
 
     private void AddDataOutConnections()
@@ -340,10 +305,8 @@ public partial class DiagramUserControl : UserControl
         var connectionPointsMdr = Mdr.GetConnectionPoints(MainDiagramGrid);
 
         var offset = 150;
-
-        var connection = new HighlightableConnector
-        {
-            Points =
+        
+        AddConnection($"{Mdr.Name}_RBus",
             [
                 connectionPointsDataOut.MidRight,
                 connectionPointsDataOut.MidRight with
@@ -351,12 +314,7 @@ public partial class DiagramUserControl : UserControl
                     X = connectionPointsDataOut.MidRight.X + offset
                 },
                 connectionPointsMdr.MidLeft with { X = connectionPointsDataOut.MidRight.X + offset }
-            ],
-            StrokeThickness = 2,
-            Name = $"{Mdr.Name}_RBus"
-        };
-
-        ConnectionCanvas.Children.Add(connection);
+            ]);
     }
 
     private void AddDataInConnections()
@@ -365,22 +323,15 @@ public partial class DiagramUserControl : UserControl
         var connectionPointsMdr = Mdr.GetConnectionPoints(MainDiagramGrid);
 
         var offset = 10;
-
-        var connection = new HighlightableConnector
-        {
-            Points =
+        
+        AddConnection($"{Mdr.Name}_SBus", 
             [
                 connectionPointsDataIn.TopOffsetPlus,
                 connectionPointsDataIn.TopOffsetPlus with { Y = connectionPointsMdr.TopOffsetPlus.Y - offset },
                 new Point(connectionPointsMdr.RightMinusOffset.X + offset,
                     connectionPointsMdr.TopOffsetPlus.Y - offset),
                 connectionPointsMdr.RightMinusOffset with { X = connectionPointsMdr.RightMinusOffset.X + offset }
-            ],
-            StrokeThickness = 2,
-            Name = $"{Mdr.Name}_SBus"
-        };
-
-        ConnectionCanvas.Children.Add(connection);
+            ]);
     }
 
     private void AddPdsConnections()
@@ -388,7 +339,7 @@ public partial class DiagramUserControl : UserControl
         var flagConnections = Flags.GetConnectionPoints(MainDiagramGrid);
 
         var relevantY = flagConnections.MidBottom.Y;
-        
+
         var pdCollection = new List<BitBlock>()
         {
             Pd0s,
@@ -401,19 +352,12 @@ public partial class DiagramUserControl : UserControl
         foreach (var bitBlock in pdCollection)
         {
             var bitBlockConnectionPoint = bitBlock.GetConnectionPointRelativeTo(MainDiagramGrid);
-
-            var connection = new HighlightableConnector
-            {
-                Points =
+            
+            AddConnection($"{bitBlock.Name}_{Flags.Name}",
                 [
                     bitBlockConnectionPoint,
                     bitBlockConnectionPoint with { Y = relevantY }
-                ],
-                StrokeThickness = 2,
-                Name = $"{bitBlock.Name}_{Flags.Name}"
-            };
-            
-            ConnectionCanvas.Children.Add(connection);
+                ]);
         }
     }
 
@@ -422,31 +366,34 @@ public partial class DiagramUserControl : UserControl
     {
         var connectionPoints = registerBlock.GetConnectionPoints(MainDiagramGrid);
 
-        var sBusHighlight = new HighlightableConnector
-        {
-            Points =
-            [
-                connectionPoints.RightMinusOffset,
-                connectionPoints.RightMinusOffset with { X = sBusEdges.Left },
-            ],
-            StrokeThickness = 2,
-            Name = $"{registerBlock.Name}_SBus"
-        };
-        var dBusHighlight = new HighlightableConnector
-        {
-            Points =
+        AddConnection($"{registerBlock.Name}_SBus",
+        [
+                    connectionPoints.RightMinusOffset,
+                    connectionPoints.RightMinusOffset with { X = sBusEdges.Left },
+                ]);
+        AddConnection($"{registerBlock.Name}_DBus",
             [
                 connectionPoints.RightPlusOffset,
                 connectionPoints.RightPlusOffset with { X = dBusEdges.Left },
-            ],
-            StrokeThickness = 2,
-            Name = $"{registerBlock.Name}_DBus"
-        };
-
-        ConnectionCanvas.Children.Add(sBusHighlight);
-        ConnectionCanvas.Children.Add(dBusHighlight);
+            ]);
 
         return connectionPoints;
+    }
+
+    private void AddConnection(string name, PointCollection points)
+    {
+        var viewModel = new HighlightableConnectorViewModel(name);
+
+        var connection = new HighlightableConnector
+        {
+            Points = points,
+            StrokeThickness = 2,
+            Name = viewModel.Name
+        };
+        connection.DataContext = viewModel;
+
+        ViewModel.Contexts.Add(viewModel);
+        ConnectionCanvas.Children.Add(connection);
     }
 
     #endregion
