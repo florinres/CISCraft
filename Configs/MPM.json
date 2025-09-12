@@ -2,7 +2,7 @@
     "IFCH":
     [
         ["PdPCs",     "NONE",          "SBUS",  "PmADR",       "IFCH",    "+2PC",            "IF ACLOW JUMPI",   "INDEX0",  "T",  "PWFAIL"       ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF CIL JUMPI",     "INDEX1",  "F",  "B1"           ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "IF CIL JUMPI",     "INDEX3",  "F",  "B1"           ]
     ],
     "ILLEGAL":
     [

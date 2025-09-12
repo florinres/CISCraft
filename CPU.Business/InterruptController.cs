@@ -62,10 +62,12 @@ namespace CPU.Business
             short interruptVector = 0;
 
             bool[] prioritisedExceptions = PrioritiseExceptions(exceptions);
-            int foo = Convert.ToInt16(exceptions[1]);
-            interruptVector |= (short)(Convert.ToInt16(exceptions[1]) | Convert.ToInt16(exceptions[3]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]) << 1);
-            interruptVector |= (short)(Convert.ToInt16(exceptions[2]) | Convert.ToInt16(exceptions[3]) | Convert.ToInt16(prioritisedIRQs["I2p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]) << 2);
-            interruptVector |= (short)(Convert.ToInt16(prioritisedIRQs["I0p"]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I2p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]) << 3);
+            short bit1 = (short)(Convert.ToInt16(exceptions[1]) | Convert.ToInt16(exceptions[3]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
+            short bit2 = (short)(Convert.ToInt16(exceptions[2]) | Convert.ToInt16(exceptions[3]) | Convert.ToInt16(prioritisedIRQs["I2p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
+            short bit3 = (short)(Convert.ToInt16(prioritisedIRQs["I0p"]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I2p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
+            interruptVector |= (short)(bit1<<1);
+            interruptVector |= (short)(bit2 << 2);
+            interruptVector |= (short)(bit3 << 3);
             return interruptVector;
         }
     }
