@@ -94,9 +94,8 @@ namespace CPU.Business
         {
             if (BPO)
             {
-                _controlUnit.SetGlobalIRQState(_globalIRQ);
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
-
+                Debug.Print(_globalIRQ.ToString());
                 bool[] irqs = new bool[]
                 {
                     Registers[IRQs.IRQ0],
@@ -112,41 +111,34 @@ namespace CPU.Business
                     Registers[Exceptions.Reserved1]
                 };
 
+                bool okInstructionCode = CheckInstructionCode();
+
+                 if (okInstructionCode)
+                    Registers[Exceptions.CIL] = false;
+                 else Registers[Exceptions.CIL] = true;
+
+                _controlUnit.SetCILState(Registers[Exceptions.CIL]);
+
                 Dictionary<string, bool> interruptPriorities = new Dictionary<string, bool>();
                 interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
-                bool interrupAck = Convert.ToBoolean(Registers[REGISTERS.FLAGS] & (1 << interruptShift));
+                bool interrupAck = Convert.ToBoolean(GetInterruptFlag());
 
-                if (previousMARState == 0 && previousMIRIndexState == 0)
+                int i = 0;
+                bool prioritisedInterruptsState = false;
+                foreach (var kvp in interruptPriorities)
                 {
-                    // check only when entering the Instruction Fetch phase
-
-                    bool okInstructionCode = CheckInstructionCode();
-
-                    if (okInstructionCode)
-                        Registers[Exceptions.CIL] = false;
-                    else Registers[Exceptions.CIL] = true;
-                }
-
-                if (interrupAck)
-                {
-                    int i = 0;
-                    bool prioritisedInterruptsState = false;
-                    foreach (var kvp in interruptPriorities)
+                    if (kvp.Value)
                     {
-                        if (kvp.Value)
-                        {
-                            irqs[i] = false;
-                        }
-                        prioritisedInterruptsState |= kvp.Value;
-                        i++;
+                        irqs[i] = false;
                     }
-                    _globalIRQ = interrupAck & prioritisedInterruptsState;
+                    prioritisedInterruptsState |= kvp.Value;
+                    i++;
                 }
+                _globalIRQ = interrupAck & prioritisedInterruptsState;
+                _controlUnit.SetGlobalIRQState(_globalIRQ);
 
-
-                if (_globalIRQ)
-                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
-                _controlUnit.SetCILState(Registers[Exceptions.CIL]);
+                Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
+               
 
             }
             return (previousMARState, previousMIRIndexState);

@@ -68,7 +68,7 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
             if (_irqs[(int)index] == value) return;
 
             _irqs[(int)index] = value;
-            OnPropertyChanged($"Registers[{_irqs}]");
+            OnPropertyChanged($"IRQs[{_irqs}]");
             OnPropertyChanged(nameof(_irqs));
         }
     }
@@ -79,8 +79,8 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
         {
             if (_exceptions[(int)index] == value) return;
 
-            _irqs[(int)index] = value;
-            OnPropertyChanged($"Registers[{_exceptions}]");
+            _exceptions[(int)index] = value;
+            OnPropertyChanged($"Exceptions[{_exceptions}]");
             OnPropertyChanged(nameof(_exceptions));
         }
     }
