@@ -90,13 +90,13 @@
                         <MenuItem Header="Theme">
                             <MenuItem Header="Light"
                                       IsCheckable="True"
-                                      IsEnabled="False"
+                                      IsEnabled="True"
                                       IsChecked="{Binding  Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
                                       Command="{Binding Settings.ChangeThemeCommand}"
                                       CommandParameter="{x:Static appearance:ApplicationTheme.Light}" />
 
                             <MenuItem Header="Dark"
-                                      IsCheckable="true"
+                                      IsCheckable="True"
                                       IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
                                       Command="{Binding Settings.ChangeThemeCommand}"
                                       CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
@@ -133,7 +133,8 @@
                 Padding="0"
                 Margin="10,0,10,0"
                 Appearance="Transparent"
-                BorderBrush="{x:Null}">
+                BorderBrush="{x:Null}"
+                Command="{Binding RunActiveCodeCommand}">
                 <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F" />
             </ui:Button>
 
