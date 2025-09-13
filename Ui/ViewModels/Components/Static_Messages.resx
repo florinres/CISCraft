@@ -118,16 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ATTENTION" xml:space="preserve">
-    <value>Atenție</value>
+    <value>Attention</value>
   </data>
   <data name="SAVE_FILE_FILTER" xml:space="preserve">
     <value>Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt</value>
   </data>
   <data name="SAVE_FILE_TEXT" xml:space="preserve">
-    <value>Fișierul nu este salvat. Dorești să îl salvezi înainte de închidere?</value>
+    <value>The file hasn't been saved. Do you want to save it before closing?</value>
   </data>
   <data name="SAVE_FILE_LABEL" xml:space="preserve">
-    <value>Salvează fișier</value>
+    <value>Save File</value>
   </data>
   <data name="DEFAULT_EXTENSION" xml:space="preserve">
     <value>asm</value>

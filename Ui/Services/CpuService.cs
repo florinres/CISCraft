@@ -60,6 +60,7 @@ public class CpuService : ICpuService
          var (row, column) = _cpu.StepMicrocommand();
          if (row == 0 && column == 0)
          {
+            //aici se intra cand se gata instructiunea
              _microprogramService.ClearAllHighlightedRows();
          }
          _microprogramService.CurrentRow = row;
@@ -95,5 +96,10 @@ public class CpuService : ICpuService
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Remove(Highlight);
             Highlight = null;
         }
+    }
+
+    public void RunActiveCode()
+    {
+        //nothing for now
     }
 }

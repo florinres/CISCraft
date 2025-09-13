@@ -61,7 +61,7 @@ namespace Ui.ViewModels.Components {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Atenție.
+        ///   Looks up a localized string similar to Attention.
         /// </summary>
         internal static string ATTENTION {
             get {
@@ -115,7 +115,7 @@ namespace Ui.ViewModels.Components {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Salvează fișier.
+        ///   Looks up a localized string similar to Save File.
         /// </summary>
         internal static string SAVE_FILE_LABEL {
             get {
@@ -124,7 +124,7 @@ namespace Ui.ViewModels.Components {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fișierul nu este salvat. Dorești să îl salvezi înainte de închidere?.
+        ///   Looks up a localized string similar to The file hasn&apos;t been saved. Do you want to save it before closing?.
         /// </summary>
         internal static string SAVE_FILE_TEXT {
             get {

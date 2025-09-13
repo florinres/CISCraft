@@ -23,6 +23,7 @@ public interface IActionsBarViewModel
     /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.ResetProgram"/>.</summary>
     global::CommunityToolkit.Mvvm.Input.IRelayCommand ResetProgramCommand { get; }
 
+    global::CommunityToolkit.Mvvm.Input.IRelayCommand RunActiveCodeCommand { get; }
     bool IsDebugging { get; set; }
     bool NotDebugging { get; set; }
 

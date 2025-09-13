@@ -11,4 +11,5 @@ public interface ICpuService
     public void ResetProgram();
     public void StartDebugging();
     public void StopDebugging();
+    public void RunActiveCode();
 }

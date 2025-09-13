@@ -119,7 +119,8 @@
                 Padding="0"
                 Margin="10,0,10,0"
                 Appearance="Transparent"
-                BorderBrush="{x:Null}">
+                BorderBrush="{x:Null}"
+                Command="{Binding RunActiveCodeCommand}">
                 <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F" />
             </ui:Button>
 
