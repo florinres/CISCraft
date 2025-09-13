@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Ui.Models;
 
 namespace Ui.Views.UserControls.Diagram;
 
@@ -43,33 +44,73 @@ public partial class AroundTheEdgeBus : UserControl
 
         // UpdateGeometry();
     }
-    
-    // private void UpdateGeometry()
-    // {
-    //     // Create a PathFigure with custom geometry
-    //     var path = new PathFigure
-    //     {
-    //         StartPoint = new Point(0, 0),
-    //         IsClosed = false
-    //     };
-    //
-    //     path.Segments.Add(new LineSegment(new Point(0, WrapHeight), true));       // down
-    //     path.Segments.Add(new LineSegment(new Point(WrapWidth, WrapHeight), true)); // right
-    //     path.Segments.Add(new LineSegment(new Point(WrapWidth, 0), true));        // up
-    //
-    //     // Create the PathGeometry object
-    //     var geometry = new PathGeometry();
-    //     geometry.Figures.Add(path);
-    //
-    //     // Create a Path element to render the geometry
-    //     var myPathElement = new Path
-    //     {
-    //         Data = geometry,
-    //         Stroke = Brushes.Black,
-    //         StrokeThickness = LineThickness
-    //     };
-    //
-    //     // Add the path element to the visual tree (or a container in XAML)
-    //     Content = myPathElement; // Replace with appropriate layout container
-    // }
+
+    public double GetEdgeAbsolute(PathSide side, EdgeType edgeType, FrameworkElement container)
+    {
+        var path = AroundTheEdgePath;
+        if (path.Data is not PathGeometry pg ||
+            pg.Figures.Count == 0 ||
+            pg.Figures[0].Segments.Count < 2)
+            throw new InvalidOperationException("Unexpected Path data structure.");
+
+        var fig = pg.Figures[0];
+        var bl = fig.Segments[0] is LineSegment ls0 ? ls0.Point : default; // BottomLeft
+        var br = fig.Segments[1] is LineSegment ls1 ? ls1.Point : default; // BottomRight
+        var tr = fig.Segments[2] is LineSegment ls2 ? ls2.Point : default; // TopRight
+        var tl = fig.StartPoint; // TopLeft
+
+        double halfThickness = path.StrokeThickness / 2.0;
+
+        Point targetPoint;
+
+        switch (side)
+        {
+            case PathSide.Left:
+                targetPoint = tl; // take top-left, vertical line
+                break;
+            case PathSide.Right:
+                targetPoint = tr; // take top-right, vertical line
+                break;
+            case PathSide.Bottom:
+                targetPoint = bl; // take bottom-left, horizontal line
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(side), side, null);
+        }
+
+        // Compute direction and normal for vertical edges
+        Vector normal;
+        if (side == PathSide.Left || side == PathSide.Right)
+        {
+            Point start = side == PathSide.Left ? tl : tr;
+            Point end = side == PathSide.Left ? bl : br;
+            Vector dir = end - start;
+            dir.Normalize();
+
+            if (side == PathSide.Right)
+                normal = new Vector(-dir.Y, dir.X) * halfThickness * (edgeType == EdgeType.Inner ? 1 : -1);
+            else // Right edge
+                normal = new Vector(-dir.Y, dir.X) * halfThickness * (edgeType == EdgeType.Inner ? -1 : 1);
+
+            targetPoint += normal;
+            targetPoint = path.TransformToAncestor(container).Transform(targetPoint);
+            return targetPoint.X;
+        }
+
+        else // bottom edge, horizontal, only inner Y
+        {
+            Vector dir = br - bl;
+            dir.Normalize();
+            normal = new(-dir.Y, dir.X);
+
+            // Inner edge only
+            normal *= -halfThickness;
+            targetPoint += normal;
+
+            targetPoint = path.TransformToAncestor(container).Transform(targetPoint);
+
+            // Return absolute Y
+            return targetPoint.Y;
+        }
+    }
 }

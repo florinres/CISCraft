@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Cpu = CPU.Business.CPU;
 using Ram = MainMemory.Business.MainMemory;
 using MemWrapper = MainMemory.Business.Models.MemoryContentWrapper;
@@ -7,17 +6,20 @@ using CPU.Business.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
+using CPU.Business;
 
 namespace CPU.Tests
 {
     public static class CpuTestsUtils
     {
+        public const short stackPointer = 0xA;
+        const short MaxMemoryDump = 20;
         public static Dictionary<string, bool> CoveredMpm = new Dictionary<string, bool>();
-        internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string,string>> realPath, List<Dictionary<string, int>> registerSnapshots)
+        internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string, string>> realPath, List<Dictionary<string, int>> registerSnapshots)
         {
             int a, b, i;
 
-            while(!IsIrEmpty(cpu))
+            while (!IsIrEmpty(cpu))
             {
                 (a, b) = cpu.StepMicrocommand();
                 var buf = cpu.GetCurrentLabel(a);
@@ -34,6 +36,7 @@ namespace CPU.Tests
                     realPath.Add(pathBuffer);
                 }
             }
+            cpu.Registers[REGISTERS.PC] -= 2;
         }
 
         public static void GenerateTraceLog(
@@ -51,13 +54,6 @@ namespace CPU.Tests
 
             File.AppendAllText(outputFile, $"Trace log for test: {testName}\n");
             File.AppendAllText(outputFile, $"{instruction}\n\n");
-
-            File.AppendAllText(outputFile, "Dump before [0-10]:\n");
-            foreach (byte i in beforeDump[0..10])
-            {
-                File.AppendAllText(outputFile, "0x"+ i.ToString("X") + " ");
-            }
-            File.AppendAllText(outputFile, "\n\n");
 
             File.AppendAllText(outputFile, "Expected Path: ");
             foreach (var label in expectedPath)
@@ -97,8 +93,16 @@ namespace CPU.Tests
                 File.AppendAllText(outputFile, "\n");
             }
 
-            File.AppendAllText(outputFile, "Dump after [0-10]:\n");
-            foreach (byte i in afterDump[0..10])
+            File.AppendAllText(outputFile, $"Dump before [0-{MaxMemoryDump}]:\n");
+            foreach (byte i in beforeDump[0..MaxMemoryDump])
+            {
+                File.AppendAllText(outputFile, "0x"+ i.ToString("X") + " ");
+            }
+
+            File.AppendAllText(outputFile, "\n");
+
+            File.AppendAllText(outputFile, $"Dump after [0-{MaxMemoryDump}]:\n");
+            foreach (byte i in afterDump[0..MaxMemoryDump])
             {
                 File.AppendAllText(outputFile, "0x" + i.ToString("X") + " ");
             }
@@ -150,19 +154,18 @@ namespace CPU.Tests
         {
             Dictionary<string, int> buf = new Dictionary<string, int>();
 
-            cpu.ACLOW = false;
-            cpu.CIL = false;
+            cpu.Registers[Exceptions.ACLOW] = false;
+            cpu.Registers[Exceptions.CIL] = false;
             cpu.DBUS = 0;
             cpu.SBUS = 0;
             cpu.RBUS = 0;
-            cpu.INT = false;
 
-            for (int i = 0; i < (int)REGISTERS.MAX; i++)
+            for (int i = 0; i <= EnumExtensions.GetMaxValue<REGISTERS>(); i++)
             {
                 cpu.Registers[(REGISTERS)i] = 0;
             }
             cpu.Registers[REGISTERS.ONES] = -1;
-            cpu.Registers[REGISTERS.SP] = 0x6;
+            cpu.Registers[REGISTERS.SP] = stackPointer;
 
             for (int i = 0; i < 16; i++)
             {
@@ -172,7 +175,7 @@ namespace CPU.Tests
             buf["None"]  = 0;
             buf["FLAGS"] = 0;
             buf["RG"]    = 0;
-            buf["SP"]    = 0x6;
+            buf["SP"]    = stackPointer;
             buf["T "]    = 0;
             buf["PC"]    = 0;
             buf["IVR"]   = 0;
@@ -191,4 +194,3 @@ namespace CPU.Tests
         }
     }
 }
-

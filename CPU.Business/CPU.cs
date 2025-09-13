@@ -20,7 +20,7 @@ namespace CPU.Business
             NONE,
             SBUS,
             DBUS,
-            ADD,
+            SUM,
             SUB,
             AND,
             OR,
@@ -50,14 +50,6 @@ namespace CPU.Business
             INTA_SP_MINUS_2,
             A0BE_A0BI,
         }
-        struct ALU_FLAGS
-        {
-            public int CarryFlag;
-            public int ZeroFlag;
-            public int SignFlag;
-            public int OverflowFlag;
-        }
-        ALU_FLAGS _aluFlags;
 
         public RegisterWrapper Registers;
         public short SBUS, DBUS, RBUS;
@@ -65,8 +57,9 @@ namespace CPU.Business
         private bool BPO; //Bistabil Pornire/Oprire
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
+        private InterruptController _interruptController;
+
         private IMainMemory _mainMemory;
-        public bool ACLOW, INT, CIL;
         private OrderedDictionary<string, string[][]> _microProgram;
         public string currentLabel;
         private ushort overflowShift = 0;
@@ -74,12 +67,13 @@ namespace CPU.Business
         private ushort zeroShift = 2;
         private ushort carryShift = 3;
         private ushort interruptShift = 7;
+        private bool _globalIRQ = false;
         private bool CinPdCondaritm = false;
         private bool PdCondaritm = false;
         private bool PdCondlogic = false;
         public CPU(IMainMemory mainMemory, RegisterWrapper registers)
         {
-            _controlUnit = new ControlUnit();
+            _controlUnit = new ControlUnit(registers);
             _controlUnit.SbusEvent += OnSbusEvent;
             _controlUnit.DbusEvent += OnDbusEvent;
             _controlUnit.AluEvent += OnAluEvent;
@@ -88,8 +82,10 @@ namespace CPU.Business
             _controlUnit.OtherEvent += OnOtherEvent;
             _mainMemory = mainMemory;
             _microProgram = new OrderedDictionary<string, string[][]>();
+            _interruptController = new InterruptController();
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             BPO = true; //Enable CPU clock
             previousMARState = 0;
             previousMIRIndexState = 0;
@@ -97,7 +93,49 @@ namespace CPU.Business
         public (int MAR, int MirIndex) StepMicrocommand()
         {
             if (BPO)
-                (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(ACLOW, Registers[REGISTERS.FLAGS]);
+            {
+                _controlUnit.SetGlobalIRQState(_globalIRQ);
+                (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
+
+                bool[] irqs = new bool[]
+                {
+                    Registers[IRQs.IRQ0],
+                    Registers[IRQs.IRQ1],
+                    Registers[IRQs.IRQ2],
+                    Registers[IRQs.IRQ3]
+                };
+                bool[] exceptions = new bool[]
+                {
+                    Registers[Exceptions.ACLOW],
+                    Registers[Exceptions.CIL],
+                    Registers[Exceptions.Reserved0],
+                    Registers[Exceptions.Reserved1]
+                };
+
+                Dictionary<string, bool> interruptPriorities = new Dictionary<string, bool>();
+                interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
+                bool interrupAck = Convert.ToBoolean(Registers[REGISTERS.FLAGS] & (1 << interruptShift));
+
+                if (interrupAck)
+                {
+                    int i = 0;
+                    bool prioritisedInterruptsState = false;
+                    foreach (var kvp in interruptPriorities)
+                    {
+                        if (kvp.Value)
+                        {
+                            irqs[i] = false;
+                        }
+                        prioritisedInterruptsState |= kvp.Value;
+                        i++;
+                    }
+                    _globalIRQ = interrupAck & prioritisedInterruptsState;
+                }
+                if (_globalIRQ)
+                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
+
+
+            }
             return (previousMARState, previousMIRIndexState);
         }
         /// <summary>
@@ -113,7 +151,7 @@ namespace CPU.Business
             int mpmIndex = 0;
             _microProgram = JsonSerializer.Deserialize<OrderedDictionary<string, string[][]>>(jsonString);
             var labelsAddresses = new Dictionary<string, byte>();
-            byte[] microcommandsBuffer = new byte[1200];
+            byte[] microcommandsBuffer = new byte[1700];
             int bufferIndex = 0;
 
             if (_microProgram == null) return;
@@ -208,7 +246,8 @@ namespace CPU.Business
             {
                 Registers[(GPR)i] = 0;
             }
-            _mainMemory.ClearMemory();
+            Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.SP] = 0x200;
             _controlUnit.Reset();
             BPO = true; //Reactivate CPU clock
         }
@@ -276,38 +315,46 @@ namespace CPU.Business
                 case ALU_OP.DBUS:
                     RBUS = DBUS;
                     break;
-                case ALU_OP.ADD:
+                case ALU_OP.SUM:
                     RBUS = (short)(SBUS + DBUS + Cin);
                     Cin = 0;
+                    ComputeFlags();
                     break;
                     // case ALU_OP.SUB:
                     //     RBUS = (short)(SBUS - DBUS);
-                    break;
                 case ALU_OP.AND:
                     RBUS = (short)(SBUS & DBUS);
+                    ComputeFlags();
                     break;
                 case ALU_OP.OR:
                     RBUS = (short)(SBUS | DBUS);
+                    ComputeFlags();
                     break;
                 case ALU_OP.XOR:
                     RBUS = (short)(SBUS ^ DBUS);
+                    ComputeFlags();
                     break;
                 case ALU_OP.ASL:
                     RBUS <<= 1;
+                    ComputeFlags();
                     break;
                 case ALU_OP.ASR:
                     short msbRbus = (short)(RBUS & 0x8000);
                     RBUS >>= 1;
                     RBUS |= msbRbus;
+                    ComputeFlags();
                     break;
                 case ALU_OP.LSR:
                     RBUS = (short)((ushort)RBUS >> 1);
+                    ComputeFlags();
                     break;
                 case ALU_OP.ROL:
                     RBUS = (short)RotateLeft((ushort)RBUS, 1);
+                    ComputeFlags();
                     break;
                 case ALU_OP.ROR:
                     RBUS = (short)RotateRight((ushort)RBUS, 1);
+                    ComputeFlags();
                     break;
                 case ALU_OP.RLC:
                     RotateLeftWithCarry();
@@ -317,7 +364,6 @@ namespace CPU.Business
                     break;
             }
 
-            ComputeFlags();
             Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
@@ -347,11 +393,11 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    _controlUnit.IR = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     Registers[REGISTERS.IR] = _controlUnit.IR; // For updateing the UI
                     break;
                 case 2 /* READ */:
-                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
+                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
                     _mainMemory.SetWordLocation(Registers[REGISTERS.ADR], Registers[REGISTERS.MDR]);
@@ -380,10 +426,10 @@ namespace CPU.Business
                     Registers[REGISTERS.PC] += 2;
                     break;
                 case OTHER_EVENTS.A1BE0:
-                    ACLOW = true;
+                    Registers[Exceptions.ACLOW] = true;
                     break;
                 case OTHER_EVENTS.A1BE1:
-                    CIL = true;
+                    Registers[Exceptions.CIL] = true;
                     break;
                 case OTHER_EVENTS.PdCondA:
                     PdCondaritm = true;
@@ -396,7 +442,7 @@ namespace CPU.Business
                     PdCondlogic = true;
                     break;
                 case OTHER_EVENTS.A1BVI:
-                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & (1 << interruptBit));
+                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] | (1 << interruptBit));
                     break;
                 case OTHER_EVENTS.A0BVI:
                     Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
@@ -477,6 +523,7 @@ namespace CPU.Business
         // Return the status only for Zero and Sign
         private void ComputeLogicFlags()
         {
+            Registers[REGISTERS.FLAGS] = 0;
             if (RBUS == 0)
             {
                 Registers[REGISTERS.FLAGS] |= (short)(1 << zeroShift);
@@ -517,6 +564,10 @@ namespace CPU.Business
         private void SetCarryFlag(ushort value)
         {
             Registers[REGISTERS.FLAGS] |= (short)((value & 1) << carryShift);
+        }
+        public ushort GetInterruptFlag()
+        {
+            return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
         }
     }
 }

@@ -1,4 +1,5 @@
 
+using System.Data.Common;
 using System.IO;
 using System.Windows.Media;
 using CPU.Business.Models;
@@ -18,7 +19,17 @@ public class CpuService : ICpuService
     private readonly IDiagramViewModel _diagram;
     private FileViewModel? _fileViewModel;
     Color _semiTransparentYellow;
-    int i = 1;
+    private Dictionary<short, ushort> _debugSymbls;
+    private Dictionary<int, int> _mirLookUpIndex = new Dictionary<int, int>
+    {
+        {0, 0},
+        {1, 1},
+        {2, 5},
+        {3, 2},
+        {4, 3},
+        {5, 4},
+        {6, 6}
+    };
     public HighlightCurrentLineBackgroundRenderer? Highlight
     {
         get;
@@ -32,6 +43,7 @@ public class CpuService : ICpuService
         _microprogramService = microprogramService;
         _semiTransparentYellow = Color.FromArgb(38, 255, 255, 0);
         _ = LoadJsonMpm();
+        _debugSymbls = new Dictionary<short, ushort>();
     }
 
     public async Task LoadJsonMpm(string filePath = "", bool debug = false)
@@ -40,8 +52,8 @@ public class CpuService : ICpuService
         
         if (filePath == "")
         {
-            var projectRoot = AppContext.BaseDirectory!;
-            fullPath = Path.Combine(projectRoot, "Assets", "Mpm.json");
+            var projectRoot = AppContext.BaseDirectory + "../../../";
+            fullPath = Path.Combine(projectRoot, "../Configs", "Mpm.json");
         }
         else
         {
@@ -54,7 +66,7 @@ public class CpuService : ICpuService
         _cpu.LoadJsonMpm(jsonString);
     }
 
-    public (int, int) StepMicrocommand()
+    public void StepMicrocommand()
     {
         _diagram.ResetHighlight();
          var (row, column) = _cpu.StepMicrocommand();
@@ -65,16 +77,70 @@ public class CpuService : ICpuService
          }
          _microprogramService.CurrentRow = row;
          _microprogramService.CurrentColumn = column;
+        var (row, column) = _cpu.StepMicrocommand();
+
+        if (row == 0 && column == 0)
+        {
+            _microprogramService.ClearAllHighlightedRows();
+
+            if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+            {
+                if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                    Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+            }
+        }
+
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+    }
+    public void StepMicroinstruction()
+    {
+        _diagram.ResetHighlight();
+        int row, column;
+        row = 1;
+        column = 1;
+        while (column != 6)
+        {
+            (row, column) = _cpu.StepMicrocommand();
+        }
+        if (row == 0)
+        {
+            _microprogramService.ClearAllHighlightedRows();
+        }
+
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = -1;
 
         if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
         {
-            Highlight?.SetLine(++i);
+            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
         }
-        return (row, column);
+    }
+    public void StepInstruction()
+    {
+        _diagram.ResetHighlight();
+        int row, col;
+        row = 1;
+        col = 1;
+        _cpu.StepMicrocommand();
+        while (row != 0 || col != 0)
+        {
+            (row, col) = _cpu.StepMicrocommand();
+        }
+
+        if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
+        {
+            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
+                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+        }
     }
     public void ResetProgram()
     {
         _cpu.ResetProgram();
+        _microprogramService.CurrentRow = -1;
+        _microprogramService.CurrentColumn = -1;
+        _microprogramService.ClearAllHighlightedRows();
     }
     public void SetActiveEditor(FileViewModel fileViewModel)
     {
@@ -85,7 +151,8 @@ public class CpuService : ICpuService
     {
         if (_fileViewModel?.EditorInstance != null)
         {
-            Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, i, _semiTransparentYellow);
+            ushort lineNum = _debugSymbls[_cpu.Registers[REGISTERS.PC]];
+            Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, lineNum, _semiTransparentYellow);
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Add(Highlight);
         }
     }
@@ -95,11 +162,19 @@ public class CpuService : ICpuService
         {
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Remove(Highlight);
             Highlight = null;
+            _cpu.ResetProgram();
+            _microprogramService.CurrentRow = -1;
+            _microprogramService.CurrentColumn = -1;
+            _microprogramService.ClearAllHighlightedRows();
         }
     }
-
+    
     public void RunActiveCode()
     {
         //nothing for now
+    }
+    public void SetDebugSymbols(Dictionary<short, ushort> debugSymbols)
+    {
+        _debugSymbls = debugSymbols;
     }
 }

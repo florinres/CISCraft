@@ -8,26 +8,32 @@
              d:DataContext="{d:DesignInstance Type=diagram:SumBlockViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Canvas>
-        <!-- Main body using shared resources -->
-        <Polygon Points="0,20 0,70  60,90 60,55 45,45 60,40 60,0"
-                 Fill="{DynamicResource NodeBackgroundBrush}"
-                 Stroke="{DynamicResource NodeBorderBrush}"
-                 StrokeThickness="2"
-                 Canvas.Top="0">
-            <Polygon.RenderTransform>
-                <RotateTransform Angle="-90"
-                                 CenterX="30"
-                                 CenterY="30" />
-            </Polygon.RenderTransform>
-        </Polygon>
+    <Grid>
+        <!-- Use Viewbox to scale the content automatically -->
+        <Viewbox Stretch="Uniform">
+            <Grid Width="60" Height="90">
+                <!-- Main body using shared resources -->
+                <Polygon Points="0,20 0,70  60,90 60,55 45,45 60,40 60,0"
+                         Fill="{DynamicResource NodeBackgroundBrush}"
+                         Stroke="{DynamicResource NodeBorderBrush}"
+                         StrokeThickness="2"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
+                    <Polygon.RenderTransform>
+                        <RotateTransform Angle="-90"
+                                         CenterX="30"
+                                         CenterY="45" />
+                    </Polygon.RenderTransform>
+                </Polygon>
 
-        <!-- Text -->
-        <TextBlock Text="SUM"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   FontSize="14"
-                   Canvas.Top="25"
-                   Canvas.Left="25"/>
-    </Canvas>
+                <!-- Text -->
+                <TextBlock Text="SUM"
+                           Foreground="White"
+                           FontWeight="Bold"
+                           FontSize="14"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Grid>
+        </Viewbox>
+    </Grid>
 </UserControl>

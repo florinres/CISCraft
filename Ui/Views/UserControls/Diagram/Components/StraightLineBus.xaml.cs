@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Ui.Views.UserControls.Diagram;
+namespace Ui.Views.UserControls.Diagram.Components;
 
 public partial class StraightLineBus : UserControl
 {
@@ -26,4 +26,18 @@ public partial class StraightLineBus : UserControl
     {
         InitializeComponent();
     }
+    
+    public (double Left, double Right) GetEdges(FrameworkElement relativeTo)
+    {
+        // Transform (0,0) = top-left corner of this control into coordinates of relativeTo
+        var transform = ActualVisualElement.TransformToAncestor(relativeTo);
+        var topLeft = transform.Transform(new Point(0, 0));
+
+        // Right edge is top-left.X + ActualWidth
+        double left = topLeft.X;
+        double right = topLeft.X + ActualVisualElement.ActualWidth;
+
+        return (left, right);
+    }
+
 }

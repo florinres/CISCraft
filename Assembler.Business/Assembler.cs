@@ -44,5 +44,9 @@ namespace Assembler.Business
             }
             return Encoder.Encode(tree.Root, out len);
         }
+        public Dictionary<short, ushort> GetDebugSymbols()
+        {
+            return Encoder.DebugSymbols;
+        }
     }
 }

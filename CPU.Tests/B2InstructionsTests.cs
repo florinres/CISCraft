@@ -398,7 +398,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(1, ram.FetchWord(0x6));
+                    Assert.AreEqual(1, ram.FetchWord(CpuTestsUtils.stackPointer));
                 });
         }
         [TestMethod]
@@ -428,7 +428,7 @@ namespace CPU.Tests
                 () =>
                 {
                     Assert.AreEqual(1, cpu.Registers[GPR.R1]);
-                    Assert.AreEqual(6, cpu.Registers[REGISTERS.SP]);
+                    Assert.AreEqual(CpuTestsUtils.stackPointer, cpu.Registers[REGISTERS.SP]);
                 });
         }
     }

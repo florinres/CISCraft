@@ -14,15 +14,18 @@ namespace Ui.Views.Windows;
 public partial class MainWindow
 {
     ICpuService _cpuService;
+    IActionsBarViewModel _actionsBarViewModel;
     public MainWindow(
         IMainWindowViewModel viewModel,
-        ICpuService cpuService
+        ICpuService cpuService,
+        IActionsBarViewModel actionsBarViewModel
     )
     {
         DataContext = viewModel;
         SystemThemeWatcher.Watch(this);
         InitializeComponent();
         _cpuService = cpuService;
+        _actionsBarViewModel = actionsBarViewModel;
     }
 
     public void SetServiceProvider(IServiceProvider serviceProvider)
@@ -86,6 +89,17 @@ public partial class MainWindow
         {
             vm.EditorInstance = editor;
             _cpuService.SetActiveEditor(vm);
+            _actionsBarViewModel.CanAssemble = true;
+            editor.Unloaded += OnEditorUnloaded;
         }
+    }
+    private void OnTextChanged(object sender, EventArgs e)
+    {
+        _actionsBarViewModel.CanDebug = false;
+        _actionsBarViewModel.CanAssemble = true;
+    }
+    private void OnEditorUnloaded(object sender, EventArgs e)
+    {
+        _actionsBarViewModel.CanAssemble = false;
     }
 }

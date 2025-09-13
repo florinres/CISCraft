@@ -4,6 +4,9 @@ using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 
 namespace Ui.ViewModels.Generics;
 
@@ -13,11 +16,14 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     private readonly IAssemblerService _assemblerService;
     private readonly ICpuService _cpuService;
     private readonly IToolVisibilityService _toolVisibilityService;
-
     [ObservableProperty]
     public partial bool IsDebugging { get; set; }
     [ObservableProperty]
-    public partial bool NotDebugging { get; set; }
+    public partial bool CanDebug { get; set; }
+    [ObservableProperty]
+    public partial bool CanAssemble{ get; set; }
+    [ObservableProperty]
+    public partial StepLevel StepLevel { get; set; }
 
     public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService, ICpuService cpuService, IToolVisibilityService toolVisibilityService)
     {
@@ -26,12 +32,19 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         _cpuService = cpuService;
         _toolVisibilityService = toolVisibilityService;
         IsDebugging = false;
-        NotDebugging = true;
+        CanDebug = false;
+        CanAssemble = false;
+        StepLevel = StepLevel.Microcommand;
         ObjectCodeGenerated += OnObjectCodeGenerated;
     }
 
     public event EventHandler<byte[]>? ObjectCodeGenerated;
 
+    [RelayCommand]
+    public void SetStepLevel(StepLevel level)
+    {
+        StepLevel = level;
+    }
     [RelayCommand]
     private async Task RunAssembleSourceCodeService()
     {
@@ -40,6 +53,8 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         ObjectCodeGenerated?.Invoke(this, objectCode);
         
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
+        CanDebug = true;
+        CanAssemble = false;
     }
     
     [RelayCommand]
@@ -60,18 +75,31 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             );
     }
     [RelayCommand]
-    private void StepMicroprogram()
+    private void Step()
     {
-        _cpuService.StepMicrocommand();
+        switch (StepLevel)
+        {
+            case StepLevel.Microcommand:
+                _cpuService.StepMicrocommand();
+                break;
+            case StepLevel.Microinstruction:
+                _cpuService.StepMicroinstruction();
+                break;
+            case StepLevel.Instruction:
+                _cpuService.StepInstruction();
+                break;
+        }
     }
     [RelayCommand]
     private void StartDebug()
     {
         if (_activeDocumentService.SelectedDocument != null)
         {
+            _cpuService.SetDebugSymbols(_assemblerService.DebugSymbols);
             _cpuService.StartDebugging();
             IsDebugging = true;
-            NotDebugging = false;
+            CanDebug = false;
+            CanAssemble = false;
         }
     }
     [RelayCommand]
@@ -81,7 +109,8 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         {
             _cpuService.StopDebugging();
             IsDebugging = false;
-            NotDebugging = true;
+            CanDebug = true;
+            CanAssemble = true;
         }
     }
     [RelayCommand]
