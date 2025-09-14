@@ -15,15 +15,6 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto"
-                      Background="{DynamicResource RegionBackgroundBrush}"
-                      x:Name="DiagramScrollViewer"
-                      PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
-                      PreviewMouseMove="ScrollViewer_PreviewMouseMove"
-                      PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
-                      PreviewMouseWheel="Window_MouseWheel"
-                      Cursor="Arrow">
         <Grid Width="1500" Height="700"
               Background="Transparent">
             <Grid ShowGridLines="False"
@@ -469,7 +460,6 @@
                 </Canvas>
             </Grid>
         </Grid>
-    </ScrollViewer>
         <components:MicroprogramMemory
             Grid.Row="1"
             DataContext="{Binding MemoryContext}"
