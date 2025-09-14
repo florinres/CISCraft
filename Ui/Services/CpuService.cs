@@ -69,14 +69,6 @@ public class CpuService : ICpuService
     public void StepMicrocommand()
     {
         _diagram.ResetHighlight();
-         var (row, column) = _cpu.StepMicrocommand();
-         if (row == 0 && column == 0)
-         {
-            //aici se intra cand se gata instructiunea
-             _microprogramService.ClearAllHighlightedRows();
-         }
-         _microprogramService.CurrentRow = row;
-         _microprogramService.CurrentColumn = column;
         var (row, column) = _cpu.StepMicrocommand();
 
         if (row == 0 && column == 0)
@@ -167,11 +159,6 @@ public class CpuService : ICpuService
             _microprogramService.CurrentColumn = -1;
             _microprogramService.ClearAllHighlightedRows();
         }
-    }
-    
-    public void RunActiveCode()
-    {
-        //nothing for now
     }
     public void SetDebugSymbols(Dictionary<short, ushort> debugSymbols)
     {

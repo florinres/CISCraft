@@ -109,21 +109,6 @@
       <Folder Include="Interfaces\Windows\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="ViewModels\Components\Static_Messages.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Static_Messages.resx</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Update="ViewModels\Components\Static_Messages.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Static_Messages.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-    </ItemGroup>
-
 <!--    <ItemGroup>-->
 <!--      <ProjectReference Include="..\MainMemory.Business\MainMemory.Business.csproj" />-->
 <!--    </ItemGroup>-->
