@@ -8,7 +8,6 @@ namespace MainMemory.Business
 {
     public interface IMainMemory
     {
-        public void SetStackSize(int stackSize);
         public void SetByteLocation(int memoryAddress, byte content);
         public void SetWordLocation(int memoryAddress, short content);
         public void SetISR(int interruptNumber, byte[] interruptRoutine);
@@ -16,7 +15,6 @@ namespace MainMemory.Business
         public short FetchWord(int address);
         public byte[] GetMemoryDump();
         public void LoadMachineCode(byte[] machineCode);
-        public void ClearISR(int interruptNumber);
         public void ClearMemory();
         int memoryLocationsNum { get; }
     }
