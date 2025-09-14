@@ -1,5 +1,4 @@
 using System.Text;
-using AvalonDock;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
@@ -117,12 +116,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     private void ResetProgram()
     {
         _cpuService.ResetProgram();
-    }
-
-    [RelayCommand]
-    private void RunActiveCode()
-    {
-        _cpuService.RunActiveCode();
     }
     private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
     {

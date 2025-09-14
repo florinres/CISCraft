@@ -1,4 +1,3 @@
-
 using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.Win32;
@@ -13,7 +12,6 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     private readonly IToolVisibilityService _toolVisibilityService;
     private IDockingService _dockingService;
     public static ObservableCollection<FileViewModel> files;
-    public static string DefaultFileName = "New";
     [ObservableProperty] public partial ILayoutControlViewModel LayoutControl { get; set; }
 
     public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService, ILayoutControlViewModel layoutControl)
@@ -47,9 +45,8 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     private void NewDocument()
     {
         string defaultContent = string.Empty;
-        string filePath = string.Empty;
-        string fullPath = string.Empty;
-        string fileName = string.Empty;
+        string filePath = "";
+        string fullPath = "";
 
         if (string.IsNullOrWhiteSpace(filePath))
         {
@@ -66,67 +63,25 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         }
         catch (IOException)
         {
-            defaultContent = fullPath + Static_Messages.FILE_NOT_EXIST_TEXT;
+            defaultContent = fullPath + " doesn't exist"; // daca nu apare fisierul pe git trb bagat manual in bin ig 
         }
-        fileName = GetNextAvailableFileName();
 
         var doc = new FileViewModel
         {
-            Title = fileName,
+            Title = "Microprogram",
             Content = defaultContent
         };
         DocumentService.Documents.Add(doc);
         DocumentService.SelectedDocument ??= doc;
     }
 
-    /// <summary>
-    /// Generates a new unique file name by finding the highest numeric suffix
-    /// among existing documents whose title contains the default file name pattern,
-    /// then incrementing it.
-    /// </summary>
-    /// <returns>A unique file name with an incremented number suffix.</returns>
-    private string GetNextAvailableFileName()
-    {
-        ObservableCollection<FileViewModel> openDocuments = DocumentService.Documents;
-        List<FileViewModel> matchingDocuments = new List<FileViewModel>();
-        string newFileName;
-
-        foreach (var document in openDocuments)
-        {
-            if (document.Title.Contains(DefaultFileName))
-            {
-                matchingDocuments.Add(document);
-            }
-        }
-
-        int highestSuffixNumber = int.MinValue;
-        foreach (var document in matchingDocuments)
-        {
-            int suffixNumber = int.Parse(document.Title.Substring(3));
-            if (suffixNumber > highestSuffixNumber)
-            {
-                highestSuffixNumber = suffixNumber;
-            }
-        }
-
-        highestSuffixNumber++;
-        if (matchingDocuments.Count == 0)
-        {
-            highestSuffixNumber = 1;
-        }
-
-        newFileName = DefaultFileName + highestSuffixNumber.ToString();
-        return newFileName;
-    }
-
-
     [RelayCommand]
     private async Task OpenDocument()
     {
         var dialog = new OpenFileDialog
         {
-            Title = Static_Messages.OPEN_FILE_TEXT,
-            Filter = Static_Messages.OPEN_FILE_FILTER
+            Title = "Open File",
+            Filter = "Assembly Files (*.asm;*.s)|*.asm;*.s|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
         };
 
         if (dialog.ShowDialog() != true) return;
@@ -161,14 +116,14 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         _toolVisibilityService.ToggleToolVisibility(DocumentService.Microprogram);
     }
 
-    public static void CloseDocument(FileViewModel file)
+    public static void closeDocument(FileViewModel file)
     {
         string filePath = file.FilePath;
         if (!File.Exists(filePath))
         {
             MessageBoxResult result = MessageBox.Show(
-                Static_Messages.SAVE_FILE_TEXT,
-                Static_Messages.ATTENTION,
+                "Fișierul nu este salvat. Dorești să îl salvezi înainte de închidere?",
+                "Atenție",
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Warning
             );
@@ -176,9 +131,9 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
             {
                 var saveFileDialog = new SaveFileDialog
                 {
-                    Title = Static_Messages.SAVE_FILE_LABEL,
-                    Filter = Static_Messages.SAVE_FILE_FILTER,
-                    DefaultExt = Static_Messages.DEFAULT_EXTENSION,
+                    Title = "Salvează fișier",
+                    Filter = "Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt",
+                    DefaultExt = "asm",
                     AddExtension = true,
                     FileName = file.Title,
                 };

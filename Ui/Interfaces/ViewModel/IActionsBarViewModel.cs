@@ -29,9 +29,7 @@ namespace Ui.Interfaces.ViewModel
         global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand LoadJsonCommand { get; }
         /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.ResetProgram"/>.</summary>
         global::CommunityToolkit.Mvvm.Input.IRelayCommand ResetProgramCommand { get; }
-        global::CommunityToolkit.Mvvm.Input.IRelayCommand RunActiveCodeCommand { get; }
-        bool IsDebugging { get; set; }
-        bool NotDebugging { get; set; }
+
         /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.SetStepLevel"/>.</summary>
         global::CommunityToolkit.Mvvm.Input.IRelayCommand<StepLevel> SetStepLevelCommand { get; }
         bool IsDebugging { get; set; }

@@ -11,6 +11,12 @@ namespace Ui.Views.UserControls.Diagram;
 
 public partial class DiagramUserControl : UserControl
 {
+    private Point _lastPanPoint;
+    private bool _isPanning = false;
+    private readonly TranslateTransform _panTransform = new();
+    private readonly ScaleTransform _zoomTransform = new();
+    private readonly TransformGroup _transformGroup = new();
+
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register(nameof(ViewModel), typeof(IDiagramViewModel), typeof(DiagramUserControl),
             new PropertyMetadata(null, OnViewModelChanged));
@@ -33,12 +39,46 @@ public partial class DiagramUserControl : UserControl
     {
         InitializeComponent();
 
-        DiagramScrollViewer.LostMouseCapture += (s, e) => _isDragging = false;
         MainDiagramGrid.Loaded += (s, e) =>
         {
             Dispatcher.BeginInvoke(new Action(DrawConnections), System.Windows.Threading.DispatcherPriority.Loaded);
         };
 
+        _transformGroup.Children.Add(_panTransform);
+        _transformGroup.Children.Add(_zoomTransform);
+        MainDiagramGrid.RenderTransform = _transformGroup;
+
+        MainDiagramGrid.MouseWheel += Window_MouseWheel;
+        MainDiagramGrid.MouseLeftButtonDown += Pan_MouseLeftButtonDown;
+        MainDiagramGrid.MouseLeftButtonUp += Pan_MouseLeftButtonUp;
+        MainDiagramGrid.MouseMove += Pan_MouseMove;
+
+    }
+
+    private void Pan_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _isPanning = true;
+        _lastPanPoint = e.GetPosition(this);
+        MainDiagramGrid.CaptureMouse();
+        MainDiagramGrid.Cursor = Cursors.Hand;
+    }
+
+    private void Pan_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        _isPanning = false;
+        MainDiagramGrid.ReleaseMouseCapture();
+        MainDiagramGrid.Cursor = Cursors.Arrow;
+    }
+
+    private void Pan_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (!_isPanning) return;
+        var currentPoint = e.GetPosition(this);
+        var delta = currentPoint - _lastPanPoint;
+        _lastPanPoint = currentPoint;
+
+        _panTransform.X += delta.X;
+        _panTransform.Y += delta.Y;
     }
 
     private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -46,61 +86,26 @@ public partial class DiagramUserControl : UserControl
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
 
         const double zoomStep = 0.1;
-        double oldZoom = ViewModel.ZoomFactor;
-        double newZoom = e.Delta > 0 ? oldZoom + zoomStep : Math.Max(0.1, oldZoom - zoomStep);
+        const double minZoom = .8;
+        const double maxZoom = 2.0;
 
-        // Calculate position relative to scrollviewer
-        var mousePos = e.GetPosition(DiagramScrollViewer);
-        double relativeX = mousePos.X + DiagramScrollViewer.HorizontalOffset;
-        double relativeY = mousePos.Y + DiagramScrollViewer.VerticalOffset;
+        double oldZoom = _zoomTransform.ScaleX;
+        double newZoom = e.Delta > 0 ? oldZoom + zoomStep : oldZoom - zoomStep;
+        newZoom = Math.Max(minZoom, Math.Min(maxZoom, newZoom));
 
-        ViewModel.ZoomFactor = newZoom;
+        // Zoom centered on mouse
+        var mousePos = e.GetPosition(MainDiagramGrid);
 
-        // Adjust scroll to keep zoom centered on mouse
-        DiagramScrollViewer.ScrollToHorizontalOffset(relativeX * newZoom / oldZoom - mousePos.X);
-        DiagramScrollViewer.ScrollToVerticalOffset(relativeY * newZoom / oldZoom - mousePos.Y);
+        // Adjust pan so zoom is centered on mouse
+        var relativeX = mousePos.X * (newZoom / oldZoom) - mousePos.X;
+        var relativeY = mousePos.Y * (newZoom / oldZoom) - mousePos.Y;
+        _panTransform.X -= relativeX;
+        _panTransform.Y -= relativeY;
+
+        _zoomTransform.ScaleX = newZoom;
+        _zoomTransform.ScaleY = newZoom;
 
         e.Handled = true;
-    }
-
-    private Point _scrollStartPoint;
-    private Point _scrollStartOffset;
-    private bool _isDragging;
-
-    private void ScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        _scrollStartPoint = e.GetPosition(DiagramScrollViewer);
-        _scrollStartOffset.X = DiagramScrollViewer.HorizontalOffset;
-        _scrollStartOffset.Y = DiagramScrollViewer.VerticalOffset;
-        _isDragging = true;
-        DiagramScrollViewer.CaptureMouse();
-        DiagramScrollViewer.Cursor = Cursors.Hand;
-    }
-
-    private void ScrollViewer_PreviewMouseMove(object sender, MouseEventArgs e)
-    {
-        if (!_isDragging) return;
-
-        Point currentPoint = e.GetPosition(DiagramScrollViewer);
-        Vector delta = currentPoint - _scrollStartPoint;
-
-        DiagramScrollViewer.ScrollToHorizontalOffset(_scrollStartOffset.X - delta.X);
-        DiagramScrollViewer.ScrollToVerticalOffset(_scrollStartOffset.Y - delta.Y);
-    }
-
-    private void ScrollViewer_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (!_isDragging) return;
-
-        _isDragging = false;
-        DiagramScrollViewer.ReleaseMouseCapture();
-        DiagramScrollViewer.Cursor = Cursors.Arrow;
-    }
-
-    public void CenterOn(Point position)
-    {
-        DiagramScrollViewer.ScrollToHorizontalOffset(position.X - DiagramScrollViewer.ViewportWidth / 2);
-        DiagramScrollViewer.ScrollToVerticalOffset(position.Y - DiagramScrollViewer.ViewportHeight / 2);
     }
 
     #region Bullshit
