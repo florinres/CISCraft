@@ -146,21 +146,14 @@ namespace MainMemory.Business
             return this.memoryLocationsNum;
         }
         /// <summary>
-        /// Sets the interrupt handler based on the given interrupt number.
+        /// Sets the interrupt handler for HW interrupts or exceptions based on given address.
         /// </summary>
-        /// <param name="interruptNumber"></param>
+        /// <param name="handlerAddress"></param>
         /// <param name="interruptRoutine"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetISR(int interruptNumber, byte[] interruptRoutine)
+        public void SetISR(int handlerAddress, byte[] interruptRoutine)
         {
-            if(interruptNumber > this._interuptsNum)
-                throw new ArgumentOutOfRangeException(nameof(interruptNumber), "Interrupt number exceeds the total number of interrupts. Please try another value.");
-
-            ushort isrAddress = (ushort)((this._memoryContent[interruptNumber * 2 + 1] << 8) | this._memoryContent[interruptNumber * 2]); //little endian addressing
-
             for (int i = 0; i < interruptRoutine.Length; i++)
-                this._memoryContent[isrAddress + i] = interruptRoutine[i];
-
+                this._memoryContent[handlerAddress + i] = interruptRoutine[i];
         }
 
         /// <summary>
@@ -179,7 +172,6 @@ namespace MainMemory.Business
 
                 int memoryStartAddress = Convert.ToInt32(irqData["memoryStartAddress"],16);
                 int handlerStartAddress = Convert.ToInt32(irqData["handlerStartAddress"],16);
-                string handlerCode = irqData["handlerCode"];
 
                 //little endian
                 this._memoryContent[memoryStartAddress] = (byte)((handlerStartAddress << 8) >> 8);

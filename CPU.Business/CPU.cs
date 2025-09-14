@@ -88,7 +88,7 @@ namespace CPU.Business
             Registers[REGISTERS.ONES] = -1;
             Registers[REGISTERS.SP] = 0x200;
             Registers[REGISTERS.PC] = _userCodeStart;
-            BPO = true; //Enable CPU clock
+            BPO = true; // Enable CPU clock
             previousMARState = 0;
             previousMIRIndexState = 0;
         }
@@ -257,6 +257,7 @@ namespace CPU.Business
             }
             Registers[REGISTERS.ONES] = -1;
             Registers[REGISTERS.SP] = 0x200;
+            Registers[REGISTERS.PC] = _userCodeStart;
             Registers[REGISTERS.ADR] = _userCodeStart;
             _controlUnit.Reset();
             BPO = true; //Reactivate CPU clock
