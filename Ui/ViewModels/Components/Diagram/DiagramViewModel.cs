@@ -52,11 +52,11 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
     public RegisterViewModel MirContext      { get; } = new("MIR");
     public RegisterViewModel MarContext      { get; } = new("MAR");
     
-    public BitBlockViewModel Pd1Context      { get; } = new("Pd1");
-    public BitBlockViewModel PdMinus1Context { get; } = new("Pd-1");
-    public BitBlockViewModel Pd0sContext     { get; } = new("Pd0s");
-    public BitBlockViewModel xContext      { get; } = new("x");
-    public BitBlockViewModel yContext { get; } = new("y");
+    public BitBlockViewModel BVIContext      { get; } = new("BVI");
+    public BitBlockViewModel CContext        { get; } = new("C");
+    public BitBlockViewModel ZContext        { get; } = new("Z");
+    public BitBlockViewModel SContext        { get; } = new("S");
+    public BitBlockViewModel VContext        { get; } = new("V");
     #endregion
 
     public List<BaseDiagramObject> Contexts { get; set; } = [];
@@ -100,9 +100,11 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             R13Context,
             R14Context,
             R15Context,
-            Pd1Context,
-            PdMinus1Context,
-            Pd0sContext,
+            BVIContext,
+            CContext,
+            ZContext,
+            SContext,
+            VContext,
             MirContext,
             MarContext
         ];

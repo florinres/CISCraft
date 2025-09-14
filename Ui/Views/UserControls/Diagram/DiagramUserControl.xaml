@@ -60,7 +60,7 @@
                 <!-- Control Unit -->
                 <Border
                     Grid.Column="0"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Grid.ColumnSpan="3"
                     Grid.RowSpan="3"
                     Background="{DynamicResource NodeBackgroundBrush}"
@@ -72,16 +72,16 @@
                     HorizontalAlignment="Stretch">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" /> <!-- For Title -->
+                            <RowDefinition Height="20" /> <!-- For Title -->
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
+                            <RowDefinition Height="17" />
                         </Grid.RowDefinitions>
                         <TextBlock
                             TextAlignment="Center"
                             Foreground="White"
-                            Grid.Row="0"
-                            Margin="0,5">
+                            Grid.Row="0">
                             CU
                         </TextBlock>
                         <components:RegisterBlock
@@ -150,7 +150,7 @@
                     x:Name="IO0"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
@@ -171,7 +171,7 @@
                     x:Name="IO1"
                     Grid.Column="3"
                     Grid.ColumnSpan="3"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
@@ -193,7 +193,7 @@
                     x:Name="IO2"
                     Grid.Column="6"
                     Grid.ColumnSpan="3"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
@@ -215,7 +215,7 @@
                     x:Name="IO3"
                     Grid.Column="9"
                     Grid.ColumnSpan="3"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
@@ -238,7 +238,7 @@
                     x:Name="Sie"
                     Grid.Column="5"
                     Grid.ColumnSpan="2"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
@@ -254,63 +254,66 @@
                                Padding="2" />
                 </Border>
 
-                <components:RegisterBlock
-                    x:Name="Ivr"
-                    Grid.Row="2"
-                    Grid.Column="5"
-                    Grid.ColumnSpan="2"
-                    DataContext="{Binding IVRContext}"
-                    Margin="0,0,0,0"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Stretch" />
-
                 <Grid
-                    Grid.Row="3"
+                    Grid.Row="1"
                     Grid.Column="5"
                     Grid.ColumnSpan="2"
-                    Grid.RowSpan="4"
-                    Margin="0,25,0,0"
+                    Grid.RowSpan="8"
+                    Margin="0,0,0,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
                     <components:RegisterBlock
-                        x:Name="Pc"
+                        x:Name="Ivr"
                         Grid.Row="0"
+                        Grid.Column="5"
+                        Grid.ColumnSpan="2"
+                        DataContext="{Binding IVRContext}"
+                        Margin="0,0,0,2"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Stretch" />
+                    <components:RegisterBlock
+                        x:Name="Pc"
+                        Grid.Row="1"
                         DataContext="{Binding PCContext}"
-                        Margin="0,1,0,0"
+                        Margin="0,2,0,2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Stretch" />
                     <components:RegisterBlock
                         x:Name="T"
-                        Grid.Row="1"
+                        Grid.Row="3"
                         DataContext="{Binding TContext}"
-                        Margin="0,1,0,0"
+                        Margin="0,2,0,2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Stretch" />
                     <components:RegisterBlock
                         x:Name="Sp"
-                        Grid.Row="2"
+                        Grid.Row="4"
                         DataContext="{Binding SPContext}"
-                        Margin="0,1,0,0"
+                        Margin="0,2,0,2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Stretch" />
                     <components:RegisterBlock
                         x:Name="Flags"
-                        Grid.Row="3"
+                        Grid.Row="5"
                         DataContext="{Binding FLAGContext}"
-                        Margin="0,1,0,0"
+                        Margin="0,2,0,2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Stretch" />
-                    <Grid Grid.Row="4"
+                    <Grid Grid.Row="6"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
-                          Margin="0,15,0,0">
+                          Grid.RowSpan="2"
+                          Margin="0,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -318,11 +321,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <components:BitBlock x:Name="Pd1" Grid.Column="0" DataContext="{Binding Pd1Context}" />
-                        <components:BitBlock x:Name="PdMinus1" Grid.Column="1" DataContext="{Binding PdMinus1Context}" />
-                        <components:BitBlock x:Name="Pd0s" Grid.Column="2" DataContext="{Binding Pd0sContext}" />
-                        <components:BitBlock x:Name="Pdx" Grid.Column="3" DataContext="{Binding xContext}" />
-                        <components:BitBlock x:Name="Pdy" Grid.Column="4" DataContext="{Binding yContext}" />
+                        <components:BitBlock x:Name="BVI" Grid.Column="0" DataContext="{Binding BVIContext}" />
+                        <components:BitBlock x:Name="C" Grid.Column="1" DataContext="{Binding CContext}" />
+                        <components:BitBlock x:Name="Z" Grid.Column="2" DataContext="{Binding ZContext}" />
+                        <components:BitBlock x:Name="S" Grid.Column="3" DataContext="{Binding SContext}" />
+                        <components:BitBlock x:Name="V" Grid.Column="4" DataContext="{Binding VContext}" />
                     </Grid>
                 </Grid>
 
@@ -332,11 +335,14 @@
                     Grid.Column="5"
                     Grid.ColumnSpan="2"
                     VerticalAlignment="Top"
+                    Height="23"
+                    Margin="0"
                     HorizontalAlignment="Stretch"
                     DataContext="{Binding MDRContext}" />
 
                 <components:RegisterBlock
                     x:Name="Adr"
+                    Height="23"
                     Grid.Row="7"
                     Grid.Column="5"
                     Grid.ColumnSpan="2"
@@ -347,17 +353,23 @@
                 <components:StraightLineBus
                     x:Name="SBus"
                     Grid.Row="2"
-                    Grid.RowSpan="6"
+                    Grid.RowSpan="7"
                     Grid.Column="7"
                     LineWidth="8"
+                    Panel.ZIndex="300"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,24,0"
                     LineHeight="500" />
 
                 <components:StraightLineBus
                     x:Name="DBus"
                     Grid.Row="2"
-                    Grid.RowSpan="6"
+                    Grid.RowSpan="7"
                     Grid.Column="8"
                     LineWidth="8"
+                    Panel.ZIndex="300"
+                    HorizontalAlignment="Left"
+                    Margin="24,0,0,0"
                     LineHeight="500" />
 
                 <diagram:SumBlock
@@ -366,7 +378,8 @@
                     Grid.Column="7"
                     Grid.RowSpan="2"
                     Grid.ColumnSpan="2"
-                    VerticalAlignment="Bottom"
+                    Margin="0,-12,0,12"
+                    Panel.ZIndex="999"
                     HorizontalAlignment="Center" />
 
                 <Border
@@ -444,6 +457,7 @@
                     LineThickness="10"
                     WrapHeight="390"
                     WrapWidth="710"
+                    Panel.ZIndex="300"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center" />
 
@@ -453,11 +467,20 @@
                     Grid.RowSpan="10"
                     Grid.Column="0"
                     Grid.ColumnSpan="12"
-                    IsHitTestVisible="False"
                     Background="Transparent"
+                    IsHitTestVisible="True"
+                    Panel.ZIndex="100"
                     Margin="0"
                     UseLayoutRounding="True">
                 </Canvas>
+                <!-- new: overlay goes here -->
+                <Canvas
+                    x:Name="OverlayCanvas"
+                    Grid.Row="0" Grid.RowSpan="10"
+                    Grid.Column="0" Grid.ColumnSpan="12"
+                    Background="Transparent"
+                    IsHitTestVisible="False"
+                    Panel.ZIndex="400" />
             </Grid>
         </Grid>
         <components:MicroprogramMemory

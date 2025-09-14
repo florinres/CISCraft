@@ -28,8 +28,10 @@ public interface IDiagramViewModel : IToolViewModel
     RegisterViewModel R13Context { get; }
     RegisterViewModel R14Context { get; }
     RegisterViewModel R15Context { get; }
-    BitBlockViewModel Pd1Context { get; }
-    BitBlockViewModel PdMinus1Context { get; }
-    BitBlockViewModel Pd0sContext { get; }
+    BitBlockViewModel BVIContext { get; }
+    BitBlockViewModel CContext { get; }
+    BitBlockViewModel ZContext { get; }
+    BitBlockViewModel SContext { get; }
+    BitBlockViewModel VContext { get; }
     void ResetHighlight();
 }
