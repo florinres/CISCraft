@@ -1,7 +1,11 @@
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Shapes;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
 using Ui.ViewModels.Components.Diagram;
@@ -16,6 +20,7 @@ public partial class DiagramUserControl : UserControl
     private readonly TranslateTransform _panTransform = new();
     private readonly ScaleTransform _zoomTransform = new();
     private readonly TransformGroup _transformGroup = new();
+    private Canvas _overlayCanvas;
 
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register(nameof(ViewModel), typeof(IDiagramViewModel), typeof(DiagramUserControl),
@@ -136,12 +141,14 @@ public partial class DiagramUserControl : UserControl
             {
                 Points =
                 [
-                    connectionPoints.MidLeft,
-                    connectionPoints.MidLeft with { X = rBusLeftInnerEdge }
+                    connectionPoints.MidLeft with { X = connectionPoints.MidLeft.X - 2 },
+                    connectionPoints.MidLeft with { X = rBusLeftInnerEdge - 1 }
                 ],
                 StrokeThickness = 2,
                 Name = $"{registerBlock.Name}_RBus"
             };
+            Panel.SetZIndex(rBusHighlight, -1);
+            AddWireEffects(rBusHighlight, $"Pm{registerBlock.Name}");
             ConnectionCanvas.Children.Add(rBusHighlight);
         }
 
@@ -154,6 +161,7 @@ public partial class DiagramUserControl : UserControl
         AddGeneralRegistersConnections();
         ConnectIOsToSie();
         AddPdsConnections();
+        AddAluToRBusConnection();
     }
 
     public void ConnectIOsToSie()
@@ -253,13 +261,14 @@ public partial class DiagramUserControl : UserControl
         var sBusEdges = SBus.GetEdges(MainDiagramGrid);
         var dBusEdges = DBus.GetEdges(MainDiagramGrid);
         var rBusRightInnerEdge = RBus.GetEdgeAbsolute(PathSide.Right, EdgeType.Inner, MainDiagramGrid);
+        const int offset = 120;
 
         var sBusHighlight = new HighlightableConnector
         {
             Points =
             [
-                connectionPoints.LeftMinusOffset,
-                connectionPoints.LeftMinusOffset with { X = sBusEdges.Right },
+                connectionPoints.LeftMinusOffset with { X = connectionPoints.LeftMinusOffset.X - 2, Y = connectionPoints.LeftMinusOffset.Y - offset },
+                connectionPoints.LeftMinusOffset with { X = sBusEdges.Right, Y = connectionPoints.LeftMinusOffset.Y - offset },
             ],
             StrokeThickness = 2,
             Name = $"R_SBus"
@@ -268,8 +277,8 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPoints.LeftPlusOffset,
-                connectionPoints.LeftPlusOffset with { X = dBusEdges.Right },
+                connectionPoints.LeftPlusOffset with { X = connectionPoints.LeftPlusOffset.X - 2, Y = connectionPoints.LeftPlusOffset.Y - offset },
+                connectionPoints.LeftPlusOffset with { X = dBusEdges.Right, Y = connectionPoints.LeftPlusOffset.Y - offset },
             ],
             StrokeThickness = 2,
             Name = $"R_DBus"
@@ -277,7 +286,7 @@ public partial class DiagramUserControl : UserControl
 
         var foo = new PointCollection
         {
-            connectionPoints.MidRight,
+            connectionPoints.MidRight with { X = connectionPoints.MidRight.X + 2 },
             connectionPoints.MidRight with { X = rBusRightInnerEdge }
         };
 
@@ -288,6 +297,9 @@ public partial class DiagramUserControl : UserControl
             Name = $"R_RBus"
         };
 
+        AddWireEffects(sBusHighlight, "PdRGs");
+        AddWireEffects(dBusHighlight, "PdRGd");
+        AddWireEffects(rBusHighLight, "PmRG");
         ConnectionCanvas.Children.Add(sBusHighlight);
         ConnectionCanvas.Children.Add(dBusHighlight);
         ConnectionCanvas.Children.Add(rBusHighLight);
@@ -298,21 +310,22 @@ public partial class DiagramUserControl : UserControl
         var connectionPointsDataOut = DataOut.GetConnectionPoints(MainDiagramGrid);
         var connectionPointsIr = Ir.GetConnectionPoints(MainDiagramGrid);
 
-        var offset = 7;
+        var offset = 40;
 
         var connection = new HighlightableConnector
         {
             Points =
             [
-                connectionPointsDataOut.MidLeft,
+                connectionPointsDataOut.MidLeft with { X = connectionPointsDataOut.MidLeft.X - 2 },
                 connectionPointsDataOut.MidLeft with { X = connectionPointsDataOut.MidLeft.X - offset },
                 connectionPointsIr.MidLeft with { X = connectionPointsDataOut.MidLeft.X - offset },
-                connectionPointsIr.MidLeft
+                connectionPointsIr.MidLeft with { X = connectionPointsIr.MidLeft.X - 2 }
             ],
             StrokeThickness = 2,
             Name = $"{DataOut.Name}_{Ir.Name}"
         };
 
+        AddWireEffects(connection, $"{connection.Name} to IR");
         ConnectionCanvas.Children.Add(connection);
     }
 
@@ -327,15 +340,17 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPointsAdress.TopOffsetPlus,
-                connectionPointsAdress.TopOffsetPlus with { Y = connectionPointsAdress.TopOffsetPlus.Y - offset },
-                new(connectionPointsAdr.RightPlusOffset.X + offset, connectionPointsAdress.TopOffsetPlus.Y - offset),
+                connectionPointsAdress.MidRight with { X = connectionPointsAdress.MidRight.X - 2},
+                connectionPointsAdress.MidRight with { X = connectionPointsAdress.MidRight.X + 20},
+                connectionPointsAdress.TopOffsetPlus with { Y = connectionPointsAdress.TopOffsetPlus.Y - offset - 2, X = connectionPointsAdress.RightMinusOffset.X + 20},
+                new(connectionPointsAdr.RightPlusOffset.X + offset, connectionPointsAdress.TopOffsetPlus.Y - offset - 2),
                 connectionPointsAdr.RightPlusOffset with { X = connectionPointsAdr.RightPlusOffset.X + offset }
             ],
             StrokeThickness = 2,
             Name = $"{Adr.Name}_DBus"
         };
 
+        AddWireEffects(connection, $"{connection.Name} to R Bus");
         ConnectionCanvas.Children.Add(connection);
     }
 
@@ -350,7 +365,7 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPointsDataOut.MidRight,
+                connectionPointsDataOut.MidRight with { X = connectionPointsDataOut.MidRight.X - 2},
                 connectionPointsDataOut.MidRight with
                 {
                     X = connectionPointsDataOut.MidRight.X + offset
@@ -361,6 +376,7 @@ public partial class DiagramUserControl : UserControl
             Name = $"{Mdr.Name}_RBus"
         };
 
+        AddWireEffects(connection, $"{connection.Name} to R Bus");
         ConnectionCanvas.Children.Add(connection);
     }
 
@@ -369,22 +385,23 @@ public partial class DiagramUserControl : UserControl
         var connectionPointsDataIn = DataIn.GetConnectionPoints(MainDiagramGrid);
         var connectionPointsMdr = Mdr.GetConnectionPoints(MainDiagramGrid);
 
-        var offset = 10;
+        var offset = 8;
 
         var connection = new HighlightableConnector
         {
             Points =
             [
-                connectionPointsDataIn.TopOffsetPlus,
-                connectionPointsDataIn.TopOffsetPlus with { Y = connectionPointsMdr.TopOffsetPlus.Y - offset },
-                new Point(connectionPointsMdr.RightMinusOffset.X + offset,
-                    connectionPointsMdr.TopOffsetPlus.Y - offset),
+                connectionPointsDataIn.MidRight with { X = connectionPointsDataIn.MidRight.X - 2},
+                connectionPointsDataIn.MidRight with { X = connectionPointsDataIn.MidRight.X + 20},
+                connectionPointsDataIn.TopOffsetPlus with { Y = connectionPointsMdr.TopOffsetPlus.Y - offset, X = connectionPointsDataIn.RightMinusOffset.X + 20},
+                new Point(connectionPointsMdr.RightMinusOffset.X + offset, connectionPointsMdr.TopOffsetPlus.Y - offset),
                 connectionPointsMdr.RightMinusOffset with { X = connectionPointsMdr.RightMinusOffset.X + offset }
             ],
             StrokeThickness = 2,
             Name = $"{Mdr.Name}_SBus"
         };
 
+        AddWireEffects(connection, $"{connection.Name} to S Bus");
         ConnectionCanvas.Children.Add(connection);
     }
 
@@ -396,11 +413,11 @@ public partial class DiagramUserControl : UserControl
         
         var pdCollection = new List<BitBlock>()
         {
-            Pd0s,
-            Pd1,
-            Pdx,
-            Pdy,
-            PdMinus1
+            BVI,
+            C,
+            Z,
+            S,
+            V
         };
 
         foreach (var bitBlock in pdCollection)
@@ -411,13 +428,14 @@ public partial class DiagramUserControl : UserControl
             {
                 Points =
                 [
-                    bitBlockConnectionPoint,
-                    bitBlockConnectionPoint with { Y = relevantY }
+                    bitBlockConnectionPoint with { X = bitBlockConnectionPoint.X + 3},
+                    bitBlockConnectionPoint with { X = bitBlockConnectionPoint.X + 3, Y = relevantY - 2}
                 ],
                 StrokeThickness = 2,
                 Name = $"{bitBlock.Name}_{Flags.Name}"
             };
-            
+
+            AddWireEffects(connection, $"{connection.Name}");
             ConnectionCanvas.Children.Add(connection);
         }
     }
@@ -431,8 +449,8 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPoints.RightMinusOffset,
-                connectionPoints.RightMinusOffset with { X = sBusEdges.Left },
+                connectionPoints.RightMinusOffset with { X = connectionPoints.RightMinusOffset.X - 2 },
+                connectionPoints.RightMinusOffset with { X = sBusEdges.Left + 1 },
             ],
             StrokeThickness = 2,
             Name = $"{registerBlock.Name}_SBus"
@@ -441,17 +459,131 @@ public partial class DiagramUserControl : UserControl
         {
             Points =
             [
-                connectionPoints.RightPlusOffset,
-                connectionPoints.RightPlusOffset with { X = dBusEdges.Left },
+                connectionPoints.RightPlusOffset with { X = connectionPoints.RightPlusOffset.X - 2, Y = connectionPoints.RightPlusOffset.Y - 2 },
+                connectionPoints.RightPlusOffset with { X = dBusEdges.Left + 1, Y = connectionPoints.RightPlusOffset.Y - 2 },
             ],
             StrokeThickness = 2,
             Name = $"{registerBlock.Name}_DBus"
         };
+        AddWireEffects(sBusHighlight, $"Pd{registerBlock.Name}s");
+        AddWireEffects(dBusHighlight, $"Pd{registerBlock.Name}d");
 
         ConnectionCanvas.Children.Add(sBusHighlight);
         ConnectionCanvas.Children.Add(dBusHighlight);
 
         return connectionPoints;
+    }
+
+    private void AddAluToRBusConnection()
+    {
+        var aluPts = Alu.GetConnectionPoints(MainDiagramGrid);
+        var rBusLeftInnerEdge = RBus.GetEdgeAbsolute(PathSide.Bottom, EdgeType.Inner, MainDiagramGrid);
+
+        var conn = new HighlightableConnector
+        {
+            StrokeThickness = 2,
+            Name = "ALU_RBus",
+            Points = new PointCollection
+            {
+                aluPts.MidBottom with { Y = aluPts.MidBottom.Y - 16},
+                aluPts.MidBottom with { Y = aluPts.MidBottom.Y},
+            }
+        };
+        Panel.SetZIndex(conn, -1);
+        AddWireEffects(conn, $"SUM");
+        ConnectionCanvas.Children.Add(conn);
+    }
+    void AddWireEffects(HighlightableConnector wire, string toolTipText)
+    {
+        AttachTooltip(wire, toolTipText);
+        WireHoverOverlay(wire, Brushes.Red);
+    }
+    private static void AttachTooltip(FrameworkElement el, string text)
+    {
+        ToolTipService.SetPlacement(el, PlacementMode.MousePoint);
+        ToolTipService.SetInitialShowDelay(el, 1);
+        ToolTipService.SetBetweenShowDelay(el, 0);
+        ToolTipService.SetShowDuration(el, 6000);
+
+        el.ToolTip = new TextBlock { Text = text };
+    }
+
+    private void WireHoverOverlay(HighlightableConnector target,
+                              Brush hoverBrush = null,
+                              double hoverThickness = 3,
+                              double glowBlur = 12,
+                              double glowOpacity = 0.9)
+    {
+        hoverBrush ??= new SolidColorBrush(Color.FromRgb(0, 208, 255)); // cyan
+
+        Polyline overlay = null;
+
+        void EnsureOverlay()
+        {
+            if (overlay != null) return;
+
+            overlay = new Polyline
+            {
+                // clone the geometry
+                Points = new PointCollection(target.Points),
+                Stroke = hoverBrush,
+                StrokeThickness = hoverThickness,
+                IsHitTestVisible = false,   // let the original receive mouse
+                SnapsToDevicePixels = true
+            };
+
+            // glow
+            if (hoverBrush is SolidColorBrush scb)
+            {
+                overlay.Effect = new DropShadowEffect
+                {
+                    Color = scb.Color,
+                    BlurRadius = glowBlur,
+                    ShadowDepth = 0,
+                    Opacity = glowOpacity
+                };
+            }
+
+            // place above the source
+            Panel.SetZIndex(overlay, 999);
+            OverlayCanvas.Children.Add(overlay);
+        }
+
+        // keep overlay in sync if layout changes (e.g., you redraw connections)
+        target.LayoutUpdated += (_, __) =>
+        {
+            if (overlay != null)
+            {
+                overlay.Points = new PointCollection(target.Points);
+                Panel.SetZIndex(overlay, 999);
+            }
+        };
+
+        target.Unloaded += (_, __) =>
+        {
+            if (overlay != null)
+            {
+                OverlayCanvas.Children.Remove(overlay);
+                overlay = null;
+            }
+        };
+
+        target.MouseEnter += (_, __) =>
+        {
+            EnsureOverlay();
+            overlay.Visibility = Visibility.Visible;
+            Panel.SetZIndex(target, 999); // make sure tooltip stays on top
+            Panel.SetZIndex(overlay, 1000); // make sure tooltip stays on top
+            target.Cursor = Cursors.Hand;
+        };
+
+        target.MouseLeave += (_, __) =>
+        {
+            if (overlay != null) overlay.Visibility = Visibility.Collapsed;
+            Panel.SetZIndex(target, -1);
+            Panel.SetZIndex(overlay, 999); // make sure tooltip stays on top
+            target.ClearValue(CursorProperty);
+        };
     }
 
     #endregion

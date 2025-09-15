@@ -27,7 +27,7 @@
                 </Polygon>
 
                 <!-- Text -->
-                <TextBlock Text="SUM"
+                <TextBlock Text="{Binding Name}"
                            Foreground="White"
                            FontWeight="Bold"
                            FontSize="14"
