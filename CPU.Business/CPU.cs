@@ -94,9 +94,8 @@ namespace CPU.Business
         {
             if (BPO)
             {
-                _controlUnit.SetGlobalIRQState(_globalIRQ);
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
-
+                Debug.Print(_globalIRQ.ToString());
                 bool[] irqs = new bool[]
                 {
                     Registers[IRQs.IRQ0],
@@ -112,28 +111,34 @@ namespace CPU.Business
                     Registers[Exceptions.Reserved1]
                 };
 
+                bool okInstructionCode = CheckInstructionCode();
+
+                 if (okInstructionCode)
+                    Registers[Exceptions.CIL] = false;
+                 else Registers[Exceptions.CIL] = true;
+
+                _controlUnit.SetCILState(Registers[Exceptions.CIL]);
+
                 Dictionary<string, bool> interruptPriorities = new Dictionary<string, bool>();
                 interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
-                bool interrupAck = Convert.ToBoolean(Registers[REGISTERS.FLAGS] & (1 << interruptShift));
+                bool interrupAck = Convert.ToBoolean(GetInterruptFlag());
 
-                if (interrupAck)
+                int i = 0;
+                bool prioritisedInterruptsState = false;
+                foreach (var kvp in interruptPriorities)
                 {
-                    int i = 0;
-                    bool prioritisedInterruptsState = false;
-                    foreach (var kvp in interruptPriorities)
+                    if (kvp.Value)
                     {
-                        if (kvp.Value)
-                        {
-                            irqs[i] = false;
-                        }
-                        prioritisedInterruptsState |= kvp.Value;
-                        i++;
+                        irqs[i] = false;
                     }
-                    _globalIRQ = interrupAck & prioritisedInterruptsState;
+                    prioritisedInterruptsState |= kvp.Value;
+                    i++;
                 }
-                if (_globalIRQ)
-                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
+                _globalIRQ = interrupAck & prioritisedInterruptsState;
+                _controlUnit.SetGlobalIRQState(_globalIRQ);
 
+                Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
+               
 
             }
             return (previousMARState, previousMIRIndexState);
@@ -568,6 +573,30 @@ namespace CPU.Business
         public ushort GetInterruptFlag()
         {
             return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
+        }
+        /// <summary>
+        /// Checks instruction code if it belongs to classes B1 to B4. Returns 'true' if so.
+        /// Returns 'false' if illegal code (CIL) is detected.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckInstructionCode()
+        {
+            short instructionCode = _controlUnit.IR;
+
+            short b1Bit = (short)(instructionCode & (1 << 15));
+            short b2Bit = (short)(instructionCode & (1 << 14));
+            short b3Bit = (short)(instructionCode & (1 << 13));
+            short b4Bit = (short)(instructionCode & (1 << 12));
+
+            if (b1Bit == 0) // B1 class
+                return true;
+            else if (b2Bit == 0) //B2 class
+                return true;
+            else if (b3Bit == 0) // B3 class
+                return true;
+            else if (b4Bit == 0) // B4 class
+                return true;
+            else return false; // CIL
         }
     }
 }
