@@ -1,9 +1,15 @@
-using System.ComponentModel;
 using AvalonDock;
-using Ui.Components;
 using ICSharpCode.AvalonEdit;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text.Json;
+using Ui.Components;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
+using Ui.Models;
 using Ui.Services;
 using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
@@ -15,6 +21,15 @@ public partial class MainWindow
 {
     ICpuService _cpuService;
     IActionsBarViewModel _actionsBarViewModel;
+    public static List<ISR>? Isrs;
+    private static readonly JsonSerializerOptions JsonOpts = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        WriteIndented = true
+    };
+
     public MainWindow(
         IMainWindowViewModel viewModel,
         ICpuService cpuService,
@@ -26,6 +41,22 @@ public partial class MainWindow
         InitializeComponent();
         _cpuService = cpuService;
         _actionsBarViewModel = actionsBarViewModel;
+
+        EditInterruptsMenu.Items.Clear();
+
+        Isrs = ReadIVTJson();
+
+        foreach (var isr in Isrs)
+        {
+            var menuItem = new Wpf.Ui.Controls.MenuItem
+            {
+                Header = isr.Name,
+                Command = viewModel.MenuBar.EditISRCommand,
+                CommandParameter = isr
+            };
+
+            EditInterruptsMenu.Items.Add(menuItem);
+        }
     }
 
     public void SetServiceProvider(IServiceProvider serviceProvider)
@@ -77,10 +108,21 @@ public partial class MainWindow
 
     private void DockingManagerInstance_DocumentClosing(object sender, DocumentClosingEventArgs e)
     {
-        if(e.Document.Content is FileViewModel thisFile)
+        if (e.Document.Content is FileViewModel thisFile && Isrs != null)
         {
-            MenuBarViewModel.closeDocument(thisFile);
+            bool isIsr = false;
+            foreach (var isr in Isrs)
+            {
+                if (thisFile.Title == isr.Name)
+                {
+                    isIsr = true;
+                    break;
+                }
+            }
+            if(!isIsr)
+                MenuBarViewModel.closeDocument(thisFile);
         }
+        _actionsBarViewModel.IsInterruptSaveButtonVisible = false;
     }
     private void OnEditorLoaded(object sender, RoutedEventArgs e)
     {
@@ -90,6 +132,18 @@ public partial class MainWindow
             _cpuService.SetActiveEditor(vm);
             _actionsBarViewModel.CanAssemble = true;
             editor.Unloaded += OnEditorUnloaded;
+            if(Isrs != null)
+            {
+                _actionsBarViewModel.IsInterruptSaveButtonVisible = false;
+                foreach (var isr in Isrs)
+                {
+                    if (vm.Title == isr.Name)
+                    {
+                        _actionsBarViewModel.IsInterruptSaveButtonVisible = true;
+                        break;
+                    }
+                }
+            }
         }
     }
     private void OnTextChanged(object sender, EventArgs e)
@@ -100,5 +154,16 @@ public partial class MainWindow
     private void OnEditorUnloaded(object sender, EventArgs e)
     {
         _actionsBarViewModel.CanAssemble = false;
+    }
+
+    private List<ISR> ReadIVTJson()
+    {
+        string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");
+        string jsonPath = Path.Combine(currentFolder + "Configs", "IVT.json");
+        if (!File.Exists(jsonPath))
+            return new List<ISR>();
+        string json = File.ReadAllText(jsonPath);
+
+        return JsonSerializer.Deserialize<List<ISR>>(json, JsonOpts) ?? new();
     }
 }

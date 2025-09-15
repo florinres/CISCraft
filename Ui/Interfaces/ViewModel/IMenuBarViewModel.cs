@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Ui.Interfaces.Services;
+using Ui.Models;
 using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 
@@ -28,6 +29,13 @@ public interface IMenuBarViewModel
     ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand" /> instance wrapping
     ///     <see cref="MenuBarViewModel.NewDocument" />.
     /// </summary>
+    /// 
+
+    /// <summary>
+    ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand{T}" /> instance wrapping
+    ///     <see cref="MenuBarViewModel.EditISR" />.
+    /// </summary>
+    IRelayCommand<ISR> EditISRCommand { get; }
     IRelayCommand ShowFileStatsCommand { get; }
     
     IRelayCommand ShowDiagramCommand { get; }

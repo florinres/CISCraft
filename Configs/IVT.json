@@ -1,0 +1,50 @@
+[
+  {
+    "Name": "ACLOW",
+    "IVTAddress": 0,
+    "ISRAddress": 21856,
+    "TextCode": "mov r1, 2\r\nhalt"
+  },
+  {
+    "Name": "CIL",
+    "IVTAddress": 2,
+    "ISRAddress": 24586,
+    "TextCode": "halt"
+  },
+  {
+    "Name": "Reserved0",
+    "IVTAddress": 4,
+    "ISRAddress": 27316,
+    "TextCode": "iret"
+  },
+  {
+    "Name": "Reserved1",
+    "IVTAddress": 6,
+    "ISRAddress": 30046,
+    "TextCode": "iret"
+  },
+  {
+    "Name": "IRQ0",
+    "IVTAddress": 8,
+    "ISRAddress": 32776,
+    "TextCode": "iret"
+  },
+  {
+    "Name": "IRQ1",
+    "IVTAddress": 10,
+    "ISRAddress": 35506,
+    "TextCode": "iret"
+  },
+  {
+    "Name": "IRQ2",
+    "IVTAddress": 12,
+    "ISRAddress": 38236,
+    "TextCode": "iret"
+  },
+  {
+    "Name": "IRQ3",
+    "IVTAddress": 14,
+    "ISRAddress": 40966,
+    "TextCode": "iret"
+  }
+]

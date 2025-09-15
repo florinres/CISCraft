@@ -115,6 +115,7 @@
                                   Command="{Binding ActionsBar.SetStepLevelCommand}"  
                                   CommandParameter="{x:Static viewModel:StepLevel.Instruction}" />
                         </MenuItem>
+                        <MenuItem Header="Edit Interrupts" x:Name="EditInterruptsMenu"/>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View" />
                     <ui:MenuItem Header="Help" />
@@ -123,7 +124,7 @@
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}" x:Name="ActionBarStackPanel">
 
             <ui:Button
                 VerticalAlignment="Top"
@@ -205,6 +206,23 @@
                 BorderBrush="{x:Null}">
                 <ui:SymbolIcon Symbol="Stop24" Foreground="#E4FF3F3F" />
             </ui:Button>
+            
+            <ui:Button
+                Command="{Binding SaveInterruptCommand}"
+                CommandParameter="{Binding DataContext.Workspace.ActiveDocumentsService.SelectedDocument,
+                              RelativeSource={RelativeSource AncestorType=Window}}"
+                VerticalAlignment="Top"
+                Visibility="{Binding IsInterruptSaveButtonVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                ToolTip="Save Interrupt"
+                Height="30"
+                Width="30"
+                Padding="0"
+                Margin="0,0,10,0"
+                Appearance="Transparent"
+                BorderBrush="{x:Null}">
+                <ui:SymbolIcon Symbol="Checkbox120" Foreground="Green" />
+            </ui:Button>
+            
         </StackPanel>
 
         <DockingManager
