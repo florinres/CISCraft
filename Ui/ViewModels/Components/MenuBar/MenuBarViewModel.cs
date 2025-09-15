@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
+using Ui.Models;
 using Ui.ViewModels.Generics;
 
 namespace Ui.ViewModels.Components.MenuBar;
@@ -11,14 +13,16 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 {
     private readonly IToolVisibilityService _toolVisibilityService;
     private IDockingService _dockingService;
+    private IActionsBarViewModel _actionsBarViewModel;
     public static ObservableCollection<FileViewModel> files;
     [ObservableProperty] public partial ILayoutControlViewModel LayoutControl { get; set; }
 
-    public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService, ILayoutControlViewModel layoutControl)
+    public MenuBarViewModel(IActiveDocumentService documentService, IToolVisibilityService toolVisibilityService, ILayoutControlViewModel layoutControl, IActionsBarViewModel actionsBarViewModel)
     {
         DocumentService = documentService;
         _toolVisibilityService = toolVisibilityService;
         LayoutControl = layoutControl;
+        _actionsBarViewModel = actionsBarViewModel;
     }
 
     [ObservableProperty] public partial IActiveDocumentService DocumentService { get; set; }
@@ -68,7 +72,7 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 
         var doc = new FileViewModel
         {
-            Title = "Microprogram",
+            Title = "Untitled",
             Content = defaultContent
         };
         DocumentService.Documents.Add(doc);
@@ -115,6 +119,20 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
     {
         _toolVisibilityService.ToggleToolVisibility(DocumentService.Microprogram);
     }
+    [RelayCommand]
+    public void EditISR(ISR isr)
+    {
+        var doc = new FileViewModel
+        {
+            Title = isr.Name,
+            Content = isr.TextCode
+        };
+
+        DocumentService.Documents.Add(doc);
+        DocumentService.SelectedDocument ??= doc;
+
+        _actionsBarViewModel.IsInterruptSaveButtonVisible = true;
+    }
 
     public static void closeDocument(FileViewModel file)
     {
@@ -147,6 +165,6 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
                 return;
             }
             files.Remove(file);
-        }   
+        }
     }
 }

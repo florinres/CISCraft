@@ -1,10 +1,16 @@
-using System.Text;
-using Microsoft.Win32;
-using Ui.Interfaces.Services;
-using Ui.Interfaces.ViewModel;
-using Ui.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Text.Json;
+using Ui.Interfaces.Services;
+using Ui.Interfaces.ViewModel;
+using Ui.Models;
+using Ui.Services;
+using Ui.ViewModels.Components.MenuBar;
+using Ui.Views.Windows;
 
 
 namespace Ui.ViewModels.Generics;
@@ -22,7 +28,16 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [ObservableProperty]
     public partial bool CanAssemble{ get; set; }
     [ObservableProperty]
+    public partial bool IsInterruptSaveButtonVisible { get; set; }
+    [ObservableProperty]
     public partial StepLevel StepLevel { get; set; }
+    private static readonly JsonSerializerOptions JsonOpts = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        WriteIndented = true
+    };
 
     public ActionsBarViewModel(IAssemblerService assemblerService, IActiveDocumentService activeDocumentService, ICpuService cpuService, IToolVisibilityService toolVisibilityService)
     {
@@ -117,11 +132,37 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         _cpuService.ResetProgram();
     }
+    [RelayCommand]
+    private void SaveInterrupt(FileViewModel activeFile)
+    {
+        if (MainWindow.Isrs is null) return;
+
+        foreach(var isr in MainWindow.Isrs)
+        {
+            if (isr.Name == activeFile.Title)
+            {
+                isr.TextCode = activeFile.Content;
+                WriteIsrsToJson(MainWindow.Isrs);
+                IsInterruptSaveButtonVisible = false;
+                break;
+            }
+        }
+
+        MenuBarViewModel.files.Remove(activeFile);
+    }
     private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
     {
         if (objectCode is not [])
         {
             _activeDocumentService.HexViewer.IsVisible = true;
         }
+    }
+
+    private void WriteIsrsToJson(List<ISR> isrs)
+    {
+        string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");
+        string jsonPath = Path.Combine(currentFolder + "Configs", "IVT.json");
+        var json = JsonSerializer.Serialize(isrs, JsonOpts);
+        File.WriteAllText(jsonPath, json);
     }
 }
