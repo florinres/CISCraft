@@ -4,7 +4,7 @@ using MainMemory.Business.Models;
 
 namespace MainMemory.Business
 {
-    public class MainMemory: IMainMemory
+    public class MainMemory : IMainMemory
     {
         private MemoryContentWrapper _memoryContent;
         public int memoryLocationsNum { get; private set; }
@@ -16,7 +16,14 @@ namespace MainMemory.Business
         private int _interuptsNum;
         private ushort _retiOpCode; // OpCode for Return Interrupt instruction
         private string _ivtConfigFile;
-
+        public List<ISR>? Isrs;
+        private static readonly JsonSerializerOptions JsonOpts = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            WriteIndented = true
+        };
         /// <summary>
         /// Class responsible for modelling the behaviour
         /// of RAM or main memory block.
@@ -58,7 +65,7 @@ namespace MainMemory.Business
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void SetByteLocation(int address, byte content)
         {
-            if( address > this.memoryLocationsNum - 1)
+            if (address > this.memoryLocationsNum - 1)
                 throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value.");
 
             this._memoryContent[address] = content;
@@ -74,8 +81,8 @@ namespace MainMemory.Business
             if (address > this.memoryLocationsNum - 1)
                 throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value.");
 
-            this._memoryContent[address+1] = (byte)(content>>8);
-            this._memoryContent[address] = (byte)(content << 8 >>8);
+            this._memoryContent[address + 1] = (byte)(content >> 8);
+            this._memoryContent[address] = (byte)(content << 8 >> 8);
         }
         /// <summary>
         /// Loads user machine code into main memory.
@@ -84,7 +91,7 @@ namespace MainMemory.Business
         /// <exception cref="InvalidOperationException"></exception>
         public void LoadMachineCode(byte[] machineCode)
         {
-            if(machineCode.Length > this._interruptHandlersSegment - this._userCodeSegment)
+            if (machineCode.Length > this._interruptHandlersSegment - this._userCodeSegment)
                 throw new InvalidOperationException("User machine code size exceeds memory capacity. Please try another program.");
 
             _memoryContent.NotifyChange = false;
@@ -163,20 +170,27 @@ namespace MainMemory.Business
         /// </summary>
         private void InitializeDefaultInterrupts()
         {
-            string configFile = File.ReadAllText(this._ivtConfigFile);
-
-            var table = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(configFile);
-            foreach (var irqEntry in table)
+            this.Isrs = ReadIVTJson();
+            foreach (var isr in Isrs)
             {
-                var irqData = irqEntry.Value;
-
-                int memoryStartAddress = Convert.ToInt32(irqData["memoryStartAddress"],16);
-                int handlerStartAddress = Convert.ToInt32(irqData["handlerStartAddress"],16);
+                ushort memoryStartAddress = isr.IVTAddress;
+                ushort handlerStartAddress = isr.ISRAddress;
 
                 //little endian
                 this._memoryContent[memoryStartAddress] = (byte)((handlerStartAddress << 8) >> 8);
                 this._memoryContent[memoryStartAddress + 1] = (byte)(handlerStartAddress >> 8);
             }
+        }
+
+        private List<ISR> ReadIVTJson()
+        {
+            string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");
+            string jsonPath = Path.Combine(currentFolder + "Configs", "IVT.json");
+            if (!File.Exists(jsonPath))
+                return new List<ISR>();
+            string json = File.ReadAllText(jsonPath);
+
+            return JsonSerializer.Deserialize<List<ISR>>(json, JsonOpts) ?? new();
         }
     }
 }
