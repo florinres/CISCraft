@@ -118,7 +118,12 @@
                         <MenuItem Header="Edit Interrupts" x:Name="EditInterruptsMenu"/>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View" />
-                    <ui:MenuItem Header="Help" />
+                    <ui:MenuItem Header="Help">
+                        <MenuItem Command="{Binding ActionsBar.OpenReferenceManualCommand}" Header="Reference Manual"/>
+                        <MenuItem Command="{Binding ActionsBar.OpenDevGuideCommand}" Header="Developer's Guide"/>
+                        <MenuItem Command="{Binding ActionsBar.OpenInstructionEncodingCommand}" Header="Instruction Encoding"/>
+                        <MenuItem Command="{Binding ActionsBar.OpenISACommand}" Header="Instruction Set Architecture"/>
+                    </ui:MenuItem>
                 </Menu>
                 
             </ui:TitleBar.Header>
