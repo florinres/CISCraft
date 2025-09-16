@@ -19,6 +19,7 @@ namespace CPU.Tests
         Cpu? cpu;
         List<KeyValuePair<string, string>>? realInstructionPath;
         List<string>? expectedInstructionPath;
+        const short UserCodeStartAddress = 16;
 
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
@@ -105,7 +106,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(4, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 4, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -136,7 +137,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xE, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xE, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -166,7 +167,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x8, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x8, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -188,7 +189,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xE, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xE, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -209,7 +210,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x4, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x4, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -240,7 +241,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xE, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xE, cpu.Registers[REGISTERS.PC]);
                 });
 
         }
@@ -271,7 +272,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x8, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x8, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -293,7 +294,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xA, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xA, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -314,7 +315,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x4, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x4, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -345,7 +346,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xE, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xE, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -375,7 +376,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x8, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x8, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -397,7 +398,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xA, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xA, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -418,7 +419,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x4, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x4, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -449,7 +450,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xE, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xE, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -479,7 +480,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x8, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x8, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -501,7 +502,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xA, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xA, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -523,7 +524,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0xA, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0xA, cpu.Registers[REGISTERS.PC]);
                 });
         }
         // [TestMethod]
@@ -553,7 +554,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 6;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 6;
             RunInstructionTest(
                 "Jmp_AI_Test",
                 "jmp [r0]",
@@ -567,7 +568,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x6, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x6, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -575,7 +576,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 0;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress;
             RunInstructionTest(
                 "Jmp_AI_Test",
                 "jmp 6[r0]",
@@ -590,7 +591,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x6, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x6, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -615,7 +616,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x6, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x6, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -623,7 +624,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 6;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 6;
             RunInstructionTest(
                 "Call_AI_Test",
                 "call [r0]",
@@ -640,7 +641,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x6, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x6, cpu.Registers[REGISTERS.PC]);
                 });
         }
         [TestMethod]
@@ -648,7 +649,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 0;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress;
             RunInstructionTest(
                 "Call_AX_Test",
                 "call 6[r0]",
@@ -666,7 +667,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(0x6, cpu.Registers[REGISTERS.PC]);
+                    Assert.AreEqual(UserCodeStartAddress + 0x6, cpu.Registers[REGISTERS.PC]);
                 });
         }
     }

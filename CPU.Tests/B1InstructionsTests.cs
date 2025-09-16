@@ -19,6 +19,7 @@ namespace CPU.Tests
         Cpu? cpu;
         List<KeyValuePair<string, string>>? realInstructionPath;
         List<string>? expectedInstructionPath;
+        const short UserCodeStartAddress = 16;
 
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
@@ -143,7 +144,7 @@ namespace CPU.Tests
 
             // ram.SetByteLocation(2, 2); //TODO: Fix memoryContentWrapper
             // ram.SetByteLocation(3, 0);
-            // cpu.Registers[GPR.R0] = 2;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress;
 
             RunInstructionTest(
                 "Mov_AD_AI_Test",
@@ -170,6 +171,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = UserCodeStartAddress;
             RunInstructionTest(
                 "Mov_AD_AX_Test",
                 "mov r1, 2[r0]",
@@ -247,7 +249,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 2;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 2;
             RunInstructionTest(
                 "Mov_AI_AI_Test",
                 "mov [r1], [r0]",
@@ -272,6 +274,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = UserCodeStartAddress;
             RunInstructionTest(
                 "Mov_AI_AX_Test",
                 "mov [r1], 2[r0]",
@@ -347,7 +350,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 4;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 4;
             RunInstructionTest(
                 "Mov_AX_AI_Test",
                 "mov 2[r1], [r0]",
@@ -373,6 +376,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
+            cpu.Registers[GPR.R0] = UserCodeStartAddress;
             RunInstructionTest(
                 "Mov_AX_AX_Test",
                 "mov 2[r1], 6[r0]",

@@ -19,6 +19,7 @@ namespace CPU.Tests
         Cpu? cpu;
         List<KeyValuePair<string, string>>? realInstructionPath;
         List<string>? expectedInstructionPath;
+        const short UserCodeStartAddress = 16;
 
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
@@ -235,7 +236,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(2, ram.FetchWord(CpuTestsUtils.stackPointer)); 
+                    Assert.AreEqual(UserCodeStartAddress + 2, ram.FetchWord(CpuTestsUtils.stackPointer)); 
                 });
         }
         [TestMethod]
@@ -243,7 +244,7 @@ namespace CPU.Tests
         {
             if (cpu == null || ram == null) return;
 
-            cpu.Registers[GPR.R0] = 12;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 12;
             RunInstructionTest(
                 "POPPC_TEST",
                 "push r0\npoppc",
@@ -264,7 +265,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(12, cpu.Registers[REGISTERS.PC]); 
+                    Assert.AreEqual(UserCodeStartAddress + 12, cpu.Registers[REGISTERS.PC]); 
                 });
         }
         [TestMethod]
@@ -338,7 +339,7 @@ namespace CPU.Tests
         {
             if (cpu == null || ram == null) return;
 
-            cpu.Registers[GPR.R0] = 0x10;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 0x10;
             RunInstructionTest(
                 "RET_TEST",
                 "push r0\nret",
@@ -359,7 +360,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(0x10, cpu.Registers[REGISTERS.PC]); 
+                    Assert.AreEqual(UserCodeStartAddress + 0x10, cpu.Registers[REGISTERS.PC]); 
                     Assert.AreEqual(CpuTestsUtils.stackPointer, cpu.Registers[REGISTERS.SP]); 
                 });
         }
@@ -368,7 +369,7 @@ namespace CPU.Tests
         {
             if (cpu == null || ram == null) return;
 
-            cpu.Registers[GPR.R0] = 0x10;
+            cpu.Registers[GPR.R0] = UserCodeStartAddress + 0x10;
             RunInstructionTest(
                 "IRET_TEST",
                 "sec\npushf\npush r0\niret",
@@ -403,7 +404,7 @@ namespace CPU.Tests
                 },
                 () =>
                 { 
-                    Assert.AreEqual(0x10, cpu.Registers[REGISTERS.PC]); 
+                    Assert.AreEqual(UserCodeStartAddress + 0x10, cpu.Registers[REGISTERS.PC]); 
                     Assert.AreEqual(CpuTestsUtils.stackPointer, cpu.Registers[REGISTERS.SP]); 
                     Assert.AreEqual(0x8, cpu.Registers[REGISTERS.FLAGS]); 
                 });
