@@ -143,7 +143,8 @@ public class CpuService : ICpuService
     {
         if (_fileViewModel?.EditorInstance != null)
         {
-            ushort lineNum = _debugSymbls[_cpu.Registers[REGISTERS.PC]];
+            short index = (short)(_cpu.Registers[REGISTERS.PC] - 16);
+            ushort lineNum = _debugSymbls[index];
             Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, lineNum, _semiTransparentYellow);
             _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Add(Highlight);
         }

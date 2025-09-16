@@ -166,6 +166,7 @@ namespace CPU.Tests
             }
             cpu.Registers[REGISTERS.ONES] = -1;
             cpu.Registers[REGISTERS.SP] = stackPointer;
+            cpu.Registers[REGISTERS.PC] = 16;
 
             for (int i = 0; i < 16; i++)
             {
@@ -177,7 +178,7 @@ namespace CPU.Tests
             buf["RG"]    = 0;
             buf["SP"]    = stackPointer;
             buf["T "]    = 0;
-            buf["PC"]    = 0;
+            buf["PC"]    = 16;
             buf["IVR"]   = 0;
             buf["ADR"]   = 0;
             buf["MDR"]   = 0;

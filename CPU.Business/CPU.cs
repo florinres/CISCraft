@@ -52,6 +52,7 @@ namespace CPU.Business
         }
 
         public RegisterWrapper Registers;
+        private short  _userCodeStart = 16; // first address of user code
         public short SBUS, DBUS, RBUS;
         public short Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
@@ -86,7 +87,8 @@ namespace CPU.Business
             Registers = registers;
             Registers[REGISTERS.ONES] = -1;
             Registers[REGISTERS.SP] = 0x200;
-            BPO = true; //Enable CPU clock
+            Registers[REGISTERS.PC] = _userCodeStart;
+            BPO = true; // Enable CPU clock
             previousMARState = 0;
             previousMIRIndexState = 0;
         }
@@ -95,7 +97,9 @@ namespace CPU.Business
             if (BPO)
             {
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
-                Debug.Print(_globalIRQ.ToString());
+                Debug.WriteLine("SBUS= " + SBUS.ToString());
+                Debug.WriteLine("DBUS= " + DBUS.ToString());
+                Debug.WriteLine("RBUS= " + RBUS.ToString());
                 bool[] irqs = new bool[]
                 {
                     Registers[IRQs.IRQ0],
@@ -253,6 +257,8 @@ namespace CPU.Business
             }
             Registers[REGISTERS.ONES] = -1;
             Registers[REGISTERS.SP] = 0x200;
+            Registers[REGISTERS.PC] = _userCodeStart;
+            Registers[REGISTERS.ADR] = _userCodeStart;
             _controlUnit.Reset();
             BPO = true; //Reactivate CPU clock
         }
@@ -282,7 +288,6 @@ namespace CPU.Business
                     SBUS = Registers[(REGISTERS)index];
                     break;
             }
-            Debug.WriteLine("SBUS= " + SBUS.ToString());
         }
         private void OnDbusEvent(int index)
         {
@@ -302,7 +307,6 @@ namespace CPU.Business
                     DBUS = Registers[(REGISTERS)index];
                     break;
             }
-            Debug.WriteLine("DBUS= " + DBUS.ToString());
         }
 
         // I will just use one and not try to immitate the hardware.
@@ -368,8 +372,6 @@ namespace CPU.Business
                     RotateRightWithCarry();
                     break;
             }
-
-            Debug.WriteLine("RBUS= " + RBUS.ToString());
         }
 
         private void OnRbusEvent(int index)
@@ -399,7 +401,7 @@ namespace CPU.Business
                     break;
                 case 1 /* IFCH */:
                     _controlUnit.IR = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
-                    Registers[REGISTERS.IR] = _controlUnit.IR; // For updateing the UI
+                    Registers[REGISTERS.IR] = _controlUnit.IR; // For updating the UI
                     break;
                 case 2 /* READ */:
                     Registers[REGISTERS.MDR] = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
