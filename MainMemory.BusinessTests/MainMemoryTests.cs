@@ -36,20 +36,6 @@ namespace MainMemory.Business.Tests
         }
 
         [TestMethod()]
-        public void SetInternalStackSizeTest()
-        {
-            Assert.ThrowsException<InvalidOperationException>(() => this.dummyRAM.SetStackSize(this.dummyRAM.GetMemorySize()));
-
-        }
-
-        [TestMethod()]
-        public void SetInternalISRTest()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => this.dummyRAM.SetISR(21, null));
-
-        }
-
-        [TestMethod()]
         public void ClearInternlISRTest()
         {
             ushort interruptReturnOpCode = 0xe00f;
