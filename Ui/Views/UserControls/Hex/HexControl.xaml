@@ -4,12 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
-             xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel"
+             xmlns:viewModel="clr-namespace:Ui.Interfaces.ViewModel" xmlns:hexviewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModel:IHexViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Button d:DataContext="{d:DesignInstance Type=hexviewer:HexViewModel}" Grid.Row="0" Grid.Column="0" Content="Hexadecimal" Command="{Binding ChangeToHexCommand}"/>
+        <Button d:DataContext="{d:DesignInstance Type=hexviewer:HexViewModel}" Grid.Row="0" Grid.Column="0" Content="Decimal" Margin="103,0,0,0" VerticalAlignment="Top" Command="{Binding ChangeToDecimalCommand}"/>
+        <Button d:DataContext="{d:DesignInstance Type=hexviewer:HexViewModel}" Grid.Column="0" Content="Binary" Margin="177,0,0,0" Command="{Binding ChangeToBinaryCommand}"/>
+
         <wpfHexaEditor:HexEditor
+            Grid.Row="1"
             x:Name="HexEditorControl"
             Stream="{Binding HexEditorStream, Mode=OneWay}"
             Width="Auto"
@@ -25,7 +41,7 @@
             ByteSpacerPositioning="HexBytePanel"
             ByteSpacerVisualStyle="Dash"
             ByteSpacerWidthTickness="Normal"
-            DataStringVisual="Hexadecimal"
+            DataStringVisual="{Binding DataStringVisual, Mode=TwoWay}"
             DefaultCopyToClipboardMode="HexaString"
             ForegroundSecondColor="IndianRed"
             HighLightColor="DimGray"
@@ -34,7 +50,7 @@
             AllowAutoHighLightSelectionByte="False"
             OffSetStringVisual="Hexadecimal"
             PreloadByteInEditorMode="MaxVisibleLine"
-            VisualCaretMode="Overwrite" 
+            VisualCaretMode="Overwrite"
             Background="{DynamicResource ApplicationBackgroundBrush}"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
             ZoomScale="{Binding ZoomFactor, Mode=TwoWay}"

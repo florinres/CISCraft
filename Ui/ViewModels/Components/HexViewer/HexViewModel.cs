@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using MainMemory.Business;
@@ -13,6 +14,7 @@ namespace Ui.ViewModels.Components.HexViewer;
 public partial class HexViewModel : ToolViewModel, IHexViewModel
 {
     [ObservableProperty] public override partial string? Title { get; set; } = "HexViewer";
+    [ObservableProperty] private string dataStringVisual = "Hexadecimal";
     private readonly IAssemblerService _assemblerService;
     private readonly MemoryContentWrapper _memoryContentWrapper;
     private readonly IMainMemory _mainMemory;
@@ -34,7 +36,7 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
 
     [ObservableProperty]
     private bool _isElementReadyToRender;
-    
+
     [ObservableProperty]
     private Stream _hexEditorStream = new MemoryStream();
 
@@ -58,7 +60,7 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
             RefreshHexViewFromMemory();
             return;
         }
-        
+
         var index = TryParseIndexFromPropertyName(e.PropertyName);
         RefreshHexViewFromMemory(index);
     }
@@ -66,7 +68,7 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
     private static int? TryParseIndexFromPropertyName(string name)
     {
         var match = Regex.Match(name, @"Memory\[(\d+)\]");
-        if(int.TryParse(match.Groups[1].Value, out var index))
+        if (int.TryParse(match.Groups[1].Value, out var index))
         {
             return index;
         }
@@ -75,17 +77,33 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
 
     private void RefreshHexViewFromMemory(int? index = null)
     {
-        if(HexEditorStream.CanSeek && index is not null)
+        if (HexEditorStream.CanSeek && index is not null)
         {
             HexEditorStream.Position = index.Value;
             HexEditorStream.WriteByte(_memoryContentWrapper[index.Value]);
             HexEditorStream.Position = index.Value;
         }
-        
+
         HexEditorStream?.Dispose();
         HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
         IsElementReadyToRender = true;
     }
 
-    
+    [RelayCommand]
+    private void ChangeToHex()
+    {
+        DataStringVisual = "Hexadecimal";
+    }
+
+    [RelayCommand]
+    private void ChangeToDecimal()
+    {
+        DataStringVisual = "Decimal";
+    }
+
+    [RelayCommand]
+    private void ChangeToBinary()
+    {
+        DataStringVisual = "Binary";
+    }
 }
