@@ -40,6 +40,7 @@ public class AssemblerService : IAssemblerService
     {
 
         var objectCode = _assembler.Assemble(sourceCode, out _);
+        var originalDbgSymbols = _assembler.GetDebugSymbols();
         _mainMemory.LoadMachineCode(objectCode);
 
         this.Isrs = ReadIVTJson();
@@ -53,6 +54,7 @@ public class AssemblerService : IAssemblerService
         }
 
         SourceCodeAssembled?.Invoke(this, objectCode);
+        _assembler.SetInternalDebugSymbols(originalDbgSymbols);
         DebugSymbols = _assembler.GetDebugSymbols();
         return objectCode;
     }

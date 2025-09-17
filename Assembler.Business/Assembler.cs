@@ -23,7 +23,7 @@ namespace Assembler.Business
         {
             Encoder = new Encoder();
             Grammar = new CiscGrammar();
-            Parser  = new Parser(Grammar);
+            Parser = new Parser(Grammar);
         }
         public byte[] Assemble(string sourceCode, out int len)
         {
@@ -46,7 +46,12 @@ namespace Assembler.Business
         }
         public Dictionary<short, ushort> GetDebugSymbols()
         {
-            return Encoder.DebugSymbols;
+            return new Dictionary<short, ushort>(Encoder.DebugSymbols);
+        }
+
+        public void SetInternalDebugSymbols(Dictionary<short, ushort> dbgSymbols)
+        {
+            this.Encoder.DebugSymbols = dbgSymbols;
         }
     }
 }

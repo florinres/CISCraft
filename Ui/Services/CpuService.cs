@@ -74,11 +74,12 @@ public class CpuService : ICpuService
         if (row == 0 && column == 0)
         {
             _microprogramService.ClearAllHighlightedRows();
-
+            
             if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
             {
-                if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
-                    Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+                short index = (short)(_cpu.Registers[REGISTERS.PC] - 16);
+                if (_debugSymbls.ContainsKey(index))
+                    Highlight?.SetLine(_debugSymbls[index]);
             }
         }
 
@@ -105,8 +106,9 @@ public class CpuService : ICpuService
 
         if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
         {
-            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
-                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+            short index = (short)(_cpu.Registers[REGISTERS.PC] - 16);
+            if (_debugSymbls.ContainsKey(index))
+                Highlight?.SetLine(_debugSymbls[index]);
         }
     }
     public void StepInstruction()
@@ -123,8 +125,9 @@ public class CpuService : ICpuService
 
         if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
         {
-            if (_debugSymbls.ContainsKey(_cpu.Registers[REGISTERS.PC]))
-                Highlight?.SetLine(_debugSymbls[_cpu.Registers[REGISTERS.PC]]);
+            short index = (short)(_cpu.Registers[REGISTERS.PC] - 16);
+            if (_debugSymbls.ContainsKey(index))
+                Highlight?.SetLine(_debugSymbls[index]);
         }
     }
     public void ResetProgram()

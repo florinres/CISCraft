@@ -150,7 +150,7 @@ namespace Assembler.Business
             }
         }
         public readonly Dictionary<string, ushort> SymbolTable = new Dictionary<string, ushort>();
-        public readonly Dictionary<short, ushort> DebugSymbols = new Dictionary<short, ushort>();
+        public Dictionary<short, ushort> DebugSymbols = new Dictionary<short, ushort>();
         readonly Dictionary<string, Dictionary<ushort,string>> _oppcodes = new Dictionary<string, Dictionary<ushort,string>>
         {
             // Numerical value    ,                                     Mnemonic, Type
