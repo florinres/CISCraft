@@ -211,7 +211,15 @@
                 BorderBrush="{x:Null}">
                 <ui:SymbolIcon Symbol="Stop24" Foreground="#E4FF3F3F" />
             </ui:Button>
-            
+
+            <Menu Height="30">
+                <ui:MenuItem x:Name="TriggerInterruptMenu" Height="30" Width="30" ToolTip="Trigger Interrupt">
+                    <MenuItem.Header>
+                        <ui:SymbolIcon Symbol="Flash16" Height="30" Width="30" Margin="-16,-20,-16,-20" />
+                    </MenuItem.Header>
+                </ui:MenuItem>
+            </Menu>
+
             <ui:Button
                 Command="{Binding SaveInterruptCommand}"
                 CommandParameter="{Binding DataContext.Workspace.ActiveDocumentsService.SelectedDocument,

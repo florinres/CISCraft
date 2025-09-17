@@ -576,6 +576,11 @@ namespace CPU.Business
         {
             return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
         }
+        public void SetInterruptFlag(ushort value)
+        {
+            value &= 1;
+            Registers[REGISTERS.FLAGS] = (short)(value << interruptShift);
+        }
         /// <summary>
         /// Checks instruction code if it belongs to classes B1 to B4. Returns 'true' if so.
         /// Returns 'false' if illegal code (CIL) is detected.

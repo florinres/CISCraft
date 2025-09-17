@@ -15,7 +15,7 @@ namespace MainMemory.Business
         public short FetchWord(int address);
         public byte[] GetMemoryDump();
         public void LoadMachineCode(byte[] machineCode);
+        public void LoadAtOffset(byte[] machineCode, ushort sectionOffset);
         public void ClearMemory();
-        int memoryLocationsNum { get; }
     }
 }

@@ -1,5 +1,6 @@
 using AvalonDock;
 using ICSharpCode.AvalonEdit;
+using MainMemory.Business;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -11,9 +12,11 @@ using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
 using Ui.Services;
+using Ui.ViewModels;
 using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 using Wpf.Ui.Appearance;
+using ISR = Ui.Models.ISR;
 
 namespace Ui.Views.Windows;
 
@@ -22,6 +25,9 @@ public partial class MainWindow
     ICpuService _cpuService;
     IActionsBarViewModel _actionsBarViewModel;
     public static List<ISR>? Isrs;
+    IMainMemory _mainMemory;
+    IMainWindowViewModel _viewModel;
+    IAssemblerService _assemblerService;
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -33,30 +39,24 @@ public partial class MainWindow
     public MainWindow(
         IMainWindowViewModel viewModel,
         ICpuService cpuService,
-        IActionsBarViewModel actionsBarViewModel
+        IActionsBarViewModel actionsBarViewModel,
+        IMainMemory mainMemory,
+        IAssemblerService assemblerService
     )
     {
-        DataContext = viewModel;
+        _viewModel = viewModel;
+        DataContext = _viewModel;
         SystemThemeWatcher.Watch(this);
         InitializeComponent();
         _cpuService = cpuService;
         _actionsBarViewModel = actionsBarViewModel;
+        _mainMemory = mainMemory;
+        _assemblerService = assemblerService;
 
         EditInterruptsMenu.Items.Clear();
+        TriggerInterruptMenu.Items.Clear();
 
-        Isrs = ReadIVTJson();
-
-        foreach (var isr in Isrs)
-        {
-            var menuItem = new Wpf.Ui.Controls.MenuItem
-            {
-                Header = isr.Name,
-                Command = viewModel.MenuBar.EditISRCommand,
-                CommandParameter = isr
-            };
-
-            EditInterruptsMenu.Items.Add(menuItem);
-        }
+        InitInterrupts();
     }
 
     public void SetServiceProvider(IServiceProvider serviceProvider)
@@ -138,7 +138,7 @@ public partial class MainWindow
             _cpuService.SetActiveEditor(vm);
             _actionsBarViewModel.CanAssemble = true;
             editor.Unloaded += OnEditorUnloaded;
-            if(Isrs != null)
+            if(Isrs != null && _actionsBarViewModel.IsDebugging != true)
             {
                 _actionsBarViewModel.IsInterruptSaveButtonVisible = false;
                 foreach (var isr in Isrs)
@@ -161,7 +161,39 @@ public partial class MainWindow
     {
         _actionsBarViewModel.CanAssemble = false;
     }
+    private void InitInterrupts()
+    {
+        Isrs = ReadIVTJson();
 
+        foreach (var isr in Isrs)
+        {
+            AddInterruptsButtonsOnUI(isr);
+
+            // Get ISR object code
+            var debugSymbols = _assemblerService.AssembleSourceCodeService(isr.TextCode, isr.ISRAddress);
+
+            _cpuService.UpdateDebugSymbols(isr.TextCode, debugSymbols, isr.ISRAddress);
+        }
+    }
+
+    private void AddInterruptsButtonsOnUI(ISR isr)
+    {
+        var editInterruptMenu = new Wpf.Ui.Controls.MenuItem
+        {
+            Header = isr.Name,
+            Command = _viewModel.MenuBar.EditISRCommand,
+            CommandParameter = isr
+        };
+        var triggerInterruptMenu = new Wpf.Ui.Controls.MenuItem
+        {
+            Header = isr.Name,
+            Command = _viewModel.ActionsBar.TriggerInterruptCommand,
+            CommandParameter = isr
+        };
+
+        EditInterruptsMenu.Items.Add(editInterruptMenu);
+        TriggerInterruptMenu.Items.Add(triggerInterruptMenu);
+    }
     private List<ISR> ReadIVTJson()
     {
         string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");

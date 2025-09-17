@@ -15,12 +15,13 @@ public partial class FileViewModel : PaneViewModel
     [ObservableProperty] public partial string? FilePath { get; set; }
 
     public StyledAvalonEdit? EditorInstance { get; set; }
-
+    public bool IsUserCode = false;
     public async Task LoadFromFile(string path)
     {
         FilePath = path;
         Content = await File.ReadAllTextAsync(path);
         Title = Path.GetFileName(path);
+        IsUserCode = true;
     }
 
     public void SaveToFile(string? path = null)

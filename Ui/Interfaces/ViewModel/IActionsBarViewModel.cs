@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Ui.Models;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel
@@ -35,12 +36,15 @@ namespace Ui.Interfaces.ViewModel
 
         /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.SaveInterrupt"/>.</summary>
         global::CommunityToolkit.Mvvm.Input.IRelayCommand<FileViewModel> SaveInterruptCommand { get; }
+        /// <summary>
+        ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand{T}" /> instance wrapping
+        ///     <see cref="MenuBarViewModel.TriggerInterrupt" />.
+        /// </summary>
+        IRelayCommand<ISR> TriggerInterruptCommand { get; }
         bool IsDebugging { get; set; }
         bool CanDebug { get; set; }
         bool CanAssemble { get; set; }
         bool IsInterruptSaveButtonVisible { get; set; }
-
-        event EventHandler<byte[]>? ObjectCodeGenerated;
 
         event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangingEventHandler? PropertyChanging;

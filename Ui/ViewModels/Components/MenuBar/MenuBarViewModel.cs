@@ -73,7 +73,8 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         var doc = new FileViewModel
         {
             Title = "Untitled",
-            Content = defaultContent
+            Content = defaultContent,
+            IsUserCode = true
         };
         DocumentService.Documents.Add(doc);
         DocumentService.SelectedDocument ??= doc;
@@ -125,7 +126,8 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
         var doc = new FileViewModel
         {
             Title = isr.Name,
-            Content = isr.TextCode
+            Content = isr.TextCode,
+            IsUserCode = false
         };
 
         DocumentService.Documents.Add(doc);
@@ -133,7 +135,6 @@ public partial class MenuBarViewModel : ObservableObject, IMenuBarViewModel
 
         _actionsBarViewModel.IsInterruptSaveButtonVisible = true;
     }
-
     public static void closeDocument(FileViewModel file)
     {
         string filePath = file.FilePath;
