@@ -65,12 +65,12 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         if (_activeDocumentService.SelectedDocument == null) return;
         var objectCode = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content));
         ObjectCodeGenerated?.Invoke(this, objectCode);
-        
+
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
         CanDebug = true;
         CanAssemble = false;
     }
-    
+
     [RelayCommand]
     private async Task LoadJson()
     {
@@ -81,11 +81,11 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         };
 
         if (dialog.ShowDialog() != true) return;
-        
+
         await Task.Run(
-            
+
             () => _cpuService.LoadJsonMpm(dialog.FileName)
-            
+
             );
     }
     [RelayCommand]
@@ -164,5 +164,38 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         string jsonPath = Path.Combine(currentFolder + "Configs", "IVT.json");
         var json = JsonSerializer.Serialize(isrs, JsonOpts);
         File.WriteAllText(jsonPath, json);
+    }
+
+    [RelayCommand]
+    private void OpenReferenceManual()
+    {
+        var pdfPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Docs/reference_manual.pdf");
+        if (File.Exists(pdfPath))
+            Process.Start(new ProcessStartInfo(pdfPath) { UseShellExecute = true });
+    }
+
+    [RelayCommand]
+
+    private void OpenDevGuide()
+    {
+        var pdfPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Docs/dev_guide.pdf");
+        if (File.Exists(pdfPath))
+            Process.Start(new ProcessStartInfo(pdfPath) { UseShellExecute = true });
+    }
+
+    [RelayCommand]
+    private void OpenISA()
+    {
+        var pdfPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Docs/isa.pdf");
+        if (File.Exists(pdfPath))
+            Process.Start(new ProcessStartInfo(pdfPath) { UseShellExecute = true });
+    }
+
+    [RelayCommand]
+    private void OpenInstructionEncoding()
+    {
+        var pdfPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Docs/instruction_encoding.pdf");
+        if (File.Exists(pdfPath))
+            Process.Start(new ProcessStartInfo(pdfPath) { UseShellExecute = true });
     }
 }
