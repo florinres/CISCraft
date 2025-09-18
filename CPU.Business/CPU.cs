@@ -56,6 +56,7 @@ namespace CPU.Business
         public ushort SBUS, DBUS, RBUS;
         public ushort Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
+        private bool ResetBI; //Bistabil Intrerupere
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
         private InterruptController _interruptController;
@@ -99,11 +100,18 @@ namespace CPU.Business
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
                 bool[] irqs = new bool[]
                 {
-                    Registers[IRQs.IRQ0],
-                    Registers[IRQs.IRQ1],
-                    Registers[IRQs.IRQ2],
-                    Registers[IRQs.IRQ3]
+                    Registers[IRQs.IRQ0] && !ResetBI,
+                    Registers[IRQs.IRQ1] && !ResetBI,
+                    Registers[IRQs.IRQ2] && !ResetBI,
+                    Registers[IRQs.IRQ3] && !ResetBI
                 };
+                // note that on HW level ResetBI
+                // is used as J signal for exception
+                // JK latches
+
+                if (ResetBI)
+                    ResetBI = false; // corresponding IRQ latch has been reseted
+
                 bool[] exceptions = new bool[]
                 {
                     Registers[Exceptions.ACLOW],
@@ -461,10 +469,16 @@ namespace CPU.Business
                     break;
                 case OTHER_EVENTS.INTA_SP_MINUS_2:
                     // INTA = 1;
+                    Registers[REGISTERS.FLAGS] |= (short)(1 << interruptShift);
                     Registers[REGISTERS.SP] -= 2;
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
-                    //resetarea bitilor de exceptie;
+                    //Adu la 0 bistabilii de exceptii de intrerupere
+                    //Reset exception and interrupts flag latches
+
+                    Registers[Exceptions.ACLOW] = false;
+                    Registers[Exceptions.CIL] = false;
+                    ResetBI = true;
                     break;
                 case OTHER_EVENTS.A0BPO:
                     //Adu la 0 BPO
