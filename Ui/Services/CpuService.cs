@@ -78,10 +78,6 @@ public class CpuService : ICpuService
     {
         _diagram.ResetHighlight();
 
-        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
-
-        _cursorNeedsUpdate = false;
-
         var (row, column) = _cpu.StepMicrocommand();
         
         if (row == 0 && column == 0)
@@ -92,6 +88,10 @@ public class CpuService : ICpuService
 
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+
+        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
+
+        _cursorNeedsUpdate = false;
     }
     public void StepMicroinstruction()
     {
@@ -296,7 +296,8 @@ public class CpuService : ICpuService
     {
         ushort lineNum = GetLineAndEditorNumberByPc(pc);
 
-        _activeDocumentService.SelectedDocument?.HighlightLine(lineNum);
+        if (cursorNeedsUpdate)
+            _activeDocumentService.SelectedDocument?.HighlightLine(lineNum);
     }
     private bool IsSectionIsr(MemorySection section)
     {
