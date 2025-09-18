@@ -151,7 +151,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     private BaseDiagramObject? _lastUpdatedObject;
     
-    private void UpdateRegister(REGISTERS reg, short value)
+    private void UpdateRegister(REGISTERS reg, ushort value)
     {
         switch (reg)
         {
@@ -188,7 +188,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         }
     }
 
-    private void UpdateGpr(GPR gpr, short value)
+    private void UpdateGpr(GPR gpr, ushort value)
     {
         switch (gpr)
         {

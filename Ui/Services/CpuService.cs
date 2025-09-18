@@ -220,10 +220,10 @@ public class CpuService : ICpuService
             new MemorySection("CIL",        0x600A, 0x6AB3, new Dictionary<short,ushort>(), ""),
             new MemorySection("Reserved0",  0x6AB4, 0x755D, new Dictionary<short,ushort>(), ""),
             new MemorySection("Reserved1",  0x755E, 0x8007, new Dictionary<short,ushort>(), ""),
-            new MemorySection("ISR0",       0x8008, 0x8AB1, new Dictionary<short,ushort>(), ""),
-            new MemorySection("ISR1",       0x8AB2, 0x955B, new Dictionary<short,ushort>(), ""),
-            new MemorySection("ISR2",       0x955C, 0xA005, new Dictionary<short,ushort>(), ""),
-            new MemorySection("ISR3",       0xA006, 0xAAAF, new Dictionary<short,ushort>(), ""),
+            new MemorySection("IRQ0",       0x8008, 0x8AB1, new Dictionary<short,ushort>(), ""),
+            new MemorySection("IRQ1",       0x8AB2, 0x955B, new Dictionary<short,ushort>(), ""),
+            new MemorySection("IRQ2",       0x955C, 0xA005, new Dictionary<short,ushort>(), ""),
+            new MemorySection("IRQ3",       0xA006, 0xAAAF, new Dictionary<short,ushort>(), ""),
             new MemorySection("Stack",      0xAAB0, 0xFFFF, new Dictionary<short,ushort>(), ""),
         };
     }
@@ -268,7 +268,7 @@ public class CpuService : ICpuService
 
         return false;
     }
-    private ushort GetLineAndEditorNumberByPc(short pc)
+    private ushort GetLineAndEditorNumberByPc(ushort pc)
     {
         MemorySection? section = GetMemorySectionByAddress(pc);
 
@@ -277,12 +277,12 @@ public class CpuService : ICpuService
 
         bool editorChange = EditorChangedBasedOnSection(section);
 
-        if (section != null && section.DebugSymbols != null && section.DebugSymbols.ContainsKey(pc))
-            return section.DebugSymbols[pc];
+        if (section != null && section.DebugSymbols != null && section.DebugSymbols.ContainsKey((short)pc))
+            return section.DebugSymbols[(short)pc];
 
         return 0;
     }
-    private MemorySection? GetMemorySectionByAddress(short address)
+    private MemorySection? GetMemorySectionByAddress(ushort address)
     {
         foreach (var section in MemorySections)
         {
@@ -291,11 +291,11 @@ public class CpuService : ICpuService
         }
         return null;
     }
-    private bool IsAddressInSection(short address, MemorySection section)
+    private bool IsAddressInSection(ushort address, MemorySection section)
     {
         return address >= section.StartAddress && address <= section.EndAddress;
     }
-    private void UpdateEditorAndHighlight(short pc, bool cursorNeedsUpdate)
+    private void UpdateEditorAndHighlight(ushort pc, bool cursorNeedsUpdate)
     {
         ushort lineNum = GetLineAndEditorNumberByPc(pc);
 

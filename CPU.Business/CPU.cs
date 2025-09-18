@@ -52,9 +52,9 @@ namespace CPU.Business
         }
 
         public RegisterWrapper Registers;
-        private short  _userCodeStart = 16; // first address of user code
-        public short SBUS, DBUS, RBUS;
-        public short Cin = 0;
+        private ushort  _userCodeStart = 16; // first address of user code
+        public ushort SBUS, DBUS, RBUS;
+        public ushort Cin = 0;
         private bool BPO; //Bistabil Pornire/Oprire
         private int previousMIRIndexState, previousMARState;
         private ControlUnit _controlUnit;
@@ -85,7 +85,7 @@ namespace CPU.Business
             _microProgram = new OrderedDictionary<string, string[][]>();
             _interruptController = new InterruptController();
             Registers = registers;
-            Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.ONES] = 0xFFFF;
             Registers[REGISTERS.SP] = 0x200;
             Registers[REGISTERS.PC] = _userCodeStart;
             BPO = true; // Enable CPU clock
@@ -263,7 +263,7 @@ namespace CPU.Business
             {
                 Registers[(Exceptions)i] = false;
             }
-            Registers[REGISTERS.ONES] = -1;
+            Registers[REGISTERS.ONES] = 0xFFFF;
             Registers[REGISTERS.SP] = 0x200;
             Registers[REGISTERS.PC] = _userCodeStart;
             Registers[REGISTERS.ADR] = _userCodeStart;
@@ -283,14 +283,14 @@ namespace CPU.Business
             switch ((REGISTERS)index)
             {
                 case REGISTERS.NEG:
-                    SBUS = (short)~Registers[REGISTERS.T];
+                    SBUS = (ushort)~Registers[REGISTERS.T];
                     break;
                 case REGISTERS.RG:
                     int gprIndex = _controlUnit.GetSourceRegister();
                     SBUS = Registers[(GPR)gprIndex];
                     break;
                 case REGISTERS.IRLSB:
-                    SBUS = (short)(Registers[REGISTERS.IR] & 0xFF);
+                    SBUS = (ushort)(Registers[REGISTERS.IR] & 0xFF);
                     break;
                 default:
                     SBUS = Registers[(REGISTERS)index];
@@ -302,14 +302,14 @@ namespace CPU.Business
             switch ((REGISTERS)index)
             {
                 case REGISTERS.NEG:
-                    DBUS = (short)~Registers[REGISTERS.MDR];
+                    DBUS = (ushort)~Registers[REGISTERS.MDR];
                     break;
                 case REGISTERS.RG:
                     int gprIndex = _controlUnit.GetDestinationRegister();
                     DBUS = Registers[(GPR)gprIndex];
                     break;
                 case REGISTERS.IRLSB:
-                    DBUS = (short)(Registers[REGISTERS.IR] & 0xFF);
+                    DBUS = (ushort)(Registers[REGISTERS.IR] & 0xFF);
                     break;
                 default:
                     DBUS = Registers[(REGISTERS)index];
@@ -333,22 +333,22 @@ namespace CPU.Business
                     RBUS = DBUS;
                     break;
                 case ALU_OP.SUM:
-                    RBUS = (short)(SBUS + DBUS + Cin);
+                    RBUS = (ushort)(SBUS + DBUS + Cin);
                     Cin = 0;
                     ComputeFlags();
                     break;
                     // case ALU_OP.SUB:
                     //     RBUS = (short)(SBUS - DBUS);
                 case ALU_OP.AND:
-                    RBUS = (short)(SBUS & DBUS);
+                    RBUS = (ushort)(SBUS & DBUS);
                     ComputeFlags();
                     break;
                 case ALU_OP.OR:
-                    RBUS = (short)(SBUS | DBUS);
+                    RBUS = (ushort)(SBUS | DBUS);
                     ComputeFlags();
                     break;
                 case ALU_OP.XOR:
-                    RBUS = (short)(SBUS ^ DBUS);
+                    RBUS = (ushort)(SBUS ^ DBUS);
                     ComputeFlags();
                     break;
                 case ALU_OP.ASL:
@@ -356,21 +356,21 @@ namespace CPU.Business
                     ComputeFlags();
                     break;
                 case ALU_OP.ASR:
-                    short msbRbus = (short)(RBUS & 0x8000);
+                    ushort msbRbus = (ushort)(RBUS & 0x8000);
                     RBUS >>= 1;
                     RBUS |= msbRbus;
                     ComputeFlags();
                     break;
                 case ALU_OP.LSR:
-                    RBUS = (short)((ushort)RBUS >> 1);
+                    RBUS = (ushort)((ushort)RBUS >> 1);
                     ComputeFlags();
                     break;
                 case ALU_OP.ROL:
-                    RBUS = (short)RotateLeft((ushort)RBUS, 1);
+                    RBUS = (ushort)RotateLeft((ushort)RBUS, 1);
                     ComputeFlags();
                     break;
                 case ALU_OP.ROR:
-                    RBUS = (short)RotateRight((ushort)RBUS, 1);
+                    RBUS = (ushort)RotateRight((ushort)RBUS, 1);
                     ComputeFlags();
                     break;
                 case ALU_OP.RLC:
@@ -408,11 +408,11 @@ namespace CPU.Business
                 case 0 /* None */:
                     break;
                 case 1 /* IFCH */:
-                    _controlUnit.IR = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
+                    _controlUnit.IR = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
                     Registers[REGISTERS.IR] = _controlUnit.IR; // For updating the UI
                     break;
                 case 2 /* READ */:
-                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord((ushort)Registers[REGISTERS.ADR]);
+                    Registers[REGISTERS.MDR] = _mainMemory.FetchWord(Registers[REGISTERS.ADR]);
                     break;
                 case 3 /* WRITE */:
                     _mainMemory.SetWordLocation(Registers[REGISTERS.ADR], Registers[REGISTERS.MDR]);
@@ -457,10 +457,10 @@ namespace CPU.Business
                     PdCondlogic = true;
                     break;
                 case OTHER_EVENTS.A1BVI:
-                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] | (1 << interruptBit));
+                    Registers[REGISTERS.FLAGS] = (ushort)(Registers[REGISTERS.FLAGS] | (1 << interruptBit));
                     break;
                 case OTHER_EVENTS.A0BVI:
-                    Registers[REGISTERS.FLAGS] = (short)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
+                    Registers[REGISTERS.FLAGS] = (ushort)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
                     break;
                 case OTHER_EVENTS.INTA_SP_MINUS_2:
                     // INTA = 1;
@@ -486,7 +486,7 @@ namespace CPU.Business
             buf &= (ushort)(buf & ~1);
             buf |= oldCarry;
 
-            RBUS = (short)buf;
+            RBUS = (ushort)buf;
         }
         private void RotateRightWithCarry()
         {
@@ -498,7 +498,7 @@ namespace CPU.Business
             buf = (ushort)(buf & ~0x8000);
             buf |= (ushort)(oldCarry << 16);
 
-            RBUS = (short)buf;
+            RBUS = (ushort)buf;
         }
         private (int, int) MarToMpmIndex(int MAR)
         {
@@ -524,7 +524,7 @@ namespace CPU.Business
 
             if ((ushort)RBUS < Math.Max((ushort)SBUS, (ushort)DBUS))
             {
-                Registers[REGISTERS.FLAGS] |= (short)(1 << carryShift);
+                Registers[REGISTERS.FLAGS] |= (ushort)(1 << carryShift);
             }
 
             if (
@@ -532,7 +532,7 @@ namespace CPU.Business
                  (((SBUS ^ RBUS) & 0x8000) != 0)
                 )
             {
-                Registers[REGISTERS.FLAGS] |= (short)(1 << overflowShift);
+                Registers[REGISTERS.FLAGS] |= (ushort)(1 << overflowShift);
             }
         }
         // Return the status only for Zero and Sign
@@ -541,12 +541,12 @@ namespace CPU.Business
             Registers[REGISTERS.FLAGS] = 0;
             if (RBUS == 0)
             {
-                Registers[REGISTERS.FLAGS] |= (short)(1 << zeroShift);
+                Registers[REGISTERS.FLAGS] |= (ushort)(1 << zeroShift);
             }
 
             if ((RBUS & 0x8000) == 0x8000)
             {
-                Registers[REGISTERS.FLAGS] |= (short)(1 << signShift);
+                Registers[REGISTERS.FLAGS] |= (ushort)(1 << signShift);
             }
         }
         private void ComputeFlags()
@@ -578,7 +578,7 @@ namespace CPU.Business
         }
         private void SetCarryFlag(ushort value)
         {
-            Registers[REGISTERS.FLAGS] |= (short)((value & 1) << carryShift);
+            Registers[REGISTERS.FLAGS] |= (ushort)((value & 1) << carryShift);
         }
         public ushort GetInterruptFlag()
         {
@@ -587,7 +587,7 @@ namespace CPU.Business
         public void SetInterruptFlag(ushort value)
         {
             value &= 1;
-            Registers[REGISTERS.FLAGS] = (short)(value << interruptShift);
+            Registers[REGISTERS.FLAGS] = (ushort)(value << interruptShift);
         }
         /// <summary>
         /// Checks instruction code if it belongs to classes B1 to B4. Returns 'true' if so.
@@ -596,7 +596,7 @@ namespace CPU.Business
         /// <returns></returns>
         private bool CheckInstructionCode()
         {
-            short instructionCode = _controlUnit.IR;
+            ushort instructionCode = _controlUnit.IR;
 
             short b1Bit = (short)(instructionCode & (1 << 15));
             short b2Bit = (short)(instructionCode & (1 << 14));

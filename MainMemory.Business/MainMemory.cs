@@ -67,7 +67,7 @@ namespace MainMemory.Business
         /// <param name="address"></param>
         /// <param name="content"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetByteLocation(int address, byte content)
+        public void SetByteLocation(ushort address, byte content)
         {
             if (address > s_memorySize - 1)
                 throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value.");
@@ -80,7 +80,7 @@ namespace MainMemory.Business
         /// <param name="address"></param>
         /// <param name="content"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void SetWordLocation(int address, short content)
+        public void SetWordLocation(ushort address, ushort content)
         {
             if (address > s_memorySize)
                 throw new ArgumentOutOfRangeException(nameof(address), "Address is out of range. Please try another value.");
@@ -146,7 +146,7 @@ namespace MainMemory.Business
         /// <param name="memoryAddress"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public byte FetchByte(int memoryAddress)
+        public byte FetchByte(ushort memoryAddress)
         {
             if (memoryAddress > s_memorySize)
                 throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value.");
@@ -159,12 +159,12 @@ namespace MainMemory.Business
         /// <param name="memoryAddress"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public short FetchWord(int memoryAddress)
+        public ushort FetchWord(ushort memoryAddress)
         {
             if (memoryAddress > s_memorySize)
                 throw new ArgumentOutOfRangeException(nameof(memoryAddress), "Address is out of range. Please try another value.");
 
-            return (short)((this._memoryContent[memoryAddress + 1] << 8) | this._memoryContent[memoryAddress]);
+            return (ushort)((this._memoryContent[memoryAddress + 1] << 8) | this._memoryContent[memoryAddress]);
         }
         /// <summary>
         /// Returns the total size of program memory.
@@ -179,7 +179,7 @@ namespace MainMemory.Business
         /// </summary>
         /// <param name="handlerAddress"></param>
         /// <param name="interruptRoutine"></param>
-        public void SetISR(int handlerAddress, byte[] interruptRoutine)
+        public void SetISR(ushort handlerAddress, byte[] interruptRoutine)
         {
             for (int i = 0; i < interruptRoutine.Length; i++)
                 this._memoryContent[handlerAddress + i] = interruptRoutine[i];

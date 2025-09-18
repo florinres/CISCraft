@@ -23,7 +23,7 @@ namespace CPU.Business
         /// Value: micro-commands
         /// </summary>
         public long[] MPM = new long[150];
-        public short IR = 0;
+        public ushort IR = 0;
         private int state = 0;
         private int _mirIndex = 0;
         private int _globalIRQState = 0;
@@ -192,7 +192,7 @@ namespace CPU.Business
         /// The name of the microcode it shall be executed.
         /// This shall be used by UI.
         /// </returns>
-		internal (int MAR,int MirIndex) StepMicrocommand(bool ACLOWSignal, short flagsRegister)
+		internal (int MAR,int MirIndex) StepMicrocommand(bool ACLOWSignal, ushort flagsRegister)
         {
             if (_mirIndex != 0)
             {
@@ -258,7 +258,7 @@ namespace CPU.Business
         /// <param name="ACLOWSignal"></param>
         /// <param name="flagsRegister"></param>
         /// <returns></returns>
-		private bool ComputeConditionG(bool ACLOWSignal,short flagsRegister)
+		private bool ComputeConditionG(bool ACLOWSignal, ushort flagsRegister)
 		{
             bool g_flag = true;
             bool CILFlag = _cilState;
@@ -433,7 +433,7 @@ namespace CPU.Business
         {
             return (int)((_registersWrapper.MIR & AddresMask) >> AddresShift);
         }
-        private int getBit(short register, ushort bitIndex=0)
+        private int getBit(ushort register, ushort bitIndex=0)
         {
             return (int)((register & (1 << bitIndex)) >> bitIndex);
         }
