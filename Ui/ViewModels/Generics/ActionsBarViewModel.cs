@@ -50,7 +50,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         CanDebug = false;
         CanAssemble = false;
         StepLevel = StepLevel.Microcommand;
-        //ObjectCodeGenerated += OnObjectCodeGenerated;
     }
     [RelayCommand]
     public void SetStepLevel(StepLevel level)
@@ -108,7 +107,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         if (_activeDocumentService.SelectedDocument != null)
         {
-            //_cpuService.AddDebugSymbols(_assemblerService.DebugSymbols);
             _cpuService.StartDebugging();
             IsDebugging = true;
             CanDebug = false;
@@ -167,14 +165,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             CanAssemble = false;
         }
     }
-    //private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
-    //{
-    //    if (objectCode is not [])
-    //    {
-    //        _activeDocumentService.HexViewer.IsVisible = true;
-    //    }
-    //}
-
     private void WriteIsrsToJson(List<ISR> isrs)
     {
         string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");

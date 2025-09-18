@@ -18,10 +18,9 @@ namespace Ui.Services;
 public class CpuService : ICpuService
 {
     private readonly CPU.Business.CPU _cpu;
+    private bool _cursorNeedsUpdate = false;
     private readonly IMicroprogramViewModel _microprogramService;
     private readonly IDiagramViewModel _diagram;
-    private FileViewModel? _fileViewModel;
-    Color _semiTransparentYellow;
     private Dictionary<int, int> _mirLookUpIndex = new Dictionary<int, int>
     {
         {0, 0},
@@ -42,11 +41,6 @@ public class CpuService : ICpuService
     public static List<ISR>? Isrs;
     public List<MemorySection> MemorySections { get; set; }
     private IActiveDocumentService _activeDocumentService;
-    public HighlightCurrentLineBackgroundRenderer? Highlight
-    {
-        get;
-        set;
-    }
 
     public CpuService(IMicroprogramViewModel microprogramService, CPU.Business.CPU cpu, IDiagramViewModel diagram, IActiveDocumentService activeDocumentService)
     {
@@ -54,7 +48,6 @@ public class CpuService : ICpuService
         _diagram = diagram;
         _microprogramService = microprogramService;
         _activeDocumentService = activeDocumentService;
-        _semiTransparentYellow = Color.FromArgb(38, 255, 255, 0);
         _ = LoadJsonMpm();
 
         Isrs = ReadIVTJson();
@@ -84,13 +77,17 @@ public class CpuService : ICpuService
     public void StepMicrocommand()
     {
         _diagram.ResetHighlight();
-        var (row, column) = _cpu.StepMicrocommand();
 
+        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
+
+        _cursorNeedsUpdate = false;
+
+        var (row, column) = _cpu.StepMicrocommand();
+        
         if (row == 0 && column == 0)
         {
             _microprogramService.ClearAllHighlightedRows();
-
-            UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC]);
+            _cursorNeedsUpdate = true;
         }
 
         _microprogramService.CurrentRow = row;
@@ -98,37 +95,48 @@ public class CpuService : ICpuService
     }
     public void StepMicroinstruction()
     {
-        _diagram.ResetHighlight();
         int row, column;
         row = 1;
         column = 1;
+
+        _diagram.ResetHighlight();
+
+        _cursorNeedsUpdate = false;
+
+        (row, column) = _cpu.StepMicrocommand();
+
+        if (row == 0)
+        {
+            _cursorNeedsUpdate = true;
+            _microprogramService.ClearAllHighlightedRows();
+        }
+
+        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
+
         while (column != 6)
         {
             (row, column) = _cpu.StepMicrocommand();
         }
-        if (row == 0)
-        {
-            _microprogramService.ClearAllHighlightedRows();
-        }
 
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = -1;
-
-        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC]);
     }
     public void StepInstruction()
     {
-        _diagram.ResetHighlight();
         int row, col;
         row = 1;
         col = 1;
+
+        _diagram.ResetHighlight();
+
         _cpu.StepMicrocommand();
+
         while (row != 0 || col != 0)
         {
             (row, col) = _cpu.StepMicrocommand();
         }
 
-        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC]);
+        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], true);
     }
     public void ResetProgram()
     {
@@ -137,17 +145,13 @@ public class CpuService : ICpuService
         _microprogramService.CurrentColumn = -1;
         _microprogramService.ClearAllHighlightedRows();
     }
-    public void SetActiveEditor(FileViewModel fileViewModel)
-    {
-        _fileViewModel = fileViewModel;
-    }
     public void StartDebugging()
     {
         ushort lineNum = 0;
 
         lineNum = GetLineAndEditorNumberByPc(_cpu.Registers[REGISTERS.PC]);
 
-        InitHighlight(lineNum);
+        _activeDocumentService.SelectedDocument?.HighlightLine(lineNum);
     }
     public void TriggerInterrupt(ISR isr)
     {
@@ -182,15 +186,14 @@ public class CpuService : ICpuService
     }
     public void StopDebugging()
     {
-        if (Highlight != null && _fileViewModel?.EditorInstance != null)
+        foreach (var doc in _activeDocumentService.Documents)
         {
-            _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Remove(Highlight);
-            Highlight = null;
-            _cpu.ResetProgram();
-            _microprogramService.CurrentRow = -1;
-            _microprogramService.CurrentColumn = -1;
-            _microprogramService.ClearAllHighlightedRows();
+            doc.ResetHighlight();
         }
+        _cpu.ResetProgram();
+        _microprogramService.CurrentRow = -1;
+        _microprogramService.CurrentColumn = -1;
+        _microprogramService.ClearAllHighlightedRows();
     }
     public void UpdateDebugSymbols(string code, Dictionary<short, ushort> debugSymbols, ushort sectionAddress)
     {
@@ -233,16 +236,14 @@ public class CpuService : ICpuService
     }
     bool EditorChangedBasedOnSection(MemorySection section)
     {
-        if (_fileViewModel == null) return false;
         if (_activeDocumentService.SelectedDocument == null) return false;
 
         // If the document is already open, select it
         foreach (var doc in _activeDocumentService.Documents)
         {
-            if ((doc.Title == section.Name) || (doc.IsUserCode && section.Name == "User_Code" && !_fileViewModel.IsUserCode))
+            if ((doc.Title == section.Name) && (doc.IsUserCode && section.Name == "User_Code" && !_activeDocumentService.SelectedDocument.IsUserCode))
             {
                 _activeDocumentService.SelectedDocument = doc;
-                _fileViewModel = doc;
 
                 return true;
             }
@@ -259,7 +260,6 @@ public class CpuService : ICpuService
 
             _activeDocumentService.Documents.Add(isrFile);
             _activeDocumentService.SelectedDocument = isrFile;
-            _fileViewModel = isrFile;
             return true;
         }
 
@@ -269,19 +269,13 @@ public class CpuService : ICpuService
     {
         MemorySection? section = GetMemorySectionByAddress(pc);
 
-        if (section == null || _fileViewModel == null || _fileViewModel.EditorInstance == null)
+        if (section == null || _activeDocumentService.SelectedDocument == null)
             return 0;
 
         bool editorChange = EditorChangedBasedOnSection(section);
 
-
         if (section != null && section.DebugSymbols != null && section.DebugSymbols.ContainsKey(pc))
-        {
-            if(editorChange)
-                InitHighlight(section.DebugSymbols[pc]);
-
             return section.DebugSymbols[pc];
-        }
 
         return 0;
     }
@@ -298,21 +292,11 @@ public class CpuService : ICpuService
     {
         return address >= section.StartAddress && address <= section.EndAddress;
     }
-    private void UpdateEditorAndHighlight(short pc)
+    private void UpdateEditorAndHighlight(short pc, bool cursorNeedsUpdate)
     {
         ushort lineNum = GetLineAndEditorNumberByPc(pc);
 
-        if (Highlight != null && _fileViewModel != null && _fileViewModel.EditorInstance != null)
-        {
-            Highlight?.SetLine(lineNum);
-        }
-    }
-    private void InitHighlight(ushort lineNum)
-    {
-        if (_fileViewModel?.EditorInstance == null) return;
-
-        Highlight = new HighlightCurrentLineBackgroundRenderer(_fileViewModel.EditorInstance, lineNum, _semiTransparentYellow);
-        _fileViewModel.EditorInstance.TextArea.TextView.BackgroundRenderers.Add(Highlight);
+        _activeDocumentService.SelectedDocument?.HighlightLine(lineNum);
     }
     private bool IsSectionIsr(MemorySection section)
     {

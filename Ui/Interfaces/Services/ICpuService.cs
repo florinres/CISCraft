@@ -6,9 +6,7 @@ namespace Ui.Interfaces.Services;
 public interface ICpuService
 {
     public List<MemorySection> MemorySections { get; set; }
-    HighlightCurrentLineBackgroundRenderer? Highlight { get; set; }
     Task LoadJsonMpm(string filePath = "", bool debug = false);
-    public void SetActiveEditor(FileViewModel fileViewModel);
     public void ResetProgram();
     public void StartDebugging();
     public void StopDebugging();

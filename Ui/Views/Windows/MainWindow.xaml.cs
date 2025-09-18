@@ -135,7 +135,6 @@ public partial class MainWindow
         if (sender is StyledAvalonEdit editor && editor.DataContext is FileViewModel vm)
         {
             vm.EditorInstance = editor;
-            _cpuService.SetActiveEditor(vm);
             _actionsBarViewModel.CanAssemble = true;
             editor.Unloaded += OnEditorUnloaded;
             if(Isrs != null && _actionsBarViewModel.IsDebugging != true)
