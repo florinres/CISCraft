@@ -8,7 +8,7 @@ namespace MainMemory.Business
     {
         private MemoryContentWrapper _memoryContent;
 
-        private static ushort s_memorySize = 1 << 16 - 1; // The size of the whole RAM (i.e 64Kb)
+        private static ushort s_memorySize = (1 << 16) - 1; // The size of the whole RAM (i.e 64Kb)
         private ushort _ivtSegment; // Interrupt Vector Table
         private ushort _userCodeSegment;
         private ushort _interruptHandlersSegment;

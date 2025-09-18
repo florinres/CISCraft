@@ -155,19 +155,22 @@ public class CpuService : ICpuService
     }
     public void TriggerInterrupt(ISR isr)
     {
-        _cpu.SetInterruptFlag(1);
         switch (isr.Name)
         { 
             case "ACLOW":
+                _cpu.SetInterruptFlag(1);
                 _cpu.Registers[Exceptions.ACLOW] = true;
                 break;
             case "CIL":
+                _cpu.SetInterruptFlag(1);
                 _cpu.Registers[Exceptions.CIL] = true;
                 break;
             case "Reserved0":
+                _cpu.SetInterruptFlag(1);
                 _cpu.Registers[Exceptions.Reserved0] = true;
                 break;
             case "Reserved1":
+                _cpu.SetInterruptFlag(1);
                 _cpu.Registers[Exceptions.Reserved1] = true;
                 break;
             case "IRQ0":
