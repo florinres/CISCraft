@@ -255,6 +255,14 @@ namespace CPU.Business
             {
                 Registers[(GPR)i] = 0;
             }
+            for (int i = 0; i <= (int)IRQs.IRQ3; i++)
+            {
+                Registers[(IRQs)i] = false;
+            }
+            for (int i = 0; i <= (int)Exceptions.Reserved1; i++)
+            {
+                Registers[(Exceptions)i] = false;
+            }
             Registers[REGISTERS.ONES] = -1;
             Registers[REGISTERS.SP] = 0x200;
             Registers[REGISTERS.PC] = _userCodeStart;
