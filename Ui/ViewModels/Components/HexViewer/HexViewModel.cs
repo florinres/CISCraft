@@ -1,12 +1,14 @@
+using MainMemory.Business;
+using MainMemory.Business.Models;
 using System.Buffers.Binary;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using MainMemory.Business;
-using MainMemory.Business.Models;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
+using Ui.Models;
+using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 
 namespace Ui.ViewModels.Components.HexViewer;
@@ -14,7 +16,8 @@ namespace Ui.ViewModels.Components.HexViewer;
 public partial class HexViewModel : ToolViewModel, IHexViewModel
 {
     [ObservableProperty] public override partial string? Title { get; set; } = "HexViewer";
-    [ObservableProperty] private string dataStringVisual = "Hexadecimal";
+    [ObservableProperty]
+    public partial string DataStringVisual { get; set; } = "Hexadecimal";
     private readonly IAssemblerService _assemblerService;
     private readonly MemoryContentWrapper _memoryContentWrapper;
     private readonly IMainMemory _mainMemory;
@@ -88,22 +91,21 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
         HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
         IsElementReadyToRender = true;
     }
-
-    [RelayCommand]
-    private void ChangeToHex()
+    public void SetNumberFormat(NumberFormat format)
     {
-        DataStringVisual = "Hexadecimal";
-    }
-
-    [RelayCommand]
-    private void ChangeToDecimal()
-    {
-        DataStringVisual = "Decimal";
-    }
-
-    [RelayCommand]
-    private void ChangeToBinary()
-    {
-        DataStringVisual = "Binary";
+        switch (format)
+        {
+            case NumberFormat.Hex:
+                DataStringVisual = "Hexadecimal";
+                break;
+            case NumberFormat.Decimal:
+                DataStringVisual = "Decimal";
+                break;
+            case NumberFormat.Binary:
+                DataStringVisual = "Binary";
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(format), format, null);
+        }
     }
 }

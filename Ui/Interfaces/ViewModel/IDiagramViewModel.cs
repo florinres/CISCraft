@@ -1,4 +1,6 @@
+using Ui.Models;
 using Ui.ViewModels.Components.Diagram;
+using Ui.ViewModels.Components.MenuBar;
 
 namespace Ui.Interfaces.ViewModel;
 
@@ -34,4 +36,5 @@ public interface IDiagramViewModel : IToolViewModel
     BitBlockViewModel SContext { get; }
     BitBlockViewModel VContext { get; }
     void ResetHighlight();
+    public void SetNumberFormat(NumberFormat format);
 }

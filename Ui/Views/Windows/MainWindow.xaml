@@ -63,28 +63,6 @@
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
                     </ui:MenuItem>
 
-                    <ui:MenuItem Header="Tools">
-                        <MenuItem
-                            Header="Properties"
-                            IsCheckable="True"
-                            IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}"
-                            Command="{Binding MenuBar.ShowFileStatsCommand}" />
-                        <MenuItem
-                            Header="Diagram"
-                            IsCheckable="True"
-                            IsChecked="{Binding Workspace.ActiveDocumentsService.Diagram.IsVisible, Mode=TwoWay}"
-                            Command="{Binding MenuBar.ShowDiagramCommand}" />
-                        <MenuItem
-                            Header="HexViewer"
-                            IsCheckable="True"
-                            IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
-                            Command="{Binding MenuBar.ShowHexViewerCommand}" />
-                        <MenuItem
-                            Header="Microprogram"
-                            IsCheckable="True"
-                            IsChecked="{Binding Workspace.ActiveDocumentsService.Microprogram.IsVisible, Mode=TwoWay}"
-                            Command="{Binding MenuBar.ShowMicroprogramCommand}" />
-                    </ui:MenuItem>
                     <ui:MenuItem Header="Edit">
                         <menuBar:LayoutControl ViewModel="{Binding MenuBar.LayoutControl}"/>
                         <MenuItem Header="Theme">
@@ -117,7 +95,40 @@
                         </MenuItem>
                         <MenuItem Header="Edit Interrupts" x:Name="EditInterruptsMenu"/>
                     </ui:MenuItem>
-                    <ui:MenuItem Header="View" />
+                    <ui:MenuItem Header="View">
+                        <MenuItem Header="Base">
+                            <MenuItem Header="Hex"
+                                 Command="{Binding MenuBar.SetNumberFormatCommand}"
+                                 CommandParameter="{x:Static model:NumberFormat.Hex}" />
+                            <MenuItem Header="Decimal"
+                              Command="{Binding MenuBar.SetNumberFormatCommand}"
+                              CommandParameter="{x:Static model:NumberFormat.Decimal}" />
+                            <MenuItem Header="Binary"
+                              Command="{Binding MenuBar.SetNumberFormatCommand}"  
+                              CommandParameter="{x:Static model:NumberFormat.Binary}" />
+                        </MenuItem>
+
+                         <MenuItem
+                            Header="Properties"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.FileStats.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowFileStatsCommand}" />
+                        <MenuItem
+                            Header="Diagram"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.Diagram.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowDiagramCommand}" />
+                        <MenuItem
+                            Header="HexViewer"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.HexViewer.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowHexViewerCommand}" />
+                        <MenuItem
+                            Header="Microprogram"
+                            IsCheckable="True"
+                            IsChecked="{Binding Workspace.ActiveDocumentsService.Microprogram.IsVisible, Mode=TwoWay}"
+                            Command="{Binding MenuBar.ShowMicroprogramCommand}" />
+                    </ui:MenuItem>
                     <ui:MenuItem Header="Help">
                         <MenuItem Command="{Binding ActionsBar.OpenReferenceManualCommand}" Header="Reference Manual"/>
                         <MenuItem Command="{Binding ActionsBar.OpenDevGuideCommand}" Header="Developer's Guide"/>
