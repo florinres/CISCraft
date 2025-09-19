@@ -141,41 +141,6 @@ namespace Ui.ViewModels.Components.MenuBar
 
             DocumentService.Documents.Add(doc);
             DocumentService.SelectedDocument ??= doc;
-
-            _actionsBarViewModel.IsInterruptSaveButtonVisible = true;
-        }
-        public static void closeDocument(FileViewModel file)
-        {
-            string filePath = file.FilePath;
-            if (!File.Exists(filePath))
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    "Fișierul nu este salvat. Dorești să îl salvezi înainte de închidere?",
-                    "Atenție",
-                    MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Warning
-                );
-                if (result == MessageBoxResult.Yes)
-                {
-                    var saveFileDialog = new SaveFileDialog
-                    {
-                        Title = "Salvează fișier",
-                        Filter = "Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt",
-                        DefaultExt = "asm",
-                        AddExtension = true,
-                        FileName = file.Title,
-                    };
-                    if (saveFileDialog.ShowDialog() == true)
-                    {
-                        File.WriteAllText(saveFileDialog.FileName, file.Content);
-                    }
-                }
-                else if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
-                files.Remove(file);
-            }
         }
     }
 }

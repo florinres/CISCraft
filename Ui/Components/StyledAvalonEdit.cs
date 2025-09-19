@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit;
 using Ui.Helpers;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using System.Windows.Input;
 
 namespace Ui.Components;
 
@@ -16,6 +17,12 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
             new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                 OnTextChanged));
 
+    // Add a RoutedCommand for Save
+    public static readonly RoutedCommand SaveCommand = new RoutedCommand(
+        "Save", 
+        typeof(StyledAvalonEdit),
+        new InputGestureCollection { new KeyGesture(Key.S, ModifierKeys.Control) });
+    
     public StyledAvalonEdit()
     {
         //theming
@@ -33,8 +40,19 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
 
         //syntaxHighlighting
         SyntaxHighlighting = AvalonEditHelper.AssemblyHighlightDefinition;
+        
+        // Add command bindings
+        CommandBindings.Add(new CommandBinding(SaveCommand, ExecuteSaveCommand));
     }
-
+    
+    private void ExecuteSaveCommand(object sender, ExecutedRoutedEventArgs e)
+    {
+        // Raise a save requested event that MainWindow can listen for
+        SaveRequested?.Invoke(this, EventArgs.Empty);
+    }
+    
+    // Event that will be raised when Ctrl+S is pressed
+    public event EventHandler? SaveRequested;
 
     public new string Text
     {

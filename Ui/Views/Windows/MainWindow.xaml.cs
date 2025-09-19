@@ -1,6 +1,7 @@
-using AvalonDock;
+﻿using AvalonDock;
 using ICSharpCode.AvalonEdit;
 using MainMemory.Business;
+using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -28,6 +29,7 @@ public partial class MainWindow
     IMainMemory _mainMemory;
     IMainWindowViewModel _viewModel;
     IAssemblerService _assemblerService;
+    IActiveDocumentService _activeDocumentService;
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -41,7 +43,8 @@ public partial class MainWindow
         ICpuService cpuService,
         IActionsBarViewModel actionsBarViewModel,
         IMainMemory mainMemory,
-        IAssemblerService assemblerService
+        IAssemblerService assemblerService,
+        IActiveDocumentService activeDocumentService
     )
     {
         _viewModel = viewModel;
@@ -52,6 +55,7 @@ public partial class MainWindow
         _actionsBarViewModel = actionsBarViewModel;
         _mainMemory = mainMemory;
         _assemblerService = assemblerService;
+        _activeDocumentService = activeDocumentService;
 
         EditInterruptsMenu.Items.Clear();
         TriggerInterruptMenu.Items.Clear();
@@ -89,6 +93,9 @@ public partial class MainWindow
         //Tool visibility workaround.
         //TLDRL: AvalonDock nbeeds all docking tabs to be visible in the beggining to register them. After they are registered we can do whatever we want with them but they need to be visible in the bggining
         menuBar.SetToolsVisibilityOnAndOff();
+        
+        // Reset the layout to initialize it properly with the new titles
+        _docking.SaveLastUsedLayout();
         _docking.LoadLastUsedLayout();
     }
     private void DockManager_AnchorableClosing(object? sender, AnchorableClosingEventArgs e)
@@ -111,54 +118,131 @@ public partial class MainWindow
         _docking.SaveLastUsedLayout();
         base.OnClosing(e);
     }
-
     private void DockingManagerInstance_DocumentClosing(object sender, DocumentClosingEventArgs e)
     {
         if (e.Document.Content is FileViewModel thisFile && Isrs != null)
         {
-            bool isIsr = false;
-            foreach (var isr in Isrs)
+            if (_actionsBarViewModel.IsDebugging)
             {
-                if (thisFile.Title == isr.Name)
+                e.Cancel = true;
+                return;
+            }
+
+            if (thisFile.IsUserCode == false)
+            {
+                SaveInterrupt(thisFile);
+                _activeDocumentService.Documents.Remove(thisFile);
+                return;
+            }
+
+            string filePath = thisFile.FilePath;
+            if (!File.Exists(filePath))
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Do you want to save the file before closing?",
+                    "Warning",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning
+                );
+                if (result == MessageBoxResult.Yes)
                 {
-                    isIsr = true;
-                    break;
+                    var saveFileDialog = new SaveFileDialog
+                    {
+                        Title = "Save file",
+                        Filter = "Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt",
+                        DefaultExt = "asm",
+                        AddExtension = true,
+                        FileName = thisFile.Title,
+                    };
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        File.WriteAllText(saveFileDialog.FileName, thisFile.Content);
+                    }
+                }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
                 }
             }
-            if(!isIsr)
-                MenuBarViewModel.closeDocument(thisFile);
+            _activeDocumentService.Documents.Remove(thisFile);
         }
-        _actionsBarViewModel.IsInterruptSaveButtonVisible = false;
     }
     private void OnEditorLoaded(object sender, RoutedEventArgs e)
     {
         if (sender is StyledAvalonEdit editor && editor.DataContext is FileViewModel vm)
         {
             vm.EditorInstance = editor;
-            _actionsBarViewModel.CanAssemble = true;
-            editor.Unloaded += OnEditorUnloaded;
-            if(Isrs != null && _actionsBarViewModel.IsDebugging != true)
+
+            _actionsBarViewModel.CanAssemble = false;
+            _actionsBarViewModel.CanDebug = true;
+
+            if (((vm.IsModified == false) || vm.NeedsAssemble) && _actionsBarViewModel.IsDebugging == false)
             {
-                _actionsBarViewModel.IsInterruptSaveButtonVisible = false;
-                foreach (var isr in Isrs)
-                {
-                    if (vm.Title == isr.Name)
-                    {
-                        _actionsBarViewModel.IsInterruptSaveButtonVisible = true;
-                        break;
-                    }
-                }
+                _actionsBarViewModel.CanDebug = false;
+                _actionsBarViewModel.CanAssemble = true;
+            }
+            
+            editor.SaveRequested += (s, args) => SaveCurrentDocument(vm);
+
+            editor.Unloaded += OnEditorUnLoaded;
+        }
+    }
+    private void OnEditorUnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is StyledAvalonEdit editor && editor.DataContext is FileViewModel vm)
+        { 
+            _actionsBarViewModel.CanAssemble = false; 
+            _actionsBarViewModel.CanDebug = false;
+        }
+    }
+    private void SaveCurrentDocument(FileViewModel document)
+    {
+        if (document == null) return;
+
+        if (document.IsUserCode == false)
+        {
+            document.Title = document.Title?.Replace("*", "");
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(document.FilePath) && File.Exists(document.FilePath))
+        {
+            document.SaveToFile();
+            document.IsModified = false;
+            _actionsBarViewModel.CanAssemble = true;
+        }
+        else
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Title = "Save file",
+                Filter = "Assembly Files (*.asm)|*.asm|Text Files (*.txt)|*.txt",
+                DefaultExt = "asm",
+                AddExtension = true,
+                FileName = document.Title?.Replace("*", ""),
+            };
+            
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                document.SaveToFile(saveFileDialog.FileName);
+                document.IsModified = false;
+                _actionsBarViewModel.CanAssemble = true;
             }
         }
     }
     private void OnTextChanged(object sender, EventArgs e)
     {
-        _actionsBarViewModel.CanDebug = false;
-        _actionsBarViewModel.CanAssemble = true;
-    }
-    private void OnEditorUnloaded(object sender, EventArgs e)
-    {
         _actionsBarViewModel.CanAssemble = false;
+        _actionsBarViewModel.CanDebug = false;
+
+        if (sender is StyledAvalonEdit editor && editor.DataContext is FileViewModel vm)
+        {
+            vm.IsModified = true;
+            vm.NeedsAssemble = true;
+            if (!vm.Title.EndsWith("*"))
+                vm.Title += "*";
+        }
     }
     private void InitInterrupts()
     {
@@ -174,7 +258,6 @@ public partial class MainWindow
             _cpuService.UpdateDebugSymbols(isr.TextCode, debugSymbols, isr.ISRAddress);
         }
     }
-
     private void AddInterruptsButtonsOnUI(ISR isr)
     {
         var editInterruptMenu = new Wpf.Ui.Controls.MenuItem
@@ -202,5 +285,35 @@ public partial class MainWindow
         string json = File.ReadAllText(jsonPath);
 
         return JsonSerializer.Deserialize<List<ISR>>(json, JsonOpts) ?? new();
+    }
+    private void SaveInterrupt(FileViewModel activeFile)
+    {
+        if (Isrs is null) return;
+
+        foreach (var isr in Isrs)
+        {
+            if (isr.Name == activeFile.Title)
+            {
+                isr.TextCode = activeFile.Content;
+
+                // Update memory with object code and write debug symbols in correct memory section
+                var debugSymbols = _assemblerService.AssembleSourceCodeService(isr.TextCode, isr.ISRAddress);
+
+                _cpuService.UpdateDebugSymbols(isr.TextCode, debugSymbols, isr.ISRAddress);
+
+                // Update json
+                WriteIsrsToJson(MainWindow.Isrs);
+                break;
+            }
+        }
+
+        MenuBarViewModel.files.Remove(activeFile);
+    }
+    public void WriteIsrsToJson(List<ISR> isrs)
+    {
+        string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");
+        string jsonPath = Path.Combine(currentFolder + "Configs", "IVT.json");
+        var json = JsonSerializer.Serialize(isrs, JsonOpts);
+        File.WriteAllText(jsonPath, json);
     }
 }

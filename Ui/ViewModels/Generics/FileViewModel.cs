@@ -7,6 +7,10 @@ namespace Ui.ViewModels.Generics;
 public partial class FileViewModel : PaneViewModel
 {
     Color _semiTransparentYellow;
+    public bool IsModified = false;
+
+    [ObservableProperty]
+    public partial bool NeedsAssemble { get; set; } = true;
     private HighlightCurrentLineBackgroundRenderer? _highlight
     {
         get;

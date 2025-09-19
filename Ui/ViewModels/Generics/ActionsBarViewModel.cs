@@ -31,8 +31,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [ObservableProperty]
     public partial bool CanAssemble{ get; set; }
     [ObservableProperty]
-    public partial bool IsInterruptSaveButtonVisible { get; set; }
-    [ObservableProperty]
     public partial StepLevel StepLevel { get; set; }
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
@@ -66,7 +64,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         var debugSymbols = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content, USER_CODE_START_ADDR));
 
         _cpuService.UpdateDebugSymbols(_activeDocumentService.SelectedDocument.Content, debugSymbols, USER_CODE_START_ADDR);
-
+        
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
         CanDebug = true;
         CanAssemble = false;
@@ -135,47 +133,9 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         _cpuService.ResetProgram();
     }
     [RelayCommand]
-    private void SaveInterrupt(FileViewModel activeFile)
-    {
-        if (MainWindow.Isrs is null) return;
-
-        foreach(var isr in MainWindow.Isrs)
-        {
-            if (isr.Name == activeFile.Title)
-            {
-                isr.TextCode = activeFile.Content;
- 
-                // Update memory with object code and write debug symbols in correct memory section
-                var debugSymbols = _assemblerService.AssembleSourceCodeService(isr.TextCode, isr.ISRAddress);
-
-                _cpuService.UpdateDebugSymbols(isr.TextCode, debugSymbols, isr.ISRAddress);
-
-                // Update json
-                WriteIsrsToJson(MainWindow.Isrs);
-                IsInterruptSaveButtonVisible = false;
-                break;
-            }
-        }
-        
-        MenuBarViewModel.files.Remove(activeFile);
-    }
-    [RelayCommand]
     public void TriggerInterrupt(ISR isr)
     {
-        if (IsDebugging)
-        {
-            _cpuService.TriggerInterrupt(isr);
-            //IsDebugging = true;
-            //CanDebug = false;
-            //CanAssemble = false;
-        }
-    }
-    private void WriteIsrsToJson(List<ISR> isrs)
-    {
-        string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");
-        string jsonPath = Path.Combine(currentFolder + "Configs", "IVT.json");
-        var json = JsonSerializer.Serialize(isrs, JsonOpts);
-        File.WriteAllText(jsonPath, json);
+        _cpuService.TriggerInterrupt(isr);
     }
 
     [RelayCommand]

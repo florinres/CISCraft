@@ -15,7 +15,7 @@ namespace Ui.ViewModels.Components.HexViewer;
 
 public partial class HexViewModel : ToolViewModel, IHexViewModel
 {
-    [ObservableProperty] public override partial string? Title { get; set; } = "HexViewer";
+    [ObservableProperty] public override partial string? Title { get; set; } = "MainMemory";
     [ObservableProperty]
     public partial string DataStringVisual { get; set; } = "Hexadecimal";
     private readonly IAssemblerService _assemblerService;
