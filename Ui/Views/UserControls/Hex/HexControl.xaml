@@ -9,21 +9,6 @@
              d:DataContext="{d:DesignInstance Type=viewModel:IHexViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
-        <Button d:DataContext="{d:DesignInstance Type=hexviewer:HexViewModel}" Grid.Row="0" Grid.Column="0" Content="Hexadecimal" Command="{Binding ChangeToHexCommand}"/>
-        <Button d:DataContext="{d:DesignInstance Type=hexviewer:HexViewModel}" Grid.Row="0" Grid.Column="0" Content="Decimal" Margin="103,0,0,0" VerticalAlignment="Top" Command="{Binding ChangeToDecimalCommand}"/>
-        <Button d:DataContext="{d:DesignInstance Type=hexviewer:HexViewModel}" Grid.Column="0" Content="Binary" Margin="177,0,0,0" Command="{Binding ChangeToBinaryCommand}"/>
-
         <wpfHexaEditor:HexEditor
             Grid.Row="1"
             x:Name="HexEditorControl"

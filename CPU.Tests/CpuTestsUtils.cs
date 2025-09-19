@@ -12,7 +12,7 @@ namespace CPU.Tests
 {
     public static class CpuTestsUtils
     {
-        public const short stackPointer = 0xA;
+        public const ushort stackPointer = 0xA;
         const short MaxMemoryDump = 20;
         public static Dictionary<string, bool> CoveredMpm = new Dictionary<string, bool>();
         internal static void CapturePathAndRegisters(Cpu cpu, List<KeyValuePair<string, string>> realPath, List<Dictionary<string, int>> registerSnapshots)
@@ -164,7 +164,7 @@ namespace CPU.Tests
             {
                 cpu.Registers[(REGISTERS)i] = 0;
             }
-            cpu.Registers[REGISTERS.ONES] = -1;
+            cpu.Registers[REGISTERS.ONES] = 0xFFFF;
             cpu.Registers[REGISTERS.SP] = stackPointer;
             cpu.Registers[REGISTERS.PC] = 16;
 

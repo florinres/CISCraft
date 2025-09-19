@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using CPU.Business.Models;
 using Ui.Interfaces.ViewModel;
+using Ui.Models;
+using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 
 namespace Ui.ViewModels.Components.Diagram;
@@ -61,6 +63,38 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     public List<BaseDiagramObject> Contexts { get; set; } = [];
 
+    public void SetNumberFormat(NumberFormat format)
+    {
+        DataInContext.Format = format;
+        DataOutContext.Format = format;
+        PCContext.Format = format;
+        IVRContext.Format = format;
+        TContext.Format = format;
+        SPContext.Format = format;
+        FLAGContext.Format = format;
+        MDRContext.Format = format;
+        ADRContext.Format = format;
+        IRContext.Format = format;
+        R0Context.Format = format;
+        R1Context.Format = format;
+        R2Context.Format = format;
+        R3Context.Format = format;
+        R4Context.Format = format;
+        R5Context.Format = format;
+        R6Context.Format = format;
+        R7Context.Format = format;
+        R8Context.Format = format;
+        R9Context.Format = format;
+        R10Context.Format = format;
+        R11Context.Format = format;
+        R12Context.Format = format;
+        R13Context.Format = format;
+        R14Context.Format = format;
+        R15Context.Format = format;
+        MirContext.Format = format;
+        MarContext.Format = format;
+    }
+
     public void ResetHighlight()
     {
         foreach (var context in Contexts)
@@ -68,7 +102,6 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             context.IsHighlighted = false;
         }
     }
-
     private void SetUpContext()
     {
         // This could be done through some sort of discovery or annotations, but I don't see the point.
@@ -151,7 +184,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     private BaseDiagramObject? _lastUpdatedObject;
     
-    private void UpdateRegister(REGISTERS reg, short value)
+    private void UpdateRegister(REGISTERS reg, ushort value)
     {
         switch (reg)
         {
@@ -188,7 +221,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         }
     }
 
-    private void UpdateGpr(GPR gpr, short value)
+    private void UpdateGpr(GPR gpr, ushort value)
     {
         switch (gpr)
         {

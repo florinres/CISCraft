@@ -1,17 +1,18 @@
+using Ui.Models;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.Services;
 
 public interface ICpuService
 {
-    HighlightCurrentLineBackgroundRenderer? Highlight { get; set; }
+    public List<MemorySection> MemorySections { get; set; }
     Task LoadJsonMpm(string filePath = "", bool debug = false);
-    public void SetActiveEditor(FileViewModel fileViewModel);
     public void ResetProgram();
     public void StartDebugging();
     public void StopDebugging();
-    public void SetDebugSymbols(Dictionary<short, ushort> debugSymbols);
+    public void UpdateDebugSymbols(string code, Dictionary<short, ushort> debugSymbols, ushort sectionAddress);
     void StepMicrocommand();
     void StepMicroinstruction();
     void StepInstruction();
+    public void TriggerInterrupt(ISR isr);
 }

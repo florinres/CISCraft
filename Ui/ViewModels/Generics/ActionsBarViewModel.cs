@@ -21,8 +21,11 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     private readonly IAssemblerService _assemblerService;
     private readonly ICpuService _cpuService;
     private readonly IToolVisibilityService _toolVisibilityService;
+    const ushort USER_CODE_START_ADDR = 0x0010;
     [ObservableProperty]
     public partial bool IsDebugging { get; set; }
+    [ObservableProperty]
+    public partial bool NotDebugging { get; set; }
     [ObservableProperty]
     public partial bool CanDebug { get; set; }
     [ObservableProperty]
@@ -46,14 +49,11 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         _cpuService = cpuService;
         _toolVisibilityService = toolVisibilityService;
         IsDebugging = false;
+        NotDebugging = true;
         CanDebug = false;
         CanAssemble = false;
         StepLevel = StepLevel.Microcommand;
-        ObjectCodeGenerated += OnObjectCodeGenerated;
     }
-
-    public event EventHandler<byte[]>? ObjectCodeGenerated;
-
     [RelayCommand]
     public void SetStepLevel(StepLevel level)
     {
@@ -63,8 +63,9 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     private async Task RunAssembleSourceCodeService()
     {
         if (_activeDocumentService.SelectedDocument == null) return;
-        var objectCode = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content));
-        ObjectCodeGenerated?.Invoke(this, objectCode);
+        var debugSymbols = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content, USER_CODE_START_ADDR));
+
+        _cpuService.UpdateDebugSymbols(_activeDocumentService.SelectedDocument.Content, debugSymbols, USER_CODE_START_ADDR);
 
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
         CanDebug = true;
@@ -109,9 +110,9 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         if (_activeDocumentService.SelectedDocument != null)
         {
-            _cpuService.SetDebugSymbols(_assemblerService.DebugSymbols);
             _cpuService.StartDebugging();
             IsDebugging = true;
+            NotDebugging = false;
             CanDebug = false;
             CanAssemble = false;
         }
@@ -123,6 +124,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         {
             _cpuService.StopDebugging();
             IsDebugging = false;
+            NotDebugging = true;
             CanDebug = true;
             CanAssemble = true;
         }
@@ -142,22 +144,32 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             if (isr.Name == activeFile.Title)
             {
                 isr.TextCode = activeFile.Content;
+ 
+                // Update memory with object code and write debug symbols in correct memory section
+                var debugSymbols = _assemblerService.AssembleSourceCodeService(isr.TextCode, isr.ISRAddress);
+
+                _cpuService.UpdateDebugSymbols(isr.TextCode, debugSymbols, isr.ISRAddress);
+
+                // Update json
                 WriteIsrsToJson(MainWindow.Isrs);
                 IsInterruptSaveButtonVisible = false;
                 break;
             }
         }
-
+        
         MenuBarViewModel.files.Remove(activeFile);
     }
-    private void OnObjectCodeGenerated(object? sender, byte[] objectCode)
+    [RelayCommand]
+    public void TriggerInterrupt(ISR isr)
     {
-        if (objectCode is not [])
+        if (IsDebugging)
         {
-            _activeDocumentService.HexViewer.IsVisible = true;
+            _cpuService.TriggerInterrupt(isr);
+            //IsDebugging = true;
+            //CanDebug = false;
+            //CanAssemble = false;
         }
     }
-
     private void WriteIsrsToJson(List<ISR> isrs)
     {
         string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");

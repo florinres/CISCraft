@@ -175,7 +175,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-1, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(-1, (short)(cpu.Registers[GPR.R0]));
                 });
         }
         [TestMethod]
@@ -228,7 +228,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -1;
+            cpu.Registers[GPR.R0] = 0xFFFF;
             RunInstructionTest(
                 "Asl_AD_Test",
                 "asl r0",
@@ -243,7 +243,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-2, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(-2, (short)(cpu.Registers[GPR.R0]));
                 });
         }
         [TestMethod]
@@ -251,7 +251,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -4;
+            cpu.Registers[GPR.R0] = 0xFFFC;
             RunInstructionTest(
                 "Asr_AD_Test",
                 "asr r0",
@@ -266,7 +266,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-2, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(-2, (short)(cpu.Registers[GPR.R0]));
                 });
         }
         [TestMethod]
@@ -274,7 +274,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -1;
+            cpu.Registers[GPR.R0] = 0xFFFF;
             RunInstructionTest(
                 "Lsr_AD_Test",
                 "lsr r0",
@@ -296,7 +296,7 @@ namespace CPU.Tests
         public void Rol_AD_Test()
         {
             if (cpu == null) return;
-            cpu.Registers[GPR.R0] = -0x8000;
+            cpu.Registers[GPR.R0] = 0x8000;
             RunInstructionTest(
                 "Rol_AD_Test",
                 "rol r0",
@@ -333,14 +333,14 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-0x8000, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(0x8000, cpu.Registers[GPR.R0]);
                 });
         }
         [TestMethod]
         public void Rlc_AD_Test()
         {
             if (cpu == null) return;
-            cpu.Registers[GPR.R0] = -0x8000;
+            cpu.Registers[GPR.R0] = 0x8000;
             RunInstructionTest(
                 "Rlc_AD_Test",
                 "rlc r0",

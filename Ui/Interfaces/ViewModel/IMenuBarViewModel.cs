@@ -5,7 +5,6 @@ using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 
 namespace Ui.Interfaces.ViewModel;
-
 public interface IMenuBarViewModel
 {
     ILayoutControlViewModel LayoutControl { get; set; }
@@ -36,6 +35,8 @@ public interface IMenuBarViewModel
     ///     <see cref="MenuBarViewModel.EditISR" />.
     /// </summary>
     IRelayCommand<ISR> EditISRCommand { get; }
+    /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.SetNumberFormat"/>.</summary>
+    global::CommunityToolkit.Mvvm.Input.IRelayCommand<NumberFormat> SetNumberFormatCommand { get; }
     IRelayCommand ShowFileStatsCommand { get; }
     
     IRelayCommand ShowDiagramCommand { get; }

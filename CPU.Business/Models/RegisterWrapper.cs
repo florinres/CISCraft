@@ -4,8 +4,8 @@ namespace CPU.Business.Models;
 
 public class RegisterWrapper(int amount = 23) : ObservableObject
 {
-    private short[] _registers { get; } = new short[amount];
-    private short[] _gpr { get; } = new short[16];
+    private ushort[] _registers { get; } = new ushort[amount];
+    private ushort[] _gpr { get; } = new ushort[16];
     private bool[] _irqs { get; } = new bool[4];
     private bool[] _exceptions { get; } = new bool[4];
 
@@ -35,7 +35,7 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
         }
     }
 
-    public short this[REGISTERS index]
+    public ushort this[REGISTERS index]
     {
         get => _registers[(int)index];
         set
@@ -48,7 +48,7 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
         }
     }
 
-    public short this[GPR index]
+    public ushort this[GPR index]
     {
         get => _gpr[(int)index];
         set
@@ -84,8 +84,8 @@ public class RegisterWrapper(int amount = 23) : ObservableObject
             OnPropertyChanged(nameof(_exceptions));
         }
     }
-    public short[] Registers => _registers;
-    public short[] Gpr => _gpr;
+    public ushort[] Registers => _registers;
+    public ushort[] Gpr => _gpr;
     public bool[] Irqs => _irqs;
     public bool[] Exceptions => _exceptions;
 }

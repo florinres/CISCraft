@@ -1,10 +1,18 @@
 ﻿using System.IO;
+using System.Windows.Media;
 using Ui.Components;
 
 namespace Ui.ViewModels.Generics;
 
 public partial class FileViewModel : PaneViewModel
 {
+    Color _semiTransparentYellow;
+    private HighlightCurrentLineBackgroundRenderer? _highlight
+    {
+        get;
+        set;
+    }
+
     [ObservableProperty] public override partial string? Title { get; set; } = "Untitled";
     public FileViewModel()
     {
@@ -14,13 +22,47 @@ public partial class FileViewModel : PaneViewModel
 
     [ObservableProperty] public partial string? FilePath { get; set; }
 
-    public StyledAvalonEdit? EditorInstance { get; set; }
+    private StyledAvalonEdit? _editorInstance;
+    public StyledAvalonEdit? EditorInstance
+    {
+        get => _editorInstance;
+        set
+        {
+            if (_editorInstance == value)
+                return;
 
+            _editorInstance = value;
+
+            if (_editorInstance != null)
+            {
+                _semiTransparentYellow = Color.FromArgb(38, 255, 255, 0);
+                _highlight = new HighlightCurrentLineBackgroundRenderer(
+                    _editorInstance, 0, _semiTransparentYellow);
+
+                _editorInstance.TextArea.TextView.BackgroundRenderers.Add(_highlight);
+            }
+        }
+    }
+
+    public bool IsUserCode = false;
     public async Task LoadFromFile(string path)
     {
         FilePath = path;
         Content = await File.ReadAllTextAsync(path);
         Title = Path.GetFileName(path);
+        IsUserCode = true;
+    }
+    public void HighlightLine(int lineNumber)
+    {
+        if (_highlight == null) return;
+        _highlight.SetLine(lineNumber);
+        EditorInstance?.ScrollTo(lineNumber, 1);
+    }
+    public void ResetHighlight()
+    {
+        if (_highlight == null) return;
+        _highlight.SetLine(0);
+        EditorInstance?.ScrollTo(1, 1);
     }
 
     public void SaveToFile(string? path = null)
