@@ -478,7 +478,7 @@ namespace CPU.Business
             ushort buf = 0;
             ushort oldCarry = GetCarryFlag();
 
-            SetCarryFlag((ushort)((RBUS & -0x8000) >> 16));
+            SetCarryFlag((ushort)((RBUS & 0x8000) >> 15));
             buf = RotateLeft((ushort)RBUS, 1);
             buf &= (ushort)(buf & ~1);
             buf |= oldCarry;

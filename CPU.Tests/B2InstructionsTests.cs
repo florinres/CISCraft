@@ -175,7 +175,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-1, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(-1, (short)(cpu.Registers[GPR.R0]));
                 });
         }
         [TestMethod]
@@ -243,7 +243,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-2, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(-2, (short)(cpu.Registers[GPR.R0]));
                 });
         }
         [TestMethod]
@@ -251,7 +251,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = 0xFFC0;
+            cpu.Registers[GPR.R0] = 0xFFFC;
             RunInstructionTest(
                 "Asr_AD_Test",
                 "asr r0",
@@ -266,7 +266,7 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-2, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(-2, (short)(cpu.Registers[GPR.R0]));
                 });
         }
         [TestMethod]
@@ -296,7 +296,7 @@ namespace CPU.Tests
         public void Rol_AD_Test()
         {
             if (cpu == null) return;
-            cpu.Registers[GPR.R0] = unchecked((ushort)-0x8000);
+            cpu.Registers[GPR.R0] = 0x8000;
             RunInstructionTest(
                 "Rol_AD_Test",
                 "rol r0",
@@ -333,14 +333,14 @@ namespace CPU.Tests
                 },
                 () =>
                 {
-                    Assert.AreEqual(-0x8000, cpu.Registers[GPR.R0]);
+                    Assert.AreEqual(0x8000, cpu.Registers[GPR.R0]);
                 });
         }
         [TestMethod]
         public void Rlc_AD_Test()
         {
             if (cpu == null) return;
-            cpu.Registers[GPR.R0] = unchecked((ushort)-0x8000);
+            cpu.Registers[GPR.R0] = 0x8000;
             RunInstructionTest(
                 "Rlc_AD_Test",
                 "rlc r0",

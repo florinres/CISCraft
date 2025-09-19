@@ -554,10 +554,10 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = (1 << 16) - 1;
+            cpu.Registers[GPR.R0] = 0xFFFE;
             RunInstructionTest(
                 "Cmp_AD_AM_Test5",
-                "cmp r0, 20000",
+                "cmp r0, 32767",
                 new List<string>
                 {
                     "IFCH_0",
