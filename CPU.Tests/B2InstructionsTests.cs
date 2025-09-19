@@ -228,7 +228,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -1;
+            cpu.Registers[GPR.R0] = 0xFFFF;
             RunInstructionTest(
                 "Asl_AD_Test",
                 "asl r0",
@@ -251,7 +251,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -4;
+            cpu.Registers[GPR.R0] = 0xFFC0;
             RunInstructionTest(
                 "Asr_AD_Test",
                 "asr r0",
@@ -274,7 +274,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -1;
+            cpu.Registers[GPR.R0] = 0xFFFF;
             RunInstructionTest(
                 "Lsr_AD_Test",
                 "lsr r0",
@@ -296,7 +296,7 @@ namespace CPU.Tests
         public void Rol_AD_Test()
         {
             if (cpu == null) return;
-            cpu.Registers[GPR.R0] = -0x8000;
+            cpu.Registers[GPR.R0] = unchecked((ushort)-0x8000);
             RunInstructionTest(
                 "Rol_AD_Test",
                 "rol r0",
@@ -340,7 +340,7 @@ namespace CPU.Tests
         public void Rlc_AD_Test()
         {
             if (cpu == null) return;
-            cpu.Registers[GPR.R0] = -0x8000;
+            cpu.Registers[GPR.R0] = unchecked((ushort)-0x8000);
             RunInstructionTest(
                 "Rlc_AD_Test",
                 "rlc r0",

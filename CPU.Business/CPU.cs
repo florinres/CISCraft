@@ -519,7 +519,7 @@ namespace CPU.Business
         {
             ComputeLogicFlags();
 
-            if ((ushort)RBUS < Math.Max((ushort)SBUS, (ushort)DBUS))
+            if (RBUS < Math.Max(SBUS, DBUS))
             {
                 Registers[REGISTERS.FLAGS] |= (ushort)(1 << carryShift);
             }

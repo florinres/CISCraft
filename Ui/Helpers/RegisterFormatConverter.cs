@@ -8,7 +8,7 @@ public class RegisterFormatConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values.Length != 2 || values[0] is not (short or long or byte) || values[1] is not NumberFormat format)
+        if (values.Length != 2 || values[0] is not (ushort or long or byte) || values[1] is not NumberFormat format)
             return Binding.DoNothing;
         
         long value = System.Convert.ToInt64(values[0]);
@@ -20,7 +20,7 @@ public class RegisterFormatConverter : IMultiValueConverter
             case byte:
                 totalBits = 8;
                 break;
-            case short:
+            case ushort:
                 totalBits = 16;
                 break;
             case int:

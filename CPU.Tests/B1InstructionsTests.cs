@@ -19,7 +19,7 @@ namespace CPU.Tests
         Cpu? cpu;
         List<KeyValuePair<string, string>>? realInstructionPath;
         List<string>? expectedInstructionPath;
-        const short UserCodeStartAddress = 16;
+        const ushort UserCodeStartAddress = 16;
 
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
@@ -554,7 +554,7 @@ namespace CPU.Tests
         {
             if (cpu == null) return;
 
-            cpu.Registers[GPR.R0] = -(1<<15 - 1);
+            cpu.Registers[GPR.R0] = (1 << 16) - 1;
             RunInstructionTest(
                 "Cmp_AD_AM_Test5",
                 "cmp r0, 20000",
