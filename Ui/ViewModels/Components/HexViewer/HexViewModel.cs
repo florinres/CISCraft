@@ -46,19 +46,19 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
     private void OnSourceCodeAssembled(object? sender, byte[] code)
     {
         AssembledCode = code;
-        HexEditorStream = new MemoryStream(AssembledCode, writable: false);
+        // Don't update HexEditorStream here, let OnAssembledCodeChanged handle it
         IsElementReadyToRender = AssembledCode is { Length: > 0 };
-        RefreshHexViewFromMemory();
+        // Don't call RefreshHexViewFromMemory() here to avoid double refresh
     }
 
     partial void OnAssembledCodeChanged(byte[]? oldValue, byte[] newValue)
     {
-        HexEditorStream = new MemoryStream(newValue, 0, newValue.Length, false);
-        IsElementReadyToRender = newValue is { Length: > 0 };
+        // Use MemoryContentWrapper directly rather than creating a new stream from the assembled code
+        RefreshHexViewFromMemory();
     }
     private void OnMemoryChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is null)
+        if (e.PropertyName is null || e.PropertyName == nameof(_memoryContentWrapper.MemoryContent))
         {
             RefreshHexViewFromMemory();
             return;
@@ -80,15 +80,33 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
 
     private void RefreshHexViewFromMemory(int? index = null)
     {
-        if (HexEditorStream.CanSeek && index is not null)
+        // If we're just updating a single byte, try to do it without recreating the stream
+        if (HexEditorStream.CanWrite && index is not null)
         {
-            HexEditorStream.Position = index.Value;
-            HexEditorStream.WriteByte(_memoryContentWrapper[index.Value]);
-            HexEditorStream.Position = index.Value;
+            try
+            {
+                HexEditorStream.Position = index.Value;
+                HexEditorStream.WriteByte(_memoryContentWrapper[index.Value]);
+                HexEditorStream.Position = 0; // Reset position
+                return; // Exit early to avoid creating a new stream
+            }
+            catch (Exception)
+            {
+                // If updating a single byte fails, fall back to recreating the stream
+            }
         }
 
-        HexEditorStream?.Dispose();
-        HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
+        // Only dispose and recreate the stream if necessary
+        using (var oldStream = HexEditorStream)
+        {
+            // Create new stream
+            var newStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
+            
+            // Assign new stream first before potentially disposing the old one
+            // This ensures we never have a null stream
+            HexEditorStream = newStream;
+        }
+        
         IsElementReadyToRender = true;
     }
     public void SetNumberFormat(NumberFormat format)

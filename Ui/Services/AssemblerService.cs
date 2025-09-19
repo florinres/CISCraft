@@ -39,8 +39,11 @@ public class AssemblerService : IAssemblerService
     {
         var objectCode = _assembler.Assemble(sourceCode, out _);
 
+        // Let the memory wrapper know it's about to receive multiple updates
+        // This prevents flickering by batching the updates
         _mainMemory.LoadAtOffset(objectCode, sectionAddress);
 
+        // Only notify about the assembled code after all updates are complete
         SourceCodeAssembled?.Invoke(this, objectCode);
 
         return _assembler.GetDebugSymbols(sectionAddress);

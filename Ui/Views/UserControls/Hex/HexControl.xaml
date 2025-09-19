@@ -12,7 +12,7 @@
         <wpfHexaEditor:HexEditor
             Grid.Row="1"
             x:Name="HexEditorControl"
-            Stream="{Binding HexEditorStream, Mode=OneWay}"
+            Stream="{Binding HexEditorStream, Mode=OneWay, IsAsync=True}"
             Width="Auto"
             Height="Auto"
             Margin="2"

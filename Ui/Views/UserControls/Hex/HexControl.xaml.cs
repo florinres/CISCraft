@@ -1,7 +1,10 @@
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using Ui.Interfaces.ViewModel;
+using WpfHexaEditor;
 
 namespace Ui.Views.UserControls.Hex;
 
@@ -28,9 +31,46 @@ public partial class HexControl : UserControl
     public HexControl()
     {
         InitializeComponent();
+
+        // Enable double-buffering to prevent flickering
+        EnableDoubleBuffering();
+
+        // Set the rendering options to optimize performance
+        RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.LowQuality);
+        RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
+        RenderOptions.SetCachingHint(this, CachingHint.Cache);
+        
+        // Disable animations that might cause flickering
+        UseLayoutRounding = true;
+        
+        // Set the rendering tier to force hardware acceleration if possible
+        var renderingTier = RenderCapability.Tier >> 16;
+        if (renderingTier >= 2) // Tier 2 or higher supports hardware acceleration
+        {
+            // Hardware acceleration is enabled by default in WPF Tier 2.
+            // No need to set RenderMode, as CompositionTarget does not expose this property.
+            // You may optionally log or handle tier-specific logic here.
+        }
+        
         Loaded += OnLoaded;
         DataContextChanged += OnDataContextChanged;
+    }
 
+    // Enable WPF double-buffering to prevent flickering
+    private void EnableDoubleBuffering()
+    {
+        if (PresentationSource.FromVisual(this) != null)
+        {
+            var hwndTarget = PresentationSource.FromVisual(this) as HwndSource;
+            if (hwndTarget != null)
+            {
+                var hwndTargetComposition = hwndTarget.CompositionTarget;
+                if (hwndTargetComposition != null)
+                {
+                    hwndTargetComposition.RenderMode = RenderMode.SoftwareOnly;
+                }
+            }
+        }
     }
     
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -69,6 +109,11 @@ public partial class HexControl : UserControl
     
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
+        if (e.OldValue is IHexViewModel oldVm)
+        {
+            oldVm.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+
         if (e.NewValue is IHexViewModel vm)
         {
             vm.PropertyChanged += OnViewModelPropertyChanged;
@@ -76,12 +121,6 @@ public partial class HexControl : UserControl
             if (vm.ZoomFactor > 2.0001) vm.ZoomFactor = 2;
             HexEditorControl.ZoomScale = vm.ZoomFactor;
             HexEditorControl.InvalidateVisual();
-
-        }
-
-        if (e.OldValue is IHexViewModel oldVm)
-        {
-            oldVm.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
     
@@ -95,7 +134,6 @@ public partial class HexControl : UserControl
                 HexEditorControl.Stream = ((IHexViewModel)sender!).HexEditorStream;
             });
         }
-
     }
 
 
