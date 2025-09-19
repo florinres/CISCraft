@@ -244,7 +244,7 @@ public class CpuService : ICpuService
         // If the document is already open, select it
         foreach (var doc in _activeDocumentService.Documents)
         {
-            if ((doc.Title == section.Name) && (doc.IsUserCode && section.Name == "User_Code" && !_activeDocumentService.SelectedDocument.IsUserCode))
+            if ((doc.Title == section.Name))
             {
                 _activeDocumentService.SelectedDocument = doc;
 

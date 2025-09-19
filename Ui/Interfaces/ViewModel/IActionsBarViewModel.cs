@@ -42,6 +42,7 @@ namespace Ui.Interfaces.ViewModel
         /// </summary>
         IRelayCommand<ISR> TriggerInterruptCommand { get; }
         bool IsDebugging { get; set; }
+        bool NotDebugging { get; set; }
         bool CanDebug { get; set; }
         bool CanAssemble { get; set; }
         bool IsInterruptSaveButtonVisible { get; set; }

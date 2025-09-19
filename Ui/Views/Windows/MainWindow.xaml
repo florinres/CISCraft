@@ -9,6 +9,8 @@
     xmlns:wpfui="clr-namespace:AvalonDock.Themes.WPFUI;assembly=AvalonDock.Themes.WPFUI"
     xmlns:system="clr-namespace:System;assembly=netstandard"
     xmlns:viewmodels="clr-namespace:Ui.ViewModels.Generics"
+    xmlns:menuBarViewModel="clr-namespace:Ui.ViewModels.Components.MenuBar"
+    xmlns:model="clr-namespace:Ui.Models"
     xmlns:helpers="clr-namespace:Ui.Helpers"
     xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
     xmlns:diagram1="clr-namespace:Ui.Views.UserControls.Diagram"
@@ -31,7 +33,7 @@
     Loaded="MainWindow_OnLoaded">
     <Window.Resources>
         <helpers:ThemeToIndexConverter x:Key="ThemeToIndexConverter" />
-        <helpers:EnumEqualsConverter x:Key="EnumEqualsConverter" />
+        <helpers:EnumEqualsConverter    x:Key="EnumEqualsConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -53,11 +55,14 @@
             <ui:TitleBar.Header>
                 <Menu Height="48" Margin="0 -9 0 0">
                     <ui:MenuItem Header="File">
-                        <MenuItem Command="{Binding MenuBar.NewDocumentCommand}" Header="New" />
-                        <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open" />
+                        <MenuItem 
+                            Command="{Binding MenuBar.NewDocumentCommand}" Header="New" 
+                            IsEnabled="{Binding ActionsBar.NotDebugging}"/>
+                        <MenuItem Command="{Binding MenuBar.OpenDocumentCommand}" Header="Open"
+                                  IsEnabled="{Binding ActionsBar.NotDebugging}"/>
                         <Separator />
-                        <MenuItem Command="{Binding ActionsBar.LoadJsonCommand}" Header="Load MPM" />
-                        <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.SaveAsCommand}"
+                        <MenuItem Command="{Binding ActionsBar.LoadJsonCommand}" IsEnabled="{Binding ActionsBar.NotDebugging}" Header="Load MPM" />
+                        <MenuItem Command="{Binding ActiveDocument.SaveAsCommand}"
                                   Header="Save As..." />
                         <Separator />
                         <MenuItem IsEnabled="False" Command="{Binding ActiveDocument.CloseCommand}" Header="Close" />
@@ -140,7 +145,7 @@
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}" x:Name="ActionBarStackPanel">
+        <StackPanel Grid.Row="1" Height="36" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}" x:Name="ActionBarStackPanel">
 
             <ui:Button
                 VerticalAlignment="Top"

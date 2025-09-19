@@ -25,6 +25,8 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [ObservableProperty]
     public partial bool IsDebugging { get; set; }
     [ObservableProperty]
+    public partial bool NotDebugging { get; set; }
+    [ObservableProperty]
     public partial bool CanDebug { get; set; }
     [ObservableProperty]
     public partial bool CanAssemble{ get; set; }
@@ -47,6 +49,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         _cpuService = cpuService;
         _toolVisibilityService = toolVisibilityService;
         IsDebugging = false;
+        NotDebugging = true;
         CanDebug = false;
         CanAssemble = false;
         StepLevel = StepLevel.Microcommand;
@@ -109,6 +112,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         {
             _cpuService.StartDebugging();
             IsDebugging = true;
+            NotDebugging = false;
             CanDebug = false;
             CanAssemble = false;
         }
@@ -120,6 +124,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         {
             _cpuService.StopDebugging();
             IsDebugging = false;
+            NotDebugging = true;
             CanDebug = true;
             CanAssemble = true;
         }
@@ -160,9 +165,9 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         if (IsDebugging)
         {
             _cpuService.TriggerInterrupt(isr);
-            IsDebugging = true;
-            CanDebug = false;
-            CanAssemble = false;
+            //IsDebugging = true;
+            //CanDebug = false;
+            //CanAssemble = false;
         }
     }
     private void WriteIsrsToJson(List<ISR> isrs)
