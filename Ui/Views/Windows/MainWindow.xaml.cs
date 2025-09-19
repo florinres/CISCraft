@@ -91,15 +91,21 @@ public partial class MainWindow
         menuBar.SetToolsVisibilityOnAndOff();
         _docking.LoadLastUsedLayout();
     }
-
     private void DockManager_AnchorableClosing(object? sender, AnchorableClosingEventArgs e)
     {
-        if (e.Anchorable.Content is not IToolViewModel toolVm) return;
-        
-        toolVm.IsVisible = false;
-        e.Cancel = true;
-    }
+        System.Diagnostics.Debug.WriteLine($"Closing tool: {e.Anchorable.Title}");
 
+        if (e.Anchorable.Content is IToolViewModel tool)
+        {
+            System.Diagnostics.Debug.WriteLine($"Before: IsVisible = {tool.IsVisible}");
+
+            tool.IsVisible = false;
+            e.Anchorable.Hide();
+
+            System.Diagnostics.Debug.WriteLine($"After: IsVisible = {tool.IsVisible}");
+            e.Cancel = true;
+        }
+    }
     protected override void OnClosing(CancelEventArgs e)
     {
         _docking.SaveLastUsedLayout();
