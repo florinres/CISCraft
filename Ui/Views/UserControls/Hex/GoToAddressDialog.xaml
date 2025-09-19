@@ -1,0 +1,48 @@
+<Window x:Class="Ui.Views.UserControls.Hex.GoToAddressDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:local="clr-namespace:Ui.Views.UserControls.Hex"
+        mc:Ignorable="d"
+        Title="Go To Address" Height="200" Width="360"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="Enter address in hexadecimal:" Margin="0,0,0,12" FontSize="14"/>
+        
+        <TextBox Grid.Row="1" x:Name="AddressTextBox" Margin="0,0,0,24" Padding="8,6" FontSize="14"
+                 ToolTip="Enter hexadecimal address (e.g. 0x1000 or 1000)">
+            <TextBox.Text>
+                <Binding Path="Address" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:HexadecimalValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Grid.Column="1" Content="Cancel" Width="90" Height="32" Margin="0,0,12,0" 
+                    Click="CancelButton_Click" IsCancel="True"/>
+            <Button Grid.Column="2" Content="Go" Width="90" Height="32" 
+                    Click="GoButton_Click" IsDefault="True"/>
+        </Grid>
+    </Grid>
+</Window>

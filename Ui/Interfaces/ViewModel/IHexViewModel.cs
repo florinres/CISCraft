@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.IO;
+using System.Windows.Input;
 using Ui.Models;
 using Ui.ViewModels.Components.HexViewer;
 using Ui.ViewModels.Components.MenuBar;
@@ -20,5 +22,17 @@ public interface IHexViewModel : IToolViewModel
     bool IsElementReadyToRender { get; set; }
 
     /// <inheritdoc cref="HexViewModel._hexEditorStream"/>
-    System.IO.Stream? HexEditorStream { get; set; }
+    Stream? HexEditorStream { get; set; }
+    
+    /// <summary>
+    /// Command to navigate to a specific memory address
+    /// </summary>
+    ICommand GotoAddressCommand { get; }
+    
+    /// <summary>
+    /// Navigate to a specific memory address
+    /// </summary>
+    /// <param name="address">Address to navigate to</param>
+    /// <returns>True if navigation was successful</returns>
+    bool GotoAddress(long address);
 }

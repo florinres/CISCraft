@@ -40,8 +40,25 @@
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
             ZoomScale="{Binding ZoomFactor, Mode=TwoWay}"
             ReadOnlyMode="True"
-            AllowZoom="True"
-            />
-
+            AllowZoom="True">
+            
+            <!-- Add Context Menu for right-click options -->
+            <wpfHexaEditor:HexEditor.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Go to Address (Ctrl+F)" Command="{Binding GotoAddressCommand}" InputGestureText="Ctrl+F"/>
+                </ContextMenu>
+            </wpfHexaEditor:HexEditor.ContextMenu>
+            
+        </wpfHexaEditor:HexEditor>
+        
+        <!-- Add an overlay tooltip to show Ctrl+F shortcut when the control is first loaded -->
+        <!-- <Border x:Name="ShortcutOverlay" 
+                Background="{DynamicResource SystemAccentColorLight1}"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="10" Padding="8,4"
+                CornerRadius="4"
+                Visibility="Collapsed">
+            <TextBlock Text="Press Ctrl+F to go to address" Foreground="White" FontWeight="SemiBold" />
+        </Border> -->
     </Grid>
 </UserControl>
