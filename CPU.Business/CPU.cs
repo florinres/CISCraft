@@ -97,9 +97,6 @@ namespace CPU.Business
             if (BPO)
             {
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
-                Debug.WriteLine("SBUS= " + SBUS.ToString());
-                Debug.WriteLine("DBUS= " + DBUS.ToString());
-                Debug.WriteLine("RBUS= " + RBUS.ToString());
                 bool[] irqs = new bool[]
                 {
                     Registers[IRQs.IRQ0],

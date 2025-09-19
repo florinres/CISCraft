@@ -386,7 +386,6 @@ namespace CPU.Business
                     MemoryEvent?.Invoke(getMirMemOpField());
                     break;
                 case 6:
-                    Debug.WriteLine("Next MAR= " + _registersWrapper.MAR);
                     break;
 			}
             _mirIndex++;
