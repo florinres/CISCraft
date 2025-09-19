@@ -177,13 +177,13 @@ public class CpuService : ICpuService
                 _cpu.Registers[IRQs.IRQ0] = true;
                 break;
             case "IRQ1":
-                _cpu.Registers[IRQs.IRQ2] = true;
+                _cpu.Registers[IRQs.IRQ1] = true;
                 break;
             case "IRQ2":
                 _cpu.Registers[IRQs.IRQ2] = true;
                 break;
             case "IRQ3":
-                _cpu.Registers[IRQs.IRQ2] = true;
+                _cpu.Registers[IRQs.IRQ3] = true;
                 break;
         }
     }
