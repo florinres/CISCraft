@@ -125,13 +125,14 @@
                         <MenuItem Command="{Binding ActionsBar.OpenISACommand}" Header="Instruction Set Architecture"/>
                     </ui:MenuItem>
                 </Menu>
-                
+
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}" x:Name="ActionBarStackPanel">
 
             <ui:Button
+                Command="{Binding RunCodeCommand}"
                 VerticalAlignment="Top"
                 ToolTip="Run"
                 Height="30"

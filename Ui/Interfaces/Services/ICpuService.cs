@@ -11,6 +11,7 @@ public interface ICpuService
     public void StartDebugging();
     public void StopDebugging();
     public void SetDebugSymbols(Dictionary<short, ushort> debugSymbols);
+    public ushort GetIR();
     void StepMicrocommand();
     void StepMicroinstruction();
     void StepInstruction();

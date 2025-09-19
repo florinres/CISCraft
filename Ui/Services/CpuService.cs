@@ -165,4 +165,7 @@ public class CpuService : ICpuService
     {
         _debugSymbls = debugSymbols;
     }
+    public ushort GetIR(){
+        return (ushort)_cpu.Registers[REGISTERS.IR];
+    }
 }
