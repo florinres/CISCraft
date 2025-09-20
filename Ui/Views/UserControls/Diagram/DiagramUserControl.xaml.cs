@@ -188,7 +188,7 @@ public partial class DiagramUserControl : UserControl
             // Determine start and end points from edges
             Point ioEdge, sieEdge;
 
-            double horizontalInset = 40; // how much the line moves horizontally before going vertical
+            double horizontalInset = 30; // how much the line moves horizontally before going vertical
 
             if (io == IO0) // leftmost → S-shape
                 ioEdge = new Point(ioBounds.Right, ioBounds.Top + ioBounds.Height / 2);
@@ -217,7 +217,7 @@ public partial class DiagramUserControl : UserControl
             }
             else // IO0 or IO3 → S-shaped
             {
-                double offset = 60;
+                double offset = 40;
                 connector.Points = new PointCollection
                 {
                     ioEdge,
@@ -341,8 +341,8 @@ public partial class DiagramUserControl : UserControl
             Points =
             [
                 connectionPointsAdress.MidRight with { X = connectionPointsAdress.MidRight.X - 2},
-                connectionPointsAdress.MidRight with { X = connectionPointsAdress.MidRight.X + 20},
-                connectionPointsAdress.TopOffsetPlus with { Y = connectionPointsAdress.TopOffsetPlus.Y - offset - 2, X = connectionPointsAdress.RightMinusOffset.X + 20},
+                connectionPointsAdress.MidRight with { X = connectionPointsAdress.MidRight.X + 30},
+                connectionPointsAdress.TopOffsetPlus with { Y = connectionPointsAdress.TopOffsetPlus.Y - offset - 2, X = connectionPointsAdress.RightMinusOffset.X + 30},
                 new(connectionPointsAdr.RightPlusOffset.X + offset, connectionPointsAdress.TopOffsetPlus.Y - offset - 2),
                 connectionPointsAdr.RightPlusOffset with { X = connectionPointsAdr.RightPlusOffset.X + offset }
             ],
@@ -392,8 +392,8 @@ public partial class DiagramUserControl : UserControl
             Points =
             [
                 connectionPointsDataIn.MidRight with { X = connectionPointsDataIn.MidRight.X - 2},
-                connectionPointsDataIn.MidRight with { X = connectionPointsDataIn.MidRight.X + 20},
-                connectionPointsDataIn.TopOffsetPlus with { Y = connectionPointsMdr.TopOffsetPlus.Y - offset, X = connectionPointsDataIn.RightMinusOffset.X + 20},
+                connectionPointsDataIn.MidRight with { X = connectionPointsDataIn.MidRight.X + 30},
+                connectionPointsDataIn.TopOffsetPlus with { Y = connectionPointsMdr.TopOffsetPlus.Y - offset, X = connectionPointsDataIn.RightMinusOffset.X + 30},
                 new Point(connectionPointsMdr.RightMinusOffset.X + offset, connectionPointsMdr.TopOffsetPlus.Y - offset),
                 connectionPointsMdr.RightMinusOffset with { X = connectionPointsMdr.RightMinusOffset.X + offset }
             ],
@@ -486,7 +486,7 @@ public partial class DiagramUserControl : UserControl
             Points = new PointCollection
             {
                 aluPts.MidBottom with { Y = aluPts.MidBottom.Y - 16},
-                aluPts.MidBottom with { Y = aluPts.MidBottom.Y},
+                aluPts.MidBottom with { Y = aluPts.MidBottom.Y + 10},
             }
         };
         Panel.SetZIndex(conn, -1);
