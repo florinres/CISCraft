@@ -72,27 +72,6 @@
 
                     <ui:MenuItem Header="Edit">
                         <menuBar:LayoutControl ViewModel="{Binding MenuBar.LayoutControl}"/>
-                        <MenuItem Header="Theme">
-                            <MenuItem Header="Light"
-                                      IsCheckable="True"
-                                      IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
-                                      Command="{Binding Settings.ChangeThemeCommand}"
-                                      CommandParameter="{x:Static appearance:ApplicationTheme.Light}">
-                                <MenuItem.Icon>
-                                    <ui:SymbolIcon Symbol="BrightnessHigh24" />
-                                </MenuItem.Icon>
-                            </MenuItem>
-
-                            <MenuItem Header="Dark"
-                                      IsCheckable="true"
-                                      IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
-                                      Command="{Binding Settings.ChangeThemeCommand}"
-                                      CommandParameter="{x:Static appearance:ApplicationTheme.Dark}">
-                                <MenuItem.Icon>
-                                    <ui:SymbolIcon Symbol="DarkTheme24" />
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </MenuItem>
                         <MenuItem Header="Step Level">
                             <MenuItem Header="Microcommand"
                                      IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Microcommand}"  
