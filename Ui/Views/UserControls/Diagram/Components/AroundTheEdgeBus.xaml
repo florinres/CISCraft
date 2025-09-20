@@ -10,7 +10,7 @@
     <Grid>
         <!-- Black outer path -->
         <Path x:Name="AroundTheEdgePath"
-                Stroke="Black"
+              Stroke="{DynamicResource BusStrokeBrush}"
               StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"
@@ -27,7 +27,7 @@
         </Path>
 
         <!-- Inner gray path (slightly thinner, sits on top) -->
-        <Path Stroke="Gray"
+        <Path Stroke="{DynamicResource BusFillBrush}"
               StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InnerThicknessConverter}}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"

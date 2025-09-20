@@ -9,13 +9,14 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Rectangle x:Name="ActualVisualElement"
-                   Fill="Gray"
-                   Stroke="Black"
+    <Rectangle x:Name="ActualVisualElement"
+           Fill="{DynamicResource BusFillBrush}"
+           Stroke="{DynamicResource BusStrokeBrush}"
                    StrokeThickness="1"
                    Width="{Binding LineWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
                    Height="{Binding LineHeight, RelativeSource={RelativeSource AncestorType=UserControl}}"
                    VerticalAlignment="Center"
-                   RadiusX="4" RadiusY="4"/>
+                   RadiusX="4"
+                   RadiusY="4"/>
     </Grid>
 </UserControl>

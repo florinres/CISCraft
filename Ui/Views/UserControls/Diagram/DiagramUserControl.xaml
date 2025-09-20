@@ -528,7 +528,7 @@
                     Grid.RowSpan="3"
                     Grid.ColumnSpan="3"
                     Panel.ZIndex="999"
-                    Margin="0,-12,0,12"
+                    Margin="0,-10,0,10"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center" />
 

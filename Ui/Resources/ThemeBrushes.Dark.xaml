@@ -13,4 +13,8 @@
 
     <!-- Text for diagram labels -->
     <SolidColorBrush x:Key="DiagramTextBrush" Color="#FFFFFF" />
+
+    <!-- Bus visuals -->
+    <SolidColorBrush x:Key="BusFillBrush" Color="#808080" />
+    <SolidColorBrush x:Key="BusStrokeBrush" Color="#000000" />
 </ResourceDictionary>
