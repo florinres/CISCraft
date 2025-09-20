@@ -89,10 +89,70 @@ public partial class HexControl : UserControl
     
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        PatchStatusBarGridBackground(HexEditorControl);
+        // Hide the status bar grid
+        HideStatusBar(HexEditorControl);
         
         // Show the shortcut overlay temporarily to educate users about the Ctrl+F shortcut
         //ShowShortcutOverlay();
+    }
+    
+    private void HideStatusBar(DependencyObject root)
+    {
+        // Wait for the visual tree to be completely built
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            // Hide the status bar
+            var statusBarGrid = FindVisualChild<Grid>(root, "StatusBarGrid");
+            if (statusBarGrid != null)
+            {
+                statusBarGrid.Visibility = Visibility.Collapsed;
+            }
+            
+            // Remove all borders from the control and its children
+            RemoveAllBorders(root);
+            
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+    
+    /// <summary>
+    /// Recursively removes borders from all controls in the visual tree
+    /// </summary>
+    private void RemoveAllBorders(DependencyObject parent)
+    {
+        // Set BorderThickness to 0 for any Control
+        if (parent is Control control)
+        {
+            control.BorderThickness = new Thickness(0);
+        }
+        
+        // Set BorderThickness to 0 for any Border element
+        if (parent is Border border)
+        {
+            border.BorderThickness = new Thickness(0);
+        }
+        
+        // Process all children recursively
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+            RemoveAllBorders(child);
+        }
+    }
+    
+    private T? FindVisualChild<T>(DependencyObject parent, string name) where T : FrameworkElement
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+            
+            if (child is T typedChild && typedChild.Name == name)
+                return typedChild;
+                
+            T? result = FindVisualChild<T>(child, name);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
     
     //private void ShowShortcutOverlay()
@@ -116,34 +176,8 @@ public partial class HexControl : UserControl
     //    }
     //}
     
-    private void PatchStatusBarGridBackground(DependencyObject root)
-    {
-        var background = TryFindResource("ApplicationBackgroundBrush") as Brush;
-        if (background is null) return;
-
-        Grid? statusBarGrid = FindChildByName<Grid>(root, "StatusBarGrid");
-        if (statusBarGrid is not null)
-        {
-            statusBarGrid.Background = background;
-        }
-    }
-
-    private T? FindChildByName<T>(DependencyObject parent, string name) where T : FrameworkElement
-    {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-
-            if (child is T typedChild && typedChild.Name == name)
-                return typedChild;
-
-            // Recurse
-            T? result = FindChildByName<T>(child, name);
-            if (result != null)
-                return result;
-        }
-        return null;
-    }
+    // We've removed the PatchStatusBarGridBackground method since we're hiding the status bar completely
+    // We've also removed the FindChildByName helper method as it's no longer needed
     
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
@@ -170,6 +204,9 @@ public partial class HexControl : UserControl
             {
                 HexEditorControl.Stream = null;
                 HexEditorControl.Stream = ((IHexViewModel)sender!).HexEditorStream;
+                
+                // Re-hide the status bar after stream change which might reset the control
+                HideStatusBar(HexEditorControl);
             });
         }
     }
