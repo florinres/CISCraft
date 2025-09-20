@@ -12,7 +12,6 @@
         <!-- Flippable shape layer -->
         <Canvas x:Name="ShapeLayer" Width="60" Height="50">
             <Polygon Points="0,0 0,50 60,40 60,10"
-                     Fill="{DynamicResource NodeBackgroundBrush}"
                      Stroke="{DynamicResource NodeBorderBrush}"
                      StrokeThickness="2"/>
         </Canvas>
