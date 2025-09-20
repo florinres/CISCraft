@@ -10,4 +10,7 @@
 
     <!-- Header background (if used in custom chrome) -->
     <SolidColorBrush x:Key="HeaderBackgroundBrush" Color="#2D2D30" />
+
+    <!-- Text for diagram labels -->
+    <SolidColorBrush x:Key="DiagramTextBrush" Color="#FFFFFF" />
 </ResourceDictionary>

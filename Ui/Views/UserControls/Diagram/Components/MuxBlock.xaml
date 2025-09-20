@@ -19,9 +19,9 @@
         <!-- Fixed label layer (not flipped) -->
         <Canvas Width="80" Height="60" IsHitTestVisible="False">
             <TextBlock Text="MUX" FontSize="14" FontWeight="Bold"
-                       Canvas.Left="10" Canvas.Top="10" Foreground="White"/>
+                       Canvas.Left="10" Canvas.Top="10" Foreground="{DynamicResource DiagramTextBrush}"/>
             <TextBlock Text="2:1" FontSize="12" FontWeight="Bold"
-                       Canvas.Left="17" Canvas.Top="25" Foreground="White"/>
+                       Canvas.Left="17" Canvas.Top="25" Foreground="{DynamicResource DiagramTextBrush}"/>
         </Canvas>
     </Grid>
 </UserControl>

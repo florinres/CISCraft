@@ -53,7 +53,7 @@
 
             <!-- Left-aligned Text -->
             <TextBlock Grid.Column="0"
-                       Foreground="White"
+                       Foreground="{DynamicResource DiagramTextBrush}"
                        VerticalAlignment="Center"
                        TextAlignment="Left"
                        Padding="8,0,0,0">
@@ -72,7 +72,7 @@
                     CornerRadius="0,4,4,0"
                     MinWidth="45">
                 <TextBlock Text="{Binding Name}" 
-                           Foreground="White"
+                           Foreground="{DynamicResource DiagramTextBrush}"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"

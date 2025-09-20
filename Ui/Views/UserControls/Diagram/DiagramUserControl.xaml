@@ -159,7 +159,7 @@
                     HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 0"
-                               Foreground="White"
+                               Foreground="{DynamicResource DiagramTextBrush}"
                                FontWeight="Bold"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
@@ -180,7 +180,7 @@
                     HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 1"
-                               Foreground="White"
+                               Foreground="{DynamicResource DiagramTextBrush}"
                                FontWeight="Bold"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
@@ -201,7 +201,7 @@
                     HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 2"
-                               Foreground="White"
+                               Foreground="{DynamicResource DiagramTextBrush}"
                                FontWeight="Bold"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
@@ -222,7 +222,7 @@
                     HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 3"
-                               Foreground="White"
+                               Foreground="{DynamicResource DiagramTextBrush}"
                                FontWeight="Bold"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
@@ -243,7 +243,7 @@
                     VerticalAlignment="Center"
                     CornerRadius="4">
                     <TextBlock Text="SIE"
-                               Foreground="White"
+                               Foreground="{DynamicResource DiagramTextBrush}"
                                FontWeight="Bold"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
@@ -266,7 +266,7 @@
                     HorizontalAlignment="Stretch">
                         <TextBlock
                             TextAlignment="Center"
-                            Foreground="White">
+                            Foreground="{DynamicResource DiagramTextBrush}">
                             CU
                         </TextBlock>
                 </Border>
@@ -308,11 +308,11 @@
                     Panel.ZIndex="100"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch">
-                    <TextBlock
-                        TextAlignment="Center"
-                        Foreground="White" >
-                        RAM
-                    </TextBlock>
+                        <TextBlock
+                            TextAlignment="Center"
+                            Foreground="{DynamicResource DiagramTextBrush}">
+                            RAM
+                        </TextBlock>
                 </Border>
 
                 <components:RegisterBlock

@@ -27,7 +27,7 @@
 
                 <!-- Text -->
                 <TextBlock Text="{Binding Name}"
-                           Foreground="White"
+                           Foreground="{DynamicResource DiagramTextBrush}"
                            FontWeight="Bold"
                            FontSize="14"
                            HorizontalAlignment="Center"
