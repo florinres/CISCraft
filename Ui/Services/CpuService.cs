@@ -95,15 +95,15 @@ public class CpuService : ICpuService
     }
     public void StepMicroinstruction()
     {
-        int row, column;
+        int row, col;
         row = 1;
-        column = 1;
+        col = 1;
 
         _diagram.ResetHighlight();
 
         _cursorNeedsUpdate = false;
 
-        (row, column) = _cpu.StepMicrocommand();
+        (row, col) = _cpu.StepMicrocommand();
 
         if (row == 0)
         {
@@ -111,11 +111,18 @@ public class CpuService : ICpuService
             _microprogramService.ClearAllHighlightedRows();
         }
 
-        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
-
-        while (column != 6)
+        if (row == 97 && col == 2)
         {
-            (row, column) = _cpu.StepMicrocommand();
+            UpdateEditorAndHighlight((ushort)(_cpu.Registers[REGISTERS.PC] - 2), true);
+        }
+        else
+        {
+            UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
+        }
+
+        while ((col != 6) && (row != 97 || col != 2))
+        {
+            (row, col) = _cpu.StepMicrocommand();
         }
 
         _microprogramService.CurrentRow = row;
@@ -131,12 +138,19 @@ public class CpuService : ICpuService
 
         _cpu.StepMicrocommand();
 
-        while (row != 0 || col != 0)
+        while ((row != 0 || col != 0) && (row != 97 || col != 2))
         {
             (row, col) = _cpu.StepMicrocommand();
         }
 
-        UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], true);
+        if (row == 97 && col == 2)
+        {
+            UpdateEditorAndHighlight((ushort)(_cpu.Registers[REGISTERS.PC] - 2), true);
+        }
+        else
+        {
+            UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], true);
+        }
     }
     public void ResetProgram()
     {
