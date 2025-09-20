@@ -516,7 +516,7 @@
                     Grid.RowSpan="23"
                     Grid.Column="33"
                     Grid.ColumnSpan="41"
-                    LineThickness="13"
+                    LineThickness="11"
                     Panel.ZIndex="300"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch" />
