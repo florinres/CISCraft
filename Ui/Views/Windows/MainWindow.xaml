@@ -34,6 +34,8 @@
     <Window.Resources>
         <helpers:ThemeToIndexConverter x:Key="ThemeToIndexConverter" />
         <helpers:EnumEqualsConverter    x:Key="EnumEqualsConverter" />
+        <helpers:ThemeToToggleConverter x:Key="ThemeToToggleConverter" />
+        <helpers:ThemeToIconConverter x:Key="ThemeToIconConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -73,16 +75,23 @@
                         <MenuItem Header="Theme">
                             <MenuItem Header="Light"
                                       IsCheckable="True"
-                                      IsEnabled="False"
-                                      IsChecked="{Binding  Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
+                                      IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Light}}"
                                       Command="{Binding Settings.ChangeThemeCommand}"
-                                      CommandParameter="{x:Static appearance:ApplicationTheme.Light}" />
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Light}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="BrightnessHigh24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
 
                             <MenuItem Header="Dark"
                                       IsCheckable="true"
                                       IsChecked="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static appearance:ApplicationTheme.Dark}}"
                                       Command="{Binding Settings.ChangeThemeCommand}"
-                                      CommandParameter="{x:Static appearance:ApplicationTheme.Dark}" />
+                                      CommandParameter="{x:Static appearance:ApplicationTheme.Dark}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="DarkTheme24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                         <MenuItem Header="Step Level">
                             <MenuItem Header="Microcommand"
@@ -145,18 +154,24 @@
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
-        <StackPanel Grid.Row="1" Height="36" Orientation="Horizontal" Margin="0" DataContext="{Binding ActionsBar}" x:Name="ActionBarStackPanel">
+        <Grid Grid.Row="1" Height="36">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <ui:Button
-                VerticalAlignment="Top"
-                ToolTip="Run"
-                Height="30"
-                Width="30"
-                Padding="0"
-                Margin="10,0,10,0"
-                Appearance="Transparent"
-                BorderBrush="{x:Null}">
-                <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F" />
+            <!-- Left-aligned action buttons -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" DataContext="{Binding ActionsBar}">
+                <ui:Button
+                    VerticalAlignment="Top"
+                    ToolTip="Run"
+                    Height="30"
+                    Width="30"
+                    Padding="0"
+                    Margin="10,0,10,0"
+                    Appearance="Transparent"
+                    BorderBrush="{x:Null}">
+                    <ui:SymbolIcon Symbol="TriangleRight16" Foreground="#E413D01F" />
             </ui:Button>
 
             <ui:Button
@@ -235,8 +250,25 @@
                     </MenuItem.Header>
                 </ui:MenuItem>
             </Menu>
+            </StackPanel>
             
-        </StackPanel>
+            <!-- Right-aligned theme toggle button -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                <!-- Theme Toggle Button -->
+                <ui:Button
+                    Command="{Binding Settings.ChangeThemeCommand}"
+                    CommandParameter="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource ThemeToToggleConverter}}"
+                    VerticalAlignment="Center"
+                    ToolTip="Toggle Light/Dark Theme"
+                    Height="30"
+                    Width="30"
+                    Padding="0"
+                    Appearance="Transparent"
+                    BorderBrush="{x:Null}">
+                    <ui:SymbolIcon Symbol="{Binding Settings.CurrentApplicationTheme, Converter={StaticResource ThemeToIconConverter}}" />
+                </ui:Button>
+            </StackPanel>
+        </Grid>
 
         <DockingManager
             x:Name="DockingManagerInstance"
