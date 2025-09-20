@@ -25,7 +25,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Background="{DynamicResource HeaderBackgroundBrush}">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition SharedSizeGroup="AddressCol"
                                   Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
@@ -57,62 +57,50 @@
             <TextBlock Text="MPM Address" Grid.Column="0" HorizontalAlignment="Center" TextAlignment="Center"
                        Margin="1" Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="Label" Grid.Column="1" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="SBUS" Grid.Column="2" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="DBUS" Grid.Column="3" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="ALU" Grid.Column="4" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="RBUS" Grid.Column="5" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="MEMORY OP" Grid.Column="6" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="OTHER OP" Grid.Column="7" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="SUCCESOR" Grid.Column="8" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="INDEX" Grid.Column="9" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="!T/F" Grid.Column="10" HorizontalAlignment="Center" TextAlignment="Center" Margin="1"
                        Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
             <TextBlock Text="Jump Address" Grid.Column="11" HorizontalAlignment="Center" TextAlignment="Center"
                        Margin="1" Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Background="{DynamicResource RegionBackgroundBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
         </Grid>
         <ListView Grid.Row="1" ItemsSource="{Binding Rows}"

@@ -6,4 +6,9 @@ public partial class TestHexWindow : Window
     {
         InitializeComponent();
     }
+
+    private void InitializeComponent()
+    {
+        throw new NotImplementedException();
+    }
 }

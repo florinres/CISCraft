@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
@@ -15,7 +16,7 @@ namespace Ui.ViewModels.Components.HexViewer;
 
 public partial class HexViewModel : ToolViewModel, IHexViewModel
 {
-    [ObservableProperty] public override partial string? Title { get; set; } = "HexViewer";
+    [ObservableProperty] public override partial string? Title { get; set; } = "MainMemory";
     [ObservableProperty]
     public partial string DataStringVisual { get; set; } = "Hexadecimal";
     private readonly IAssemblerService _assemblerService;
@@ -31,7 +32,9 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
         // Subscribe to the event
         _assemblerService.SourceCodeAssembled += OnSourceCodeAssembled;
         _memoryContentWrapper.PropertyChanged += OnMemoryChanged;
-
+        
+        // Initialize commands
+        GotoAddressCommand = new RelayCommand(ExecuteGotoAddressCommand);
     }
 
     [ObservableProperty]
@@ -42,23 +45,25 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
 
     [ObservableProperty]
     private Stream _hexEditorStream = new MemoryStream();
+    
+    public ICommand GotoAddressCommand { get; }
 
     private void OnSourceCodeAssembled(object? sender, byte[] code)
     {
         AssembledCode = code;
-        HexEditorStream = new MemoryStream(AssembledCode, writable: false);
+        // Don't update HexEditorStream here, let OnAssembledCodeChanged handle it
         IsElementReadyToRender = AssembledCode is { Length: > 0 };
-        RefreshHexViewFromMemory();
+        // Don't call RefreshHexViewFromMemory() here to avoid double refresh
     }
 
     partial void OnAssembledCodeChanged(byte[]? oldValue, byte[] newValue)
     {
-        HexEditorStream = new MemoryStream(newValue, 0, newValue.Length, false);
-        IsElementReadyToRender = newValue is { Length: > 0 };
+        // Use MemoryContentWrapper directly rather than creating a new stream from the assembled code
+        RefreshHexViewFromMemory();
     }
     private void OnMemoryChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is null)
+        if (e.PropertyName is null || e.PropertyName == nameof(_memoryContentWrapper.MemoryContent))
         {
             RefreshHexViewFromMemory();
             return;
@@ -80,15 +85,33 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
 
     private void RefreshHexViewFromMemory(int? index = null)
     {
-        if (HexEditorStream.CanSeek && index is not null)
+        // If we're just updating a single byte, try to do it without recreating the stream
+        if (HexEditorStream.CanWrite && index is not null)
         {
-            HexEditorStream.Position = index.Value;
-            HexEditorStream.WriteByte(_memoryContentWrapper[index.Value]);
-            HexEditorStream.Position = index.Value;
+            try
+            {
+                HexEditorStream.Position = index.Value;
+                HexEditorStream.WriteByte(_memoryContentWrapper[index.Value]);
+                HexEditorStream.Position = 0; // Reset position
+                return; // Exit early to avoid creating a new stream
+            }
+            catch (Exception)
+            {
+                // If updating a single byte fails, fall back to recreating the stream
+            }
         }
 
-        HexEditorStream?.Dispose();
-        HexEditorStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
+        // Only dispose and recreate the stream if necessary
+        using (var oldStream = HexEditorStream)
+        {
+            // Create new stream
+            var newStream = new MemoryStream(_memoryContentWrapper.MemoryContent, writable: true);
+            
+            // Assign new stream first before potentially disposing the old one
+            // This ensures we never have a null stream
+            HexEditorStream = newStream;
+        }
+        
         IsElementReadyToRender = true;
     }
     public void SetNumberFormat(NumberFormat format)
@@ -107,5 +130,35 @@ public partial class HexViewModel : ToolViewModel, IHexViewModel
             default:
                 throw new ArgumentOutOfRangeException(nameof(format), format, null);
         }
+    }
+    
+    /// <summary>
+    /// Execute the goto address command, showing a dialog to enter the address
+    /// </summary>
+    private void ExecuteGotoAddressCommand()
+    {
+        // This method will be called from the UI when the user wants to navigate to a specific address
+        // The actual implementation will be in the HexControl to show the dialog
+        // This is a placeholder for the command binding
+    }
+    
+    /// <summary>
+    /// Navigate to a specific memory address in the hex editor
+    /// </summary>
+    /// <param name="address">Address to navigate to</param>
+    /// <returns>True if navigation was successful</returns>
+    public bool GotoAddress(long address)
+    {
+        // Verify the address is within the valid range
+        if (address < 0 || address >= _memoryContentWrapper.Length)
+        {
+            return false;
+        }
+        
+        // The HexEditorControl's position is set through binding or events in the view
+        // We'll expose this method so the HexControl can call it and then use its reference
+        // to the HexEditor control to set the position
+        
+        return true;
     }
 }

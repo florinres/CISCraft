@@ -34,8 +34,6 @@ namespace Ui.Interfaces.ViewModel
         /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.SetStepLevel"/>.</summary>
         global::CommunityToolkit.Mvvm.Input.IRelayCommand<StepLevel> SetStepLevelCommand { get; }
 
-        /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="ActionsBarViewModel.SaveInterrupt"/>.</summary>
-        global::CommunityToolkit.Mvvm.Input.IRelayCommand<FileViewModel> SaveInterruptCommand { get; }
         /// <summary>
         ///     Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand{T}" /> instance wrapping
         ///     <see cref="MenuBarViewModel.TriggerInterrupt" />.
@@ -45,7 +43,6 @@ namespace Ui.Interfaces.ViewModel
         bool NotDebugging { get; set; }
         bool CanDebug { get; set; }
         bool CanAssemble { get; set; }
-        bool IsInterruptSaveButtonVisible { get; set; }
 
         event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangingEventHandler? PropertyChanging;

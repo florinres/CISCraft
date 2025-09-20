@@ -237,9 +237,9 @@ public class CpuService : ICpuService
 
         return JsonSerializer.Deserialize<List<ISR>>(json, JsonOpts) ?? new();
     }
-    bool EditorChangedBasedOnSection(MemorySection section)
+    void ChangEditorBasedOnSection(MemorySection section)
     {
-        if (_activeDocumentService.SelectedDocument == null) return false;
+        if (_activeDocumentService.SelectedDocument == null) return;
 
         // If the document is already open, select it
         foreach (var doc in _activeDocumentService.Documents)
@@ -248,7 +248,7 @@ public class CpuService : ICpuService
             {
                 _activeDocumentService.SelectedDocument = doc;
 
-                return true;
+                return;
             }
         }
         
@@ -263,10 +263,7 @@ public class CpuService : ICpuService
 
             _activeDocumentService.Documents.Add(isrFile);
             _activeDocumentService.SelectedDocument = isrFile;
-            return true;
         }
-
-        return false;
     }
     private ushort GetLineAndEditorNumberByPc(ushort pc)
     {
@@ -275,7 +272,7 @@ public class CpuService : ICpuService
         if (section == null || _activeDocumentService.SelectedDocument == null)
             return 0;
 
-        bool editorChange = EditorChangedBasedOnSection(section);
+        ChangEditorBasedOnSection(section);
 
         if (section != null && section.DebugSymbols != null && section.DebugSymbols.ContainsKey((short)pc))
             return section.DebugSymbols[(short)pc];

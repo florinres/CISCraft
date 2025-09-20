@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit;
 using Ui.Helpers;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using System.Windows.Input;
 
 namespace Ui.Components;
 
@@ -16,6 +17,12 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
             new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                 OnTextChanged));
 
+    // Add a RoutedCommand for Save
+    public static readonly RoutedCommand SaveCommand = new RoutedCommand(
+        "Save", 
+        typeof(StyledAvalonEdit),
+        new InputGestureCollection { new KeyGesture(Key.S, ModifierKeys.Control) });
+    
     public StyledAvalonEdit()
     {
         //theming
@@ -33,8 +40,19 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
 
         //syntaxHighlighting
         SyntaxHighlighting = AvalonEditHelper.AssemblyHighlightDefinition;
+        
+        // Add command bindings
+        CommandBindings.Add(new CommandBinding(SaveCommand, ExecuteSaveCommand));
     }
-
+    
+    private void ExecuteSaveCommand(object sender, ExecutedRoutedEventArgs e)
+    {
+        // Raise a save requested event that MainWindow can listen for
+        SaveRequested?.Invoke(this, EventArgs.Empty);
+    }
+    
+    // Event that will be raised when Ctrl+S is pressed
+    public event EventHandler? SaveRequested;
 
     public new string Text
     {
@@ -56,11 +74,13 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         ApplyTheme();
+        UpdateSyntaxHighlighting();
     }
 
     private void OnThemeChanged(ApplicationTheme newTheme, Color color)
     {
         ApplyTheme();
+        UpdateSyntaxHighlighting();
     }
 
     private void ApplyTheme()
@@ -75,6 +95,45 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
         TextArea.Background = bg;
         Foreground = fg; // WPF foreground of the control
         TextArea.Foreground = fg;
+    }
+    
+    private void UpdateSyntaxHighlighting()
+    {
+        try
+        {
+            // Create a new instance of the highlighting definition every time
+            var highlightDefinition = AvalonEditHelper.AssemblyHighlightDefinition;
+            
+            // Reset and then set the highlighting to ensure it refreshes
+            SyntaxHighlighting = null;
+            SyntaxHighlighting = highlightDefinition;
+            
+            // If this is a ThemeAwareHighlightingDefinition, subscribe to its ThemeChanged event
+            if (SyntaxHighlighting is ThemeAwareHighlightingDefinition themeAwareDefinition)
+            {
+                // Debug output to confirm we're setting up theme change handling
+                System.Diagnostics.Debug.WriteLine("Setting up theme change handler on ThemeAwareHighlightingDefinition");
+                
+                // Unsubscribe first to avoid multiple handlers
+                themeAwareDefinition.ThemeChanged -= OnHighlightingThemeChanged;
+                themeAwareDefinition.ThemeChanged += OnHighlightingThemeChanged;
+            }
+            
+            System.Diagnostics.Debug.WriteLine("Updated syntax highlighting based on theme change");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error updating syntax highlighting: {ex.Message}");
+        }
+    }
+    
+    private void OnHighlightingThemeChanged(object? sender, EventArgs e)
+    {
+        // Force the editor to redraw with the new highlighting colors
+        System.Diagnostics.Debug.WriteLine("Highlighting theme changed, forcing redraw");
+        
+        // Refresh the TextArea to update the colors
+        TextArea.TextView.Redraw();
     }
 
     ~StyledAvalonEdit()

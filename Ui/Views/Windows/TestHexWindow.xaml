@@ -1,4 +1,4 @@
-<Window x:Class="Ui.Views.Windows.TestHexWindow"
+<Window x:Class="Ui.Views.Windows.MainMemoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,7 +9,7 @@
         xmlns:hexViewer="clr-namespace:Ui.ViewModels.Components.HexViewer"
         xmlns:microprogram="clr-namespace:Ui.Views.UserControls.Microprogram"
         mc:Ignorable="d"
-        Title="TestHexWindow" Height="450" Width="800"
+        Title="MainMemory" Height="450" Width="800"
         Background="{DynamicResource ApplicationBackgroundBrush}">
     <microprogram:MicroprogramControl/>
 </Window>

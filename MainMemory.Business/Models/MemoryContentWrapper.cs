@@ -43,8 +43,10 @@ public class MemoryContentWrapper : ObservableObject
             
             if (!NotifyChange) return;
             
+            // Only notify about the specific index change, not the entire array
             OnPropertyChanged($"Memory[{index}]");
-            OnPropertyChanged(nameof(_memoryContent));
+            // Don't trigger a full memory content change for a single byte update
+            // OnPropertyChanged(nameof(_memoryContent));
         }
     }
     
@@ -57,7 +59,9 @@ public class MemoryContentWrapper : ObservableObject
     {
         BinaryPrimitives.WriteUInt16BigEndian(_memoryContent.AsSpan(offset), value);
 
-        // Trigger change notifications for affected bytes
+        if (!NotifyChange) return;
+
+        // Trigger change notifications for affected bytes only
         OnPropertyChanged($"Memory[{offset}]");
         OnPropertyChanged($"Memory[{offset + 1}]");
     }

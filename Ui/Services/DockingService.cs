@@ -27,14 +27,31 @@ public class DockingService : IDockingService
         if (_dockingManager?.Layout == null)
             return;
 
-        var anchorable = _dockingManager.Layout.Descendents()
-            .OfType<LayoutAnchorable>()
-            .First(a => a.Content == tool);
+        try
+        {
+            var anchorable = _dockingManager.Layout.Descendents()
+                .OfType<LayoutAnchorable>()
+                .FirstOrDefault(a => a.Content == tool);
 
-        if (tool.IsVisible)
-            anchorable.Show();
-        else
-            anchorable.Hide();
+            if (anchorable == null)
+            {
+                // If the anchorable isn't found, try to show the tool again
+                ShowTool(tool);
+                return;
+            }
+
+            if (tool.IsVisible)
+                anchorable.Show();
+            else
+                anchorable.Hide();
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception gracefully
+            System.Diagnostics.Debug.WriteLine($"Error toggling visibility: {ex.Message}");
+            // Try to show the tool again
+            ShowTool(tool);
+        }
     }
 
     private IToolViewModel? TryFindToolByTitle(string? title)
