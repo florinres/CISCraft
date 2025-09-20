@@ -281,7 +281,7 @@
 
                 <components:RegisterBlock
                     x:Name="Mar"
-                    Grid.Column="11"
+                    Grid.Column="19"
                     Grid.ColumnSpan="10"
                     Grid.Row="11"
                     Panel.ZIndex="200"
@@ -289,7 +289,7 @@
 
                 <components:RegisterBlock
                     x:Name="Ir"
-                    Grid.Column="11"
+                    Grid.Column="19"
                     Grid.ColumnSpan="10"
                     Grid.Row="13"
                     Panel.ZIndex="200"
@@ -297,10 +297,10 @@
 
                 <!-- RAM -->
                 <Border
-                    Grid.Column="10"
+                    Grid.Column="18"
                     Grid.Row="22"
                     Grid.RowSpan="8"
-                    Grid.ColumnSpan="20"
+                    Grid.ColumnSpan="12"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
                     Padding="1"
@@ -317,25 +317,25 @@
 
                 <components:RegisterBlock
                     x:Name="DataIn"
-                    Grid.Column="11"
+                    Grid.Column="19"
                     Grid.Row="24"
-                    Grid.ColumnSpan="18"
+                    Grid.ColumnSpan="10"
                     Panel.ZIndex="200"
                     DataContext="{Binding DataInContext }" />
 
                 <components:RegisterBlock
                     x:Name="DataOut"
-                    Grid.Column="11"
+                    Grid.Column="19"
                     Grid.Row="26"
-                    Grid.ColumnSpan="18"
+                    Grid.ColumnSpan="10"
                     Panel.ZIndex="200"
                     DataContext="{Binding DataOutContext }" />
 
                 <components:RegisterBlock
                     x:Name="Address"
-                    Grid.Column="11"
+                    Grid.Column="19"
                     Grid.Row="28"
-                    Grid.ColumnSpan="18"
+                    Grid.ColumnSpan="10"
                     Panel.ZIndex="200"
                     DataContext="{Binding ADRContext }" />
 

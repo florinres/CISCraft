@@ -6,7 +6,7 @@
     <SolidColorBrush x:Key="NodeBackgroundBrush" Color="#F3F3F3" />
     <SolidColorBrush x:Key="NodeBorderBrush" Color="#C8C8C8" />
     <SolidColorBrush x:Key="NodeHighlightBrush" Color="#C75000" />
-    <SolidColorBrush x:Key="NodeNameBackgroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="NodeNameBackgroundBrush" Color="#E8E8E8" />
 
     <!-- Header background (if used in custom chrome) -->
     <SolidColorBrush x:Key="HeaderBackgroundBrush" Color="#E0E0E0" />
