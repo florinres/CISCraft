@@ -2,14 +2,14 @@
 <SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008" extensions=".asm">
     <Property name="CaseSensitive" value="true" />
 
-    <!-- Define Colors -->
-    <Color name="Comment" foreground="Gray"/>
-    <Color name="String" foreground="LightCoral"/>
-    <Color name="Instruction" foreground="LightBlue"/>
-    <Color name="Register" foreground="LightGreen"/>
-    <Color name="Directive" foreground="Orange"/>
-    <Color name="Number" foreground="LightYellow"/>
-    <Color name="Label" foreground="LightPink"/>
+    <!-- Define Colors optimized for light theme (dark text on light background) -->
+    <Color name="Comment" foreground="#606060"/>
+    <Color name="String" foreground="#A31515"/>
+    <Color name="Instruction" foreground="#0000CC"/>
+    <Color name="Register" foreground="#008000"/>
+    <Color name="Directive" foreground="#B26B00"/>
+    <Color name="Number" foreground="#800080"/>
+    <Color name="Label" foreground="#D70000"/>
     
     <RuleSet ignoreCase="true">
         <!-- Strings -->
@@ -135,14 +135,22 @@
 
         <!-- Registers -->
         <Keywords color="Register" >
-            <Word>AX</Word> <Word>ax</Word>
-            <Word>BX</Word> <Word>bx</Word>
-            <Word>CX</Word> <Word>cx</Word>
-            <Word>DX</Word> <Word>dx</Word>
-            <Word>SI</Word> <Word>si</Word>
-            <Word>DI</Word> <Word>di</Word>
-            <Word>SP</Word> <Word>sp</Word>
-            <Word>BP</Word> <Word>bp</Word>
+            <Word>R0</Word> <Word>r0</Word>
+            <Word>R1</Word> <Word>r1</Word>
+            <Word>R2</Word> <Word>r2</Word>
+            <Word>R3</Word> <Word>r3</Word>
+            <Word>R4</Word> <Word>r4</Word>
+            <Word>R5</Word> <Word>r5</Word>
+            <Word>R6</Word> <Word>r6</Word>
+            <Word>R7</Word> <Word>r7</Word>
+            <Word>R8</Word> <Word>r8</Word>
+            <Word>R9</Word> <Word>r9</Word>
+            <Word>R10</Word> <Word>r10</Word>
+            <Word>R11</Word> <Word>r11</Word>
+            <Word>R12</Word> <Word>r12</Word>
+            <Word>R13</Word> <Word>r13</Word>
+            <Word>R14</Word> <Word>r14</Word>
+            <Word>R15</Word> <Word>r15</Word>
         </Keywords>
 
         <!-- Directives -->

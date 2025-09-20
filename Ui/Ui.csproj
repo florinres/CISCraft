@@ -11,6 +11,19 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
+    
+    <!-- Ensure XSHD files are copied to output directory -->
+    <ItemGroup>
+      <None Update="Assets\AvalonEdit\Assembly16BitHighlighting.xshd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Assets\AvalonEdit\Assembly16BitHighlighting-Light.xshd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Assets\AvalonEdit\Assembly16BitHighlighting-Dark.xshd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="ViewModels\Pages\**" />

@@ -11,7 +11,7 @@ internal sealed class ThemeToIndexConverter : IValueConverter
         return value switch
         {
             ApplicationTheme.Dark => 1,
-            ApplicationTheme.HighContrast => 2,
+            // ApplicationTheme.HighContrast => 2,
             _ => 0
         };
     }
@@ -21,7 +21,7 @@ internal sealed class ThemeToIndexConverter : IValueConverter
         return value switch
         {
             1 => ApplicationTheme.Dark,
-            2 => ApplicationTheme.HighContrast,
+            // 2 => ApplicationTheme.HighContrast,
             _ => ApplicationTheme.Light
         };
     }
