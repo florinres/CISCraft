@@ -21,6 +21,11 @@ public partial class DiagramUserControl : UserControl
     private readonly ScaleTransform _zoomTransform = new();
     private readonly TransformGroup _transformGroup = new();
     private Canvas _overlayCanvas;
+    
+    /// <summary>
+    /// Gets the ConnectionCanvas used for drawing connections between components
+    /// </summary>
+    private Canvas _connectionCanvas;
 
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register(nameof(ViewModel), typeof(IDiagramViewModel), typeof(DiagramUserControl),
@@ -37,12 +42,17 @@ public partial class DiagramUserControl : UserControl
         if (d is DiagramUserControl control && e.NewValue is IDiagramViewModel vm)
         {
             control.DataContext = vm;
+            vm.SetDiagramControl(control);
         }
     }
 
     public DiagramUserControl()
     {
         InitializeComponent();
+        
+        // Initialize canvas reference
+        _connectionCanvas = this.FindName("ConnectionCanvas") as Canvas;
+        _overlayCanvas = this.FindName("OverlayCanvas") as Canvas;
 
         MainDiagramGrid.Loaded += (s, e) =>
         {
@@ -59,6 +69,50 @@ public partial class DiagramUserControl : UserControl
         MainDiagramGrid.MouseMove += Pan_MouseMove;
 
     }
+    
+    /// <summary>
+    /// Highlights all connections related to a specific register or component
+    /// </summary>
+    /// <param name="componentName">Name of the register or component</param>
+    /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
+    /// <param name="highlightBrush">Optional custom brush for highlighting</param>
+    public void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null)
+    {
+        // This method is now handled by the ViewModel
+        if (ViewModel != null)
+        {
+            ViewModel.HighlightComponentConnections(componentName, highlight, highlightBrush);
+        }
+    }
+    
+    /// <summary>
+    /// Highlights a connection by its name
+    /// </summary>
+    /// <param name="connectionName">Name of the connection to highlight</param>
+    /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
+    /// <param name="highlightBrush">Optional custom brush for highlighting</param>
+    public void HighlightConnectionByName(string connectionName, bool highlight = true, Brush highlightBrush = null)
+    {
+        // This method is now handled by the ViewModel
+        if (ViewModel != null)
+        {
+            ViewModel.HighlightConnectionByName(connectionName, highlight, highlightBrush);
+        }
+    }
+    
+    /// <summary>
+    /// Highlights all connections between FLAG register and individual flag bits
+    /// </summary>
+    /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
+    /// <param name="highlightBrush">Optional custom brush for highlighting</param>
+    public void HighlightFlagBitConnections(bool highlight = true, Brush highlightBrush = null)
+    {
+        // This method is now handled by the ViewModel
+        if (ViewModel != null)
+        {
+            ViewModel.HighlightFlagBitConnections(highlight, highlightBrush);
+        }
+    }
 
     private void Pan_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -73,6 +127,24 @@ public partial class DiagramUserControl : UserControl
         _isPanning = false;
         MainDiagramGrid.ReleaseMouseCapture();
         MainDiagramGrid.Cursor = Cursors.Arrow;
+    }
+    
+    /// <summary>
+    /// Gets the ConnectionCanvas for drawing connections between components
+    /// </summary>
+    /// <returns>The ConnectionCanvas instance</returns>
+    public Canvas GetConnectionCanvas()
+    {
+        return _connectionCanvas;
+    }
+    
+    /// <summary>
+    /// Gets the OverlayCanvas for highlighting connections between components
+    /// </summary>
+    /// <returns>The OverlayCanvas instance</returns>
+    public Canvas GetOverlayCanvas()
+    {
+        return _overlayCanvas;
     }
 
     private void Pan_MouseMove(object sender, MouseEventArgs e)
@@ -117,7 +189,7 @@ public partial class DiagramUserControl : UserControl
 
     private void DrawConnections()
     {
-        ConnectionCanvas.Children.Clear(); // optional, if redrawing
+        _connectionCanvas.Children.Clear(); // optional, if redrawing
 
         var sBusEdges = SBus.GetEdges(MainDiagramGrid);
         var dBusEdges = DBus.GetEdges(MainDiagramGrid);
@@ -145,11 +217,11 @@ public partial class DiagramUserControl : UserControl
                     connectionPoints.MidLeft with { X = rBusLeftInnerEdge - 1 }
                 ],
                 StrokeThickness = 2,
-                Name = $"{registerBlock.Name}_RBus"
+                Name = $"Pm{registerBlock.Name}"
             };
             Panel.SetZIndex(rBusHighlight, -1);
-            AddWireEffects(rBusHighlight, $"Pm{registerBlock.Name}");
-            ConnectionCanvas.Children.Add(rBusHighlight);
+            AddWireEffects(rBusHighlight, rBusHighlight.Name);
+            _connectionCanvas.Children.Add(rBusHighlight);
         }
 
         // Add connections for IR and other components
@@ -168,7 +240,7 @@ public partial class DiagramUserControl : UserControl
     {
         var ios = new[] { IO0, IO1, IO2, IO3 };
 
-        var canvas = ConnectionCanvas;
+        var canvas = _connectionCanvas;
 
         foreach (var io in ios)
         {
@@ -271,7 +343,7 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.LeftMinusOffset with { X = sBusEdges.Right, Y = connectionPoints.LeftMinusOffset.Y - offset },
             ],
             StrokeThickness = 2,
-            Name = $"R_SBus"
+            Name = $"PdRGs"
         };
         var dBusHighlight = new HighlightableConnector
         {
@@ -281,7 +353,7 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.LeftPlusOffset with { X = dBusEdges.Right, Y = connectionPoints.LeftPlusOffset.Y - offset },
             ],
             StrokeThickness = 2,
-            Name = $"R_DBus"
+            Name = $"PdRGd"
         };
 
         var foo = new PointCollection
@@ -294,15 +366,15 @@ public partial class DiagramUserControl : UserControl
         {
             Points = foo,
             StrokeThickness = 2,
-            Name = $"R_RBus"
+            Name = $"PmRG"
         };
 
-        AddWireEffects(sBusHighlight, "PdRGs");
-        AddWireEffects(dBusHighlight, "PdRGd");
-        AddWireEffects(rBusHighLight, "PmRG");
-        ConnectionCanvas.Children.Add(sBusHighlight);
-        ConnectionCanvas.Children.Add(dBusHighlight);
-        ConnectionCanvas.Children.Add(rBusHighLight);
+        AddWireEffects(sBusHighlight, sBusHighlight.Name);
+        AddWireEffects(dBusHighlight, dBusHighlight.Name);
+        AddWireEffects(rBusHighLight, rBusHighLight.Name);
+        _connectionCanvas.Children.Add(sBusHighlight);
+        _connectionCanvas.Children.Add(dBusHighlight);
+        _connectionCanvas.Children.Add(rBusHighLight);
     }
 
     private void AddDataOutIrConnections()
@@ -325,8 +397,8 @@ public partial class DiagramUserControl : UserControl
             Name = $"{DataOut.Name}_{Ir.Name}"
         };
 
-        AddWireEffects(connection, $"{connection.Name} to IR");
-        ConnectionCanvas.Children.Add(connection);
+        AddWireEffects(connection, $"{connection.Name}");
+        _connectionCanvas.Children.Add(connection);
     }
 
     private void AddAddressConnections()
@@ -347,11 +419,11 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsAdr.RightPlusOffset with { X = connectionPointsAdr.RightPlusOffset.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"{Adr.Name}_DBus"
+            Name = $"{Adr.Name}"
         };
 
-        AddWireEffects(connection, $"{connection.Name} to R Bus");
-        ConnectionCanvas.Children.Add(connection);
+        AddWireEffects(connection, $"{connection.Name}");
+        _connectionCanvas.Children.Add(connection);
     }
 
     private void AddDataOutConnections()
@@ -373,11 +445,11 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsMdr.MidLeft with { X = connectionPointsDataOut.MidRight.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"{Mdr.Name}_RBus"
+            Name = $"DataOut"
         };
 
-        AddWireEffects(connection, $"{connection.Name} to R Bus");
-        ConnectionCanvas.Children.Add(connection);
+        AddWireEffects(connection, $"{connection.Name}");
+        _connectionCanvas.Children.Add(connection);
     }
 
     private void AddDataInConnections()
@@ -398,11 +470,11 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsMdr.RightMinusOffset with { X = connectionPointsMdr.RightMinusOffset.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"{Mdr.Name}_SBus"
+            Name = $"DataIn"
         };
 
-        AddWireEffects(connection, $"{connection.Name} to S Bus");
-        ConnectionCanvas.Children.Add(connection);
+        AddWireEffects(connection, $"{connection.Name}");
+        _connectionCanvas.Children.Add(connection);
     }
 
     private void AddPdsConnections()
@@ -432,11 +504,11 @@ public partial class DiagramUserControl : UserControl
                     bitBlockConnectionPoint with { X = bitBlockConnectionPoint.X + 3, Y = relevantY - 2}
                 ],
                 StrokeThickness = 2,
-                Name = $"{bitBlock.Name}_{Flags.Name}"
+                Name = $"{bitBlock.Name}_Flags"
             };
 
             AddWireEffects(connection, $"{connection.Name}");
-            ConnectionCanvas.Children.Add(connection);
+            _connectionCanvas.Children.Add(connection);
         }
     }
 
@@ -453,7 +525,7 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.RightMinusOffset with { X = sBusEdges.Left + 1 },
             ],
             StrokeThickness = 2,
-            Name = $"{registerBlock.Name}_SBus"
+            Name = $"Pd{registerBlock.Name}S"
         };
         var dBusHighlight = new HighlightableConnector
         {
@@ -463,13 +535,13 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.RightPlusOffset with { X = dBusEdges.Left + 1, Y = connectionPoints.RightPlusOffset.Y - 2 },
             ],
             StrokeThickness = 2,
-            Name = $"{registerBlock.Name}_DBus"
+            Name = $"Pd{registerBlock.Name}D"
         };
-        AddWireEffects(sBusHighlight, $"Pd{registerBlock.Name}s");
-        AddWireEffects(dBusHighlight, $"Pd{registerBlock.Name}d");
+        AddWireEffects(sBusHighlight, sBusHighlight.Name);
+        AddWireEffects(dBusHighlight, dBusHighlight.Name);
 
-        ConnectionCanvas.Children.Add(sBusHighlight);
-        ConnectionCanvas.Children.Add(dBusHighlight);
+        _connectionCanvas.Children.Add(sBusHighlight);
+        _connectionCanvas.Children.Add(dBusHighlight);
 
         return connectionPoints;
     }
@@ -482,7 +554,7 @@ public partial class DiagramUserControl : UserControl
         var conn = new HighlightableConnector
         {
             StrokeThickness = 2,
-            Name = "ALU_RBus",
+            Name = "PdAlu",
             Points = new PointCollection
             {
                 aluPts.MidBottom with { Y = aluPts.MidBottom.Y - 10},
@@ -490,14 +562,15 @@ public partial class DiagramUserControl : UserControl
             }
         };
         Panel.SetZIndex(conn, -1);
-        AddWireEffects(conn, $"SUM");
-        ConnectionCanvas.Children.Add(conn);
+        AddWireEffects(conn, conn.Name);
+        _connectionCanvas.Children.Add(conn);
     }
     void AddWireEffects(HighlightableConnector wire, string toolTipText)
     {
         AttachTooltip(wire, toolTipText);
         WireHoverOverlay(wire, Brushes.Red);
     }
+    
     private static void AttachTooltip(FrameworkElement el, string text)
     {
         ToolTipService.SetPlacement(el, PlacementMode.MousePoint);

@@ -1,6 +1,8 @@
+using System.Windows.Media;
 using Ui.Models;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.MenuBar;
+using Ui.Views.UserControls.Diagram;
 
 namespace Ui.Interfaces.ViewModel;
 
@@ -36,5 +38,9 @@ public interface IDiagramViewModel : IToolViewModel
     BitBlockViewModel SContext { get; }
     BitBlockViewModel VContext { get; }
     void ResetHighlight();
-    public void SetNumberFormat(NumberFormat format);
+    void SetNumberFormat(NumberFormat format);
+    void SetDiagramControl(DiagramUserControl diagramControl);
+    void HighlightConnectionByName(string connectionName, bool highlight = true, Brush highlightBrush = null);
+    void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null);
+    void HighlightFlagBitConnections(bool highlight = true, Brush highlightBrush = null);
 }

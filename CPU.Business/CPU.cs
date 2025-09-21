@@ -34,6 +34,11 @@ namespace CPU.Business
             RRC,
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the CPU is currently accessing FLAG register bits
+        /// </summary>
+        public bool IsAccessingFlags { get; private set; }
+
         enum OTHER_EVENTS
         {
             SP_PLUS_2 = 1,
@@ -94,6 +99,9 @@ namespace CPU.Business
         }
         public (int MAR, int MirIndex) StepMicrocommand()
         {
+            // Reset the flag access indicator at the start of each micro-command
+            IsAccessingFlags = false;
+            
             if (BPO)
             {
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
@@ -548,6 +556,9 @@ namespace CPU.Business
         }
         private void ComputeFlags()
         {
+            // Set IsAccessingFlags to true when computing flags
+            IsAccessingFlags = true;
+            
             if (CinPdCondaritm || PdCondaritm)
                 ComputeArithmeticFlags();
             if (PdCondlogic)
@@ -579,12 +590,16 @@ namespace CPU.Business
         }
         public ushort GetInterruptFlag()
         {
+            // Mark as accessing flags when reading interrupt flag
+            IsAccessingFlags = true;
             return (ushort)((Registers[REGISTERS.FLAGS] & (1<<interruptShift)) >> interruptShift);
         }
         public void SetInterruptFlag(ushort value)
         {
             value &= 1;
             Registers[REGISTERS.FLAGS] = (ushort)(value << interruptShift);
+            // Mark as accessing flags when setting interrupt flag
+            IsAccessingFlags = true;
         }
         /// <summary>
         /// Checks instruction code if it belongs to classes B1 to B4. Returns 'true' if so.

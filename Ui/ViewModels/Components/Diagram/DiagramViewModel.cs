@@ -1,15 +1,24 @@
 using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Shapes;
 using CPU.Business.Models;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
 using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
+using Ui.Views.UserControls.Diagram;
+using Ui.Views.UserControls.Diagram.Components;
 
 namespace Ui.ViewModels.Components.Diagram;
 
 public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 {
     private readonly RegisterWrapper _registers;
+    private DiagramUserControl _diagramControl;
+    private Canvas _connectionCanvas;
+    private Canvas _overlayCanvas;
 
     public DiagramViewModel(IMicroprogramViewModel microprogramViewModel, RegisterWrapper registers)
     {
@@ -19,7 +28,235 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         SetUpContext();
     }
     
+    /// <summary>
+    /// Sets the reference to the associated DiagramUserControl
+    /// </summary>
+    /// <param name="diagramControl">The DiagramUserControl instance</param>
+    public void SetDiagramControl(DiagramUserControl diagramControl)
+    {
+        _diagramControl = diagramControl;
+        _connectionCanvas = diagramControl.GetConnectionCanvas();
+        _overlayCanvas = diagramControl.GetOverlayCanvas();
+    }
     
+    /// <summary>
+    /// Highlights a connection by its name
+    /// </summary>
+    /// <param name="connectionName">The name of the connection to highlight</param>
+    /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
+    /// <param name="highlightBrush">The brush to use for highlighting, defaults to cyan</param>
+    public void HighlightConnectionByName(string connectionName, bool highlight = true, Brush highlightBrush = null)
+    {
+        if (_connectionCanvas == null || _overlayCanvas == null) return;
+        
+        highlightBrush ??= new SolidColorBrush(Color.FromRgb(0, 208, 255)); // cyan
+        
+        _diagramControl.Dispatcher.InvokeAsync(() => {
+            // First find the connection in ConnectionCanvas
+            HighlightableConnector targetConnector = null;
+            
+            foreach (var child in _connectionCanvas.Children)
+            {
+                if (child is HighlightableConnector connector && connector.Name == connectionName)
+                {
+                    targetConnector = connector;
+                    break;
+                }
+            }
+            
+            if (targetConnector == null) return;
+            
+            // Look for existing overlay for this connection
+            Polyline existingOverlay = null;
+            string overlayName = $"overlay_{connectionName}";
+            
+            foreach (var child in _overlayCanvas.Children)
+            {
+                if (child is Polyline polyline && polyline.Name == overlayName)
+                {
+                    existingOverlay = polyline;
+                    break;
+                }
+            }
+            
+            if (highlight)
+            {
+                // Create overlay if it doesn't exist yet
+                if (existingOverlay == null)
+                {
+                    existingOverlay = new Polyline
+                    {
+                        Name = overlayName,
+                        Points = new PointCollection(targetConnector.Points),
+                        Stroke = highlightBrush,
+                        StrokeThickness = 3,
+                        IsHitTestVisible = false
+                    };
+                    
+                    if (highlightBrush is SolidColorBrush solidBrush)
+                    {
+                        existingOverlay.Effect = new DropShadowEffect
+                        {
+                            Color = solidBrush.Color,
+                            BlurRadius = 12,
+                            ShadowDepth = 0,
+                            Opacity = 0.9
+                        };
+                    }
+                    
+                    Panel.SetZIndex(existingOverlay, 1000);
+                    _overlayCanvas.Children.Add(existingOverlay);
+                }
+                else
+                {
+                    // Update existing overlay
+                    existingOverlay.Visibility = Visibility.Visible;
+                    existingOverlay.Stroke = highlightBrush;
+                    
+                    if (highlightBrush is SolidColorBrush solidBrush)
+                    {
+                        existingOverlay.Effect = new DropShadowEffect
+                        {
+                            Color = solidBrush.Color,
+                            BlurRadius = 12,
+                            ShadowDepth = 0,
+                            Opacity = 0.9
+                        };
+                    }
+                    
+                    Panel.SetZIndex(existingOverlay, 1000);
+                }
+                
+                // Mark the original connector as highlighted (just for state tracking)
+                targetConnector.IsHighlighted = true;
+            }
+            else if (existingOverlay != null)
+            {
+                // Remove highlighting
+                _overlayCanvas.Children.Remove(existingOverlay);
+                targetConnector.IsHighlighted = false;
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Highlights all connections related to a specific register or component
+    /// </summary>
+    /// <param name="componentName">Name of the register or component</param>
+    /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
+    /// <param name="highlightBrush">Optional custom brush for highlighting</param>
+    public void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null)
+    {
+        if (_connectionCanvas == null || _overlayCanvas == null) return;
+        
+        highlightBrush ??= new SolidColorBrush(Color.FromRgb(0, 208, 255)); // cyan
+        
+        _diagramControl.Dispatcher.InvokeAsync(() => {
+            // First, if removing highlights, clean up any existing overlays for this component
+            if (!highlight)
+            {
+                List<UIElement> toRemove = new List<UIElement>();
+                string overlayPrefix = $"overlay_{componentName}";
+                
+                foreach (var child in _overlayCanvas.Children)
+                {
+                    if (child is Polyline polyline && 
+                        polyline.Name != null && 
+                        polyline.Name.Contains(componentName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        toRemove.Add(polyline);
+                    }
+                }
+                
+                foreach (var element in toRemove)
+                {
+                    _overlayCanvas.Children.Remove(element);
+                }
+                
+                // Also reset IsHighlighted on original connectors
+                foreach (var child in _connectionCanvas.Children)
+                {
+                    if (child is HighlightableConnector connector && 
+                        connector.Name != null && 
+                        connector.Name.Contains(componentName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        connector.IsHighlighted = false;
+                    }
+                }
+                
+                return;
+            }
+            
+            // For highlighting, create overlays for each matching connector
+            foreach (var child in _connectionCanvas.Children)
+            {
+                if (child is HighlightableConnector connector && 
+                    connector.Name != null && 
+                    connector.Name.Contains(componentName, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Create unique overlay name for this connector
+                    string overlayName = $"overlay_{connector.Name}";
+                    
+                    // Check if overlay already exists
+                    bool overlayExists = false;
+                    foreach (var overlayChild in _overlayCanvas.Children)
+                    {
+                        if (overlayChild is Polyline polyline && polyline.Name == overlayName)
+                        {
+                            overlayExists = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!overlayExists)
+                    {
+                        // Create new overlay
+                        Polyline overlay = new Polyline
+                        {
+                            Name = overlayName,
+                            Points = new PointCollection(connector.Points),
+                            Stroke = highlightBrush,
+                            StrokeThickness = 3,
+                            IsHitTestVisible = false
+                        };
+                        
+                        if (highlightBrush is SolidColorBrush solidBrush)
+                        {
+                            overlay.Effect = new DropShadowEffect
+                            {
+                                Color = solidBrush.Color,
+                                BlurRadius = 12,
+                                ShadowDepth = 0,
+                                Opacity = 0.9
+                            };
+                        }
+                        
+                        Panel.SetZIndex(overlay, 1000);
+                        _overlayCanvas.Children.Add(overlay);
+                        
+                        // Mark original connector as highlighted
+                        connector.IsHighlighted = true;
+                    }
+                }
+            }
+        });
+    }
+    
+    /// <summary>
+    /// Highlights all connections between FLAG register and individual flag bits
+    /// </summary>
+    /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
+    /// <param name="highlightBrush">Optional custom brush for highlighting</param>
+    public void HighlightFlagBitConnections(bool highlight = true, Brush highlightBrush = null)
+    {
+        var flagBitNames = new[] { "BVI", "C", "Z", "S", "V" };
+        
+        foreach (var bitName in flagBitNames)
+        {
+            string connectionName = $"{bitName}_Flags";
+            HighlightConnectionByName(connectionName, highlight, highlightBrush);
+        }
+    }
     
     [ObservableProperty] public override partial string? Title { get; set; } = "Diagram";
 
@@ -97,9 +334,46 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     public void ResetHighlight()
     {
+        // Reset context highlights
         foreach (var context in Contexts)
         {
             context.IsHighlighted = false;
+        }
+        
+        // Clear all overlays from OverlayCanvas
+        if (_overlayCanvas != null)
+        {
+            _diagramControl.Dispatcher.InvokeAsync(() => {
+                // Find and remove all overlay elements (those with "overlay_" prefix in name)
+                List<UIElement> toRemove = new List<UIElement>();
+                
+                foreach (var child in _overlayCanvas.Children)
+                {
+                    if (child is Polyline polyline && 
+                        polyline.Name != null && 
+                        polyline.Name.StartsWith("overlay_"))
+                    {
+                        toRemove.Add(polyline);
+                    }
+                }
+                
+                foreach (var element in toRemove)
+                {
+                    _overlayCanvas.Children.Remove(element);
+                }
+                
+                // Reset IsHighlighted flag on all connectors
+                if (_connectionCanvas != null)
+                {
+                    foreach (var child in _connectionCanvas.Children)
+                    {
+                        if (child is HighlightableConnector connector)
+                        {
+                            connector.IsHighlighted = false;
+                        }
+                    }
+                }
+            });
         }
     }
     private void SetUpContext()

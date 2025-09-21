@@ -86,8 +86,16 @@ public class CpuService : ICpuService
             _cursorNeedsUpdate = true;
         }
 
+        _diagram.HighlightConnectionByName("PmIvr", true, new SolidColorBrush(Colors.Lime));
+
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+
+        // Highlight Flag bits if they're being accessed
+        if (_cpu.IsAccessingFlags)
+        {
+            //_diagram.HighlightFlagBitConnections(true, new SolidColorBrush(Colors.Yellow));
+        }
 
         UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
 
@@ -109,6 +117,12 @@ public class CpuService : ICpuService
         {
             _cursorNeedsUpdate = true;
             _microprogramService.ClearAllHighlightedRows();
+        }
+
+        // Highlight Flag bits if they're being accessed
+        if (_cpu.IsAccessingFlags)
+        {
+            _diagram.HighlightFlagBitConnections(true, new SolidColorBrush(Colors.Yellow));
         }
 
         if (row == 97 && col == 2)
@@ -138,8 +152,15 @@ public class CpuService : ICpuService
 
         _cpu.StepMicrocommand();
 
+        // Check if CPU is accessing flags in each microcommand
         while ((row != 0 || col != 0) && (row != 97 || col != 2))
         {
+            // Highlight Flag bits if they're being accessed
+            if (_cpu.IsAccessingFlags)
+            {
+                _diagram.HighlightFlagBitConnections(true, new SolidColorBrush(Colors.Yellow));
+            }
+            
             (row, col) = _cpu.StepMicrocommand();
         }
 
