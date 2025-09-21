@@ -190,6 +190,12 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         {
             case REGISTERS.FLAGS:
                 Update(FLAGContext, value);
+                // Update individual flag bits
+                Update(BVIContext, (value & 0x0080) != 0 ? 1 : 0); // BVI is bit 7
+                Update(CContext, (value & 0x0008) != 0 ? 1 : 0);   // C is bit 3
+                Update(ZContext, (value & 0x0004) != 0 ? 1 : 0);   // Z is bit 2
+                Update(SContext, (value & 0x0002) != 0 ? 1 : 0);   // S is bit 1
+                Update(VContext, (value & 0x0001) != 0 ? 1 : 0);   // V is bit 0
                 break;
             // case REGISTERS.RG:
             //     PCContext.Value = value;
