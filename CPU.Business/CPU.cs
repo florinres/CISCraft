@@ -98,27 +98,19 @@ namespace CPU.Business
             if (BPO)
             {
                 (previousMARState, previousMIRIndexState) = _controlUnit.StepMicrocommand(Registers[Exceptions.ACLOW], Registers[REGISTERS.FLAGS]);
-                bool[] irqs = new bool[]
-                {
-                    Registers[IRQs.IRQ0] && !ResetBI,
-                    Registers[IRQs.IRQ1] && !ResetBI,
-                    Registers[IRQs.IRQ2] && !ResetBI,
-                    Registers[IRQs.IRQ3] && !ResetBI
-                };
+
                 // note that on HW level ResetBI
                 // is used as J signal for exception
                 // JK latches
+                bool[] irqs = Enum.GetValues<IRQs>()
+                                .Select(irq => Registers[irq] && !ResetBI)
+                                .ToArray();
+                bool[] exceptions = Enum.GetValues<Exceptions>()
+                        .Select(ex => Registers[ex] && !ResetBI)
+                        .ToArray();
 
                 if (ResetBI)
                     ResetBI = false; // corresponding IRQ latch has been reseted
-
-                bool[] exceptions = new bool[]
-                {
-                    Registers[Exceptions.ACLOW],
-                    Registers[Exceptions.CIL],
-                    Registers[Exceptions.Reserved0],
-                    Registers[Exceptions.Reserved1]
-                };
 
                 bool okInstructionCode = CheckInstructionCode();
 
@@ -128,26 +120,22 @@ namespace CPU.Business
 
                 _controlUnit.SetCILState(Registers[Exceptions.CIL]);
 
-                Dictionary<string, bool> interruptPriorities = new Dictionary<string, bool>();
-                interruptPriorities = _interruptController.CheckInterruptSignals(irqs, exceptions);
-                bool interrupAck = Convert.ToBoolean(GetInterruptFlag());
+                Dictionary<string, bool> interruptPriorities;
+                _interruptController.CheckInterruptSignals(irqs, exceptions);
+                interruptPriorities = _interruptController.GetPrioritisedIRQStates();
+                bool bviState = Convert.ToBoolean(GetInterruptFlag());
+                // BVI: Bistabil Validare Intreruperi
+                // used to accept or not any incomming HW interrupts
+                // IRQ0->IRQ3
 
-                int i = 0;
-                bool prioritisedInterruptsState = false;
+                bool hwInterruptRequest = false;
                 foreach (var kvp in interruptPriorities)
-                {
-                    if (kvp.Value)
-                    {
-                        irqs[i] = false;
-                    }
-                    prioritisedInterruptsState |= kvp.Value;
-                    i++;
-                }
-                _globalIRQ = interrupAck & prioritisedInterruptsState;
+                    hwInterruptRequest |= kvp.Value;
+
+                _globalIRQ = bviState & hwInterruptRequest;
                 _controlUnit.SetGlobalIRQState(_globalIRQ);
 
                 Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
-               
 
             }
             return (previousMARState, previousMIRIndexState);
@@ -468,16 +456,40 @@ namespace CPU.Business
                     Registers[REGISTERS.FLAGS] = (ushort)(Registers[REGISTERS.FLAGS] & ~(1 << interruptBit));
                     break;
                 case OTHER_EVENTS.INTA_SP_MINUS_2:
-                    // INTA = 1;
-                    Registers[REGISTERS.FLAGS] |= (short)(1 << interruptShift);
+                    // INTA = 1
+                    // this signal would normally go to
+                    // the corressponding I/O HW circuit
+
+                    var prioritisedIRQs = _interruptController.GetPrioritisedIRQStates();
+                    foreach (var kvp in prioritisedIRQs)
+                    {
+                        if (kvp.Value)
+                        {
+                            int irqNumber = int.Parse(kvp.Key.Substring(1, 1));
+                            IRQs irq = (IRQs)irqNumber;
+                            Registers[irq] = false;
+                        }
+                    }
+
                     Registers[REGISTERS.SP] -= 2;
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
-                    //Adu la 0 bistabilii de exceptii de intrerupere
+                    //Adu la 0 bistabilii de exceptii si de intrerupere
                     //Reset exception and interrupts flag latches
+                    //Note:since the exception latches are reseted always together with those
+                    // of ISR, the same variable shall model both signals
 
-                    Registers[Exceptions.ACLOW] = false;
-                    Registers[Exceptions.CIL] = false;
+                    var prioritisedExceptions = _interruptController.GetPrioritisedExceptions();
+                    foreach (var kvp in prioritisedExceptions)
+                    {
+                        if (kvp.Value)
+                        {
+                            if (Enum.TryParse<Exceptions>(kvp.Key, out var ex))
+                            {
+                                Registers[ex] = false;
+                            }
+                        }
+                    }
                     ResetBI = true;
                     break;
                 case OTHER_EVENTS.A0BPO:
