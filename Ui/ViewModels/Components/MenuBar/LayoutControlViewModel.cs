@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Services;
@@ -75,6 +77,13 @@ public partial class LayoutControlViewModel : ObservableObject, ILayoutControlVi
     public void DeleteLayout(string layoutName)
     {
         _dockingService.DeleteLayout(layoutName);
+        SetLayouts();
+    }
+
+    [RelayCommand]
+    public void RestoreDefaultLayout()
+    {
+        _dockingService.RestoreDefaultLayout();
         SetLayouts();
     }
 }

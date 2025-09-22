@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Ui.Interfaces.Services;
 using Ui.ViewModels.Components.MenuBar;
 
@@ -24,9 +25,13 @@ public interface ILayoutControlViewModel
     
     IRelayCommand<string> DeleteLayoutCommand { get; }
 
+    /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="LayoutControlViewModel.RestoreDefaultLayout"/>.</summary>
+    IRelayCommand RestoreDefaultLayoutCommand { get; }
+
     void SaveLayout(string layoutName);
     void LoadLayout(string layoutName);
     void LoadLayouts();
+    void RestoreDefaultLayout();
     event PropertyChangedEventHandler? PropertyChanged;
     event PropertyChangingEventHandler? PropertyChanging;
 }

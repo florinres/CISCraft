@@ -209,4 +209,23 @@ public class DockingService : IDockingService
         if (GetAllLayoutNames().Contains(LastUsedLayoutName))
             LoadLayout(LastUsedLayoutName);
     }
+    
+    public void RestoreDefaultLayout()
+    {
+        // Delete the last used layout to force the application to use its default state
+        if (GetAllLayoutNames().Contains(LastUsedLayoutName))
+        {
+            DeleteLayout(LastUsedLayoutName);
+        }
+        
+        // Reset all tool visibility to their default state
+        foreach (var tool in _activeDocumentService.Tools)
+        {
+            tool.IsVisible = true; // Default all tools to visible
+            tool.ZoomFactor = 1.0; // Reset zoom to default
+        }
+        
+        // Update the layout to reflect the changes
+        _dockingManager?.UpdateLayout();
+    }
 }

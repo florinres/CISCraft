@@ -13,4 +13,5 @@ public interface IDockingService
     void DeleteLayout(string fileName);
     void SaveLastUsedLayout();
     void LoadLastUsedLayout();
+    void RestoreDefaultLayout();
 }

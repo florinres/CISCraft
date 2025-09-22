@@ -59,6 +59,12 @@
     <!-- 🟦 Static section after dynamic menu -->
     <Separator />
     
+    <ui:MenuItem Header="Restore Default Layout" 
+                 Command="{Binding RestoreDefaultLayoutCommand}"
+                 ToolTip="Restore the default layout and clear any saved layout state" />
+    
+    <Separator />
+    
     <ui:MenuItem Header="Add Layout" x:Name="AddLayoutMenu" StaysOpenOnClick="True">
         <ui:MenuItem StaysOpenOnClick="True">
             <MenuItem.Header>
