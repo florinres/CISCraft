@@ -11,7 +11,6 @@
     <UserControl.Resources>
         <Style x:Key="NodeStyleRectangle" TargetType="Border">
             <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Background" Value="{DynamicResource NodeBackgroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource NodeBorderBrush}" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="Padding" Value="0" />
@@ -54,7 +53,7 @@
 
             <!-- Left-aligned Text -->
             <TextBlock Grid.Column="0"
-                       Foreground="White"
+                       Foreground="{DynamicResource DiagramTextBrush}"
                        VerticalAlignment="Center"
                        TextAlignment="Left"
                        Padding="8,0,0,0">
@@ -73,7 +72,7 @@
                     CornerRadius="0,4,4,0"
                     MinWidth="45">
                 <TextBlock Text="{Binding Name}" 
-                           Foreground="White"
+                           Foreground="{DynamicResource DiagramTextBrush}"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"

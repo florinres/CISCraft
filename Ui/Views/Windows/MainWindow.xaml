@@ -89,7 +89,7 @@
                         <MenuItem Header="Edit Interrupts" IsEnabled="{Binding ActionsBar.NotDebugging}" x:Name="EditInterruptsMenu"/>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View">
-                        <MenuItem Header="Base">
+                        <MenuItem Header="Number Format">
                             <MenuItem Header="Hex"
                                  Command="{Binding MenuBar.SetNumberFormatCommand}"
                                  CommandParameter="{x:Static model:NumberFormat.Hex}" />
@@ -129,7 +129,7 @@
                         <MenuItem Command="{Binding ActionsBar.OpenISACommand}" Header="Instruction Set Architecture"/>
                     </ui:MenuItem>
                 </Menu>
-                
+
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
@@ -142,7 +142,8 @@
             <!-- Left-aligned action buttons -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" DataContext="{Binding ActionsBar}">
                 <ui:Button
-                    VerticalAlignment="Top"
+                    Command="{Binding RunCodeCommand}"
+                VerticalAlignment="Top"
                     ToolTip="Run"
                     Height="30"
                     Width="30"

@@ -325,4 +325,7 @@ public class CpuService : ICpuService
 
         return false;
     }
+    public ushort GetIR(){
+        return (ushort)_cpu.Registers[REGISTERS.IR];
+    }
 }
