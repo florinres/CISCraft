@@ -26,7 +26,7 @@
                 </Polygon>
 
                 <!-- Text -->
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding DataContext.MemoryContext.CurrentMemoryRow[2], RelativeSource={RelativeSource AncestorType=UserControl}}"
                            Foreground="{DynamicResource DiagramTextBrush}"
                            FontWeight="Bold"
                            FontSize="14"
