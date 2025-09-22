@@ -30,363 +30,433 @@
                                     ScaleY="{Binding ZoomFactor, Mode=TwoWay}" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
+                    <RowDefinition Height="20"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
-                    <ColumnDefinition Width="90"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
+                    <ColumnDefinition Width="20"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <!-- Control Unit -->
-                <Border
-                    Grid.Column="0"
-                    Grid.Row="2"
-                    Grid.ColumnSpan="3"
-                    Grid.RowSpan="3"
-                    Background="{DynamicResource NodeBackgroundBrush}"
-                    BorderBrush="{DynamicResource NodeBorderBrush}"
-                    BorderThickness="2"
-                    Padding="1"
-                    CornerRadius="4"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20" /> <!-- For Title -->
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="17" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            TextAlignment="Center"
-                            Foreground="White"
-                            Grid.Row="0">
-                            CU
-                        </TextBlock>
-                        <components:RegisterBlock
-                            x:Name="Mir"
-                            Grid.Row="1"
-                            DataContext="{Binding MirContext}" Height="20" Margin="8"
-                            MinNameWidth="80" />
-                        <components:RegisterBlock
-                            x:Name="Mar"
-                            Grid.Row="2"
-                            DataContext="{Binding MarContext}" Height="20" Margin="8"
-                            MinNameWidth="80" />
-                        <components:RegisterBlock
-                            x:Name="Ir"
-                            Grid.Row="3"
-                            DataContext="{Binding IRContext}" Height="20" Margin="8"
-                            MinNameWidth="80" />
-                    </Grid>
-                </Border>
-                <!-- RAM -->
-                <Border
-                    Grid.Column="0"
-                    Grid.Row="7"
-                    Grid.RowSpan="3"
-                    Grid.ColumnSpan="3"
-                    Background="{DynamicResource NodeBackgroundBrush}"
-                    BorderBrush="{DynamicResource NodeBorderBrush}"
-                    BorderThickness="2"
-                    Padding="1"
-                    CornerRadius="4"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" /> <!-- For Title -->
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            TextAlignment="Center"
-                            Foreground="White"
-                            Grid.Row="0"
-                            Margin="0,5">
-                            RAM
-                        </TextBlock>
-                        <components:RegisterBlock
-                            x:Name="DataIn"
-                            DataContext="{Binding DataInContext }" Height="20" Margin="8"
-                            MinNameWidth="80"
-                            Grid.Row="1" />
-                        <components:RegisterBlock
-                            x:Name="DataOut"
-                            DataContext="{Binding DataOutContext }" Height="20" Margin="8"
-                            MinNameWidth="80"
-                            Grid.Row="2" />
-                        <components:RegisterBlock
-                            x:Name="Address"
-                            DataContext="{Binding ADRContext }" Height="20" Margin="8"
-                            MinNameWidth="80"
-                            Grid.Row="3" />
-                    </Grid>
-                </Border>
-                <!-- IO -->
+
+                <!-- IO 0 -->
                 <Border
                     x:Name="IO0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Grid.Row="1"
+                    Grid.Column="10"
+                    Grid.ColumnSpan="9"
+                    Grid.Row="2"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 0"
                                Foreground="White"
                                FontWeight="Bold"
-                               HorizontalAlignment="Center"
+                               HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
                                TextAlignment="Center"
-                               Padding="2"
-                               Width="180" />
+                               Padding="2" />
                 </Border>
+
+                <!-- IO 1 -->
                 <Border
                     x:Name="IO1"
-                    Grid.Column="3"
-                    Grid.ColumnSpan="3"
-                    Grid.Row="1"
+                    Grid.Column="28"
+                    Grid.ColumnSpan="9"
+                    Grid.Row="2"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 1"
                                Foreground="White"
                                FontWeight="Bold"
-                               HorizontalAlignment="Center"
+                               HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
                                TextAlignment="Center"
-                               Padding="2"
-                               Width="180" />
+                               Padding="2" />
                 </Border>
 
+                <!-- IO 2 -->
                 <Border
                     x:Name="IO2"
-                    Grid.Column="6"
-                    Grid.ColumnSpan="3"
-                    Grid.Row="1"
+                    Grid.Column="47"
+                    Grid.ColumnSpan="9"
+                    Grid.Row="2"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 2"
                                Foreground="White"
                                FontWeight="Bold"
-                               HorizontalAlignment="Center"
+                               HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
                                TextAlignment="Center"
-                               Padding="2"
-                               Width="180" />
+                               Padding="2" />
                 </Border>
 
+                <!-- IO 3 -->
                 <Border
                     x:Name="IO3"
-                    Grid.Column="9"
-                    Grid.ColumnSpan="3"
-                    Grid.Row="1"
+                    Grid.Column="65"
+                    Grid.ColumnSpan="9"
+                    Grid.Row="2"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Stretch"
                     CornerRadius="4">
                     <TextBlock Text="I/O 3"
                                Foreground="White"
                                FontWeight="Bold"
-                               HorizontalAlignment="Center"
+                               HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
                                TextAlignment="Center"
-                               Width="180"
                                Padding="2" />
                 </Border>
 
                 <!-- SIE -->
                 <Border
                     x:Name="Sie"
-                    Grid.Column="5"
-                    Grid.ColumnSpan="2"
-                    Grid.Row="2"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
+                    Grid.Row="4"
+                    Grid.RowSpan="2"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
-                    Padding="1"
+                    Padding="4"
                     VerticalAlignment="Center"
                     CornerRadius="4">
                     <TextBlock Text="SIE"
                                Foreground="White"
                                FontWeight="Bold"
-                               HorizontalAlignment="Center"
+                               HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
                                TextAlignment="Center"
                                Padding="2" />
                 </Border>
 
-                <Grid
-                    Grid.Row="1"
-                    Grid.Column="5"
-                    Grid.ColumnSpan="2"
+                <!-- Control Unit -->
+                <Border
+                    Grid.Column="10"
+                    Grid.Row="7"
+                    Grid.ColumnSpan="20"
                     Grid.RowSpan="8"
-                    Margin="0,0,0,0"
+                    Background="{DynamicResource NodeBackgroundBrush}"
+                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderThickness="2"
+                    Padding="1"
+                    CornerRadius="4"
+                    Panel.ZIndex="100"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+                        <TextBlock
+                            TextAlignment="Center"
+                            Foreground="White">
+                            CU
+                        </TextBlock>
+                </Border>
+
+                <components:RegisterBlock
+                    x:Name="Mir"
+                    Grid.Column="11"
+                    Grid.Row="9"
+                    Grid.ColumnSpan="18"
+                    Panel.ZIndex="200"
+                    DataContext="{Binding MirContext}" />
+
+                <components:RegisterBlock
+                    x:Name="Mar"
+                    Grid.Column="11"
+                    Grid.ColumnSpan="10"
+                    Grid.Row="11"
+                    Panel.ZIndex="200"
+                    DataContext="{Binding MarContext}" />
+
+                <components:RegisterBlock
+                    x:Name="Ir"
+                    Grid.Column="11"
+                    Grid.ColumnSpan="10"
+                    Grid.Row="13"
+                    Panel.ZIndex="200"
+                    DataContext="{Binding IRContext}" />
+
+                <!-- RAM -->
+                <Border
+                    Grid.Column="10"
+                    Grid.Row="22"
+                    Grid.RowSpan="8"
+                    Grid.ColumnSpan="20"
+                    Background="{DynamicResource NodeBackgroundBrush}"
+                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderThickness="2"
+                    Padding="1"
+                    CornerRadius="4"
+                    Panel.ZIndex="100"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+                    <TextBlock
+                        TextAlignment="Center"
+                        Foreground="White" >
+                        RAM
+                    </TextBlock>
+                </Border>
+
+                <components:RegisterBlock
+                    x:Name="DataIn"
+                    Grid.Column="11"
+                    Grid.Row="24"
+                    Grid.ColumnSpan="18"
+                    Panel.ZIndex="200"
+                    DataContext="{Binding DataInContext }" />
+
+                <components:RegisterBlock
+                    x:Name="DataOut"
+                    Grid.Column="11"
+                    Grid.Row="26"
+                    Grid.ColumnSpan="18"
+                    Panel.ZIndex="200"
+                    DataContext="{Binding DataOutContext }" />
+
+                <components:RegisterBlock
+                    x:Name="Address"
+                    Grid.Column="11"
+                    Grid.Row="28"
+                    Grid.ColumnSpan="18"
+                    Panel.ZIndex="200"
+                    DataContext="{Binding ADRContext }" />
+
+                <components:RegisterBlock
+                    x:Name="Ivr"
+                    Grid.Row="7"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
+                    DataContext="{Binding IVRContext}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" />
+
+                <components:RegisterBlock
+                    x:Name="Pc"
+                    Grid.Row="9"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
+                    DataContext="{Binding PCContext}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" />
+
+                <components:RegisterBlock
+                    x:Name="T"
+                    Grid.Row="11"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
+                    DataContext="{Binding TContext}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" />
+
+                <components:RegisterBlock
+                    x:Name="Sp"
+                    Grid.Row="15"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
+                    DataContext="{Binding SPContext}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" />
+
+                <components:RegisterBlock
+                    x:Name="Flags"
+                    Grid.Row="17"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
+                    DataContext="{Binding FLAGContext}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch" />
+
+                <Grid 
+                    Grid.Row="19"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
                     HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                    </Grid.RowDefinitions>
-                    <components:RegisterBlock
-                        x:Name="Ivr"
-                        Grid.Row="0"
-                        Grid.Column="5"
-                        Grid.ColumnSpan="2"
-                        DataContext="{Binding IVRContext}"
-                        Margin="0,0,0,2"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Stretch" />
-                    <components:RegisterBlock
-                        x:Name="Pc"
-                        Grid.Row="1"
-                        DataContext="{Binding PCContext}"
-                        Margin="0,2,0,2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch" />
-                    <components:RegisterBlock
-                        x:Name="T"
-                        Grid.Row="3"
-                        DataContext="{Binding TContext}"
-                        Margin="0,2,0,2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch" />
-                    <components:RegisterBlock
-                        x:Name="Sp"
-                        Grid.Row="4"
-                        DataContext="{Binding SPContext}"
-                        Margin="0,2,0,2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch" />
-                    <components:RegisterBlock
-                        x:Name="Flags"
-                        Grid.Row="5"
-                        DataContext="{Binding FLAGContext}"
-                        Margin="0,2,0,2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch" />
-                    <Grid Grid.Row="6"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          Grid.RowSpan="2"
-                          Margin="0,0,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <components:BitBlock x:Name="BVI" Grid.Column="0" DataContext="{Binding BVIContext}" />
-                        <components:BitBlock x:Name="C" Grid.Column="1" DataContext="{Binding CContext}" />
-                        <components:BitBlock x:Name="Z" Grid.Column="2" DataContext="{Binding ZContext}" />
-                        <components:BitBlock x:Name="S" Grid.Column="3" DataContext="{Binding SContext}" />
-                        <components:BitBlock x:Name="V" Grid.Column="4" DataContext="{Binding VContext}" />
-                    </Grid>
+                    VerticalAlignment="Center"
+                    Grid.RowSpan="2"
+                    Margin="0,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <components:BitBlock x:Name="BVI" Grid.Column="0" DataContext="{Binding BVIContext}" />
+                    <components:BitBlock x:Name="C" Grid.Column="1" DataContext="{Binding CContext}" />
+                    <components:BitBlock x:Name="Z" Grid.Column="2" DataContext="{Binding ZContext}" />
+                    <components:BitBlock x:Name="S" Grid.Column="3" DataContext="{Binding SContext}" />
+                    <components:BitBlock x:Name="V" Grid.Column="4" DataContext="{Binding VContext}" />
                 </Grid>
 
                 <components:RegisterBlock
                     x:Name="Mdr"
-                    Grid.Row="7"
-                    Grid.Column="5"
-                    Grid.ColumnSpan="2"
+                    Grid.Row="23"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
                     VerticalAlignment="Top"
-                    Height="23"
-                    Margin="0"
                     HorizontalAlignment="Stretch"
                     DataContext="{Binding MDRContext}" />
 
                 <components:RegisterBlock
                     x:Name="Adr"
-                    Height="23"
-                    Grid.Row="7"
-                    Grid.Column="5"
-                    Grid.ColumnSpan="2"
+                    Grid.Row="25"
+                    Grid.Column="37"
+                    Grid.ColumnSpan="10"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Stretch"
                     DataContext="{Binding ADRContext}" />
 
                 <components:StraightLineBus
                     x:Name="SBus"
-                    Grid.Row="2"
-                    Grid.RowSpan="7"
-                    Grid.Column="7"
+                    Grid.Row="7"
+                    Grid.RowSpan="20"
+                    Grid.Column="50"
                     LineWidth="8"
                     Panel.ZIndex="300"
                     HorizontalAlignment="Right"
-                    Margin="0,0,24,0"
                     LineHeight="500" />
 
                 <components:StraightLineBus
                     x:Name="DBus"
-                    Grid.Row="2"
-                    Grid.RowSpan="7"
-                    Grid.Column="8"
+                    Grid.Row="7"
+                    Grid.RowSpan="20"
+                    Grid.Column="52"
                     LineWidth="8"
                     Panel.ZIndex="300"
                     HorizontalAlignment="Left"
-                    Margin="24,0,0,0"
                     LineHeight="500" />
 
-                <diagram:SumBlock
-                    x:Name="Alu"
-                    Grid.Row="8"
-                    Grid.Column="7"
-                    Grid.RowSpan="2"
-                    Grid.ColumnSpan="2"
-                    Margin="0,-12,0,12"
-                    Panel.ZIndex="999"
-                    HorizontalAlignment="Center" />
-
+                <!-- GPR -->
                 <Border
-                    Grid.Column="9"
-                    Grid.ColumnSpan="2"
-                    Grid.Row="2"
-                    Grid.RowSpan="7"
+                    Grid.Column="56"
+                    Grid.ColumnSpan="10"
+                    Grid.Row="7"
+                    Grid.RowSpan="17"
                     Background="{DynamicResource NodeBackgroundBrush}"
                     BorderBrush="{DynamicResource NodeBorderBrush}"
                     BorderThickness="2"
@@ -450,16 +520,25 @@
 
                 <diagram:AroundTheEdgeBus
                     x:Name="RBus"
-                    Grid.Row="2"
-                    Grid.RowSpan="8"
-                    Grid.Column="4"
-                    Grid.ColumnSpan="8"
-                    LineThickness="10"
-                    WrapHeight="390"
-                    WrapWidth="710"
+                    Grid.Row="7"
+                    Grid.RowSpan="23"
+                    Grid.Column="33"
+                    Grid.ColumnSpan="41"
+                    LineThickness="13"
                     Panel.ZIndex="300"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center" />
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+
+                <diagram:SumBlock
+                    x:Name="Alu"
+                    Grid.Row="27"
+                    Grid.Column="50"
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="3"
+                    Panel.ZIndex="999"
+                    Margin="0,-12,0,12"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center" />
 
                 <Canvas
                     x:Name="ConnectionCanvas"

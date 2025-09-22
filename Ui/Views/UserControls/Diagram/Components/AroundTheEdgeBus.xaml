@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:Ui.Views.UserControls.Diagram" xmlns:viewModel="clr-namespace:Ui.ViewModels"
              xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
              d:DataContext="{d:DesignInstance Type=diagram:AroundTheEdgeBusViewModel, IsDesignTimeCreatable=False}"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d">
     <Grid>
         <!-- Black outer path -->
         <Path x:Name="AroundTheEdgePath"

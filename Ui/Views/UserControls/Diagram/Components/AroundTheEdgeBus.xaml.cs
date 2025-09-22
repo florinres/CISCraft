@@ -1,17 +1,28 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Ui.Models;
 
 namespace Ui.Views.UserControls.Diagram;
 
-public partial class AroundTheEdgeBus : UserControl
+public partial class AroundTheEdgeBus : UserControl, INotifyPropertyChanged
 {
     public static readonly DependencyProperty WrapWidthProperty =
-        DependencyProperty.Register(nameof(WrapWidth), typeof(double), typeof(AroundTheEdgeBus), new PropertyMetadata(300.0));
+        DependencyProperty.Register(
+            nameof(WrapWidth),
+            typeof(double),
+            typeof(AroundTheEdgeBus),
+            new PropertyMetadata(double.NaN, OnWrapDimensionChanged));
 
     public static readonly DependencyProperty WrapHeightProperty =
-        DependencyProperty.Register(nameof(WrapHeight), typeof(double), typeof(AroundTheEdgeBus), new PropertyMetadata(300.0));
+        DependencyProperty.Register(
+            nameof(WrapHeight),
+            typeof(double),
+            typeof(AroundTheEdgeBus),
+            new PropertyMetadata(double.NaN, OnWrapDimensionChanged));
     
     public static readonly DependencyProperty LineThicknessProperty =
         DependencyProperty.Register(nameof(LineThickness), typeof(double), typeof(AroundTheEdgeBus), new PropertyMetadata(6.0));
@@ -34,16 +45,36 @@ public partial class AroundTheEdgeBus : UserControl
         set => SetValue(LineThicknessProperty, value);
     }
 
-    public Point BottomLeftpoint => new Point(0, WrapHeight);
-    public Point BottomRightpoint => new Point(WrapWidth, WrapHeight);
-    public Point TopRightpoint => new Point(WrapWidth, 0);
+    private double EffectiveWidth => (double.IsNaN(WrapWidth) || WrapWidth <= 0) ? ActualWidth : WrapWidth;
+    private double EffectiveHeight => (double.IsNaN(WrapHeight) || WrapHeight <= 0) ? ActualHeight : WrapHeight;
+
+    public Point BottomLeftpoint => new Point(0, EffectiveHeight);
+    public Point BottomRightpoint => new Point(EffectiveWidth, EffectiveHeight);
+    public Point TopRightpoint => new Point(EffectiveWidth, 0);
 
     public AroundTheEdgeBus()
     {
         InitializeComponent();
-
-        // UpdateGeometry();
+        Loaded += (_, __) => RaisePointProps();
+        SizeChanged += (_, __) => RaisePointProps();
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private static void OnWrapDimensionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is AroundTheEdgeBus ctrl)
+            ctrl.RaisePointProps();
+    }
+
+    private void RaisePointProps()
+    {
+        OnPropertyChanged(nameof(BottomLeftpoint));
+        OnPropertyChanged(nameof(BottomRightpoint));
+        OnPropertyChanged(nameof(TopRightpoint));
+    }
+
+    private void OnPropertyChanged(string propertyName)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     public double GetEdgeAbsolute(PathSide side, EdgeType edgeType, FrameworkElement container)
     {
