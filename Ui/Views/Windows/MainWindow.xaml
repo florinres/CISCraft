@@ -129,7 +129,7 @@
                         <MenuItem Command="{Binding ActionsBar.OpenISACommand}" Header="Instruction Set Architecture"/>
                     </ui:MenuItem>
                 </Menu>
-                
+
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
@@ -142,7 +142,8 @@
             <!-- Left-aligned action buttons -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" DataContext="{Binding ActionsBar}">
                 <ui:Button
-                    VerticalAlignment="Top"
+                    Command="{Binding RunCodeCommand}"
+                VerticalAlignment="Top"
                     ToolTip="Run"
                     Height="30"
                     Width="30"
