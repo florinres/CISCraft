@@ -65,11 +65,18 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         ushort irValue = _cpuService.GetIR();
         while (irValue != haltCode)
         {
-            Debug.Print(irValue.ToString());
             _cpuService.StepMicroinstruction();
             irValue = _cpuService.GetIR();
         }
-        //_cpuService.StepInstruction();
+        _cpuService.StepMicroinstruction();
+        _cpuService.StepMicroinstruction();
+        _cpuService.StepMicroinstruction();
+        _cpuService.StepMicroinstruction();
+        _cpuService.StepMicroinstruction();
+        CanAssemble = true;
+        IsDebugging = true;
+        NotDebugging = false;
+        CanDebug = false;
     }
 
     [RelayCommand]
