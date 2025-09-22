@@ -14,7 +14,6 @@
             <Grid Width="60" Height="90">
                 <!-- Main body using shared resources -->
                 <Polygon Points="0,20 0,70  60,90 60,55 45,45 60,40 60,0"
-                         Fill="{DynamicResource NodeBackgroundBrush}"
                          Stroke="{DynamicResource NodeBorderBrush}"
                          StrokeThickness="2"
                          HorizontalAlignment="Center"
@@ -28,7 +27,7 @@
 
                 <!-- Text -->
                 <TextBlock Text="{Binding Name}"
-                           Foreground="White"
+                           Foreground="{DynamicResource DiagramTextBrush}"
                            FontWeight="Bold"
                            FontSize="14"
                            HorizontalAlignment="Center"

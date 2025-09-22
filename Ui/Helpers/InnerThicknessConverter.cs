@@ -8,7 +8,14 @@ public class InnerThicknessConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is double outerThickness)
-            return outerThickness * 0.6; // adjust ratio to your liking
+        {
+            double ratio = 0.6;
+            if (parameter is string s && double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out var p))
+            {
+                ratio = p;
+            }
+            return outerThickness * ratio;
+        }
         return value;
     }
 

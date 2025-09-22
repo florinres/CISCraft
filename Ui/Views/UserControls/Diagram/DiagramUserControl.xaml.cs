@@ -485,7 +485,7 @@ public partial class DiagramUserControl : UserControl
             Name = "ALU_RBus",
             Points = new PointCollection
             {
-                aluPts.MidBottom with { Y = aluPts.MidBottom.Y - 16},
+                aluPts.MidBottom with { Y = aluPts.MidBottom.Y - 10},
                 aluPts.MidBottom with { Y = aluPts.MidBottom.Y + 10},
             }
         };

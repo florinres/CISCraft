@@ -12,7 +12,6 @@
     <UserControl.Resources>
         <Style x:Key="NodeStyleRectangle" TargetType="Border">
             <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Background" Value="{DynamicResource NodeBackgroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource NodeBorderBrush}" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="Padding" Value="4" />
@@ -22,16 +21,22 @@
     </UserControl.Resources>
 
     <!-- Use Grid to center content -->
-    <Grid>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
         <!-- Centered Border -->
         <Border 
             x:Name="BitBlockBorder"
+            Grid.Row="0"
             Style="{StaticResource NodeStyleRectangle}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="{Binding Value}"
-                           Foreground="White"
+                           Foreground="{DynamicResource DiagramTextBrush}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            TextAlignment="Center" 
@@ -39,16 +44,14 @@
             </StackPanel>
         </Border>
 
-        <!-- Top-right TextBlock outside the Border -->
-        <TextBlock Text="{Binding Name}"
-                   Foreground="White"
-                   FontSize="10">
-            <TextBlock.RenderTransform>
-                <TranslateTransform 
-                    X="25" 
-                    Y="-10"/> <!-- negative Y to move above the Border -->
-            </TextBlock.RenderTransform>
-        </TextBlock>
+        <!-- Bottom-center label under the Border -->
+        <TextBlock Grid.Row="1"
+                   Text="{Binding Name}"
+                   Foreground="{DynamicResource DiagramTextBrush}"
+                   FontSize="10"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Margin="0,4,0,0" />
     </Grid>
 
 </UserControl>

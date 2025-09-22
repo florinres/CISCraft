@@ -89,7 +89,7 @@
                         <MenuItem Header="Edit Interrupts" IsEnabled="{Binding ActionsBar.NotDebugging}" x:Name="EditInterruptsMenu"/>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View">
-                        <MenuItem Header="Base">
+                        <MenuItem Header="Number Format">
                             <MenuItem Header="Hex"
                                  Command="{Binding MenuBar.SetNumberFormatCommand}"
                                  CommandParameter="{x:Static model:NumberFormat.Hex}" />

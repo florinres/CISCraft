@@ -8,9 +8,9 @@
              d:DataContext="{d:DesignInstance Type=diagram:AroundTheEdgeBusViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d">
     <Grid>
-        <!-- Black outer path -->
+      <!-- Outer path -->
         <Path x:Name="AroundTheEdgePath"
-                Stroke="Black"
+              Stroke="{DynamicResource BusStrokeBrush}"
               StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"
@@ -26,9 +26,9 @@
             </Path.Data>
         </Path>
 
-        <!-- Inner gray path (slightly thinner, sits on top) -->
-        <Path Stroke="Gray"
-              StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InnerThicknessConverter}}"
+      <!-- Inner path (slightly thinner, sits on top) -->
+      <Path Stroke="{DynamicResource BusFillBrush}"
+          StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InnerThicknessConverter}, ConverterParameter=0.85}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"
               StrokeEndLineCap="Round">

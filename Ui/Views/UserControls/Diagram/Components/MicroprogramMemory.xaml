@@ -8,11 +8,11 @@
              d:DataContext="{d:DesignInstance Type=microprogram:MicroprogramViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d"
              d:DesignHeight="100" d:DesignWidth="1050">
-    <Border BorderBrush="White" BorderThickness="1" Padding="4">
+    <Border BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Padding="4">
         <StackPanel>
             <TextBlock Grid.Row="0" Text="MICROPROGRAM MEMORY"
                        HorizontalAlignment="Center"
-                       Foreground="White"
+                       Foreground="{DynamicResource DiagramTextBrush}"
                        FontWeight="Bold"
                        Margin="0,0,0,4" />
             <Grid>
@@ -27,29 +27,29 @@
                     <ColumnDefinition Width="*" />    <!-- Item7 takes remaining space -->
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[0]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="0" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[0]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="1" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[1]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="1" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[1]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="2" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[2]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="2" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[2]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="3" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[3]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="3" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[3]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="4" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[4]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="4" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[4]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="5" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[5]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="5" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[5]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="6" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[6]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="6" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[6]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="7" BorderBrush="White" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[7]}" Foreground="White" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Grid.Column="7" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock Text="{Binding CurrentMemoryRow[7]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
             </Grid>
         </StackPanel>
