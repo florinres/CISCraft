@@ -212,20 +212,42 @@ public class DockingService : IDockingService
     
     public void RestoreDefaultLayout()
     {
-        // Delete the last used layout to force the application to use its default state
-        if (GetAllLayoutNames().Contains(LastUsedLayoutName))
+        try
         {
-            DeleteLayout(LastUsedLayoutName);
+            // Delete the last used layout to force the application to use its default state
+            if (GetAllLayoutNames().Contains(LastUsedLayoutName))
+            {
+                DeleteLayout(LastUsedLayoutName);
+            }
+            
+            // Reset all tool visibility to their default state
+            foreach (var tool in _activeDocumentService.Tools)
+            {
+                tool.IsVisible = true; // Default all tools to visible
+                tool.ZoomFactor = 1.0; // Reset zoom to default
+            }
+            
+            // Update the layout to reflect the changes
+            _dockingManager?.UpdateLayout();
         }
-        
-        // Reset all tool visibility to their default state
-        foreach (var tool in _activeDocumentService.Tools)
+        catch (Exception ex)
         {
-            tool.IsVisible = true; // Default all tools to visible
-            tool.ZoomFactor = 1.0; // Reset zoom to default
+            // Log the error but don't crash the application
+            System.Diagnostics.Debug.WriteLine($"Error restoring default layout: {ex.Message}");
+            
+            // At minimum, try to reset tool states even if file operations fail
+            try
+            {
+                foreach (var tool in _activeDocumentService.Tools)
+                {
+                    tool.IsVisible = true;
+                    tool.ZoomFactor = 1.0;
+                }
+            }
+            catch (Exception innerEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error resetting tool states: {innerEx.Message}");
+            }
         }
-        
-        // Update the layout to reflect the changes
-        _dockingManager?.UpdateLayout();
     }
 }

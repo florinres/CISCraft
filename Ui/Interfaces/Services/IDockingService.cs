@@ -13,5 +13,10 @@ public interface IDockingService
     void DeleteLayout(string fileName);
     void SaveLastUsedLayout();
     void LoadLastUsedLayout();
+    
+    /// <summary>
+    /// Restores the default layout by clearing any saved layout state and resetting all tools to their default configuration.
+    /// This method is useful for recovering from corrupted layouts that may cause the application to crash.
+    /// </summary>
     void RestoreDefaultLayout();
 }
