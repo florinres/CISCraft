@@ -64,7 +64,7 @@ namespace Ui.ViewModels.Components.MenuBar
             if (string.IsNullOrWhiteSpace(filePath))
             {
                 var projectRoot = Directory.GetCurrentDirectory();
-                fullPath = Path.Combine(projectRoot, "Assets", "default_code.txt");
+                fullPath = Path.GetFullPath(AppContext.BaseDirectory + "/../../../../Examples/default.s");
             }
             else
             {
