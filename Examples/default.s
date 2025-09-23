@@ -3,7 +3,7 @@
 ei ; Enables interrupts
 
 mov r0,5
-mov r1,3
+mov r1,2
 call mul
 halt ; Halts program execution by stopping CPU clock
 
@@ -12,6 +12,9 @@ halt ; Halts program execution by stopping CPU clock
 proc mul
 
     cmp r1, 0   ; Check if multiplier is zero
+    beq case_0_mul
+
+    cmp r1, 1
     beq mul_exit
 
     mov r2,r0   ; Preserve original value of R0
@@ -22,8 +25,11 @@ proc mul
     dec r1
     cmp r1, 0
     bne mul_loop
+    jmp mul_exit
+
+    case_0_mul:
+    mov r0,0
 
     mul_exit:
     ret
-
 endp mul
