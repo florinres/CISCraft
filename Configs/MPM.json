@@ -15,7 +15,7 @@
     "INT":
     [
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "NONE",    "INTA,-2SP",       "STEP",             "INDEX0",  "T",  "0"            ],
-        ["PdFLAGs",   "NONE",          "SBUS",  "PmMDR",       "NONE",    "-2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
+        ["PdFLAGs",   "NONE",          "SBUS",  "PmMDR",       "WRITE",    "-2SP",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdSPs",     "NONE",          "SBUS",  "PmADR",       "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdPCs",     "NONE",          "SBUS",  "PmMDR",       "WRITE",   "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],
         ["PdIVRs",    "NONE",          "SBUS",  "PmADR",       "READ",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ],

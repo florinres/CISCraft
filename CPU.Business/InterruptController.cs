@@ -19,7 +19,7 @@ namespace CPU.Business
             prioritisedIRQs.Add("I3p", false);
 
             prioritisedExceptions = new Dictionary<string, bool>();
-            prioritisedExceptions.Add("ACLow", false);
+            prioritisedExceptions.Add("ACLOW", false);
             prioritisedExceptions.Add("CIL", false);
             prioritisedExceptions.Add("Reserved0", false);
             prioritisedExceptions.Add("Reserved1", false);
@@ -40,7 +40,7 @@ namespace CPU.Business
             prioritisedIRQs["I0p"] = irqs[0] & exceptionExclude;
             prioritisedIRQs["I1p"] = irqs[1] & !irqs[0] & exceptionExclude;
             prioritisedIRQs["I2p"] = irqs[2] & !irqs[1] & !irqs[0] & exceptionExclude;
-            prioritisedIRQs["I3p"] = irqs[3] & irqs[2] & !irqs[1] & !irqs[0] & exceptionExclude;;
+            prioritisedIRQs["I3p"] = irqs[3] & !irqs[2] & !irqs[1] & !irqs[0] & exceptionExclude;;
         }
         /// <summary>
         /// Returns a dictionary containing the pair
@@ -67,10 +67,10 @@ namespace CPU.Business
         /// <returns></returns>
         private void PrioritiseExceptions(bool[] detectedExceptions)
         {
-            prioritisedExceptions["ACLow"] = detectedExceptions[0];
-            prioritisedExceptions["CIL"] = detectedExceptions[1] & !prioritisedExceptions["ACLow"];
-            prioritisedExceptions["Reserved0"] = detectedExceptions[2] & !prioritisedExceptions["CIL"] & !prioritisedExceptions["ACLow"];
-            prioritisedExceptions["Reserved1"] = detectedExceptions[3] & !prioritisedExceptions["Reserved0"] & !prioritisedExceptions["CIL"] & !prioritisedExceptions["ACLow"];
+            prioritisedExceptions["ACLOW"] = detectedExceptions[0];
+            prioritisedExceptions["CIL"] = detectedExceptions[1] & !prioritisedExceptions["ACLOW"];
+            prioritisedExceptions["Reserved0"] = detectedExceptions[2] & !prioritisedExceptions["CIL"] & !prioritisedExceptions["ACLOW"];
+            prioritisedExceptions["Reserved1"] = detectedExceptions[3] & !prioritisedExceptions["Reserved0"] & !prioritisedExceptions["CIL"] & !prioritisedExceptions["ACLOW"];
         }
         /// <summary>
         /// Computes value for interrupt vector used for select the correct
@@ -83,7 +83,7 @@ namespace CPU.Business
             ushort interruptVector = 0;
             PrioritiseExceptions(exceptions);
 
-            ushort bit1 = (ushort)(Convert.ToInt16(prioritisedExceptions["ACLow"]) | Convert.ToInt16(prioritisedExceptions["Reserved1"]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
+            ushort bit1 = (ushort)(Convert.ToInt16(prioritisedExceptions["CIL"]) | Convert.ToInt16(prioritisedExceptions["Reserved1"]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
             ushort bit2 = (ushort)(Convert.ToInt16(prioritisedExceptions["Reserved0"]) | Convert.ToInt16(prioritisedExceptions["Reserved1"]) | Convert.ToInt16(prioritisedIRQs["I2p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
             ushort bit3 = (ushort)(Convert.ToInt16(prioritisedIRQs["I0p"]) | Convert.ToInt16(prioritisedIRQs["I1p"]) | Convert.ToInt16(prioritisedIRQs["I2p"]) | Convert.ToInt16(prioritisedIRQs["I3p"]));
             interruptVector |= (ushort)(bit1 << 1);

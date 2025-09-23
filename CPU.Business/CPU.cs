@@ -135,8 +135,6 @@ namespace CPU.Business
                 _globalIRQ = bviState & hwInterruptRequest;
                 _controlUnit.SetGlobalIRQState(_globalIRQ);
 
-                Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
-
             }
             return (previousMARState, previousMIRIndexState);
         }
@@ -458,8 +456,12 @@ namespace CPU.Business
                 case OTHER_EVENTS.INTA_SP_MINUS_2:
                     // INTA = 1
                     // this signal would normally go to
-                    // the corressponding I/O HW circuit
+                    // the corresponding I/O HW circuit
 
+                    bool[] exceptions = Enum.GetValues<Exceptions>()
+                        .Select(ex => Registers[ex] && !ResetBI)
+                        .ToArray();
+                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
                     var prioritisedIRQs = _interruptController.GetPrioritisedIRQStates();
                     foreach (var kvp in prioritisedIRQs)
                     {
@@ -479,17 +481,6 @@ namespace CPU.Business
                     //Note:since the exception latches are reseted always together with those
                     // of ISR, the same variable shall model both signals
 
-                    var prioritisedExceptions = _interruptController.GetPrioritisedExceptions();
-                    foreach (var kvp in prioritisedExceptions)
-                    {
-                        if (kvp.Value)
-                        {
-                            if (Enum.TryParse<Exceptions>(kvp.Key, out var ex))
-                            {
-                                Registers[ex] = false;
-                            }
-                        }
-                    }
                     ResetBI = true;
                     break;
                 case OTHER_EVENTS.A0BPO:
