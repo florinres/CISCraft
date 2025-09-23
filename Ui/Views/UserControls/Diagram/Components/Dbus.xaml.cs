@@ -2,13 +2,13 @@
 
 namespace Ui.Views.UserControls.Diagram.Components;
 
-public partial class StraightLineBus : UserControl
+public partial class Dbus : UserControl
 {
     public static readonly DependencyProperty LineWidthProperty =
-        DependencyProperty.Register(nameof(LineWidth), typeof(double), typeof(StraightLineBus), new PropertyMetadata(300.0));
+        DependencyProperty.Register(nameof(LineWidth), typeof(double), typeof(Dbus), new PropertyMetadata(300.0));
 
     public static readonly DependencyProperty LineHeightProperty =
-        DependencyProperty.Register(nameof(LineHeight), typeof(double), typeof(StraightLineBus), new PropertyMetadata(6.0));
+        DependencyProperty.Register(nameof(LineHeight), typeof(double), typeof(Dbus), new PropertyMetadata(6.0));
 
     public double LineWidth
     {
@@ -22,7 +22,7 @@ public partial class StraightLineBus : UserControl
         set => SetValue(LineHeightProperty, value);
     }
     
-    public StraightLineBus()
+    public Dbus()
     {
         InitializeComponent();
     }

@@ -3,6 +3,7 @@ using CPU.Business.Models;
 using ICSharpCode.AvalonEdit;
 using Microsoft.CodeAnalysis;
 using System.Data.Common;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Media;
@@ -79,23 +80,19 @@ public class CpuService : ICpuService
         _diagram.ResetHighlight();
 
         var (row, column) = _cpu.StepMicrocommand();
-        
+
         if (row == 0 && column == 0)
         {
             _microprogramService.ClearAllHighlightedRows();
             _cursorNeedsUpdate = true;
         }
 
-        _diagram.HighlightConnectionByName("PmIvr", true, new SolidColorBrush(Colors.Lime));
-
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
 
-        // Highlight Flag bits if they're being accessed
-        if (_cpu.IsAccessingFlags)
-        {
-            //_diagram.HighlightFlagBitConnections(true, new SolidColorBrush(Colors.Yellow));
-        }
+        _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[column]].Value, true, Brushes.Red);
+
+        _diagram.HandleHighlightMpmBox(_mirLookUpIndex[column]);
 
         UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
 
@@ -119,11 +116,10 @@ public class CpuService : ICpuService
             _microprogramService.ClearAllHighlightedRows();
         }
 
-        // Highlight Flag bits if they're being accessed
-        if (_cpu.IsAccessingFlags)
-        {
-            _diagram.HighlightFlagBitConnections(true, new SolidColorBrush(Colors.Yellow));
-        }
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = -1;
+
+        _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
 
         if (row == 97 && col == 2)
         {
@@ -137,10 +133,12 @@ public class CpuService : ICpuService
         while ((col != 6) && (row != 97 || col != 2))
         {
             (row, col) = _cpu.StepMicrocommand();
-        }
 
-        _microprogramService.CurrentRow = row;
-        _microprogramService.CurrentColumn = -1;
+            _microprogramService.CurrentRow = row;
+            _microprogramService.CurrentColumn = -1;
+
+            _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
+        }
     }
     public void StepInstruction()
     {
@@ -150,18 +148,22 @@ public class CpuService : ICpuService
 
         _diagram.ResetHighlight();
 
-        _cpu.StepMicrocommand();
+        (row, col) = _cpu.StepMicrocommand();
+
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = _mirLookUpIndex[col];
+
+        _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
 
         // Check if CPU is accessing flags in each microcommand
         while ((row != 0 || col != 0) && (row != 97 || col != 2))
         {
-            // Highlight Flag bits if they're being accessed
-            if (_cpu.IsAccessingFlags)
-            {
-                _diagram.HighlightFlagBitConnections(true, new SolidColorBrush(Colors.Yellow));
-            }
-            
             (row, col) = _cpu.StepMicrocommand();
+
+            _microprogramService.CurrentRow = row;
+            _microprogramService.CurrentColumn = _mirLookUpIndex[col];
+
+            _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
         }
 
         if (row == 97 && col == 2)
@@ -175,7 +177,13 @@ public class CpuService : ICpuService
     }
     public void ResetProgram()
     {
+        foreach (var doc in _activeDocumentService.Documents)
+        {
+            doc.ResetHighlight();
+        }
+
         _cpu.ResetProgram();
+        _diagram.ResetHighlight();
         _microprogramService.CurrentRow = -1;
         _microprogramService.CurrentColumn = -1;
         _microprogramService.ClearAllHighlightedRows();
@@ -228,6 +236,7 @@ public class CpuService : ICpuService
         {
             doc.ResetHighlight();
         }
+        _diagram.ResetHighlight();
         _cpu.ResetProgram();
         _microprogramService.CurrentRow = -1;
         _microprogramService.CurrentColumn = -1;

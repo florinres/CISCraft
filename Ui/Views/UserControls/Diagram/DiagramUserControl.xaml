@@ -424,7 +424,7 @@
                     HorizontalAlignment="Stretch"
                     DataContext="{Binding ADRContext}" />
 
-                <components:StraightLineBus
+                <components:Sbus
                     x:Name="SBus"
                     Grid.Row="7"
                     Grid.RowSpan="20"
@@ -434,7 +434,7 @@
                     HorizontalAlignment="Right"
                     LineHeight="500" />
 
-                <components:StraightLineBus
+                <components:Dbus
                     x:Name="DBus"
                     Grid.Row="7"
                     Grid.RowSpan="20"
@@ -510,7 +510,7 @@
                     </Grid>
                 </Border>
 
-                <diagram:AroundTheEdgeBus
+                <diagram:Rbus
                     x:Name="RBus"
                     Grid.Row="7"
                     Grid.RowSpan="23"

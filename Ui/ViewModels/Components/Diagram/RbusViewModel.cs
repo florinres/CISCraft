@@ -1,5 +1,5 @@
 ﻿namespace Ui.ViewModels.Components.Diagram;
 
-public class AroundTheEdgeBusViewModel
+public class RbusViewModel
 {
 }

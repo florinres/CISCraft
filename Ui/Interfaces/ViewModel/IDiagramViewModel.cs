@@ -38,9 +38,12 @@ public interface IDiagramViewModel : IToolViewModel
     BitBlockViewModel SContext { get; }
     BitBlockViewModel VContext { get; }
     void ResetHighlight();
+    public void HandleHighlightMpmBox(int index);
     void SetNumberFormat(NumberFormat format);
     void SetDiagramControl(DiagramUserControl diagramControl);
     void HighlightConnectionByName(string connectionName, bool highlight = true, Brush highlightBrush = null);
+    void HighlightConnectionByTag(string connectionTag, bool highlight = true, Brush highlightBrush = null);
+    void HandleHighlightConnection(ushort flags, string connectionTag, bool highlight = true, Brush highlightBrush = null);
     void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null);
     void HighlightFlagBitConnections(bool highlight = true, Brush highlightBrush = null);
 }

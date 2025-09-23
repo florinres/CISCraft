@@ -23,33 +23,38 @@
                     <ColumnDefinition Width="80" />   <!-- Item3 -->
                     <ColumnDefinition Width="90" />   <!-- Item4 -->
                     <ColumnDefinition Width="140" />  <!-- Item5 -->
-                    <ColumnDefinition Width="125" />   <!-- Item6 -->
                     <ColumnDefinition Width="*" />    <!-- Item7 takes remaining space -->
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                <Border Name="Sbus" Grid.Column="0" BorderBrush="{DynamicResource SbusStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
                     <TextBlock Text="{Binding CurrentMemoryRow[0]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="1" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                <Border Name="Dbus" Grid.Column="1" BorderBrush="{DynamicResource DbusStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
                     <TextBlock Text="{Binding CurrentMemoryRow[1]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="2" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                <Border Name="Alu" Grid.Column="2" BorderBrush="{DynamicResource AluStrokeMPM}"  BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
                     <TextBlock Text="{Binding CurrentMemoryRow[2]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="3" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                <Border Name="Rbus" Grid.Column="3" BorderBrush="{DynamicResource RbusStrokeMPM}"  BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
                     <TextBlock Text="{Binding CurrentMemoryRow[3]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="4" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                <Border Name="Memory" Grid.Column="4" BorderBrush="{DynamicResource MemoryStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
                     <TextBlock Text="{Binding CurrentMemoryRow[4]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="5" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                <Border Name="Other" Grid.Column="5" BorderBrush="{DynamicResource OtherStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
                     <TextBlock Text="{Binding CurrentMemoryRow[5]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
                 </Border>
-                <Border Grid.Column="6" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[6]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
-                </Border>
-                <Border Grid.Column="7" BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
-                    <TextBlock Text="{Binding CurrentMemoryRow[7]}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Name="Index" Grid.Column="6" BorderBrush="{DynamicResource IndexStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource DiagramTextBrush}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}; {1}; {2}; {3}">
+                                <Binding Path="CurrentMemoryRow[6]" />
+                                <Binding Path="CurrentMemoryRow[7]" />
+                                <Binding Path="CurrentMemoryRow[8]" />
+                                <Binding Path="CurrentMemoryRow[9]" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </Border>
             </Grid>
         </StackPanel>

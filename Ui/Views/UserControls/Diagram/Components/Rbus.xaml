@@ -1,16 +1,16 @@
-﻿<UserControl x:Class="Ui.Views.UserControls.Diagram.AroundTheEdgeBus"
+﻿<UserControl x:Class="Ui.Views.UserControls.Diagram.Rbus"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Ui.Views.UserControls.Diagram" xmlns:viewModel="clr-namespace:Ui.ViewModels"
              xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
-             d:DataContext="{d:DesignInstance Type=diagram:AroundTheEdgeBusViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance Type=diagram:RbusViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d">
     <Grid>
       <!-- Outer path -->
         <Path x:Name="AroundTheEdgePath"
-              Stroke="{DynamicResource BusStrokeBrush}"
+              Stroke="{DynamicResource RbusStrokeBrush}"
               StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"
@@ -27,7 +27,7 @@
         </Path>
 
       <!-- Inner path (slightly thinner, sits on top) -->
-      <Path Stroke="{DynamicResource BusFillBrush}"
+      <Path Stroke="{DynamicResource RbusFillBrush}"
           StrokeThickness="{Binding LineThickness, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InnerThicknessConverter}, ConverterParameter=0.85}"
               StrokeLineJoin="Round"
               StrokeStartLineCap="Round"

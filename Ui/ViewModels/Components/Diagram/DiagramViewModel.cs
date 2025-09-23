@@ -1,15 +1,18 @@
+using CPU.Business.Models;
 using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
-using CPU.Business.Models;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
 using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 using Ui.Views.UserControls.Diagram;
 using Ui.Views.UserControls.Diagram.Components;
+using System.Windows;
 
 namespace Ui.ViewModels.Components.Diagram;
 
@@ -38,14 +41,180 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         _connectionCanvas = diagramControl.GetConnectionCanvas();
         _overlayCanvas = diagramControl.GetOverlayCanvas();
     }
-    
+
+    public void HandleHighlightMpmBox(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                SetMpmBoxColor(Brushes.Red, "Sbus");
+                break;
+            case 1:
+                SetMpmBoxColor(Brushes.Red, "Dbus");
+                break;
+            case 2:
+                SetMpmBoxColor(Brushes.Red, "Alu");
+                break;
+            case 3:
+                SetMpmBoxColor(Brushes.Red, "Rbus");
+                break;
+            case 4:
+                SetMpmBoxColor(Brushes.Red, "Memory");
+                break;
+            case 5:
+                SetMpmBoxColor(Brushes.Red, "Other");
+                break;
+            case 6:
+                SetMpmBoxColor(Brushes.Red, "Index");
+                break;
+        }
+    }
+    public void HandleHighlightConnection(ushort flags, string connectionTag, bool highlight = true, Brush highlightBrush = null)
+    {
+        switch (connectionTag)
+        {
+            case "NONE":
+                break;
+
+            //SBUS
+            case "PdFLAGs":
+            case "PdRGs":
+            case "PdSPs":
+            case "PdTs":
+            case "PdPCs":
+            case "PdIVRs":
+            case "PdADRs":
+            case "PdMDRs":
+            case "PdIR[7...0]":
+            case "Pd0s":
+            case "Pd-1s":
+                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Sbus");
+                break;
+            case "PdTsNeg":
+                connectionTag = "PdTs";
+                break;
+
+            //DBUS
+            case "PdFLAGS":
+            case "PdRGd":
+            case "PdSPd":
+            case "PdTd":
+            case "PdPCd":
+            case "PdIVRd":
+            case "PdADRd":
+            case "PdMDRd":
+            case "PdIR[7...0]d":
+            case "Pd0d":
+            case "Pd-1d":
+                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Dbus");
+                break;
+            case "PdMDRdNeg":
+                connectionTag = "PdMDRd";
+                break;
+
+            //ALU
+            case "SBUS":
+            case "DBUS":
+            case "SUM":
+            case "SUB":
+            case "AND":
+            case "OR":
+            case "XOR":
+            case "ASL":
+            case "ASR":
+            case "LSR":
+            case "ROL":
+            case "ROR":
+            case "RLC":
+            case "RRC":
+                connectionTag = "PdALU";
+                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Rbus");
+                break;
+
+            //RBUS
+            case "PmFLAG":
+                HighlightFlagBit(flags);
+                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Rbus");
+                break;
+            case "PmRG":
+            case "PmSP":
+            case "PmT":
+            case "PmPC":
+            case "PmIVR":
+            case "PmADR":
+            case "PmMDR":
+            case "PmFlag0":
+            case "PmFlag1":
+            case "PmFlag2":
+            case "PmFlag3":
+                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Rbus");
+                break;
+
+            // MemOp
+            case "IFCH":
+                connectionTag = "DataOut_Ir";
+                break;
+            case "READ":
+                connectionTag = "DataOut";
+                HighlightConnectionByTag("PmMDR", highlight, highlightBrush);
+                break;
+            case "WRITE":
+                connectionTag = "DataIn";
+                HighlightConnectionByTag("PdMDRs", highlight, highlightBrush);
+                break;
+
+            // OtherOp
+            case "+2SP":
+            case "-2SP":
+            case "+2PC":
+            case "A(1)BE0":
+            case "A(1)BE1":
+            case "PdCONDaritm":
+            case "Cin":
+            case "PdCONDlog":
+                break;
+            case "A(1)BVI":
+            case "A(0)BVI":
+                connectionTag = "BVI";
+                break;
+            case "A(0)BPO":
+            case "INTA":
+            case "A(0)BE":
+
+            // SUCCESOR
+            case "STEP":
+            case "JUMPI":
+            case "IF ACLOW JUMPI":
+            case "IF CIL JUMPI":
+            case "IF C JUMPI":
+            case "IF Z JUMPI":
+            case "IF S JUMPI":
+            case "IF V JUMPI":
+
+            // INDEX
+            case "INDEX0":
+            case "INDEX1":
+            case "INDEX2":
+            case "INDEX3":
+            case "INDEX4":
+            case "INDEX5":
+            case "INDEX6":
+            case "INDEX7":
+
+            // Tneg/F
+            case "T":
+            case "F":
+                break;
+        }
+        HighlightConnectionByTag(connectionTag, highlight, highlightBrush);
+    }
     /// <summary>
-    /// Highlights a connection by its name
+    /// Highlights a connection by its tag
     /// </summary>
-    /// <param name="connectionName">The name of the connection to highlight</param>
+    /// <param name="connectionTag">The tag of the connection to highlight</param>
     /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
-    /// <param name="highlightBrush">The brush to use for highlighting, defaults to cyan</param>
-    public void HighlightConnectionByName(string connectionName, bool highlight = true, Brush highlightBrush = null)
+    /// <param name="highlightBrush">The brush to use fhighlighting, defaults to cyan</param>
+    public void HighlightConnectionByTag(string connectionTag, bool highlight = true, Brush highlightBrush = null)
     {
         if (_connectionCanvas == null || _overlayCanvas == null) return;
         
@@ -57,7 +226,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             
             foreach (var child in _connectionCanvas.Children)
             {
-                if (child is HighlightableConnector connector && connector.Name == connectionName)
+                if (child is HighlightableConnector connector && connector.Tag == connectionTag)
                 {
                     targetConnector = connector;
                     break;
@@ -68,11 +237,10 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             
             // Look for existing overlay for this connection
             Polyline existingOverlay = null;
-            string overlayName = $"overlay_{connectionName}";
             
             foreach (var child in _overlayCanvas.Children)
             {
-                if (child is Polyline polyline && polyline.Name == overlayName)
+                if (child is Polyline polyline && polyline.Tag as string == connectionTag)
                 {
                     existingOverlay = polyline;
                     break;
@@ -86,7 +254,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
                 {
                     existingOverlay = new Polyline
                     {
-                        Name = overlayName,
+                        Tag = connectionTag,  // Add the tag for easier identification
                         Points = new PointCollection(targetConnector.Points),
                         Stroke = highlightBrush,
                         StrokeThickness = 3,
@@ -139,13 +307,19 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         });
     }
     
+    // Keep this method for backward compatibility but implement it using the new Tag-based method
+    public void HighlightConnectionByName(string connectionName, bool highlight = true, Brush highlightBrush = null)
+    {
+        HighlightConnectionByTag(connectionName, highlight, highlightBrush);
+    }
+    
     /// <summary>
-    /// Highlights all connections related to a specific register or component
+    /// Highlights all connections related to a specific component by tag
     /// </summary>
-    /// <param name="componentName">Name of the register or component</param>
+    /// <param name="componentTag">Tag of the component's connections to highlight</param>
     /// <param name="highlight">Whether to highlight (true) or remove highlight (false)</param>
     /// <param name="highlightBrush">Optional custom brush for highlighting</param>
-    public void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null)
+    public void HighlightComponentConnectionsByTag(string componentTag, bool highlight = true, Brush highlightBrush = null)
     {
         if (_connectionCanvas == null || _overlayCanvas == null) return;
         
@@ -156,13 +330,13 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             if (!highlight)
             {
                 List<UIElement> toRemove = new List<UIElement>();
-                string overlayPrefix = $"overlay_{componentName}";
+                string overlayPrefix = $"overlay_{componentTag}";
                 
                 foreach (var child in _overlayCanvas.Children)
                 {
                     if (child is Polyline polyline && 
-                        polyline.Name != null && 
-                        polyline.Name.Contains(componentName, StringComparison.OrdinalIgnoreCase))
+                        polyline.Tag != null && 
+                        polyline.Tag.ToString().Contains(componentTag, StringComparison.OrdinalIgnoreCase))
                     {
                         toRemove.Add(polyline);
                     }
@@ -177,8 +351,8 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
                 foreach (var child in _connectionCanvas.Children)
                 {
                     if (child is HighlightableConnector connector && 
-                        connector.Name != null && 
-                        connector.Name.Contains(componentName, StringComparison.OrdinalIgnoreCase))
+                        connector.Tag != null && 
+                        connector.Tag.Contains(componentTag, StringComparison.OrdinalIgnoreCase))
                     {
                         connector.IsHighlighted = false;
                     }
@@ -191,17 +365,16 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             foreach (var child in _connectionCanvas.Children)
             {
                 if (child is HighlightableConnector connector && 
-                    connector.Name != null && 
-                    connector.Name.Contains(componentName, StringComparison.OrdinalIgnoreCase))
+                    connector.Tag != null && 
+                    connector.Tag.Contains(componentTag, StringComparison.OrdinalIgnoreCase))
                 {
                     // Create unique overlay name for this connector
-                    string overlayName = $"overlay_{connector.Name}";
                     
                     // Check if overlay already exists
                     bool overlayExists = false;
                     foreach (var overlayChild in _overlayCanvas.Children)
                     {
-                        if (overlayChild is Polyline polyline && polyline.Name == overlayName)
+                        if (overlayChild is Polyline polyline && polyline.Tag as string == connector.Tag as string)
                         {
                             overlayExists = true;
                             break;
@@ -213,7 +386,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
                         // Create new overlay
                         Polyline overlay = new Polyline
                         {
-                            Name = overlayName,
+                            Tag = connector.Tag,  // Add the tag for easier identification
                             Points = new PointCollection(connector.Points),
                             Stroke = highlightBrush,
                             StrokeThickness = 3,
@@ -242,6 +415,12 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         });
     }
     
+    // Keep this method for backward compatibility but implement it using the new Tag-based method
+    public void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null)
+    {
+        HighlightComponentConnectionsByTag(componentName, highlight, highlightBrush);
+    }
+    
     /// <summary>
     /// Highlights all connections between FLAG register and individual flag bits
     /// </summary>
@@ -253,8 +432,8 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         
         foreach (var bitName in flagBitNames)
         {
-            string connectionName = $"{bitName}_Flags";
-            HighlightConnectionByName(connectionName, highlight, highlightBrush);
+            string connectionTag = $"{bitName}_Flags";
+            HighlightConnectionByTag(connectionTag, highlight, highlightBrush);
         }
     }
     
@@ -334,6 +513,10 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
     public void ResetHighlight()
     {
+        ResetMpmBoxColors();
+
+        ResetBusColors();
+
         // Reset context highlights
         foreach (var context in Contexts)
         {
@@ -344,14 +527,12 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         if (_overlayCanvas != null)
         {
             _diagramControl.Dispatcher.InvokeAsync(() => {
-                // Find and remove all overlay elements (those with "overlay_" prefix in name)
+                // Find and remove all overlay elements by tag
                 List<UIElement> toRemove = new List<UIElement>();
                 
                 foreach (var child in _overlayCanvas.Children)
                 {
-                    if (child is Polyline polyline && 
-                        polyline.Name != null && 
-                        polyline.Name.StartsWith("overlay_"))
+                    if (child is Polyline polyline && polyline.Tag != null)
                     {
                         toRemove.Add(polyline);
                     }
@@ -562,5 +743,118 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         _lastUpdatedObject = register;
     }
 
+    private void SetMpmBoxColor(SolidColorBrush color, string box = "Sbus")
+    {
+        if (Application.Current?.Resources == null) return;
 
+        // Update the BusStrokeBrush resource
+        if (Application.Current.Resources[$"{box}StrokeMPM"] is SolidColorBrush strokeBrush)
+        {
+            // Replace the resource
+            Application.Current.Resources[$"{box}StrokeMPM"] = color;
+        }
+    }
+    private void ResetMpmBoxColors()
+    {
+        // Get the current theme
+        var theme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
+
+        // Set default colors based on theme
+        if (theme == Wpf.Ui.Appearance.ApplicationTheme.Light)
+        {
+            SetMpmBoxColor(Brushes.Gray, "Sbus");
+            SetMpmBoxColor(Brushes.Gray, "Dbus");
+            SetMpmBoxColor(Brushes.Gray, "Rbus");
+            SetMpmBoxColor(Brushes.Gray, "Alu");
+            SetMpmBoxColor(Brushes.Gray, "Memory");
+            SetMpmBoxColor(Brushes.Gray, "Other");
+            SetMpmBoxColor(Brushes.Gray, "Index");
+        }
+        else // Dark theme
+        {
+            SetMpmBoxColor(Brushes.Gray, "Sbus");
+            SetMpmBoxColor(Brushes.Gray, "Dbus");
+            SetMpmBoxColor(Brushes.Gray, "Rbus");
+            SetMpmBoxColor(Brushes.Gray, "Alu");
+            SetMpmBoxColor(Brushes.Gray, "Memory");
+            SetMpmBoxColor(Brushes.Gray, "Other");
+            SetMpmBoxColor(Brushes.Gray, "Index");
+        }
+    }
+    /// <summary>
+    /// Sets the color of the bus stroke in the diagram.
+    /// </summary>
+    /// <param name="color">The color to set for the bus stroke.</param>
+    /// <param name="fillColor">Optional. The color to set for the bus fill. If null, only the stroke color will be changed.</param>
+    public void SetBusColor(Color color, Color? fillColor = null, string busType = "Rbus")
+    {
+        if (Application.Current?.Resources == null) return;
+
+        // Update the BusStrokeBrush resource
+        if (Application.Current.Resources[$"{busType}StrokeBrush"] is SolidColorBrush strokeBrush)
+        {
+            // Create a new brush with the specified color
+            var newStrokeBrush = new SolidColorBrush(color);
+            // Make it frozen to improve performance
+            if (newStrokeBrush.CanFreeze)
+                newStrokeBrush.Freeze();
+            
+            // Replace the resource
+            Application.Current.Resources[$"{busType}StrokeBrush"] = newStrokeBrush;
+        }
+
+        // If a fill color is provided, update the BusFillBrush resource as well
+        if (fillColor.HasValue && Application.Current.Resources[$"{busType}FillBrush"] is SolidColorBrush fillBrush)
+        {
+            var newFillBrush = new SolidColorBrush(fillColor.Value);
+            if (newFillBrush.CanFreeze)
+                newFillBrush.Freeze();
+
+            Application.Current.Resources[$"{busType}FillBrush"] = newFillBrush;
+        }
+    }
+
+    /// <summary>
+    /// Resets the bus colors to their default values based on the current theme.
+    /// </summary>
+    private void ResetBusColors()
+    {
+        // Get the current theme
+        var theme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
+        
+        // Set default colors based on theme
+        if (theme == Wpf.Ui.Appearance.ApplicationTheme.Light)
+        {
+            SetBusColor(Color.FromRgb(0x30, 0x30, 0x30), Color.FromRgb(0xBD, 0xBD, 0xBD), "Rbus");
+            SetBusColor(Color.FromRgb(0x30, 0x30, 0x30), Color.FromRgb(0xBD, 0xBD, 0xBD), "Sbus");
+            SetBusColor(Color.FromRgb(0x30, 0x30, 0x30), Color.FromRgb(0xBD, 0xBD, 0xBD), "Dbus");
+        }
+        else // Dark theme
+        {
+            SetBusColor(Color.FromRgb(0x00, 0x00, 0x00), Color.FromRgb(0x80, 0x80, 0x80), "Rbus");
+            SetBusColor(Color.FromRgb(0x00, 0x00, 0x00), Color.FromRgb(0x80, 0x80, 0x80), "Sbus");
+            SetBusColor(Color.FromRgb(0x00, 0x00, 0x00), Color.FromRgb(0x80, 0x80, 0x80), "Dbus");
+        }
+    }
+    private void HighlightFlagBit(ushort flagsValue)
+    {
+        switch(flagsValue)
+        {
+            case 0x0001:
+                HighlightConnectionByTag("V", true, Brushes.Red);
+                break;
+            case 0x0002:
+                HighlightConnectionByTag("S", true, Brushes.Red);
+                break;
+            case 0x0004:
+                HighlightConnectionByTag("Z", true, Brushes.Red);
+                break;
+            case 0x0008:
+                HighlightConnectionByTag("C", true, Brushes.Red);
+                break;
+            case 0x0080:
+                HighlightConnectionByTag("BVI", true, Brushes.Red);
+                break;
+        }
+    }
 }

@@ -217,7 +217,8 @@ public partial class DiagramUserControl : UserControl
                     connectionPoints.MidLeft with { X = rBusLeftInnerEdge - 1 }
                 ],
                 StrokeThickness = 2,
-                Name = $"Pm{registerBlock.Name}"
+                Name = $"Pm{registerBlock.Name.ToUpper()}",
+                Tag = $"Pm{registerBlock.Name.ToUpper()}"
             };
             Panel.SetZIndex(rBusHighlight, -1);
             AddWireEffects(rBusHighlight, rBusHighlight.Name);
@@ -260,7 +261,7 @@ public partial class DiagramUserControl : UserControl
             // Determine start and end points from edges
             Point ioEdge, sieEdge;
 
-            double horizontalInset = 30; // how much the line moves horizontally before going vertical
+            double horizontalInset = 80; // how much the line moves horizontally before going vertical
 
             if (io == IO0) // leftmost → S-shape
                 ioEdge = new Point(ioBounds.Right, ioBounds.Top + ioBounds.Height / 2);
@@ -343,7 +344,8 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.LeftMinusOffset with { X = sBusEdges.Right, Y = connectionPoints.LeftMinusOffset.Y - offset },
             ],
             StrokeThickness = 2,
-            Name = $"PdRGs"
+            Name = $"PdRGs",
+            Tag = $"PdRGs"
         };
         var dBusHighlight = new HighlightableConnector
         {
@@ -353,7 +355,8 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.LeftPlusOffset with { X = dBusEdges.Right, Y = connectionPoints.LeftPlusOffset.Y - offset },
             ],
             StrokeThickness = 2,
-            Name = $"PdRGd"
+            Name = $"PdRGd",
+            Tag = $"PdRGd"
         };
 
         var foo = new PointCollection
@@ -366,12 +369,13 @@ public partial class DiagramUserControl : UserControl
         {
             Points = foo,
             StrokeThickness = 2,
-            Name = $"PmRG"
+            Name = $"PmRG",
+            Tag = $"PmRG"
         };
 
-        AddWireEffects(sBusHighlight, sBusHighlight.Name);
-        AddWireEffects(dBusHighlight, dBusHighlight.Name);
-        AddWireEffects(rBusHighLight, rBusHighLight.Name);
+        AddWireEffects(sBusHighlight, sBusHighlight.Tag.ToString());
+        AddWireEffects(dBusHighlight, dBusHighlight.Tag.ToString());
+        AddWireEffects(rBusHighLight, rBusHighLight.Tag.ToString());
         _connectionCanvas.Children.Add(sBusHighlight);
         _connectionCanvas.Children.Add(dBusHighlight);
         _connectionCanvas.Children.Add(rBusHighLight);
@@ -394,10 +398,11 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsIr.MidLeft with { X = connectionPointsIr.MidLeft.X - 2 }
             ],
             StrokeThickness = 2,
-            Name = $"{DataOut.Name}_{Ir.Name}"
+            Name = $"{DataOut.Name}_{Ir.Name}",
+            Tag = $"{DataOut.Name}_{Ir.Name}"
         };
 
-        AddWireEffects(connection, $"{connection.Name}");
+        AddWireEffects(connection, $"{connection.Tag}");
         _connectionCanvas.Children.Add(connection);
     }
 
@@ -419,10 +424,11 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsAdr.RightPlusOffset with { X = connectionPointsAdr.RightPlusOffset.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"{Adr.Name}"
+            Name = $"{Adr.Name}",
+            Tag = $"{Adr.Name}"
         };
 
-        AddWireEffects(connection, $"{connection.Name}");
+        AddWireEffects(connection, $"{connection.Tag}");
         _connectionCanvas.Children.Add(connection);
     }
 
@@ -445,7 +451,8 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsMdr.MidLeft with { X = connectionPointsDataOut.MidRight.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"DataOut"
+            Name = $"DataOut",
+            Tag = $"DataOut"
         };
 
         AddWireEffects(connection, $"{connection.Name}");
@@ -470,7 +477,8 @@ public partial class DiagramUserControl : UserControl
                 connectionPointsMdr.RightMinusOffset with { X = connectionPointsMdr.RightMinusOffset.X + offset }
             ],
             StrokeThickness = 2,
-            Name = $"DataIn"
+            Name = $"DataIn",
+            Tag = $"DataIn"
         };
 
         AddWireEffects(connection, $"{connection.Name}");
@@ -504,10 +512,11 @@ public partial class DiagramUserControl : UserControl
                     bitBlockConnectionPoint with { X = bitBlockConnectionPoint.X + 3, Y = relevantY - 2}
                 ],
                 StrokeThickness = 2,
-                Name = $"{bitBlock.Name}_Flags"
+                Name = $"{bitBlock.Name}",
+                Tag = $"{bitBlock.Name}"
             };
 
-            AddWireEffects(connection, $"{connection.Name}");
+            AddWireEffects(connection, $"{connection.Tag}");
             _connectionCanvas.Children.Add(connection);
         }
     }
@@ -525,7 +534,8 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.RightMinusOffset with { X = sBusEdges.Left + 1 },
             ],
             StrokeThickness = 2,
-            Name = $"Pd{registerBlock.Name}S"
+            Name = $"Pd{registerBlock.Name}s", 
+            Tag = (registerBlock.Name == "Ir") ? "PdIR[7...0]s" : $"Pd{registerBlock.Name.ToUpper()}s" // Original name as Tag
         };
         var dBusHighlight = new HighlightableConnector
         {
@@ -535,7 +545,8 @@ public partial class DiagramUserControl : UserControl
                 connectionPoints.RightPlusOffset with { X = dBusEdges.Left + 1, Y = connectionPoints.RightPlusOffset.Y - 2 },
             ],
             StrokeThickness = 2,
-            Name = $"Pd{registerBlock.Name}D"
+            Name = $"Pd{registerBlock.Name.ToUpper()}d",
+            Tag = (registerBlock.Name == "Ir") ? "PdIR[7...0]d" : $"Pd{registerBlock.Name.ToUpper()}d"
         };
         AddWireEffects(sBusHighlight, sBusHighlight.Name);
         AddWireEffects(dBusHighlight, dBusHighlight.Name);
@@ -554,7 +565,8 @@ public partial class DiagramUserControl : UserControl
         var conn = new HighlightableConnector
         {
             StrokeThickness = 2,
-            Name = "PdAlu",
+            Name = "PdALU",
+            Tag = "PdALU",
             Points = new PointCollection
             {
                 aluPts.MidBottom with { Y = aluPts.MidBottom.Y - 10},
@@ -567,7 +579,7 @@ public partial class DiagramUserControl : UserControl
     }
     void AddWireEffects(HighlightableConnector wire, string toolTipText)
     {
-        AttachTooltip(wire, toolTipText);
+        AttachTooltip(wire, wire.Tag as string ?? toolTipText);
         WireHoverOverlay(wire, Brushes.Red);
     }
     
