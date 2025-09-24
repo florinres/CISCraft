@@ -552,7 +552,6 @@ namespace CPU.Business
         // Return the status only for Zero and Sign
         private void ComputeLogicFlags()
         {
-            Registers[REGISTERS.FLAGS] = 0;
             if (RBUS == 0)
             {
                 Registers[REGISTERS.FLAGS] |= (ushort)(1 << zeroShift);
