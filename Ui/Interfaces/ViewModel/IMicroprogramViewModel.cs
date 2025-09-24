@@ -10,7 +10,7 @@ public interface IMicroprogramViewModel : IToolViewModel
     ObservableCollection<MicroprogramMemoryViewModel> Rows { get; set; }
 
     NumberFormat AddressFormat { get; set; }
-
+    public MicroprogramMemoryViewModel CurrentMemoryRow { get; set; }
     int CurrentRow { get; set; }
 
     int CurrentColumn { get; set; }

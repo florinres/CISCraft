@@ -3,6 +3,7 @@ using CPU.Business.Models;
 using ICSharpCode.AvalonEdit;
 using Microsoft.CodeAnalysis;
 using System.Data.Common;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Media;
@@ -79,7 +80,7 @@ public class CpuService : ICpuService
         _diagram.ResetHighlight();
 
         var (row, column) = _cpu.StepMicrocommand();
-        
+
         if (row == 0 && column == 0)
         {
             _microprogramService.ClearAllHighlightedRows();
@@ -88,6 +89,10 @@ public class CpuService : ICpuService
 
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
+
+        _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[column]].Value, true, Brushes.Red);
+
+        _diagram.HandleHighlightMpmBox(_mirLookUpIndex[column]);
 
         UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], _cursorNeedsUpdate);
 
@@ -111,6 +116,11 @@ public class CpuService : ICpuService
             _microprogramService.ClearAllHighlightedRows();
         }
 
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = -1;
+
+        _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
+
         if (row == 97 && col == 2)
         {
             UpdateEditorAndHighlight((ushort)(_cpu.Registers[REGISTERS.PC] - 2), true);
@@ -123,10 +133,12 @@ public class CpuService : ICpuService
         while ((col != 6) && (row != 97 || col != 2))
         {
             (row, col) = _cpu.StepMicrocommand();
-        }
 
-        _microprogramService.CurrentRow = row;
-        _microprogramService.CurrentColumn = -1;
+            _microprogramService.CurrentRow = row;
+            _microprogramService.CurrentColumn = -1;
+
+            _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
+        }
     }
     public void StepInstruction()
     {
@@ -136,11 +148,22 @@ public class CpuService : ICpuService
 
         _diagram.ResetHighlight();
 
-        _cpu.StepMicrocommand();
+        (row, col) = _cpu.StepMicrocommand();
 
+        _microprogramService.CurrentRow = row;
+        _microprogramService.CurrentColumn = _mirLookUpIndex[col];
+
+        _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
+
+        // Check if CPU is accessing flags in each microcommand
         while ((row != 0 || col != 0) && (row != 97 || col != 2))
         {
             (row, col) = _cpu.StepMicrocommand();
+
+            _microprogramService.CurrentRow = row;
+            _microprogramService.CurrentColumn = _mirLookUpIndex[col];
+
+            _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
         }
 
         if (row == 97 && col == 2)
@@ -154,7 +177,13 @@ public class CpuService : ICpuService
     }
     public void ResetProgram()
     {
+        foreach (var doc in _activeDocumentService.Documents)
+        {
+            doc.ResetHighlight();
+        }
+
         _cpu.ResetProgram();
+        _diagram.ResetHighlight();
         _microprogramService.CurrentRow = -1;
         _microprogramService.CurrentColumn = -1;
         _microprogramService.ClearAllHighlightedRows();
@@ -188,15 +217,19 @@ public class CpuService : ICpuService
                 _cpu.Registers[Exceptions.Reserved1] = true;
                 break;
             case "IRQ0":
+                _diagram.SetIOColor(Brushes.Red, "IO0");
                 _cpu.Registers[IRQs.IRQ0] = true;
                 break;
             case "IRQ1":
+                _diagram.SetIOColor(Brushes.Red, "IO1");
                 _cpu.Registers[IRQs.IRQ1] = true;
                 break;
             case "IRQ2":
+                _diagram.SetIOColor(Brushes.Red, "IO2");
                 _cpu.Registers[IRQs.IRQ2] = true;
                 break;
             case "IRQ3":
+                _diagram.SetIOColor(Brushes.Red, "IO3");
                 _cpu.Registers[IRQs.IRQ3] = true;
                 break;
         }
@@ -207,6 +240,7 @@ public class CpuService : ICpuService
         {
             doc.ResetHighlight();
         }
+        _diagram.ResetHighlight();
         _cpu.ResetProgram();
         _microprogramService.CurrentRow = -1;
         _microprogramService.CurrentColumn = -1;

@@ -73,6 +73,15 @@ public partial class HighlightableConnector : UserControl
         get => (bool)GetValue(IsHighlightedProperty);
         set => SetValue(IsHighlightedProperty, value);
     }
+    
+    public static readonly DependencyProperty TagProperty =
+        DependencyProperty.Register(nameof(Tag), typeof(string), typeof(HighlightableConnector), new PropertyMetadata(string.Empty));
+
+    public string Tag
+    {
+        get => (string)GetValue(TagProperty);
+        set => SetValue(TagProperty, value);
+    }
 
     private void UpdatePath()
     {

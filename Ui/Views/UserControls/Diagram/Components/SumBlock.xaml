@@ -29,7 +29,7 @@
                 <TextBlock Text="{Binding DataContext.MemoryContext.CurrentMemoryRow[2], RelativeSource={RelativeSource AncestorType=UserControl}}"
                            Foreground="{DynamicResource DiagramTextBrush}"
                            FontWeight="Bold"
-                           FontSize="14"
+                           FontSize="18"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
             </Grid>

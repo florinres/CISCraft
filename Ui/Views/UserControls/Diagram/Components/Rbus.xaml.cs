@@ -8,24 +8,24 @@ using Ui.Models;
 
 namespace Ui.Views.UserControls.Diagram;
 
-public partial class AroundTheEdgeBus : UserControl, INotifyPropertyChanged
+public partial class Rbus : UserControl, INotifyPropertyChanged
 {
     public static readonly DependencyProperty WrapWidthProperty =
         DependencyProperty.Register(
             nameof(WrapWidth),
             typeof(double),
-            typeof(AroundTheEdgeBus),
+            typeof(Rbus),
             new PropertyMetadata(double.NaN, OnWrapDimensionChanged));
 
     public static readonly DependencyProperty WrapHeightProperty =
         DependencyProperty.Register(
             nameof(WrapHeight),
             typeof(double),
-            typeof(AroundTheEdgeBus),
+            typeof(Rbus),
             new PropertyMetadata(double.NaN, OnWrapDimensionChanged));
     
     public static readonly DependencyProperty LineThicknessProperty =
-        DependencyProperty.Register(nameof(LineThickness), typeof(double), typeof(AroundTheEdgeBus), new PropertyMetadata(6.0));
+        DependencyProperty.Register(nameof(LineThickness), typeof(double), typeof(Rbus), new PropertyMetadata(6.0));
 
     public double WrapWidth 
     {
@@ -52,7 +52,7 @@ public partial class AroundTheEdgeBus : UserControl, INotifyPropertyChanged
     public Point BottomRightpoint => new Point(EffectiveWidth, EffectiveHeight);
     public Point TopRightpoint => new Point(EffectiveWidth, 0);
 
-    public AroundTheEdgeBus()
+    public Rbus()
     {
         InitializeComponent();
         Loaded += (_, __) => RaisePointProps();
@@ -62,7 +62,7 @@ public partial class AroundTheEdgeBus : UserControl, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
     private static void OnWrapDimensionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is AroundTheEdgeBus ctrl)
+        if (d is Rbus ctrl)
             ctrl.RaisePointProps();
     }
 

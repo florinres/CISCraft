@@ -152,7 +152,7 @@
                     Grid.Column="10"
                     Grid.ColumnSpan="9"
                     Grid.Row="2"
-                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderBrush="{DynamicResource IO0BorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
@@ -173,7 +173,7 @@
                     Grid.Column="28"
                     Grid.ColumnSpan="9"
                     Grid.Row="2"
-                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderBrush="{DynamicResource IO1BorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
@@ -194,7 +194,7 @@
                     Grid.Column="47"
                     Grid.ColumnSpan="9"
                     Grid.Row="2"
-                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderBrush="{DynamicResource IO2BorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
@@ -215,7 +215,7 @@
                     Grid.Column="65"
                     Grid.ColumnSpan="9"
                     Grid.Row="2"
-                    BorderBrush="{DynamicResource NodeBorderBrush}"
+                    BorderBrush="{DynamicResource IO3BorderBrush}"
                     BorderThickness="2"
                     Padding="1"
                     VerticalAlignment="Top"
@@ -424,7 +424,7 @@
                     HorizontalAlignment="Stretch"
                     DataContext="{Binding ADRContext}" />
 
-                <components:StraightLineBus
+                <components:Sbus
                     x:Name="SBus"
                     Grid.Row="7"
                     Grid.RowSpan="20"
@@ -434,7 +434,7 @@
                     HorizontalAlignment="Right"
                     LineHeight="500" />
 
-                <components:StraightLineBus
+                <components:Dbus
                     x:Name="DBus"
                     Grid.Row="7"
                     Grid.RowSpan="20"
@@ -510,7 +510,7 @@
                     </Grid>
                 </Border>
 
-                <diagram:AroundTheEdgeBus
+                <diagram:Rbus
                     x:Name="RBus"
                     Grid.Row="7"
                     Grid.RowSpan="23"
