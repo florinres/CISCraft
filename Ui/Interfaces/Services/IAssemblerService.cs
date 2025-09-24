@@ -4,5 +4,5 @@ public interface IAssemblerService
 {
     event EventHandler<byte[]> SourceCodeAssembled;
     
-    Dictionary<short, ushort> AssembleSourceCodeService(string sourceCode, ushort sectionOffset);
+    Dictionary<ushort, ushort> AssembleSourceCodeService(string sourceCode, ushort sectionOffset);
 }

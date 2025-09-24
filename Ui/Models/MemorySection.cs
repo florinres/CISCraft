@@ -12,8 +12,16 @@ namespace Ui.Models
         public ushort StartAddress;
         public ushort EndAddress;
         public string Code;
-        public Dictionary<short, ushort> DebugSymbols;
-        public MemorySection(string name, ushort startAddress, ushort endAddress, Dictionary<short, ushort> debugSymbols, string code)
+        public Dictionary<ushort, ushort> DebugSymbols;
+        public MemorySection()
+        {
+            Name = "";
+            StartAddress = 0;
+            EndAddress = 0;
+            DebugSymbols = new Dictionary<ushort, ushort>();
+            Code = "";
+        }
+        public MemorySection(string name, ushort startAddress, ushort endAddress, Dictionary<ushort, ushort> debugSymbols, string code)
         {
             Name = name;
             StartAddress = startAddress;

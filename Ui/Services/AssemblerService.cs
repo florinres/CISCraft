@@ -35,7 +35,7 @@ public class AssemblerService : IAssemblerService
         return JsonSerializer.Deserialize<List<ISR>>(json, JsonOpts) ?? new();
     }
 
-    public Dictionary<short, ushort> AssembleSourceCodeService(string sourceCode, ushort sectionAddress)
+    public Dictionary<ushort, ushort> AssembleSourceCodeService(string sourceCode, ushort sectionAddress)
     {
         var objectCode = _assembler.Assemble(sourceCode, out _);
 

@@ -26,7 +26,7 @@ public class HighlightCurrentLineBackgroundRenderer : IBackgroundRenderer
 
     public void Draw(TextView textView, DrawingContext drawingContext)
     {
-        if (_lineNumber <= 0) return;
+        if (_lineNumber <= 0 || _lineNumber > _editor.Document.LineCount) return;
         textView.EnsureVisualLines();
 
         var line = _editor.Document.GetLineByNumber(_lineNumber);

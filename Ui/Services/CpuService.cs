@@ -246,7 +246,7 @@ public class CpuService : ICpuService
         _microprogramService.CurrentColumn = -1;
         _microprogramService.ClearAllHighlightedRows();
     }
-    public void UpdateDebugSymbols(string code, Dictionary<short, ushort> debugSymbols, ushort sectionAddress)
+    public void UpdateDebugSymbols(string code, Dictionary<ushort, ushort> debugSymbols, ushort sectionAddress)
     {
         foreach (var memorySection in MemorySections)
         {
@@ -262,17 +262,17 @@ public class CpuService : ICpuService
     {
         MemorySections = new List<MemorySection>
         {
-            new MemorySection("IVT",        0x0000, 0x000F, new Dictionary<short,ushort>(), ""),
-            new MemorySection("User_Code",  0x0010, 0x555F, new Dictionary<short,ushort>(), ""),
-            new MemorySection("ACLOW",      0x5560, 0x6009, new Dictionary<short,ushort>(), ""),
-            new MemorySection("CIL",        0x600A, 0x6AB3, new Dictionary<short,ushort>(), ""),
-            new MemorySection("Reserved0",  0x6AB4, 0x755D, new Dictionary<short,ushort>(), ""),
-            new MemorySection("Reserved1",  0x755E, 0x8007, new Dictionary<short,ushort>(), ""),
-            new MemorySection("IRQ0",       0x8008, 0x8AB1, new Dictionary<short,ushort>(), ""),
-            new MemorySection("IRQ1",       0x8AB2, 0x955B, new Dictionary<short,ushort>(), ""),
-            new MemorySection("IRQ2",       0x955C, 0xA005, new Dictionary<short,ushort>(), ""),
-            new MemorySection("IRQ3",       0xA006, 0xAAAF, new Dictionary<short,ushort>(), ""),
-            new MemorySection("Stack",      0xAAB0, 0xFFFF, new Dictionary<short,ushort>(), ""),
+            new MemorySection("IVT",        0x0000, 0x000F, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("User_Code",  0x0010, 0x555F, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("ACLOW",      0x5560, 0x6009, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("CIL",        0x600A, 0x6AB3, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("Reserved0",  0x6AB4, 0x755D, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("Reserved1",  0x755E, 0x8007, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("IRQ0",       0x8008, 0x8AB1, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("IRQ1",       0x8AB2, 0x955B, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("IRQ2",       0x955C, 0xA005, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("IRQ3",       0xA006, 0xAAAF, new Dictionary<ushort,ushort>(), ""),
+            new MemorySection("Stack",      0xAAB0, 0xFFFF, new Dictionary<ushort,ushort>(), ""),
         };
     }
     private List<ISR> ReadIVTJson()
@@ -292,21 +292,20 @@ public class CpuService : ICpuService
         // If the document is already open, select it
         foreach (var doc in _activeDocumentService.Documents)
         {
-            if ((doc.Title == section.Name))
+            if ((doc.SectionName == section.Name))
             {
                 _activeDocumentService.SelectedDocument = doc;
-
                 return;
             }
         }
         
-        if(IsSectionIsr(section) && _activeDocumentService.SelectedDocument.IsUserCode)
+        if(IsSectionIsr(section))
         {
             FileViewModel isrFile = new FileViewModel
             {
                 Title = section.Name,
                 Content = section.Code,
-                IsUserCode = false
+                SectionName = section.Name
             };
 
             _activeDocumentService.Documents.Add(isrFile);
@@ -322,8 +321,8 @@ public class CpuService : ICpuService
 
         ChangEditorBasedOnSection(section);
 
-        if (section != null && section.DebugSymbols != null && section.DebugSymbols.ContainsKey((short)pc))
-            return section.DebugSymbols[(short)pc];
+        if (section != null && section.DebugSymbols != null && section.DebugSymbols.ContainsKey(pc))
+            return section.DebugSymbols[pc];
 
         return 0;
     }

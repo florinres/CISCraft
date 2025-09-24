@@ -10,7 +10,7 @@ public interface ICpuService
     public void ResetProgram();
     public void StartDebugging();
     public void StopDebugging();
-    public void UpdateDebugSymbols(string code, Dictionary<short, ushort> debugSymbols, ushort sectionAddress);
+    public void UpdateDebugSymbols(string code, Dictionary<ushort, ushort> debugSymbols, ushort sectionAddress);
     public ushort GetIR();
     void StepMicrocommand();
     void StepMicroinstruction();

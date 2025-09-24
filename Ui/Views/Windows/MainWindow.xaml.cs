@@ -128,7 +128,7 @@ public partial class MainWindow
                 return;
             }
 
-            if (thisFile.IsUserCode == false)
+            if (thisFile.SectionName != "User_Code")
             {
                 SaveInterrupt(thisFile);
                 _activeDocumentService.Documents.Remove(thisFile);
@@ -200,7 +200,7 @@ public partial class MainWindow
     {
         if (document == null) return;
 
-        if (document.IsUserCode == false)
+        if (document.SectionName != "User_Code")
         {
             document.Title = document.Title?.Replace("*", "");
             return;
