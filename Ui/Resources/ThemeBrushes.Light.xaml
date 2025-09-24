@@ -4,8 +4,12 @@
 
     <!-- Diagram Brushes - Light Theme -->
     <SolidColorBrush x:Key="NodeBackgroundBrush" Color="#F3F3F3" />
-    <SolidColorBrush x:Key="NodeBorderBrush" Color="#C8C8C8" />
-    <SolidColorBrush x:Key="NodeHighlightBrush" Color="#C75000" />
+    <SolidColorBrush x:Key="IO0BorderBrush" Color="{x:Static Colors.Gray}" />
+    <SolidColorBrush x:Key="IO1BorderBrush" Color="{x:Static Colors.Gray}" />
+    <SolidColorBrush x:Key="IO2BorderBrush" Color="{x:Static Colors.Gray}" />
+    <SolidColorBrush x:Key="IO3BorderBrush" Color="{x:Static Colors.Gray}" />
+    <SolidColorBrush x:Key="NodeBorderBrush" Color="{x:Static Colors.Gray}" />
+    <SolidColorBrush x:Key="NodeHighlightBrush" Color="{x:Static Colors.Red}" />
     <SolidColorBrush x:Key="NodeNameBackgroundBrush" Color="#E8E8E8" />
 
     <SolidColorBrush x:Key="SbusStrokeMPM"   Color="{x:Static Colors.Gray}" />

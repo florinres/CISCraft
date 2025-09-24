@@ -46,4 +46,5 @@ public interface IDiagramViewModel : IToolViewModel
     void HandleHighlightConnection(ushort flags, string connectionTag, bool highlight = true, Brush highlightBrush = null);
     void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null);
     void HighlightFlagBitConnections(bool highlight = true, Brush highlightBrush = null);
+    public void SetIOColor(Brush color, string io = "IO0");
 }

@@ -217,15 +217,19 @@ public class CpuService : ICpuService
                 _cpu.Registers[Exceptions.Reserved1] = true;
                 break;
             case "IRQ0":
+                _diagram.SetIOColor(Brushes.Red, "IO0");
                 _cpu.Registers[IRQs.IRQ0] = true;
                 break;
             case "IRQ1":
+                _diagram.SetIOColor(Brushes.Red, "IO1");
                 _cpu.Registers[IRQs.IRQ1] = true;
                 break;
             case "IRQ2":
+                _diagram.SetIOColor(Brushes.Red, "IO2");
                 _cpu.Registers[IRQs.IRQ2] = true;
                 break;
             case "IRQ3":
+                _diagram.SetIOColor(Brushes.Red, "IO3");
                 _cpu.Registers[IRQs.IRQ3] = true;
                 break;
         }

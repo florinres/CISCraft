@@ -517,6 +517,8 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
 
         ResetBusColors();
 
+        ResetIOColors();
+
         // Reset context highlights
         foreach (var context in Contexts)
         {
@@ -813,7 +815,28 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             Application.Current.Resources[$"{busType}FillBrush"] = newFillBrush;
         }
     }
+    /// <summary>
+    /// Sets the color of the bus stroke in the diagram.
+    /// </summary>
+    /// <param name="color">The color to set for the bus stroke.</param>
+    /// <param name="fillColor">Optional. The color to set for the bus fill. If null, only the stroke color will be changed.</param>
+    public void SetIOColor(Brush color, string io = "IO0")
+    {
+        if (Application.Current?.Resources == null) return;
 
+        // Update the BusStrokeBrush resource
+        if (Application.Current.Resources[$"{io}BorderBrush"] is SolidColorBrush strokeBrush)
+        {
+            Application.Current.Resources[$"{io}BorderBrush"] = color;
+        }
+    }
+    private void ResetIOColors()
+    {
+        SetIOColor(Brushes.Gray, "IO0");
+        SetIOColor(Brushes.Gray, "IO1");
+        SetIOColor(Brushes.Gray, "IO2");
+        SetIOColor(Brushes.Gray, "IO3");
+    }
     /// <summary>
     /// Resets the bus colors to their default values based on the current theme.
     /// </summary>
