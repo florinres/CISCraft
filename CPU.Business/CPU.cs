@@ -122,9 +122,8 @@ namespace CPU.Business
 
                 bool okInstructionCode = CheckInstructionCode();
 
-                 if (okInstructionCode)
-                    Registers[Exceptions.CIL] = false;
-                 else Registers[Exceptions.CIL] = true;
+                 if (!okInstructionCode)
+                    Registers[Exceptions.CIL] = true;
 
                 _controlUnit.SetCILState(Registers[Exceptions.CIL]);
 
@@ -444,6 +443,11 @@ namespace CPU.Business
                     break;
                 case OTHER_EVENTS.A1BE1:
                     Registers[Exceptions.CIL] = true;
+                    _controlUnit.SetCILState(Registers[Exceptions.CIL]);
+                    bool[] expts = Enum.GetValues<Exceptions>()
+                        .Select(ex => Registers[ex] && !ResetBI)
+                        .ToArray();
+                    Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(expts);
                     break;
                 case OTHER_EVENTS.PdCondA:
                     PdCondaritm = true;
