@@ -100,9 +100,11 @@ namespace Assembler.Business
                 ToTerm("R4")  |
                 ToTerm("R5")  |
                 ToTerm("R6")  |
+                ToTerm("R7")  |
                 ToTerm("R8")  |
                 ToTerm("R9")  |
                 ToTerm("R10") |
+                ToTerm("R11") |
                 ToTerm("R12") |
                 ToTerm("R13") |
                 ToTerm("R14") |

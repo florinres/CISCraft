@@ -554,10 +554,10 @@ namespace Assembler.Business
                     // add the register to the _instrAddress_instructionPartS
                     if (_debug)
                     {
-                        Console.WriteLine(" " + node.Token.Value);
-                        Console.WriteLine(_instrAddress + 2 + " " + node.Token.Value);
+                        Debug.WriteLine(" " + node.Token.Value);
+                        Debug.WriteLine(_instrAddress + 2 + " " + node.Token.Value);
                     }
-                    _instructionParts.Offset2 = (uint)Convert.ToInt16(node.Token.Value);
+                        _instructionParts.Offset2 = (uint)(Convert.ToInt32(node.Token.Value) & 0xFF); // the only the 8 bit value
                     _instrAddress += 4;
                     return;
                 }
@@ -678,7 +678,7 @@ namespace Assembler.Business
                 _program[_programIndex++] = (byte)instruction.Instr;
                 _program[_programIndex++] = (byte)(instruction.Instr >> 8);
             }
-            if(instruction.Offset2 != uint.MaxValue)
+            if (instruction.Offset2 != uint.MaxValue)
             {
                 _program[_programIndex++] = (byte)instruction.Offset2;
                 _program[_programIndex++] = (byte)(instruction.Offset2>>8);
