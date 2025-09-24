@@ -83,7 +83,7 @@ namespace Ui.ViewModels.Components.MenuBar
             {
                 Title = "Untitled",
                 Content = defaultContent,
-                IsUserCode = true
+                SectionName = "User_Code"
             };
             DocumentService.Documents.Add(doc);
             DocumentService.SelectedDocument ??= doc;
@@ -101,6 +101,7 @@ namespace Ui.ViewModels.Components.MenuBar
             if (dialog.ShowDialog() != true) return;
 
             var doc = new FileViewModel();
+            doc.SectionName = "User_Code";
             await doc.LoadFromFile(dialog.FileName);
             DocumentService.Documents.Add(doc);
             DocumentService.SelectedDocument ??= doc;
@@ -136,7 +137,7 @@ namespace Ui.ViewModels.Components.MenuBar
             {
                 Title = isr.Name,
                 Content = isr.TextCode,
-                IsUserCode = false
+                SectionName = isr.Name
             };
 
             DocumentService.Documents.Add(doc);

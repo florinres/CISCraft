@@ -150,7 +150,7 @@ namespace Assembler.Business
             }
         }
         public readonly Dictionary<string, ushort> SymbolTable = new Dictionary<string, ushort>();
-        public readonly Dictionary<short, ushort> DebugSymbols = new Dictionary<short, ushort>();
+        public readonly Dictionary<ushort, ushort> DebugSymbols = new Dictionary<ushort, ushort>();
         readonly Dictionary<string, Dictionary<ushort,string>> _oppcodes = new Dictionary<string, Dictionary<ushort,string>>
         {
             // Numerical value    ,                                     Mnemonic, Type
@@ -257,7 +257,7 @@ namespace Assembler.Business
                     child.Term.Name == "B4Instr")
                 {
                     IncrementInstructionAddress(child);
-                    DebugSymbols[(short)(previousAddress)] = (ushort)(child.Span.Location.Line + 1);
+                    DebugSymbols[previousAddress] = (ushort)(child.Span.Location.Line + 1);
                 }
                 else if (child.Term.Name == "Label")
                 {

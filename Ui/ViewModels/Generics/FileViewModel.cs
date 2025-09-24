@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Media;
 using Ui.Components;
+using Ui.Models;
 
 namespace Ui.ViewModels.Generics;
 
@@ -8,6 +9,8 @@ public partial class FileViewModel : PaneViewModel
 {
     Color _semiTransparentYellow;
     public bool IsModified = false;
+    public string SectionName = "User_Code";
+    private int? _pendingHighlightLine = null;
 
     [ObservableProperty]
     public partial bool NeedsAssemble { get; set; } = true;
@@ -44,21 +47,31 @@ public partial class FileViewModel : PaneViewModel
                     _editorInstance, 0, _semiTransparentYellow);
 
                 _editorInstance.TextArea.TextView.BackgroundRenderers.Add(_highlight);
+                
+                // Apply any pending highlight now that the editor is ready
+                if (_pendingHighlightLine.HasValue)
+                {
+                    int lineToHighlight = _pendingHighlightLine.Value;
+                    _pendingHighlightLine = null;
+                    HighlightLine(lineToHighlight);
+                }
             }
         }
     }
-
-    public bool IsUserCode = false;
     public async Task LoadFromFile(string path)
     {
         FilePath = path;
         Content = await File.ReadAllTextAsync(path);
         Title = Path.GetFileName(path);
-        IsUserCode = true;
     }
     public void HighlightLine(int lineNumber)
     {
-        if (_highlight == null) return;
+        if (_highlight == null)
+        {
+            // Store the highlight request to apply when editor is ready
+            _pendingHighlightLine = lineNumber;
+            return;
+        }
         _highlight.SetLine(lineNumber);
         EditorInstance?.ScrollTo(lineNumber, 1);
     }

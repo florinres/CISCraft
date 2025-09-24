@@ -44,10 +44,10 @@ namespace Assembler.Business
             }
             return Encoder.Encode(tree.Root, out len);
         }
-        public Dictionary<short /* pc */, ushort /* line number */> GetDebugSymbols(ushort pcOffset)
+        public Dictionary<ushort /* pc */, ushort /* line number */> GetDebugSymbols(ushort pcOffset)
         {
             return Encoder.DebugSymbols.ToDictionary(
-                    kvp => (short)(kvp.Key + pcOffset),
+                    kvp => (ushort)(kvp.Key + pcOffset),
                     kvp => kvp.Value
                 );
         }
