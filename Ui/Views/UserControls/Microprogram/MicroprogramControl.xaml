@@ -20,19 +20,35 @@
         <system:Double x:Key="BaseWidthLargeItem">120</system:Double>
     </UserControl.Resources>
 
-    <Grid PreviewMouseWheel="Window_MouseWheel">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition SharedSizeGroup="AddressCol"
-                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
-                <ColumnDefinition SharedSizeGroup="LargeItemCol"
-                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
-                <ColumnDefinition SharedSizeGroup="ItemCol"
-                                  Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
+        
+        <!-- Horizontal ScrollViewer wraps everything -->
+        <ScrollViewer x:Name="MainScrollViewer" Grid.Row="0" Grid.RowSpan="2"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Disabled"
+                    PreviewMouseWheel="HorizontalScroll_PreviewMouseWheel"
+                    PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
+                    PreviewMouseMove="ScrollViewer_PreviewMouseMove"
+                    PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <!-- Header Grid -->
+                <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="AddressCol"
+                                      Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                    <ColumnDefinition SharedSizeGroup="LargeItemCol"
+                                      Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthAddress}}" />
+                    <ColumnDefinition SharedSizeGroup="ItemCol"
+                                      Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthItem}}" />
                 <ColumnDefinition SharedSizeGroup="LargeItemCol"
                                   Width="{Binding ElementName=Root, Path=ViewModel.ZoomFactor, Converter={StaticResource FontSizeToWidthConverter}, ConverterParameter={StaticResource BaseWidthLargeItem}}" />
                 <ColumnDefinition SharedSizeGroup="ItemCol"
@@ -102,16 +118,22 @@
                        Margin="1" Padding="4" TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        FontSize="{Binding ElementName=Root, Path=ViewModel.ZoomFactor}" />
-        </Grid>
-        <ListView Grid.Row="1" ItemsSource="{Binding Rows}"
-                  x:Name="MicroprogramScrollViewer"
-                  VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  ScrollViewer.CanContentScroll="True"
-                  PreviewMouseLeftButtonDown="ScrollViewer_PreviewMouseLeftButtonDown"
-                  PreviewMouseMove="ScrollViewer_PreviewMouseMove"
-                  PreviewMouseLeftButtonUp="ScrollViewer_PreviewMouseLeftButtonUp"
-                  Background="{DynamicResource RegionBackgroundBrush}">
+                </Grid>
+                
+                <!-- Content with vertical ScrollViewer (scrollbar hidden) -->
+                <ScrollViewer Grid.Row="1" 
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Hidden"
+                              x:Name="VerticalScrollViewer"
+                              PreviewMouseWheel="VerticalScroll_PreviewMouseWheel">
+                    <ListView ItemsSource="{Binding Rows}"
+                              x:Name="MicroprogramScrollViewer"
+                              VirtualizingStackPanel.IsVirtualizing="True"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                              Background="{DynamicResource RegionBackgroundBrush}">
             <ListView.Resources>
                 <Style TargetType="Grid">
                     <Setter Property="Grid.IsSharedSizeScope" Value="True" />
@@ -339,6 +361,9 @@
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+                    </ListView>
+                </ScrollViewer>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>
