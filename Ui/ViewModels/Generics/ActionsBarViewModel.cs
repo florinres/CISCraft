@@ -84,6 +84,12 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         if (_activeDocumentService.SelectedDocument == null) return;
         var debugSymbols = await Task.Run(() => _assemblerService.AssembleSourceCodeService(_activeDocumentService.SelectedDocument.Content, USER_CODE_START_ADDR));
+        if (debugSymbols == null)
+        {
+            CanAssemble = true;
+            CanDebug = false;
+            return;
+        }
 
         _cpuService.UpdateDebugSymbols(_activeDocumentService.SelectedDocument.Content, debugSymbols, USER_CODE_START_ADDR);
         
