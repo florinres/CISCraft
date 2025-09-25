@@ -557,7 +557,7 @@ namespace Assembler.Business
                         Debug.WriteLine(" " + node.Token.Value);
                         Debug.WriteLine(_instrAddress + 2 + " " + node.Token.Value);
                     }
-                        _instructionParts.Offset2 = (uint)(Convert.ToInt32(node.Token.Value) & 0xFF); // take the only the 8 bit value
+                        _instructionParts.Offset2 = (uint)(Convert.ToInt32(node.Token.Value) & 0x0000FFFF); // take the only the 16 bit value
                     _instrAddress += 4;
                     return;
                 }
@@ -594,7 +594,7 @@ namespace Assembler.Business
                         if(_debug) Console.Write(" " + node.ChildNodes[0].Token.Value);
                         am = 0b11;
 
-                        offset = (uint)(Convert.ToInt32(node.ChildNodes[0].Token.Value) & 0xFF); // take the only the 8 bit value
+                        offset = (uint)(Convert.ToInt32(node.ChildNodes[0].Token.Value) & 0x0000FFFF); // take the only the 16 bit value
                         _instrAddress += 2;
                     }
                     return;
