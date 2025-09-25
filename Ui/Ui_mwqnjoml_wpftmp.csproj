@@ -25,7 +25,7 @@
     <EmbeddedResource Remove="Views\Pages\**" />
     <None Remove="ViewModels\Pages\**" />
     <None Remove="Views\Pages\**" />
-    <None Update="Assets\default_code.txt">
+    <None Update="Examples\default.s">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Mpm.json">

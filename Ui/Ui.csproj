@@ -64,7 +64,7 @@
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>
         </Page>
-        <None Update="Assets\default_code.txt">
+        <None Update="Examples\default.s">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Assets\Mpm.json">
