@@ -12,7 +12,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>cpu_chip.ico</ApplicationIcon>
+    <ApplicationIcon>wpfui-icon.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -30,7 +30,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cpu_chip.ico" />
+    <Content Include="wpfui-icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonDock.Themes.WPFUI" Version="1.1.0" />
@@ -44,8 +44,8 @@
     <PackageReference Include="WPFHexaEditor" Version="2.1.7" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Assets\cpu_chip_128.png" />
-    <None Remove="Assets\cpu_chip_128.png" />
+    <None Remove="Assets\wpfui-icon-256.png" />
+    <None Remove="Assets\wpfui-icon-1024.png" />
     <None Update="Assets\Monaco\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
