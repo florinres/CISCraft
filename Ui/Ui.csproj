@@ -5,7 +5,7 @@
         <TargetFramework>net9.0-windows</TargetFramework>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AssemblyName>MicroCISC</AssemblyName>
-        <ApplicationIcon>wpfui-icon.ico</ApplicationIcon>
+        <ApplicationIcon>cpu_chip.ico</ApplicationIcon>
         <UseWPF>true</UseWPF>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -73,7 +73,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="wpfui-icon.ico" />
+        <Content Include="cpu_chip.ico" />
     </ItemGroup>
 
     <ItemGroup>
@@ -89,8 +89,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Assets\wpfui-icon-256.png" />
-        <None Remove="Assets\wpfui-icon-1024.png" />
+        <None Remove="Assets\cpu_chip_128.png" />
+        <None Remove="Assets\cpu_chip_128.png" />
         <None Update="Assets\Monaco\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -100,8 +100,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Assets\wpfui-icon-256.png" />
-        <Resource Include="Assets\wpfui-icon-1024.png" />
+        <Resource Include="Assets\cpu_chip_128.png" />
+        <Resource Include="Assets\cpu_chip_128.png" />
     </ItemGroup>
 
     <ItemGroup>
