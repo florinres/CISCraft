@@ -3,15 +3,16 @@
     <Property name="CaseSensitive" value="true" />
 
     <!-- Define Colors optimized for light theme (dark text on light background) -->
-    <Color name="Comment" foreground="#606060"/>
+    <Color name="Comment" foreground="#ff00802b"/>
     <Color name="String" foreground="#A31515"/>
-    <Color name="Instruction" foreground="#0000CC"/>
-    <Color name="Procedure" foreground="#f40404ff"/>
-    <Color name="Register" foreground="#008000"/>
+    <Color name="Instruction" foreground="#ffcc0052"/>
+    <Color name="Procedure" foreground="#ff0000cc"/>
+    <Color name="Register" foreground="#ff0000e6"/>
     <Color name="Directive" foreground="#B26B00"/>
-    <Color name="Number" foreground="#800080"/>
-    <Color name="Label" foreground="#D70000"/>
-    
+    <Color name="Number" foreground="#ffa339ef"/>
+    <Color name="Label" foreground="#ffcccc00"/>
+    <Color name="Parenthesis" foreground="#ffc32255"/>
+
     <RuleSet ignoreCase="true">
         <!-- Strings -->
         <Span color="String">
@@ -138,6 +139,11 @@
         <Keywords color="Procedure">
         <Word>proc</Word>
         <Word>endp</Word>
+        </Keywords>
+
+        <Keywords color="Parenthesis">
+        <Word>[</Word>
+        <Word>]</Word>
         </Keywords>
 
         <!-- Numbers -->
