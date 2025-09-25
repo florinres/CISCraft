@@ -61,6 +61,7 @@
                     <MultiBinding Converter="{StaticResource RegisterFormatConverter}">
                         <Binding Path="Value"/>
                         <Binding Path="Format"/>
+                        <Binding Path="Name"/>
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>

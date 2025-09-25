@@ -8,12 +8,16 @@ public class RegisterFormatConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values.Length != 2 || values[0] is not (ushort or long or byte) || values[1] is not NumberFormat format)
+        if (values.Length < 2 || values[0] is not (ushort or long or byte) || values[1] is not NumberFormat format)
             return Binding.DoNothing;
         
         long value = System.Convert.ToInt64(values[0]);
 
         int totalBits = 0;
+
+        // Check if parameter is provided and is "MIR" register
+        bool isMirRegister = (values.Length > 2 && values[2] is string regName && regName == "MIR") || 
+                            (parameter is string paramStr && paramStr == "MIR");
 
         switch (values[0])
         {
@@ -27,7 +31,8 @@ public class RegisterFormatConverter : IMultiValueConverter
                 totalBits = 32;
                 break;
             case long:
-                totalBits = 64;
+                // For MIR register, use 36 bits instead of 64
+                totalBits = isMirRegister ? 36 : 64;
                 break;
         }
 
