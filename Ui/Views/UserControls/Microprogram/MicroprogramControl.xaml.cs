@@ -5,10 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using Ui.Helpers;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.Microprogram;
+using Ui.Views.Dialogs;
 
 namespace Ui.Views.UserControls.Microprogram;
 
@@ -59,6 +61,95 @@ public partial class MicroprogramControl : UserControl
     public MicroprogramControl()
     {
         InitializeComponent();
+        
+        // Add keyboard event handler for Ctrl+F
+        PreviewKeyDown += MicroprogramControl_PreviewKeyDown;
+        
+        // Add loaded event handler for showing the shortcut tooltip
+        Loaded += MicroprogramControl_Loaded;
+    }
+    
+    private void MicroprogramControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Show the shortcut overlay temporarily to educate users about the Ctrl+F shortcut
+        var fadeIn = FindResource("FadeInStoryboard") as Storyboard;
+        fadeIn?.Begin();
+        
+        // After 3 seconds, fade out the overlay
+        var fadeOut = FindResource("FadeOutStoryboard") as Storyboard;
+        if (fadeOut != null)
+        {
+            var timer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(3)
+            };
+            timer.Tick += (s, args) =>
+            {
+                fadeOut.Begin();
+                timer.Stop();
+            };
+            timer.Start();
+        }
+    }
+    
+    private void MicroprogramControl_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        // Check for Ctrl+F key combination
+        if (e.Key == Key.F && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+        {
+            e.Handled = true;
+            ShowSearchLabelDialog();
+        }
+    }
+    
+    private void ShowSearchLabelDialog()
+    {
+        var searchDialog = new MicroprogramSearchDialog();
+        
+        if (searchDialog.ShowDialog() == true)
+        {
+            string searchText = searchDialog.SearchText;
+            SearchForLabel(searchText);
+        }
+    }
+    
+    private void SearchMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        ShowSearchLabelDialog();
+    }
+    
+    private void SearchForLabel(string label)
+    {
+        if (ViewModel == null || string.IsNullOrWhiteSpace(label))
+            return;
+            
+        // Use the viewmodel to search for the label
+        int foundIndex = (ViewModel as MicroprogramViewModel)?.SearchForLabel(label) ?? -1;
+        
+        if (foundIndex >= 0)
+        {
+            // Temporarily set the current row to the found index to scroll to it
+            ViewModel.CurrentRow = foundIndex;
+            
+            // Make sure the found row is visible
+            if (MicroprogramScrollViewer.Items.Count > foundIndex)
+            {
+                MicroprogramScrollViewer.ScrollIntoView(MicroprogramScrollViewer.Items[foundIndex]);
+                
+                // Use dispatcher to ensure UI has updated before clearing the highlight
+                Dispatcher.BeginInvoke(new Action(() => {
+                    // Clear the highlight after scrolling
+                    if (ViewModel.Rows.Count > foundIndex)
+                    {
+                        ViewModel.Rows[foundIndex].IsCurrent = false;
+                    }
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            }
+        }
+        else
+        {
+            MessageBox.Show($"Label '{label}' not found.", "Search Result", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     private Point _scrollStartPoint;
