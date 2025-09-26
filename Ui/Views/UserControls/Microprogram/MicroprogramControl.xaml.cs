@@ -1,6 +1,11 @@
+using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using Ui.Helpers;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.Microprogram;
@@ -38,7 +43,15 @@ public partial class MicroprogramControl : UserControl
                 var item = control.MicroprogramScrollViewer.Items[index];
                 
                 if(item is not null)
+                {
                     control.MicroprogramScrollViewer.ScrollIntoView(item);
+                    
+                    // Use dispatcher to ensure UI has updated before attempting to scroll
+                    control.Dispatcher.BeginInvoke(new Action(() => {
+                        control.MicroprogramScrollViewer.UpdateLayout();
+                        control.MicroprogramScrollViewer.ScrollIntoView(item);
+                    }));
+                }
             };
         }
     }
@@ -49,26 +62,31 @@ public partial class MicroprogramControl : UserControl
     }
 
     private Point _scrollStartPoint;
+    private Point _scrollStartOffset;
     private bool _isDragging;
+    
+    // No longer needed as we're directly working with MainScrollViewer
+    
     private void ScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        _scrollStartPoint = e.GetPosition(MicroprogramScrollViewer);
-        // _scrollStartOffset.X = MicroprogramScrollViewer.HorizontalOffset;
-        // _scrollStartOffset.Y = MicroprogramScrollViewer.VerticalOffset;
+        _scrollStartPoint = e.GetPosition(MainScrollViewer);
+        _scrollStartOffset.X = MainScrollViewer.HorizontalOffset;
+        _scrollStartOffset.Y = MainScrollViewer.VerticalOffset;
         _isDragging = true;
-        MicroprogramScrollViewer.CaptureMouse();
-        MicroprogramScrollViewer.Cursor = Cursors.Hand;
+        MainScrollViewer.CaptureMouse();
+        MainScrollViewer.Cursor = Cursors.Hand;
     }
 
     private void ScrollViewer_PreviewMouseMove(object sender, MouseEventArgs e)
     {
         if (!_isDragging) return;
         
-        Point currentPoint = e.GetPosition(MicroprogramScrollViewer);
+        Point currentPoint = e.GetPosition(MainScrollViewer);
         Vector delta = currentPoint - _scrollStartPoint;
 
-        // MicroprogramScrollViewer.ScrollToHorizontalOffset(_scrollStartOffset.X - delta.X);
-        // MicroprogramScrollViewer.ScrollToVerticalOffset(_scrollStartOffset.Y - delta.Y);
+        // Invert the direction by adding delta.X instead of subtracting it
+        // This makes dragging right move the content right (natural scrolling)
+        MainScrollViewer.ScrollToHorizontalOffset(_scrollStartOffset.X + delta.X);
     }
 
     private void ScrollViewer_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -76,21 +94,38 @@ public partial class MicroprogramControl : UserControl
         if (!_isDragging) return;
         
         _isDragging = false;
-        MicroprogramScrollViewer.ReleaseMouseCapture();
-        MicroprogramScrollViewer.Cursor = Cursors.Arrow;
+        MainScrollViewer.ReleaseMouseCapture();
+        MainScrollViewer.Cursor = Cursors.Arrow;
     }
 
-    private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
+    private void HorizontalScroll_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        e.Handled = false;
-        if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
+        // If Ctrl is pressed, handle zooming
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+        {
+            ViewModel.ZoomFactor += e.Delta > 0 ? 1 : -1;
+            if (ViewModel.ZoomFactor < 8) ViewModel.ZoomFactor = 8;       // Min font size
+            if (ViewModel.ZoomFactor > 40) ViewModel.ZoomFactor = 40;     // Max font size
+            e.Handled = true;
+            return;
+        }
         
-        ViewModel.ZoomFactor += e.Delta > 0 ? 1 : -1;
-        if (ViewModel.ZoomFactor < 8) ViewModel.ZoomFactor = 8;       // Min font size
-        if (ViewModel.ZoomFactor > 40) ViewModel.ZoomFactor = 40;     // Max font size
-
+        // If Shift is pressed, scroll horizontally
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+        {
+            MainScrollViewer.ScrollToHorizontalOffset(MainScrollViewer.HorizontalOffset - e.Delta / 3.0);
+            e.Handled = true;
+            return;
+        }
+        
+        // Pass the event to the vertical scrollviewer (let it bubble to the VerticalScroll_PreviewMouseWheel)
+        e.Handled = false;
+    }
+    
+    private void VerticalScroll_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        // Handle vertical scrolling
+        VerticalScrollViewer.ScrollToVerticalOffset(VerticalScrollViewer.VerticalOffset - e.Delta / 3.0);
         e.Handled = true;
     }
-
-    
 }
