@@ -143,7 +143,7 @@
             <StackPanel Grid.Column="0" Orientation="Horizontal" DataContext="{Binding ActionsBar}">
                 <ui:Button
                     Command="{Binding RunCodeCommand}"
-                    IsEnabled="{Binding CanDebug}"
+                    IsEnabled="{Binding CanRun}"
                     VerticalAlignment="Top"
                     ToolTip="Run"
                     Height="30"
