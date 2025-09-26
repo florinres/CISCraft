@@ -59,28 +59,32 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     {
         StepLevel = level;
     }
-
     [RelayCommand]
-    private void RunCode()
+    private async Task RunCode()
     {
         ushort haltCode = 0xE300;
         ushort irValue = _cpuService.GetIR();
+
         while (irValue != haltCode)
         {
-            _cpuService.StepMicroinstruction();
+
+            _cpuService.StepInstruction();
             irValue = _cpuService.GetIR();
+
+            await Task.Yield();
+            await Task.Delay(1);
         }
-        _cpuService.StepMicroinstruction();
-        _cpuService.StepMicroinstruction();
-        _cpuService.StepMicroinstruction();
-        _cpuService.StepMicroinstruction();
-        _cpuService.StepMicroinstruction();
+
+        for (int i = 0; i < 5; i++)
+        {
+            _cpuService.StepMicroinstruction();
+        }
+
         CanAssemble = true;
         IsDebugging = true;
         NotDebugging = false;
         CanDebug = false;
     }
-
     [RelayCommand]
     private async Task RunAssembleSourceCodeService()
     {
