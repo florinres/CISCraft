@@ -62,6 +62,8 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [RelayCommand]
     private async Task RunCode()
     {
+        if (_activeDocumentService.SelectedDocument == null) return;
+
         ushort haltCode = 0xE300;
         ushort irValue = _cpuService.GetIR();
 
@@ -80,7 +82,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             _cpuService.StepMicroinstruction();
         }
 
-        CanAssemble = true;
         IsDebugging = true;
         NotDebugging = false;
         CanDebug = false;
@@ -160,7 +161,6 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
             IsDebugging = false;
             NotDebugging = true;
             CanDebug = true;
-            CanAssemble = true;
         }
     }
     [RelayCommand]

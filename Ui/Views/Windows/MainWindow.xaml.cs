@@ -194,6 +194,7 @@ public partial class MainWindow
         { 
             _actionsBarViewModel.CanAssemble = false; 
             _actionsBarViewModel.CanDebug = false;
+            _actionsBarViewModel.CanRun = false;
         }
     }
     private void SaveCurrentDocument(FileViewModel document)
