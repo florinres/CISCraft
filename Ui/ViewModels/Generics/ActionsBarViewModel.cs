@@ -31,6 +31,8 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [ObservableProperty]
     public partial bool CanAssemble{ get; set; }
     [ObservableProperty]
+    public partial bool CanRun { get; set; }
+    [ObservableProperty]
     public partial StepLevel StepLevel { get; set; }
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
@@ -88,14 +90,16 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         {
             CanAssemble = true;
             CanDebug = false;
+            CanRun = false;
             return;
         }
 
         _cpuService.UpdateDebugSymbols(_activeDocumentService.SelectedDocument.Content, debugSymbols, USER_CODE_START_ADDR);
-        
+
         _toolVisibilityService.ToggleToolVisibility(_activeDocumentService.HexViewer);
         CanDebug = true;
         CanAssemble = false;
+        CanRun = true;
     }
 
     [RelayCommand]

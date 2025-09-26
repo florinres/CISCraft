@@ -43,6 +43,7 @@ namespace Ui.Interfaces.ViewModel
         bool NotDebugging { get; set; }
         bool CanDebug { get; set; }
         bool CanAssemble { get; set; }
+        bool CanRun { get; set; }
 
         event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangingEventHandler? PropertyChanging;
