@@ -146,8 +146,13 @@
                             <Style TargetType="Grid">
                                 <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                 <Style.Triggers>
+                                    <!-- StepMicroCode highlight -->
                                     <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                        <Setter Property="Background" Value="#471d1a" /> <!-- or your highlight brush -->
+                                        <Setter Property="Background" Value="#471d1a" />
+                                    </DataTrigger>
+                                    <!-- Go To Row highlight-->
+                                    <DataTrigger Binding="{Binding IsGoToTarget}" Value="True">
+                                        <Setter Property="Background" Value="#ff8d8686" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

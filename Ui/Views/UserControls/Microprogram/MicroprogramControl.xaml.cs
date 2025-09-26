@@ -46,7 +46,6 @@ public partial class MicroprogramControl : UserControl
                 {
                     control.MicroprogramScrollViewer.ScrollIntoView(item);
                     
-                    // Use dispatcher to ensure UI has updated before attempting to scroll
                     control.Dispatcher.BeginInvoke(new Action(() => {
                         control.MicroprogramScrollViewer.UpdateLayout();
                         control.MicroprogramScrollViewer.ScrollIntoView(item);
@@ -59,13 +58,22 @@ public partial class MicroprogramControl : UserControl
     public MicroprogramControl()
     {
         InitializeComponent();
+        
+        PreviewKeyDown += MicroprogramControl_PreviewKeyDown;
+    }
+    
+    private void MicroprogramControl_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+        {
+            e.Handled = true;
+            ShowGoToRowDialog();
+        }
     }
 
     private Point _scrollStartPoint;
     private Point _scrollStartOffset;
     private bool _isDragging;
-    
-    // No longer needed as we're directly working with MainScrollViewer
     
     private void ScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -84,8 +92,6 @@ public partial class MicroprogramControl : UserControl
         Point currentPoint = e.GetPosition(MainScrollViewer);
         Vector delta = currentPoint - _scrollStartPoint;
 
-        // Invert the direction by adding delta.X instead of subtracting it
-        // This makes dragging right move the content right (natural scrolling)
         MainScrollViewer.ScrollToHorizontalOffset(_scrollStartOffset.X + delta.X);
     }
 
@@ -100,17 +106,15 @@ public partial class MicroprogramControl : UserControl
 
     private void HorizontalScroll_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        // If Ctrl is pressed, handle zooming
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
         {
             ViewModel.ZoomFactor += e.Delta > 0 ? 1 : -1;
-            if (ViewModel.ZoomFactor < 8) ViewModel.ZoomFactor = 8;       // Min font size
-            if (ViewModel.ZoomFactor > 40) ViewModel.ZoomFactor = 40;     // Max font size
+            if (ViewModel.ZoomFactor < 8) ViewModel.ZoomFactor = 8;
+            if (ViewModel.ZoomFactor > 40) ViewModel.ZoomFactor = 40;
             e.Handled = true;
             return;
         }
         
-        // If Shift is pressed, scroll horizontally
         if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
         {
             MainScrollViewer.ScrollToHorizontalOffset(MainScrollViewer.HorizontalOffset - e.Delta / 3.0);
@@ -118,14 +122,84 @@ public partial class MicroprogramControl : UserControl
             return;
         }
         
-        // Pass the event to the vertical scrollviewer (let it bubble to the VerticalScroll_PreviewMouseWheel)
         e.Handled = false;
     }
     
     private void VerticalScroll_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        // Handle vertical scrolling
         VerticalScrollViewer.ScrollToVerticalOffset(VerticalScrollViewer.VerticalOffset - e.Delta / 3.0);
         e.Handled = true;
+    }
+    
+    /// <summary>
+    /// Shows the Go To Row dialog and navigates to the specified row
+    /// </summary>
+    private void ShowGoToRowDialog()
+    {
+        if (ViewModel == null)
+            return;
+
+        var dialog = new GoToRowDialog();
+        
+        var parentWindow = Window.GetWindow(this);
+        if (parentWindow != null)
+        {
+            dialog.Owner = parentWindow;
+        }
+
+        bool? result = dialog.ShowDialog();
+        if (result == true)
+        {
+            int rowNumber = dialog.ParsedRow;
+
+            if (NavigateToRow(rowNumber))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+
+                        foreach (var row in ViewModel.Rows)
+                        {
+                            row.IsGoToTarget = false;
+                        }
+
+                        if (rowNumber >= 0 && rowNumber < ViewModel.Rows.Count)
+                        {
+                            ViewModel.Rows[rowNumber].IsGoToTarget = true;
+                            var item = MicroprogramScrollViewer.Items[rowNumber];
+                            MicroprogramScrollViewer.ScrollIntoView(item);
+                            MicroprogramScrollViewer.Focus();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error navigating to row: {ex.Message}", "Navigation Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
+            }
+            else
+            {
+                MessageBox.Show($"Cannot navigate to row {rowNumber}. It is outside the valid range (0-{MicroprogramScrollViewer.Items.Count - 1}).",
+                    "Invalid Row", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+    }
+        /// <summary>
+    /// Validates if the row number is within valid range and navigates to it
+    /// </summary>
+    /// <param name="rowNumber">The row number to navigate to</param>
+    /// <returns>True if navigation was successful, false otherwise</returns>
+    private bool NavigateToRow(int rowNumber)
+    {
+        if (ViewModel == null || MicroprogramScrollViewer == null)
+            return false;
+
+        // Check if row number is within valid range
+        if (rowNumber < 0 || rowNumber >= MicroprogramScrollViewer.Items.Count)
+            return false;
+
+        return true;
     }
 }

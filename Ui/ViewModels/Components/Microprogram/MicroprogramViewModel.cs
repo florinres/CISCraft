@@ -23,33 +23,36 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
     [ObservableProperty] public partial int CurrentRow { get; set; } = -1;
-    partial void OnCurrentRowChanged(int oldValue, int newValue)
-    {
-        if (oldValue >= 0 && oldValue < Rows.Count)
+        partial void OnCurrentRowChanged(int oldValue, int newValue)
         {
-            //Rows[oldValue].IsCurrent = false;
-            foreach (var item in Rows[oldValue].Items)
+            foreach (var row in Rows)
             {
-                item.IsCurrent = false;
+                row.IsGoToTarget = false;
             }
-        }
-
-        // Set new row highlight
-        if (newValue >= 0 && newValue < Rows.Count)
-        {
-            Rows[newValue].IsCurrent = true;
-
-            // Optional: highlight the current column in new row if valid
-            if (CurrentColumn >= 0 && CurrentColumn < Rows[newValue].Items.Count)
+        
+            if (oldValue >= 0 && oldValue < Rows.Count)
             {
-                Rows[newValue].Items[CurrentColumn].IsCurrent = true;
+                //Rows[oldValue].IsCurrent = false;
+                foreach (var item in Rows[oldValue].Items)
+                {
+                    item.IsCurrent = false;
+                }
             }
+
+            if (newValue >= 0 && newValue < Rows.Count)
+            {
+                Rows[newValue].IsCurrent = true;
+
+                if (CurrentColumn >= 0 && CurrentColumn < Rows[newValue].Items.Count)
+                {
+                    Rows[newValue].Items[CurrentColumn].IsCurrent = true;
+                }
             
-            CurrentMemoryRow = Rows[newValue];
+                CurrentMemoryRow = Rows[newValue];
+            }
         }
-    }
 
-    public void ClearAllHighlightedRows()
+        public void ClearAllHighlightedRows()
     {
         foreach (var row in Rows.Where(r => r.IsCurrent))
         {
