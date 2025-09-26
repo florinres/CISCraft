@@ -180,3 +180,6 @@ Assembler.Main/obj/
 # Application release
 /Release/*
 Release.rar
+
+# Logs directory
+/Logs/*

@@ -37,7 +37,13 @@ public class AssemblerService : IAssemblerService
 
     public Dictionary<ushort, ushort> AssembleSourceCodeService(string sourceCode, ushort sectionAddress)
     {
-        var objectCode = _assembler.Assemble(sourceCode, out _);
+        int machineCodeLen = -1;
+        var objectCode = _assembler.Assemble(sourceCode, out machineCodeLen);
+        if (machineCodeLen <= 0)
+        {
+            MessageBox.Show("Assembly failed: Please check Logs directory for more details.", "Assembly Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return null;
+        }
 
         // Let the memory wrapper know it's about to receive multiple updates
         // This prevents flickering by batching the updates
