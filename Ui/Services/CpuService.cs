@@ -172,8 +172,10 @@ public class CpuService : ICpuService
         }
         else
         {
+            _microprogramService.ClearAllHighlightedRows();
             UpdateEditorAndHighlight(_cpu.Registers[REGISTERS.PC], true);
         }
+
     }
     public void ResetProgram()
     {
