@@ -47,4 +47,5 @@ public interface IDiagramViewModel : IToolViewModel
     void HighlightComponentConnections(string componentName, bool highlight = true, Brush highlightBrush = null);
     void HighlightFlagBitConnections(bool highlight = true, Brush highlightBrush = null);
     public void SetIOColor(Brush color, string io = "IO0");
+    void UpdateBusValues(ushort sbus, ushort dbus, ushort rbus);
 }

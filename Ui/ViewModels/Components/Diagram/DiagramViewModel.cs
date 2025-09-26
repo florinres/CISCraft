@@ -438,6 +438,10 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
     }
     
     [ObservableProperty] public override partial string? Title { get; set; } = "Diagram";
+    
+    [ObservableProperty] private ushort _sbusValue;
+    [ObservableProperty] private ushort _dbusValue;
+    [ObservableProperty] private ushort _rbusValue;
 
     #region Contexts
     public IMicroprogramViewModel MemoryContext { get; set; }
@@ -613,6 +617,14 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         
         Update(MirContext, _registers.MIR);
         Update(MarContext, _registers.MAR);
+    }
+    
+    // Method to update bus values from CPU
+    public void UpdateBusValues(ushort sbus, ushort dbus, ushort rbus)
+    {
+        SbusValue = sbus;
+        DbusValue = dbus;
+        RbusValue = rbus;
     }
     
     private void OnRegistersChanged(object? sender, PropertyChangedEventArgs e)
