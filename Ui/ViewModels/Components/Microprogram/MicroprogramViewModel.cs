@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.Json;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
@@ -122,6 +123,28 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
         Rows = new ObservableCollection<MicroprogramMemoryViewModel>(rows);
 
         
+    }
+
+    /// <summary>
+    /// Search for a label in the microprogram memory
+    /// </summary>
+    /// <param name="label">Label text to search for</param>
+    /// <returns>Index of the row with matching label or -1 if not found</returns>
+    public int SearchForLabel(string label)
+    {
+        if (string.IsNullOrWhiteSpace(label))
+            return -1;
+
+        // Case insensitive search for the label
+        for (int i = 0; i < Rows.Count; i++)
+        {
+            if (Rows[i].Tag.Equals(label, StringComparison.OrdinalIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public override string? Title { get; set; } = "Microprogram";

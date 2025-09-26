@@ -5,10 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using Ui.Helpers;
 using Ui.Interfaces.ViewModel;
 using Ui.ViewModels.Components.Diagram;
 using Ui.ViewModels.Components.Microprogram;
+using Ui.Views.Dialogs;
 
 namespace Ui.Views.UserControls.Microprogram;
 
