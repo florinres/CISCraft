@@ -469,6 +469,7 @@ namespace CPU.Business
                     bool[] exceptions = Enum.GetValues<Exceptions>()
                         .Select(ex => Registers[ex] && !ResetBI)
                         .ToArray();
+
                     Registers[REGISTERS.IVR] = _interruptController.ComputeInterruptVector(exceptions);
                     var prioritisedIRQs = _interruptController.GetPrioritisedIRQStates();
                     foreach (var kvp in prioritisedIRQs)
@@ -480,7 +481,6 @@ namespace CPU.Business
                             Registers[irq] = false;
                         }
                     }
-
                     Registers[REGISTERS.SP] -= 2;
                     break;
                 case OTHER_EVENTS.A0BE_A0BI:
@@ -488,6 +488,12 @@ namespace CPU.Business
                     //Reset exception and interrupts flag latches
                     //Note:since the exception latches are reseted always together with those
                     // of ISR, the same variable shall model both signals
+
+                    bool[] exceptions2 = Enum.GetValues<Exceptions>()
+                        .Select(ex => Registers[ex] && !ResetBI)
+                        .ToArray();
+                    if (exceptions2[0] == true)
+                        Registers[Exceptions.ACLOW] = false; // Clear ACLOW signal
 
                     ResetBI = true;
                     break;
@@ -574,7 +580,7 @@ namespace CPU.Business
         {
             // Set IsAccessingFlags to true when computing flags
             IsAccessingFlags = true;
-            
+
             if (CinPdCondaritm || PdCondaritm)
                 ComputeArithmeticFlags();
             if (PdCondlogic)
