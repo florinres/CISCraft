@@ -186,7 +186,8 @@ namespace CPU.Tests
                     "IFCH_0",
                     "IFCH_1",
                     "B4_0",
-                    "EI_0"
+                    "EI_0",
+                    "EI_1"
                 },
                 () =>
                 { 
@@ -207,6 +208,7 @@ namespace CPU.Tests
                     "IFCH_1",
                     "B4_0",
                     "EI_0",
+                    "EI_1",
 
                     "IFCH_0",
                     "IFCH_1",

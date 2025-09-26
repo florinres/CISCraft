@@ -218,8 +218,8 @@ namespace CPU.Business
                         bool aluBIT24 = Convert.ToBoolean(mirALUBits & 1);
                         bool aluBIT25 = Convert.ToBoolean(mirALUBits & (1 << 1));
                         if (!aluBIT24 & !aluBIT25)
-                            state = 2;
-                        else state = 0;
+                            state = 0;
+                        else state = 2;
                         return DecodeAndSendCommand();
                     case 2:
                         state = 3;

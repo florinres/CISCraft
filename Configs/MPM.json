@@ -301,8 +301,8 @@
     ],
     "EI":
     [
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "A(1)BVI",         "JUMPI",            "INDEX7",  "T",  "IFCH"         ],
-        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "STEP",             "INDEX0",  "T",  "0"            ]
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "A(1)BVI",         "STEP",            "INDEX7",  "T",  "0"         ],
+        ["NONE",      "NONE",          "NONE",  "NONE",        "NONE",    "NONE",            "JUMPI",             "INDEX7",  "T",  "IFCH"            ]
     ],
     "DI":
     [
