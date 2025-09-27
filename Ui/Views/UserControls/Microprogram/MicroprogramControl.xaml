@@ -178,7 +178,11 @@
                                 <Setter Property="Background" Value="{DynamicResource RegionBackgroundBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                        <Setter Property="Background" Value="#471d1a" /> <!-- or your highlight brush -->
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="#471d1a" Opacity="{Binding HighlightOpacity}" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

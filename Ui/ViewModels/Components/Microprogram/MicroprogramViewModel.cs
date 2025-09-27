@@ -29,6 +29,7 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
         if (oldValue >= 0 && oldValue < Rows.Count)
         {
             //Rows[oldValue].IsCurrent = false;
+            Rows[oldValue].HighlightOpacity = 1.0; // Reset opacity when no longer current
             foreach (var item in Rows[oldValue].Items)
             {
                 item.IsCurrent = false;
