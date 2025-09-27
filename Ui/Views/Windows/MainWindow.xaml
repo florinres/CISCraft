@@ -73,32 +73,47 @@
                     <ui:MenuItem Header="Edit">
                         <menuBar:LayoutControl ViewModel="{Binding MenuBar.LayoutControl}"/>
                         <MenuItem Header="Step Level">
-                            <MenuItem Header="Microcommand"
-                                     IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Microcommand}"  
-                                     Command="{Binding ActionsBar.SetStepLevelCommand}"  
-                                     CommandParameter="{x:Static viewModel:StepLevel.Microcommand}" />
-                            <MenuItem Header="Microinstructions"  
-                                  IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Microinstruction}"  
-                                  Command="{Binding ActionsBar.SetStepLevelCommand}"  
-                                  CommandParameter="{x:Static viewModel:StepLevel.Microinstruction}" />
-                            <MenuItem Header="Instruction"
-                                  IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=TwoWay, ConverterParameter=Instruction}"  
-                                  Command="{Binding ActionsBar.SetStepLevelCommand}"  
-                                  CommandParameter="{x:Static viewModel:StepLevel.Instruction}" />
+                            <RadioButton 
+                                Content="Microcommand"
+                                GroupName="StepLevel"
+                                IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=OneWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static viewModel:StepLevel.Microcommand}}"  
+                                Command="{Binding ActionsBar.SetStepLevelCommand}"  
+                                CommandParameter="{x:Static viewModel:StepLevel.Microcommand}" />
+                            <RadioButton 
+                                Content="Microinstructions"
+                                GroupName="StepLevel"
+                                IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=OneWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static viewModel:StepLevel.Microinstruction}}"  
+                                Command="{Binding ActionsBar.SetStepLevelCommand}"  
+                                CommandParameter="{x:Static viewModel:StepLevel.Microinstruction}" />
+                            <RadioButton 
+                                Content="Instruction"
+                                GroupName="StepLevel"
+                                IsChecked="{Binding DataContext.ActionsBar.StepLevel, Mode=OneWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static viewModel:StepLevel.Instruction}}"  
+                                Command="{Binding ActionsBar.SetStepLevelCommand}"  
+                                CommandParameter="{x:Static viewModel:StepLevel.Instruction}" />
                         </MenuItem>
                         <MenuItem Header="Edit Interrupts" IsEnabled="{Binding ActionsBar.NotDebugging}" x:Name="EditInterruptsMenu"/>
                     </ui:MenuItem>
                     <ui:MenuItem Header="View">
                         <MenuItem Header="Number Format">
-                            <MenuItem Header="Hex"
-                                 Command="{Binding MenuBar.SetNumberFormatCommand}"
-                                 CommandParameter="{x:Static model:NumberFormat.Hex}" />
-                            <MenuItem Header="Decimal"
-                              Command="{Binding MenuBar.SetNumberFormatCommand}"
-                              CommandParameter="{x:Static model:NumberFormat.Decimal}" />
-                            <MenuItem Header="Binary"
-                              Command="{Binding MenuBar.SetNumberFormatCommand}"  
-                              CommandParameter="{x:Static model:NumberFormat.Binary}" />
+                            <RadioButton 
+                                Content="Hex"
+                                GroupName="NumberFormat"
+                                IsChecked="{Binding MenuBar.NumberFormat, Mode=OneWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static model:NumberFormat.Hex}}"
+                                Command="{Binding MenuBar.SetNumberFormatCommand}"
+                                CommandParameter="{x:Static model:NumberFormat.Hex}" />
+                            <RadioButton 
+                                Content="Decimal"
+                                GroupName="NumberFormat"
+                                IsChecked="{Binding MenuBar.NumberFormat, Mode=OneWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static model:NumberFormat.Decimal}}"
+                                Command="{Binding MenuBar.SetNumberFormatCommand}"
+                                CommandParameter="{x:Static model:NumberFormat.Decimal}" />
+                            <RadioButton 
+                                Content="Binary"
+                                GroupName="NumberFormat"
+                                IsChecked="{Binding MenuBar.NumberFormat, Mode=OneWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static model:NumberFormat.Binary}}"
+                                Command="{Binding MenuBar.SetNumberFormatCommand}"  
+                                CommandParameter="{x:Static model:NumberFormat.Binary}" />
                         </MenuItem>
 
                          <MenuItem
