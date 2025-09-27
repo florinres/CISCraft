@@ -8,42 +8,89 @@ internal class LayoutInitializer : ILayoutUpdateStrategy
     public bool BeforeInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorableToShow,
         ILayoutContainer destinationContainer)
     {
-        //AD wants to add the anchorable into destinationContainer
-        //just for test provide a new anchorablepane 
-        //if the pane is floating let the manager go ahead
-        var destPane = destinationContainer as LayoutAnchorablePane;
-        if (destinationContainer.FindParent<LayoutFloatingWindow>() != null)
-            return false;
+        try
+        {
+            // Safety check: if destinationContainer is null or invalid, use fallback
+            if (destinationContainer == null)
+            {
+                return UseToolsPaneFallback(layout, anchorableToShow);
+            }
 
-        var toolsPane = layout.Descendents()
-            .OfType<LayoutAnchorablePane>()
-            .FirstOrDefault(d => d.Name == "ToolsPane");
-        if (toolsPane == null) return false;
-        
-        toolsPane.Children.Add(anchorableToShow);
-        return true;
+    // If the pane is floating, let the manager handle it
+    var floatingWindow = destinationContainer.FindParent<LayoutFloatingWindow>();
+    if (floatingWindow != null)
+    {
+        return false; // Let AvalonDock handle floating windows
     }
 
+            return UseToolsPaneFallback(layout, anchorableToShow);
+        }
+        catch (Exception ex)
+        {
+            // Log the error and use fallback
+            System.Diagnostics.Debug.WriteLine($"Error in BeforeInsertAnchorable: {ex.Message}");
+            return UseToolsPaneFallback(layout, anchorableToShow);
+        }
+    }
+
+    private bool UseToolsPaneFallback(LayoutRoot layout, LayoutAnchorable anchorableToShow)
+    {
+        try
+        {
+            var toolsPane = layout.Descendents()
+                .OfType<LayoutAnchorablePane>()
+                .FirstOrDefault(d => d.Name == "ToolsPane");
+            
+            if (toolsPane != null)
+            {
+                toolsPane.Children.Add(anchorableToShow);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in UseToolsPaneFallback: {ex.Message}");
+        }
+        
+        return false; // Let AvalonDock handle it as last resort
+    }
 
     public void AfterInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorable)
     {
-        if (anchorable.Content is not ToolViewModel toolVm) return;
-
-        toolVm.PropertyChanged += (_, e) =>
+        try
         {
-            if (e.PropertyName == nameof(ToolViewModel.IsVisible)) UpdateVisibility();
-        };
+            if (anchorable.Content is not ToolViewModel toolVm) return;
 
-        // Set initial state
-        UpdateVisibility();
-        return;
+            toolVm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(ToolViewModel.IsVisible)) 
+                {
+                    try
+                    {
+                        UpdateVisibility();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error updating visibility: {ex.Message}");
+                    }
+                }
+            };
 
-        void UpdateVisibility()
+            // Set initial state
+            UpdateVisibility();
+            return;
+
+            void UpdateVisibility()
+            {
+                if (toolVm.IsVisible)
+                    anchorable.Show();
+                else
+                    anchorable.Hide();
+            }
+        }
+        catch (Exception ex)
         {
-            if (toolVm.IsVisible)
-                anchorable.Show();
-            else
-                anchorable.Hide();
+            System.Diagnostics.Debug.WriteLine($"Error in AfterInsertAnchorable: {ex.Message}");
         }
     }
 
