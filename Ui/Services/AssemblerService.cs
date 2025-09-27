@@ -15,6 +15,7 @@ public class AssemblerService : IAssemblerService
 {
     private readonly ASMBLR _assembler;
     private readonly IMainMemory _mainMemory;
+    private readonly INotificationService _notificationService;
     public event EventHandler<byte[]>? SourceCodeAssembled;
     public event EventHandler<IReadOnlyList<AssemblyError>>? AssemblyErrorsReported;
     public List<ISR>? Isrs;
@@ -25,10 +26,11 @@ public class AssemblerService : IAssemblerService
         ReadCommentHandling = JsonCommentHandling.Skip,
         WriteIndented = true
     };
-    public AssemblerService(ASMBLR assembler, IMainMemory memory)
+    public AssemblerService(ASMBLR assembler, IMainMemory memory, INotificationService notificationService)
     {
         _assembler = assembler;
         _mainMemory = memory;
+        _notificationService = notificationService;
     }
     private List<ISR> ReadIVTJson(){
         string currentFolder = Path.GetFullPath(AppContext.BaseDirectory + "../../../../");
@@ -48,9 +50,9 @@ public class AssemblerService : IAssemblerService
         
         if (machineCodeLen <= 0)
         {            
-            // Use dispatcher to show message box on UI thread
+            // Use dispatcher to show notification on UI thread
             System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => {
-                MessageBox.Show("Assembly failed: Please check Logs directory for more details.", "Assembly Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _notificationService.ShowError("Assembly failed");
             }));
             
             // Notify subscribers about the errors - they will handle thread synchronization

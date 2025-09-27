@@ -67,6 +67,7 @@ namespace CPU.Tests
             Action postAssert)
         {
             int len;
+            List<Assembler.Business.AssemblyError> errors;
             expectedInstructionPath = expectedPath;
             List<Dictionary<string, int>> registerSnapshots = new List<Dictionary<string, int>>();
 
@@ -79,7 +80,7 @@ namespace CPU.Tests
 
             CpuTestsUtils.InitTest(registerSnapshots, cpu);
 
-            ram.LoadMachineCode(assembler.Assemble(sourceCode, out len));
+            ram.LoadMachineCode(assembler.Assemble(sourceCode, out len, out errors));
             byte[] initRamDump = (byte[])ram.GetMemoryDump().Clone();
             
             CpuTestsUtils.CapturePathAndRegisters(cpu, realInstructionPath, registerSnapshots);

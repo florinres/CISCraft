@@ -351,6 +351,14 @@
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
-
+        
+        <!-- Snackbar presenter for notifications - positioned at the bottom of the window -->
+        <ui:SnackbarPresenter 
+            x:Name="SnackbarPresenter" 
+            Grid.Row="2"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"
+            Margin="0,0,0,12"
+            MaxWidth="400" />
     </Grid>
 </ui:FluentWindow>

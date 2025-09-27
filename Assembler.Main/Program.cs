@@ -11,13 +11,14 @@ namespace Assembler.Business
             string file;
             byte[] objectCode = new byte[200];
             int len = 0;
+            List<AssemblyError> errors;
             try
             {
                 using (StreamReader reader = new StreamReader(filePath))
                 {
                     file = reader.ReadToEnd();
                     Assembler assembler = new Assembler();
-                    objectCode = assembler.Assemble(file, out len);
+                    objectCode = assembler.Assemble(file, out len, out errors);
                 }
             }
             catch (FileNotFoundException ex)
