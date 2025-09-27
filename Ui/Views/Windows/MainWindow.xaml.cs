@@ -174,15 +174,22 @@ public partial class MainWindow
         {
             vm.EditorInstance = editor;
 
-            _actionsBarViewModel.CanAssemble = false;
-            _actionsBarViewModel.CanDebug = true;
-
-            if (((vm.IsModified == false) || vm.NeedsAssemble) && _actionsBarViewModel.IsDebugging == false)
+            if (
+                    (vm.NeedsAssemble) &&
+                    (_actionsBarViewModel.IsDebugging == false)
+                )
             {
                 _actionsBarViewModel.CanDebug = false;
                 _actionsBarViewModel.CanAssemble = true;
             }
-            
+
+            if (vm.SectionName != "User_Code")
+            {
+                _actionsBarViewModel.CanAssemble = false;
+                _actionsBarViewModel.CanDebug = false;
+                _actionsBarViewModel.CanRun = false;
+            }
+
             editor.SaveRequested += (s, args) => SaveCurrentDocument(vm);
 
             editor.Unloaded += OnEditorUnLoaded;
