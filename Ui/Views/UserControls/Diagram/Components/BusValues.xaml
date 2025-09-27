@@ -1,0 +1,47 @@
+<UserControl x:Class="Ui.Views.UserControls.Diagram.Components.BusValues"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:diagram="clr-namespace:Ui.ViewModels.Components.Diagram"
+             d:DataContext="{d:DesignInstance Type=diagram:DiagramViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="400">
+    <Border BorderBrush="{DynamicResource NodeBorderBrush}" BorderThickness="1" Padding="4">
+        <StackPanel>
+            <TextBlock Grid.Row="0" Text="BUS VALUES"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource DiagramTextBrush}"
+                       FontWeight="Bold"
+                       Margin="0,0,0,4" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Name="Sbus" Grid.Column="0" BorderBrush="{DynamicResource SbusStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <StackPanel>
+                        <TextBlock Text="SBUS" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" FontWeight="Bold" />
+                        <TextBlock Text="{Binding SbusValue, StringFormat='0x{0:X4}'}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" />
+                    </StackPanel>
+                </Border>
+                
+                <Border Name="Dbus" Grid.Column="1" BorderBrush="{DynamicResource DbusStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <StackPanel>
+                        <TextBlock Text="DBUS" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" FontWeight="Bold" />
+                        <TextBlock Text="{Binding DbusValue, StringFormat='0x{0:X4}'}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" />
+                    </StackPanel>
+                </Border>
+                
+                <Border Name="Rbus" Grid.Column="2" BorderBrush="{DynamicResource RbusStrokeMPM}" BorderThickness="1" Margin="1" Padding="4" CornerRadius="4">
+                    <StackPanel>
+                        <TextBlock Text="RBUS" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" FontWeight="Bold" />
+                        <TextBlock Text="{Binding RbusValue, StringFormat='0x{0:X4}'}" Foreground="{DynamicResource DiagramTextBrush}" TextAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

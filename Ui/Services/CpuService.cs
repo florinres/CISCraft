@@ -90,6 +90,9 @@ public class CpuService : ICpuService
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[column];
 
+        // Update bus values in diagram
+        _diagram.UpdateBusValues(_cpu.SBUS, _cpu.DBUS, _cpu.RBUS);
+
         _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[column]].Value, true, Brushes.Red);
 
         _diagram.HandleHighlightMpmBox(_mirLookUpIndex[column]);
@@ -118,6 +121,9 @@ public class CpuService : ICpuService
 
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = -1;
+        
+        // Update bus values in diagram
+        _diagram.UpdateBusValues(_cpu.SBUS, _cpu.DBUS, _cpu.RBUS);
 
         _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
 
@@ -136,6 +142,9 @@ public class CpuService : ICpuService
 
             _microprogramService.CurrentRow = row;
             _microprogramService.CurrentColumn = -1;
+            
+            // Update bus values in diagram
+            _diagram.UpdateBusValues(_cpu.SBUS, _cpu.DBUS, _cpu.RBUS);
 
             _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
         }
@@ -152,6 +161,9 @@ public class CpuService : ICpuService
 
         _microprogramService.CurrentRow = row;
         _microprogramService.CurrentColumn = _mirLookUpIndex[col];
+        
+        // Update bus values in diagram
+        _diagram.UpdateBusValues(_cpu.SBUS, _cpu.DBUS, _cpu.RBUS);
 
         _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
 
@@ -162,6 +174,9 @@ public class CpuService : ICpuService
 
             _microprogramService.CurrentRow = row;
             _microprogramService.CurrentColumn = _mirLookUpIndex[col];
+            
+            // Update bus values in diagram
+            _diagram.UpdateBusValues(_cpu.SBUS, _cpu.DBUS, _cpu.RBUS);
 
             _diagram.HandleHighlightConnection(_cpu.Registers[REGISTERS.FLAGS], _microprogramService.CurrentMemoryRow[_mirLookUpIndex[col]].Value, true, Brushes.Red);
         }
