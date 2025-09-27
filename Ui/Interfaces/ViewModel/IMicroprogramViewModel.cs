@@ -19,4 +19,5 @@ public interface IMicroprogramViewModel : IToolViewModel
     event PropertyChangingEventHandler? PropertyChanging;
     void ClearAllHighlightedRows();
     void ClearAllHighlight();
+    int SearchForLabel(string label);
 }
