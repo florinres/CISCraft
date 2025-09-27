@@ -4,6 +4,10 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+// Use aliases to avoid ambiguous references
+using SystemMessageBox = System.Windows.MessageBox;
+using SystemMessageBoxButton = System.Windows.MessageBoxButton;
+using SystemMessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace Ui.Views.UserControls.Hex
 {
@@ -52,8 +56,8 @@ namespace Ui.Views.UserControls.Hex
         {
             if (Validation.GetHasError(AddressTextBox))
             {
-                MessageBox.Show("Please enter a valid hexadecimal address.", "Invalid Address", 
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                SystemMessageBox.Show("Please enter a valid hexadecimal address.", "Invalid Address", 
+                    SystemMessageBoxButton.OK, SystemMessageBoxImage.Warning);
                 return;
             }
             

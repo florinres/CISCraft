@@ -17,6 +17,8 @@ using Ui.ViewModels.Generics;
 using Ui.ViewModels.Windows;
 using Ui.Views.Windows;
 using Wpf.Ui;
+using Wpf.Ui.Controls;
+using Wpf.Ui.DependencyInjection;
 using WorkspaceViewModel = Ui.ViewModels.WorkspaceViewModel;
 using ASMBLR = Assembler.Business.Assembler;
 using MenuBarViewModel = Ui.ViewModels.Components.MenuBar.MenuBarViewModel;
@@ -39,6 +41,9 @@ public partial class App : Application
         {
             services.AddLogging(builder => { builder.AddConsole(); });
             services.AddSingleton<IThemeService, ThemeService>();
+            
+            // Add notification service
+            services.AddSingleton<INotificationService, NotificationService>();
 
             services.AddSingleton<MainWindow>();
             services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>();
