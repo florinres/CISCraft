@@ -69,8 +69,120 @@ public partial class MicroprogramControl : UserControl
         if (e.Key == Key.F && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
         {
             e.Handled = true;
-            ShowGoToRowDialog();
+            ShowSearchLabelDialog();
         }
+    }
+    
+    private void ShowSearchLabelDialog()
+    {
+        var searchDialog = new MicroprogramSearchDialog();
+        
+        if (searchDialog.ShowDialog() == true)
+        {
+            string searchText = searchDialog.SearchText;
+            SearchForLabel(searchText);
+        }
+    }
+    
+    private void SearchMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        ShowSearchLabelDialog();
+    }
+    
+    private void SearchForLabel(string label)
+    {
+        if (ViewModel == null || string.IsNullOrWhiteSpace(label))
+            return;
+            
+        // Use the viewmodel to search for the label
+        int foundIndex = (ViewModel as MicroprogramViewModel)?.SearchForLabel(label) ?? -1;
+        
+        if (foundIndex >= 0)
+        {
+            // Temporarily set the current row to the found index to scroll to it and highlight it
+            ViewModel.CurrentRow = foundIndex;
+            
+            // Make sure the found row is visible
+            if (MicroprogramScrollViewer.Items.Count > foundIndex)
+            {
+                // First scroll to make the item visible
+                MicroprogramScrollViewer.ScrollIntoView(MicroprogramScrollViewer.Items[foundIndex]);
+                
+                // Activate highlight through the IsCurrent property
+                if (ViewModel.Rows.Count > foundIndex)
+                {
+                    ViewModel.Rows[foundIndex].IsCurrent = true;
+                    ViewModel.Rows[foundIndex].HighlightOpacity = 1.0; // Ensure it starts fully visible
+                }
+                
+                // Create a timer to gradually fade out the highlight
+                var highlightTimer = new System.Windows.Threading.DispatcherTimer();
+                highlightTimer.Interval = TimeSpan.FromMilliseconds(800); // Keep highlight visible for 0.8 seconds before starting fade
+                
+                highlightTimer.Tick += (s, e) =>
+                {
+                    highlightTimer.Stop();
+                    
+                    // Use a second timer to control the fade effect
+                    var fadeTimer = new System.Windows.Threading.DispatcherTimer();
+                    fadeTimer.Interval = TimeSpan.FromMilliseconds(30); // Update more frequently for smoother and faster fade
+                    
+                    double opacity = 1.0;
+                    fadeTimer.Tick += (sender, args) =>
+                    {
+                        // Decrease opacity more quickly
+                        opacity -= 0.10;
+                        
+                        if (opacity <= 0)
+                        {
+                            // When fully transparent, stop timer and remove highlight
+                            fadeTimer.Stop();
+                            ViewModel.Rows[foundIndex].IsCurrent = false;
+                        }
+                        else
+                        {
+                            // Create custom transparent version of the highlight color
+                            // We'll need to update the XAML style to use this property
+                            if (ViewModel.Rows[foundIndex] != null)
+                            {
+                                ViewModel.Rows[foundIndex].HighlightOpacity = opacity;
+                            }
+                        }
+                    };
+                    
+                    fadeTimer.Start();
+                };
+                
+                highlightTimer.Start();
+            }
+        }
+        else
+        {
+            MessageBox.Show($"Label '{label}' not found.", "Search Result", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+    
+    // Helper method is still used in other places
+    
+    // This method is preserved but renamed to avoid the duplicate definition
+    private T RecursiveFindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        int childCount = VisualTreeHelper.GetChildrenCount(parent);
+        
+        for (int i = 0; i < childCount; i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            
+            if (child is T typedChild)
+                return typedChild;
+                
+            // Recursively search child elements
+            var result = RecursiveFindVisualChild<T>(child);
+            if (result != null)
+                return result;
+        }
+        
+        return null;
     }
 
     private Point _scrollStartPoint;

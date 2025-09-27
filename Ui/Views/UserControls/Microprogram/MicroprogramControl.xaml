@@ -179,11 +179,11 @@
                                 <Style.Triggers>
                                     <!-- StepMicroCode highlight -->
                                     <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                        <Setter Property="Background" Value="#471d1a" />
-                                    </DataTrigger>
-                                    <!-- Go To Row highlight-->
-                                    <DataTrigger Binding="{Binding IsGoToTarget}" Value="True">
-                                        <Setter Property="Background" Value="#ff8d8686" />
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="#471d1a" Opacity="{Binding HighlightOpacity}" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

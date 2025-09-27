@@ -22,6 +22,7 @@ public partial class MicroprogramMemoryViewModel : ObservableObject
     [ObservableProperty] public partial int Address { get; set; }
     [ObservableProperty] public partial string Tag { get; set; } = "";
     [ObservableProperty] public partial bool IsCurrent { get; set; } = false;
+    [ObservableProperty] public partial double HighlightOpacity { get; set; } = 1.0;
 
     public string GetFormattedAddress(NumberFormat format) => format switch
     {
