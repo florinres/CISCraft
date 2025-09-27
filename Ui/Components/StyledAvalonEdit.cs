@@ -23,6 +23,11 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
         typeof(StyledAvalonEdit),
         new InputGestureCollection { new KeyGesture(Key.S, ModifierKeys.Control) });
     
+    // Add constants for min/max font size
+    private const double MinFontSize = 8.0;
+    private const double MaxFontSize = 36.0;
+    private const double DefaultFontSize = 10.0;
+    
     public StyledAvalonEdit()
     {
         //theming
@@ -43,6 +48,9 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
         
         // Add command bindings
         CommandBindings.Add(new CommandBinding(SaveCommand, ExecuteSaveCommand));
+        
+        // Add zoom support with mouse wheel
+        PreviewMouseWheel += OnPreviewMouseWheel;
     }
     
     private void ExecuteSaveCommand(object sender, ExecutedRoutedEventArgs e)
@@ -135,9 +143,44 @@ public class StyledAvalonEdit : TextEditor, IAppearanceControl
         // Refresh the TextArea to update the colors
         TextArea.TextView.Redraw();
     }
+    
+    // Handle zoom functionality using Ctrl+MouseWheel
+    private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (Keyboard.Modifiers == ModifierKeys.Control)
+        {
+            double fontSize = FontSize;
+            
+            if (e.Delta > 0)
+            {
+                // Zoom in
+                fontSize = Math.Min(fontSize + 1, MaxFontSize);
+            }
+            else
+            {
+                // Zoom out
+                fontSize = Math.Max(fontSize - 1, MinFontSize);
+            }
+            
+            if (fontSize != FontSize)
+            {
+                FontSize = fontSize;
+                System.Diagnostics.Debug.WriteLine($"Font size changed to: {FontSize}pt");
+            }
+            
+            e.Handled = true; // Prevent scrolling
+        }
+    }
+    
+    // Add a method to reset zoom to default
+    public void ResetZoom()
+    {
+        FontSize = DefaultFontSize;
+    }
 
     ~StyledAvalonEdit()
     {
         ApplicationThemeManager.Changed -= OnThemeChanged;
+        PreviewMouseWheel -= OnPreviewMouseWheel;
     }
 }
