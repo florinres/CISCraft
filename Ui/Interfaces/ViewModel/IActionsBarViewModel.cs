@@ -44,6 +44,11 @@ namespace Ui.Interfaces.ViewModel
         bool CanDebug { get; set; }
         bool CanAssemble { get; set; }
         bool CanRun { get; set; }
+        
+        /// <summary>
+        /// Clears any error markers in the active document editor
+        /// </summary>
+        void ClearErrorMarkers();
 
         event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangingEventHandler? PropertyChanging;

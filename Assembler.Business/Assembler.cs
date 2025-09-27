@@ -31,21 +31,43 @@ namespace Assembler.Business
             _logsDir = Path.GetFullPath(AppContext.BaseDirectory + "../../../../Logs");
             _parserLog = "parser.log";
         }
-        public byte[] Assemble(string sourceCode, out int len)
+        public byte[] Assemble(string sourceCode, out int len, out List<AssemblyError> errors)
         {
             var tree = Parser.Parse(sourceCode);
 
+            errors = new List<AssemblyError>();
+
             if (tree.HasErrors())
             {
-                Dictionary<string,string> parsingErrors = new Dictionary<string,string>();
                 foreach (var err in tree.ParserMessages)
-                    parsingErrors[err.Message] = err.Location.ToString();
-                LogParsingInfo(parsingErrors);
+                {
+                    if (err.Location.Column > 1)
+                    {
+                        errors.Add(new AssemblyError
+                        {
+                            // Add 1 to line number to make it 1-based
+                            Line = err.Location.Line + 2,
+                            Column = err.Location.Column + 2, // Also adjust column to be 1-based
+                            Length = 1000,
+                            Message = err.Message
+                        });
+                    }
+                    else
+                    {
+                        errors.Add(new AssemblyError
+                        {
+                            // Add 1 to line number to make it 1-based
+                            Line = err.Location.Line + 1,
+                            Column = err.Location.Column + 1, // Also adjust column to be 1-based
+                            Length = 1000,
+                            Message = err.Message
+                        });
+                    }
+                }
+
                 len = 0;
                 return new byte[0];
             }
-            else
-                LogParsingInfo(new Dictionary<string, string> { { "STATUS:", "Parsing successful." } });
 
             return Encoder.Encode(tree.Root, out len);
         }
@@ -55,18 +77,6 @@ namespace Assembler.Business
                     kvp => (ushort)(kvp.Key + pcOffset),
                     kvp => kvp.Value
                 );
-        }
-
-        private void LogParsingInfo(Dictionary<string,string> msg)
-        {
-            string logPath = _logsDir + "\\" + _parserLog;
-            Directory.CreateDirectory(_logsDir);
-            File.Create(logPath).Dispose();
-            string formatedMsg = DateTime.Now.ToString() + "\n{\n" +
-            string.Join(",\n", msg.Select(kvp => $"  \"{kvp.Key}\": \"{kvp.Value}\"")) + 
-            "\n}";
-
-            _logWriter.LogInfo(formatedMsg, logPath, WriteMode.Overwrite);
         }
     }
 }

@@ -212,6 +212,10 @@ public partial class MainWindow
             document.SaveToFile();
             document.IsModified = false;
             _actionsBarViewModel.CanAssemble = true;
+            
+            // Clear any error markers since the document was saved
+            // We don't know if errors are fixed but we'll remove the markers until assembly is performed again
+            _actionsBarViewModel.ClearErrorMarkers();
         }
         else
         {
@@ -229,6 +233,10 @@ public partial class MainWindow
                 document.SaveToFile(saveFileDialog.FileName);
                 document.IsModified = false;
                 _actionsBarViewModel.CanAssemble = true;
+                
+                // Clear any error markers since the document was saved
+                // We don't know if errors are fixed but we'll remove the markers until assembly is performed again
+                _actionsBarViewModel.ClearErrorMarkers();
             }
         }
     }
