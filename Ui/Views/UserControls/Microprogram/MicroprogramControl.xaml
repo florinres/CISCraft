@@ -181,7 +181,7 @@
                                     <DataTrigger Binding="{Binding IsCurrent}" Value="True">
                                         <Setter Property="Background">
                                             <Setter.Value>
-                                                <SolidColorBrush Color="#471d1a" Opacity="{Binding HighlightOpacity}" />
+                                                <SolidColorBrush Color="#ffababab" Opacity="{Binding HighlightOpacity}" />
                                             </Setter.Value>
                                         </Setter>
                                     </DataTrigger>
