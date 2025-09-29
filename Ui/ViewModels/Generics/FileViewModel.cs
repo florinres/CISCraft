@@ -10,6 +10,7 @@ public partial class FileViewModel : PaneViewModel
     Color _semiTransparentYellow;
     public bool IsModified = false;
     public string SectionName = "User_Code";
+    public bool IsBeingDebugged = false;
     private int? _pendingHighlightLine = null;
 
     [ObservableProperty]
@@ -56,6 +57,7 @@ public partial class FileViewModel : PaneViewModel
                     HighlightLine(lineToHighlight);
                 }
             }
+            OnPropertyChanged(nameof(EditorInstance));
         }
     }
     public async Task LoadFromFile(string path)

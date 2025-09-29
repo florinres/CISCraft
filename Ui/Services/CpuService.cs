@@ -209,6 +209,8 @@ public class CpuService : ICpuService
     {
         ushort lineNum = 0;
 
+        _activeDocumentService.SelectedDocument?.IsBeingDebugged = true;
+
         lineNum = GetLineAndEditorNumberByPc(_cpu.Registers[REGISTERS.PC]);
 
         _activeDocumentService.SelectedDocument?.HighlightLine(lineNum);
@@ -257,6 +259,7 @@ public class CpuService : ICpuService
         {
             doc.ResetHighlight();
         }
+        _activeDocumentService.SelectedDocument?.IsBeingDebugged = false;
         _diagram.ResetHighlight();
         _cpu.ResetProgram();
         _microprogramService.CurrentRow = -1;
@@ -306,10 +309,20 @@ public class CpuService : ICpuService
     {
         if (_activeDocumentService.SelectedDocument == null) return;
 
+        foreach (var doc in _activeDocumentService.Documents)
+        {
+            if ((section.Name == "User_Code") && (doc.IsBeingDebugged == true))
+            {
+                _activeDocumentService.SelectedDocument = doc;
+                return;
+            }
+        }
+
         // If the document is already open, select it
         foreach (var doc in _activeDocumentService.Documents)
         {
-            if ((doc.SectionName == section.Name))
+
+            if (doc.SectionName == section.Name)
             {
                 _activeDocumentService.SelectedDocument = doc;
                 return;

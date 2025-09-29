@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
+using Ui.Components;
 using Ui.Interfaces.Services;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
@@ -83,7 +84,7 @@ namespace Ui.ViewModels.Components.MenuBar
             {
                 Title = "Untitled",
                 Content = defaultContent,
-                SectionName = "User_Code"
+                SectionName = "User_Code",
             };
             DocumentService.Documents.Add(doc);
             DocumentService.SelectedDocument ??= doc;

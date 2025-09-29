@@ -66,7 +66,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
 
         ushort haltCode = 0xE300;
         ushort irValue = _cpuService.GetIR();
-
+        _activeDocumentService.SelectedDocument.IsBeingDebugged = true;
         while (irValue != haltCode)
         {
 
@@ -105,6 +105,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
         CanDebug = true;
         CanAssemble = false;
         CanRun = true;
+        _activeDocumentService.SelectedDocument.NeedsAssemble = false;
     }
 
     [RelayCommand]
@@ -143,7 +144,7 @@ public partial class ActionsBarViewModel : ObservableObject, IActionsBarViewMode
     [RelayCommand]
     private void StartDebug()
     {
-        if (_activeDocumentService.SelectedDocument != null)
+        if (_activeDocumentService.SelectedDocument != null && _activeDocumentService.SelectedDocument.SectionName == "User_Code")
         {
             _cpuService.StartDebugging();
             IsDebugging = true;
