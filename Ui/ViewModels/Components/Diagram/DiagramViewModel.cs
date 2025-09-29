@@ -71,6 +71,10 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
     }
     public void HandleHighlightConnection(ushort flags, string connectionTag, bool highlight = true, Brush highlightBrush = null)
     {
+        // Convention:
+        // RED: Write
+        // BLUE: Read
+
         switch (connectionTag)
         {
             case "NONE":
@@ -84,14 +88,16 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "PdPCs":
             case "PdIVRs":
             case "PdADRs":
-            case "PdMDRs":
             case "PdIR[7...0]":
             case "Pd0s":
             case "Pd-1s":
-                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Sbus");
+                SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Sbus");
                 break;
             case "PdTsNeg":
                 connectionTag = "PdTs";
+                break;
+            case "PdMDRs":
+                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Sbus");
                 break;
 
             //DBUS
@@ -102,14 +108,17 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "PdPCd":
             case "PdIVRd":
             case "PdADRd":
-            case "PdMDRd":
             case "PdIR[7...0]d":
             case "Pd0d":
             case "Pd-1d":
-                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Dbus");
+                SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Dbus");
                 break;
             case "PdMDRdNeg":
                 connectionTag = "PdMDRd";
+                SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Dbus");
+                break;
+            case "PdMDRd":
+                SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Dbus");
                 break;
 
             //ALU
@@ -156,11 +165,11 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
                 break;
             case "READ":
                 connectionTag = "DataOut";
-                HighlightConnectionByTag("PmMDR", highlight, highlightBrush);
+                HighlightConnectionByTag("PmMDR",  true, Brushes.Blue);
                 break;
             case "WRITE":
                 connectionTag = "DataIn";
-                HighlightConnectionByTag("PdMDRs", highlight, highlightBrush);
+                HighlightConnectionByTag("PdMDRs", true,  Brushes.Red);
                 break;
 
             // OtherOp
