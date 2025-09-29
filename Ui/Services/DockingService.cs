@@ -204,9 +204,4 @@ public class DockingService : IDockingService
         SaveLayout(LastUsedLayoutName);
     }
 
-    public void LoadLastUsedLayout()
-    {
-        if (GetAllLayoutNames().Contains(LastUsedLayoutName))
-            LoadLayout(LastUsedLayoutName);
-    }
 }
