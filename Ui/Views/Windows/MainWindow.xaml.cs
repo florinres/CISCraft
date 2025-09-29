@@ -17,6 +17,12 @@ using Ui.ViewModels;
 using Ui.ViewModels.Components.MenuBar;
 using Ui.ViewModels.Generics;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
+// Use aliases to avoid ambiguous references
+using SystemMessageBox = System.Windows.MessageBox;
+using SystemMessageBoxButton = System.Windows.MessageBoxButton;
+using SystemMessageBoxResult = System.Windows.MessageBoxResult;
+using SystemMessageBoxImage = System.Windows.MessageBoxImage;
 using ISR = Ui.Models.ISR;
 
 namespace Ui.Views.Windows;
@@ -30,6 +36,7 @@ public partial class MainWindow
     IMainWindowViewModel _viewModel;
     IAssemblerService _assemblerService;
     IActiveDocumentService _activeDocumentService;
+    private readonly INotificationService _notificationService;
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -44,10 +51,12 @@ public partial class MainWindow
         IActionsBarViewModel actionsBarViewModel,
         IMainMemory mainMemory,
         IAssemblerService assemblerService,
-        IActiveDocumentService activeDocumentService
+        IActiveDocumentService activeDocumentService,
+        INotificationService notificationService
     )
     {
         _viewModel = viewModel;
+        _notificationService = notificationService;
         DataContext = _viewModel;
         SystemThemeWatcher.Watch(this);
         InitializeComponent();
@@ -56,6 +65,14 @@ public partial class MainWindow
         _mainMemory = mainMemory;
         _assemblerService = assemblerService;
         _activeDocumentService = activeDocumentService;
+
+        // Set up the SnackbarPresenter for our notification service after window is loaded
+        Loaded += (sender, args) => {
+            if (SnackbarPresenter != null)
+            {
+                NotificationService.SetSnackbarPresenter(SnackbarPresenter);
+            }
+        };
 
         EditInterruptsMenu.Items.Clear();
         TriggerInterruptMenu.Items.Clear();
@@ -138,13 +155,13 @@ public partial class MainWindow
             string filePath = thisFile.FilePath;
             if (!File.Exists(filePath))
             {
-                MessageBoxResult result = MessageBox.Show(
+                SystemMessageBoxResult result = SystemMessageBox.Show(
                     "Do you want to save the file before closing?",
                     "Warning",
-                    MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Warning
+                    SystemMessageBoxButton.YesNoCancel,
+                    SystemMessageBoxImage.Warning
                 );
-                if (result == MessageBoxResult.Yes)
+                if (result == SystemMessageBoxResult.Yes)
                 {
                     var saveFileDialog = new SaveFileDialog
                     {
@@ -159,7 +176,7 @@ public partial class MainWindow
                         File.WriteAllText(saveFileDialog.FileName, thisFile.Content);
                     }
                 }
-                else if (result == MessageBoxResult.Cancel)
+                else if (result == SystemMessageBoxResult.Cancel)
                 {
                     e.Cancel = true;
                     return;
@@ -219,6 +236,10 @@ public partial class MainWindow
             document.SaveToFile();
             document.IsModified = false;
             _actionsBarViewModel.CanAssemble = true;
+            
+            // Clear any error markers since the document was saved
+            // We don't know if errors are fixed but we'll remove the markers until assembly is performed again
+            _actionsBarViewModel.ClearErrorMarkers();
         }
         else
         {
@@ -236,6 +257,10 @@ public partial class MainWindow
                 document.SaveToFile(saveFileDialog.FileName);
                 document.IsModified = false;
                 _actionsBarViewModel.CanAssemble = true;
+                
+                // Clear any error markers since the document was saved
+                // We don't know if errors are fixed but we'll remove the markers until assembly is performed again
+                _actionsBarViewModel.ClearErrorMarkers();
             }
         }
     }

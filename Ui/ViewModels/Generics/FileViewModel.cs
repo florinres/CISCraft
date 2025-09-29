@@ -56,10 +56,15 @@ public partial class FileViewModel : PaneViewModel
                     _pendingHighlightLine = null;
                     HighlightLine(lineToHighlight);
                 }
+                
+                // The Editor property is now automatically updated since it returns _editorInstance
             }
             OnPropertyChanged(nameof(EditorInstance));
         }
     }
+    
+    // Alias property for better semantics when accessing the editor
+    public StyledAvalonEdit? Editor => _editorInstance;
     public async Task LoadFromFile(string path)
     {
         FilePath = path;

@@ -6,6 +6,10 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using Ui.Interfaces.ViewModel;
 using WpfHexaEditor;
+// Use aliases to avoid ambiguous references
+using SystemMessageBox = System.Windows.MessageBox;
+using SystemMessageBoxButton = System.Windows.MessageBoxButton;
+using SystemMessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace Ui.Views.UserControls.Hex;
 
@@ -252,16 +256,16 @@ public partial class HexControl : UserControl
                     catch (Exception ex)
                     {
                         // Handle any exceptions that might occur
-                        MessageBox.Show($"Error navigating to address: {ex.Message}", "Navigation Error",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        SystemMessageBox.Show($"Error navigating to address: {ex.Message}", "Navigation Error",
+                            SystemMessageBoxButton.OK, SystemMessageBoxImage.Error);
                     }
                 });
             }
             else
             {
                 // The address was invalid or out of range
-                MessageBox.Show($"Cannot navigate to address 0x{address:X}. It is outside the valid range.",
-                    "Invalid Address", MessageBoxButton.OK, MessageBoxImage.Warning);
+                SystemMessageBox.Show($"Cannot navigate to address 0x{address:X}. It is outside the valid range.",
+                    "Invalid Address", SystemMessageBoxButton.OK, SystemMessageBoxImage.Warning);
             }
         }
     }

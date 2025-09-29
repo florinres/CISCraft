@@ -20,12 +20,13 @@ namespace CPU.Main
             string file;
             byte[] objectCode = new byte[200];
             int len = 0;
+            List<Assembler.Business.AssemblyError> errors;
             try
             {
                 using (StreamReader reader = new StreamReader(filePath))
                 {
                     file = reader.ReadToEnd();
-                    objectCode = assembler.Assemble(file, out len);
+                    objectCode = assembler.Assemble(file, out len, out errors);
                 }
             }
             catch (FileNotFoundException ex)
