@@ -37,7 +37,6 @@ namespace Ui.ViewModels.Components.MenuBar
             _dockingService = dockingService;
             _toolVisibilityService.SetDockingService(dockingService);
             LayoutControl.SetDockingService(dockingService);
-            _dockingService.LoadLastUsedLayout();
             files = DocumentService.Documents;
         }
 

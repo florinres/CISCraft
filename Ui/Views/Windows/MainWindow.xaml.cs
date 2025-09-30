@@ -113,7 +113,6 @@ public partial class MainWindow
         
         // Reset the layout to initialize it properly with the new titles
         _docking.SaveLastUsedLayout();
-        _docking.LoadLastUsedLayout();
     }
     private void DockManager_AnchorableClosing(object? sender, AnchorableClosingEventArgs e)
     {
