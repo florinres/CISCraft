@@ -79,7 +79,6 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
         {
             case "NONE":
                 break;
-
             //SBUS
             case "PdFLAGs":
             case "PdRGs":
@@ -92,12 +91,14 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "Pd0s":
             case "Pd-1s":
                 SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Sbus");
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Blue);
                 break;
             case "PdTsNeg":
                 connectionTag = "PdTs";
                 break;
             case "PdMDRs":
-                SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Sbus");
+                SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Sbus");
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Blue);
                 break;
 
             //DBUS
@@ -112,13 +113,16 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "Pd0d":
             case "Pd-1d":
                 SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Dbus");
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Blue);
                 break;
             case "PdMDRdNeg":
                 connectionTag = "PdMDRd";
                 SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Dbus");
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Blue);
                 break;
             case "PdMDRd":
                 SetBusColor(Brushes.Blue.Color, Brushes.Blue.Color, "Dbus");
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Blue);
                 break;
 
             //ALU
@@ -137,6 +141,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "RLC":
             case "RRC":
                 connectionTag = "PdALU";
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Red);
                 SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Rbus");
                 break;
 
@@ -157,19 +162,21 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "PmFlag2":
             case "PmFlag3":
                 SetBusColor(Brushes.Red.Color, Brushes.Red.Color, "Rbus");
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Red);
                 break;
 
             // MemOp
             case "IFCH":
                 connectionTag = "DataOut_Ir";
+                HighlightConnectionByTag(connectionTag,  true, Brushes.Red);
                 break;
             case "READ":
                 connectionTag = "DataOut";
-                HighlightConnectionByTag("PmMDR",  true, Brushes.Blue);
+                HighlightConnectionByTag("PdMDR",  true, Brushes.Blue);
                 break;
             case "WRITE":
                 connectionTag = "DataIn";
-                HighlightConnectionByTag("PdMDRs", true,  Brushes.Red);
+                HighlightConnectionByTag("PdMDRs", true,  Brushes.Blue);
                 break;
 
             // OtherOp
@@ -185,6 +192,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "A(1)BVI":
             case "A(0)BVI":
                 connectionTag = "BVI";
+                HighlightConnectionByTag(connectionTag, true, Brushes.Red);
                 break;
             case "A(0)BPO":
             case "INTA":
@@ -215,7 +223,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
             case "F":
                 break;
         }
-        HighlightConnectionByTag(connectionTag, highlight, highlightBrush);
+        //HighlightConnectionByTag(connectionTag, highlight, highlightBrush);
     }
     /// <summary>
     /// Highlights a connection by its tag
@@ -227,7 +235,7 @@ public partial class DiagramViewModel : ToolViewModel, IDiagramViewModel
     {
         if (_connectionCanvas == null || _overlayCanvas == null) return;
         
-        highlightBrush ??= new SolidColorBrush(Color.FromRgb(0, 208, 255)); // cyan
+        highlightBrush ??= new SolidColorBrush(Color.FromRgb(0, 0, 255));
         
         _diagramControl.Dispatcher.InvokeAsync(() => {
             // First find the connection in ConnectionCanvas
