@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.Json;
 using Ui.Interfaces.ViewModel;
 using Ui.Models;
@@ -23,33 +24,36 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
     [ObservableProperty] public partial NumberFormat AddressFormat { get; set; } = NumberFormat.Hex;
     
     [ObservableProperty] public partial int CurrentRow { get; set; } = -1;
-    partial void OnCurrentRowChanged(int oldValue, int newValue)
-    {
-        if (oldValue >= 0 && oldValue < Rows.Count)
+        partial void OnCurrentRowChanged(int oldValue, int newValue)
         {
-            //Rows[oldValue].IsCurrent = false;
-            foreach (var item in Rows[oldValue].Items)
+            foreach (var row in Rows)
             {
-                item.IsCurrent = false;
+                row.IsGoToTarget = false;
             }
-        }
-
-        // Set new row highlight
-        if (newValue >= 0 && newValue < Rows.Count)
-        {
-            Rows[newValue].IsCurrent = true;
-
-            // Optional: highlight the current column in new row if valid
-            if (CurrentColumn >= 0 && CurrentColumn < Rows[newValue].Items.Count)
+        
+            if (oldValue >= 0 && oldValue < Rows.Count)
             {
-                Rows[newValue].Items[CurrentColumn].IsCurrent = true;
+                //Rows[oldValue].IsCurrent = false;
+                foreach (var item in Rows[oldValue].Items)
+                {
+                    item.IsCurrent = false;
+                }
             }
+
+            if (newValue >= 0 && newValue < Rows.Count)
+            {
+                Rows[newValue].IsCurrent = true;
+
+                if (CurrentColumn >= 0 && CurrentColumn < Rows[newValue].Items.Count)
+                {
+                    Rows[newValue].Items[CurrentColumn].IsCurrent = true;
+                }
             
-            CurrentMemoryRow = Rows[newValue];
+                CurrentMemoryRow = Rows[newValue];
+            }
         }
-    }
 
-    public void ClearAllHighlightedRows()
+        public void ClearAllHighlightedRows()
     {
         foreach (var row in Rows.Where(r => r.IsCurrent))
         {
@@ -119,6 +123,28 @@ public partial class MicroprogramViewModel : ToolViewModel, IMicroprogramViewMod
         Rows = new ObservableCollection<MicroprogramMemoryViewModel>(rows);
 
         
+    }
+
+    /// <summary>
+    /// Search for a label in the microprogram memory
+    /// </summary>
+    /// <param name="label">Label text to search for</param>
+    /// <returns>Index of the row with matching label or -1 if not found</returns>
+    public int SearchForLabel(string label)
+    {
+        if (string.IsNullOrWhiteSpace(label))
+            return -1;
+
+        // Case insensitive search for the label
+        for (int i = 0; i < Rows.Count; i++)
+        {
+            if (Rows[i].Tag.Equals(label, StringComparison.OrdinalIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public override string? Title { get; set; } = "Microprogram";
